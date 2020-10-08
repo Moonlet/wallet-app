@@ -30,12 +30,19 @@ import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { bind } from 'bind-decorator';
-import { addAccount, setSelectedAccount } from '../../../redux/wallets/actions';
+import {
+    addAccount,
+    setSelectedAccount,
+    signAndSendTransactions
+} from '../../../redux/wallets/actions';
+import { HeaderLeft } from '../../../components/header-left/header-left';
+import { Dialog } from '../../../components/dialog/dialog';
 
 interface IReduxProps {
     isVisible: boolean;
     transactions: IBlockchainTransaction[];
     closeProcessTransactions: typeof closeProcessTransactions;
+    signAndSendTransactions: typeof signAndSendTransactions;
     selectedWallet: IWalletState;
     selectedAccount: IAccountState;
     accountTransactions: IBlockchainTransaction[];
@@ -61,11 +68,12 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     closeProcessTransactions,
     addAccount,
-    setSelectedAccount
+    setSelectedAccount,
+    signAndSendTransactions
 };
 
 interface IState {
-    disabledButton: boolean;
+    currentIndex: number;
 }
 
 export class ProcessTransactionsComponent extends React.Component<
@@ -80,7 +88,7 @@ export class ProcessTransactionsComponent extends React.Component<
         super(props);
 
         this.state = {
-            disabledButton: true
+            currentIndex: 0
         };
     }
 
@@ -94,30 +102,20 @@ export class ProcessTransactionsComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.transactions !== prevProps.transactions) {
-            let allTransactionPublished = 0;
-            let transactionsFailed = 0;
+            let lastIndexPublished = -1;
+            for (let index = 0; index < this.props.transactions.length; index++) {
+                const tx = this.props.transactions[index];
 
-            for (const tx of this.props.transactions) {
-                if (this.isTransactionPublished(tx)) {
-                    allTransactionPublished++;
-                }
                 if (
+                    this.isTransactionPublished(tx) ||
                     tx.status === TransactionStatus.DROPPED ||
                     tx.status === TransactionStatus.FAILED
                 ) {
-                    transactionsFailed++;
+                    lastIndexPublished = index;
                 }
             }
 
-            if (transactionsFailed !== 0) {
-                this.setState({
-                    disabledButton: false
-                });
-            } else {
-                this.setState({
-                    disabledButton: !(allTransactionPublished === this.props.transactions.length)
-                });
-            }
+            this.setState({ currentIndex: lastIndexPublished + 1 });
         }
     }
 
@@ -291,23 +289,31 @@ export class ProcessTransactionsComponent extends React.Component<
             case TransactionStatus.PENDING: {
                 leftIcon = IconValues.PENDING;
                 iconColor = theme.colors.warning;
-                this.startIconSpin();
-                enableAnimation = true;
+                if (this.state.currentIndex === index) {
+                    this.startIconSpin();
+                    enableAnimation = true;
+                }
+
                 break;
             }
             default: {
                 leftIcon = IconValues.PENDING;
                 rightText = '';
                 iconColor = theme.colors.warning;
-                this.startIconSpin();
-                enableAnimation = true;
+                if (this.state.currentIndex === index) {
+                    this.startIconSpin();
+                    enableAnimation = true;
+                }
             }
         }
+
+        const isPublished = this.isTransactionPublished(tx);
 
         const dontDisplayActivityIndicator =
             this.isTransactionPublished(tx) ||
             status === TransactionStatus.FAILED ||
-            status === TransactionStatus.DROPPED;
+            status === TransactionStatus.DROPPED ||
+            index > this.state.currentIndex;
 
         const iconSpin = this.iconSpinValue.interpolate({
             inputRange: [0, 1],
@@ -339,7 +345,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     )}
                 </View>
 
-                {dontDisplayActivityIndicator ? (
+                {isPublished ? (
                     status === TransactionStatus.PENDING || status === TransactionStatus.SUCCESS ? (
                         <Icon
                             name={IconValues.CHECK}
@@ -349,6 +355,8 @@ export class ProcessTransactionsComponent extends React.Component<
                     ) : (
                         <Text style={styles.failedText}>{rightText}</Text>
                     )
+                ) : dontDisplayActivityIndicator ? (
+                    <View />
                 ) : (
                     <View>
                         <LoadingIndicator />
@@ -387,6 +395,93 @@ export class ProcessTransactionsComponent extends React.Component<
         this.props.closeProcessTransactions();
     }
 
+    @bind
+    private onPressSignTransaction(transaction: IBlockchainTransaction) {
+        this.props.signAndSendTransactions([transaction], this.state.currentIndex);
+    }
+
+    @bind
+    private signAllTransactions() {
+        // sign all transactions - HD wallet
+        this.props.signAndSendTransactions(this.props.transactions);
+    }
+
+    public renderBottomButton() {
+        const { styles } = this.props;
+        if (this.props.transactions.length === 0) return <View />;
+
+        let allTransactionPublished = 0;
+        let transactionsFailed = 0;
+
+        for (const tx of this.props.transactions) {
+            if (this.isTransactionPublished(tx)) {
+                allTransactionPublished++;
+            }
+            if (tx.status === TransactionStatus.DROPPED || tx.status === TransactionStatus.FAILED) {
+                transactionsFailed++;
+            }
+        }
+
+        if (allTransactionPublished + transactionsFailed === this.props.transactions.length) {
+            return (
+                <Button
+                    primary
+                    onPress={this.onPressContinue}
+                    wrapperStyle={styles.continueButton}
+                    disabled={false}
+                >
+                    {translate('App.labels.continue')}
+                </Button>
+            );
+        } else {
+            if (this.props.selectedWallet.type === WalletType.HD)
+                return (
+                    <Button
+                        primary
+                        onPress={this.signAllTransactions}
+                        wrapperStyle={styles.continueButton}
+                        disabled={false}
+                    >
+                        {translate('Transaction.signAll')}
+                    </Button>
+                );
+            else
+                return (
+                    <Button
+                        primary
+                        onPress={() =>
+                            this.onPressSignTransaction(
+                                this.props.transactions[this.state.currentIndex]
+                            )
+                        }
+                        wrapperStyle={styles.continueButton}
+                        disabled={false}
+                    >
+                        {translate('ProcessTransactions.ledgerSignButton', {
+                            txNumber: this.state.currentIndex + 1
+                        })}
+                    </Button>
+                );
+        }
+    }
+
+    @bind
+    private onPressBackButton() {
+        if (this.state.currentIndex > 0) {
+            Dialog.alert(
+                translate('ProcessTransactions.alertCancelTitle'),
+                translate('ProcessTransactions.alertCancelMessage'),
+                {
+                    text: translate('App.labels.no')
+                },
+                {
+                    text: translate('App.labels.yes'),
+                    onPress: () => this.props.closeProcessTransactions()
+                }
+            );
+        }
+    }
+
     public render() {
         const { styles } = this.props;
 
@@ -398,7 +493,21 @@ export class ProcessTransactionsComponent extends React.Component<
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.screenTitle}>{translate('App.labels.processing')}</Text>
+                    <View style={styles.header}>
+                        <View style={styles.defaultHeaderContainer}>
+                            <HeaderLeft
+                                testID="go-back"
+                                icon={IconValues.ARROW_LEFT}
+                                onPress={this.onPressBackButton}
+                            />
+                        </View>
+                        <View style={styles.headerTitleContainer}>
+                            <Text style={styles.headerTitleStyle}>
+                                {translate('App.labels.processing')}
+                            </Text>
+                        </View>
+                        <View style={styles.defaultHeaderContainer} />
+                    </View>
 
                     <Text style={styles.title}>{title}</Text>
 
@@ -412,14 +521,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         <LoadingIndicator />
                     )}
 
-                    <Button
-                        primary
-                        onPress={this.onPressContinue}
-                        wrapperStyle={styles.continueButton}
-                        disabled={this.props.transactions.length === 0 || this.state.disabledButton}
-                    >
-                        {translate('App.labels.continue')}
-                    </Button>
+                    {this.renderBottomButton()}
                 </View>
             );
         } else {

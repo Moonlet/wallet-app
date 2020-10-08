@@ -91,5 +91,24 @@ export default (theme: ITheme) =>
         transactionIconContainer: {
             justifyContent: 'center',
             marginRight: BASE_DIMENSION * 2
+        },
+        header: {
+            flexDirection: 'row',
+            width: '100%'
+        },
+        defaultHeaderContainer: {
+            flex: 1
+        },
+        headerTitleContainer: {
+            flex: 1,
+            justifyContent: 'center'
+        },
+        headerTitleStyle: {
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
+            color: theme.colors.text,
+            letterSpacing: LETTER_SPACING,
+            textAlign: 'center',
+            fontWeight: 'bold'
         }
     });

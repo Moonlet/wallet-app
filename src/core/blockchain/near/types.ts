@@ -16,6 +16,7 @@ export enum NearFunctionCallMethods {
     CREATE_ACCOUNT_AND_CLAIM = 'create_account_and_claim',
     DEPOSIT_AND_STAKE = 'deposit_and_stake',
     SELECT_STAKING_POOL = 'select_staking_pool',
+    UNSELECT_STAKING_POOL = 'unselect_staking_pool',
     STAKE_ALL = 'stake_all'
 }
 
@@ -54,5 +55,6 @@ export enum NearQueryRequestTypes {
 export enum NearAccountViewMethods {
     GET_OWNER_ACCOUNT_ID = 'get_owner_account_id',
     GET_STAKING_POOL_ACCOUNT_ID = 'get_staking_pool_account_id',
-    GET_ACCOUNT_UNSTAKED_BALANCE = 'get_account_unstaked_balance'
+    GET_ACCOUNT_UNSTAKED_BALANCE = 'get_account_unstaked_balance',
+    GET_KNOWN_DEPOSITED_BALANCE = 'get_known_deposited_balance'
 }

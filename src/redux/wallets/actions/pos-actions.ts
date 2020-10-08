@@ -1,11 +1,9 @@
 import { IAccountState } from '../state';
 import {
+    Blockchain,
     IFeeOptions,
     ITransactionExtraFields,
     TransactionMessageText
-    // TransactionMessageType,
-    // TransactionMessageText,
-    // IBlockchainTransaction
 } from '../../../core/blockchain/types';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Dispatch } from 'react';
@@ -14,12 +12,9 @@ import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
 import { getSelectedWallet } from '../selectors';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-// import { WalletType } from '../../../core/wallet/types';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../tokens/static-selectors';
-// import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
-// import { TRANSACTION_PUBLISHED } from '../actions';
 import { translate } from '../../../core/i18n';
 import { Dialog } from '../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
@@ -39,6 +34,8 @@ import {
 } from '@sentry/react-native';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
+import { delay } from '../../../core/utils/time';
+import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
 
 export const redelegate = (
     account: IAccountState,
@@ -263,6 +260,7 @@ export const posAction = (
         };
 
         const blockchainInstance = getBlockchain(account.blockchain);
+        const client = blockchainInstance.getClient(chainId);
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
         dispatch(openProcessTransactions());
@@ -298,8 +296,6 @@ export const posAction = (
         }); // encrypted string: pass)
 
         for (let index = 0; index < txs.length; index++) {
-            const client = getBlockchain(account.blockchain).getClient(chainId);
-
             if (appWallet.type === WalletType.HW) {
                 await LedgerConnect.signTransaction(
                     account.blockchain,
@@ -313,6 +309,18 @@ export const posAction = (
 
             try {
                 const txHash = await client.sendTransaction(transaction);
+
+                // SELECT_STAKING_POOL: delay 2 seconds
+                // Needed only if there are multiple operations, such as select_staking_pool and deposit_and_stake
+                // Need to increase the number of blocks between transactions
+                const { additionalInfo } = txs[index];
+                if (account.blockchain === Blockchain.NEAR && additionalInfo && txs.length > 1) {
+                    for (const action of additionalInfo?.actions || []) {
+                        if (action?.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL) {
+                            await delay(2000);
+                        }
+                    }
+                }
 
                 if (txHash) {
                     dispatch(updateProcessTransactionIdForIndex(index, txHash));

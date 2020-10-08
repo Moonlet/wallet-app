@@ -112,6 +112,7 @@ export const translation: ITranslations = {
                 standard: 'Standard',
                 stake: 'Stake',
                 staked: 'Staked',
+                stakingPublicBeta: 'Moonlet Staking - Public Beta',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
                 status: 'Status',

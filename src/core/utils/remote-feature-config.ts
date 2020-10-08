@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import CONFIG from '../../config';
 
 export enum RemoteFeature {
+    BETA_BADGE = 'beta_badge',
+    ZIL = 'feature_zil',
     NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
@@ -26,6 +28,8 @@ export const getRemoteConfigFeatures = async () => {
         const objects = await firebase
             .config()
             .getValues([
+                RemoteFeature.BETA_BADGE,
+                RemoteFeature.ZIL,
                 RemoteFeature.NEAR,
                 RemoteFeature.COSMOS,
                 RemoteFeature.CELO,
@@ -40,6 +44,8 @@ export const getRemoteConfigFeatures = async () => {
     } catch (err) {
         // Set default values
         featuresConfig = {
+            [RemoteFeature.BETA_BADGE]: JSON.stringify([]),
+            [RemoteFeature.ZIL]: JSON.stringify([]),
             [RemoteFeature.NEAR]: JSON.stringify([]),
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
@@ -64,19 +70,13 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         return true;
     }
 
-    if (
-        (feature === RemoteFeature.NEAR ||
-            feature === RemoteFeature.COSMOS ||
-            feature === RemoteFeature.CELO ||
-            feature === RemoteFeature.DEV_TOOLS) &&
-        featuresConfig
-    ) {
-        const values = featuresConfig[feature] || [];
-        if (values.length > 0) {
-            return values.indexOf(DeviceInfo.getUniqueId()) >= 0;
-        }
-    }
-    return false;
+    if (feature !== RemoteFeature.TC_VERSION)
+        return (
+            featuresConfig[feature]?.length > 0 &&
+            !!featuresConfig[feature].find(
+                element => element === '*' || element === DeviceInfo.getUniqueId()
+            )
+        );
 };
 
 export const getFirebaseTCVersion = async (): Promise<number> => {

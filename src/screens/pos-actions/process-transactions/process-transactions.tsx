@@ -25,7 +25,7 @@ import {
     getSelectedAccount
 } from '../../../redux/wallets/selectors';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { formatPlural, formatValidatorName } from '../../../core/utils/format-string';
+import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
@@ -36,6 +36,7 @@ import {
     signAndSendTransactions
 } from '../../../redux/wallets/actions';
 import { HeaderLeft } from '../../../components/header-left/header-left';
+import { Dialog } from '../../../components/dialog/dialog';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -104,6 +105,7 @@ export class ProcessTransactionsComponent extends React.Component<
             let lastIndexPublished = -1;
             for (let index = 0; index < this.props.transactions.length; index++) {
                 const tx = this.props.transactions[index];
+
                 if (
                     this.isTransactionPublished(tx) ||
                     tx.status === TransactionStatus.DROPPED ||
@@ -287,16 +289,21 @@ export class ProcessTransactionsComponent extends React.Component<
             case TransactionStatus.PENDING: {
                 leftIcon = IconValues.PENDING;
                 iconColor = theme.colors.warning;
-                this.startIconSpin();
-                enableAnimation = true;
+                if (this.state.currentIndex === index) {
+                    this.startIconSpin();
+                    enableAnimation = true;
+                }
+
                 break;
             }
             default: {
                 leftIcon = IconValues.PENDING;
                 rightText = '';
                 iconColor = theme.colors.warning;
-                this.startIconSpin();
-                enableAnimation = true;
+                if (this.state.currentIndex === index) {
+                    this.startIconSpin();
+                    enableAnimation = true;
+                }
             }
         }
 
@@ -305,7 +312,8 @@ export class ProcessTransactionsComponent extends React.Component<
         const dontDisplayActivityIndicator =
             this.isTransactionPublished(tx) ||
             status === TransactionStatus.FAILED ||
-            status === TransactionStatus.DROPPED;
+            status === TransactionStatus.DROPPED ||
+            index > this.state.currentIndex;
 
         const iconSpin = this.iconSpinValue.interpolate({
             inputRange: [0, 1],
@@ -389,7 +397,7 @@ export class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private onPressSignTransaction(transaction: IBlockchainTransaction) {
-        this.props.signAndSendTransactions([transaction]);
+        this.props.signAndSendTransactions([transaction], this.state.currentIndex);
     }
 
     @bind
@@ -414,26 +422,24 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
-        if (this.props.selectedWallet.type === WalletType.HD) {
-            // is HD wallet
+        if (allTransactionPublished === this.props.transactions.length) {
+            const disabledButton =
+                transactionsFailed !== 0
+                    ? false
+                    : !(allTransactionPublished === this.props.transactions.length);
 
-            if (allTransactionPublished === this.props.transactions.length) {
-                const disabledButton =
-                    transactionsFailed !== 0
-                        ? false
-                        : !(allTransactionPublished === this.props.transactions.length);
-
-                return (
-                    <Button
-                        primary
-                        onPress={this.onPressContinue}
-                        wrapperStyle={styles.continueButton}
-                        disabled={disabledButton}
-                    >
-                        {translate('App.labels.continue')}
-                    </Button>
-                );
-            } else
+            return (
+                <Button
+                    primary
+                    onPress={this.onPressContinue}
+                    wrapperStyle={styles.continueButton}
+                    disabled={disabledButton}
+                >
+                    {translate('App.labels.continue')}
+                </Button>
+            );
+        } else {
+            if (this.props.selectedWallet.type === WalletType.HD)
                 return (
                     <Button
                         primary
@@ -444,9 +450,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         {translate('Transaction.signAll')}
                     </Button>
                 );
-        } else {
-            // is Ledger wallet
-            if (this.state.currentIndex < this.props.transactions.length) {
+            else
                 return (
                     <Button
                         primary
@@ -458,23 +462,28 @@ export class ProcessTransactionsComponent extends React.Component<
                         wrapperStyle={styles.continueButton}
                         disabled={false}
                     >
-                        {`${translate('App.labels.sign')} ${formatPlural(
-                            this.state.currentIndex + 1
-                        )} ${translate('App.labels.transaction')}`}
+                        {translate('ProcessTransactions.ledgerSignButton', {
+                            txNumber: this.state.currentIndex + 1
+                        })}
                     </Button>
                 );
-            } else {
-                return (
-                    <Button
-                        primary
-                        onPress={this.onPressContinue}
-                        wrapperStyle={styles.continueButton}
-                        disabled={false}
-                    >
-                        {translate('App.labels.continue')}
-                    </Button>
-                );
-            }
+        }
+    }
+
+    @bind
+    private onPressBackButton() {
+        if (this.state.currentIndex > 0) {
+            Dialog.alert(
+                translate('ProcessTransactions.alertCancelTitle'),
+                translate('ProcessTransactions.alertCancelMessage'),
+                {
+                    text: translate('App.labels.no')
+                },
+                {
+                    text: translate('App.labels.cancel'),
+                    onPress: () => this.props.closeProcessTransactions()
+                }
+            );
         }
     }
 
@@ -494,9 +503,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             <HeaderLeft
                                 testID="go-back"
                                 icon={IconValues.ARROW_LEFT}
-                                onPress={() => {
-                                    this.props.closeProcessTransactions();
-                                }}
+                                onPress={this.onPressBackButton}
                             />
                         </View>
                         <View style={styles.headerTitleContainer}>

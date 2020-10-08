@@ -280,14 +280,14 @@ export const posAction = (
     }
 };
 
-export const signAndSendTransactions = (transactions: IBlockchainTransaction[]) => async (
-    dispatch: Dispatch<IAction<any>>,
-    getState: () => IReduxState
-) => {
+export const signAndSendTransactions = (
+    transactions: IBlockchainTransaction[],
+    specificIndex?: number
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
 
     const appWallet = getSelectedWallet(state);
-    const account = getSelectedAccount(state); // Not sure its ok...
+    const account = getSelectedAccount(state);
     let password = '';
     try {
         if (appWallet.type === WalletType.HD) {
@@ -324,7 +324,7 @@ export const signAndSendTransactions = (transactions: IBlockchainTransaction[]) 
                 const txHash = await client.sendTransaction(signed);
 
                 if (txHash) {
-                    dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                    dispatch(updateProcessTransactionIdForIndex(specificIndex || index, txHash));
                     dispatch({
                         type: TRANSACTION_PUBLISHED,
                         data: {
@@ -334,7 +334,10 @@ export const signAndSendTransactions = (transactions: IBlockchainTransaction[]) 
                         }
                     });
                     dispatch(
-                        updateProcessTransactionStatusForIndex(index, TransactionStatus.PENDING)
+                        updateProcessTransactionStatusForIndex(
+                            specificIndex || index,
+                            TransactionStatus.PENDING
+                        )
                     );
 
                     if (appWallet.type === WalletType.HW) {
@@ -349,11 +352,19 @@ export const signAndSendTransactions = (transactions: IBlockchainTransaction[]) 
                     });
 
                     dispatch(
-                        updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
+                        updateProcessTransactionStatusForIndex(
+                            specificIndex || index,
+                            TransactionStatus.FAILED
+                        )
                     );
                 }
             } catch (error) {
-                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
+                dispatch(
+                    updateProcessTransactionStatusForIndex(
+                        specificIndex || index,
+                        TransactionStatus.FAILED
+                    )
+                );
 
                 throw error;
             }

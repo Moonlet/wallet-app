@@ -73,6 +73,7 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                no: 'No',
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
@@ -619,6 +620,21 @@ export const translation: ITranslations = {
             reviewTransaction: 'Review transaction',
             reviewTransactionDevice:
                 'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.'
+        },
+        ProcessTransactions: {
+            ledgerSignButton: {
+                ordinal: true,
+                text: 'Sign {{txNumber}}th transaction',
+                forms: {
+                    one: 'Sign {{txNumber}}st transaction',
+                    two: 'Sign {{txNumber}}nd transaction',
+                    few: 'Sign {{txNumber}}rd transaction',
+                    other: 'Sign {{txNumber}}th transaction' // this is not needed since we have the default text above
+                }
+            },
+            alertCancelTitle: 'Transactions pending',
+            alertCancelMessage:
+                'There are transaction pending signing. Are you sure you want to cancel?'
         }
     },
     plural: (n: number, ord?: boolean) => {

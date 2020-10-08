@@ -288,6 +288,7 @@ export const signAndSendTransactions = (
 
     const appWallet = getSelectedWallet(state);
     const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
     let password = '';
     try {
         if (appWallet.type === WalletType.HD) {
@@ -314,12 +315,12 @@ export const signAndSendTransactions = (
             );
         }
 
+        const client = getBlockchain(account.blockchain).getClient(chainId);
         for (let index = 0; index < transactions.length; index++) {
             const transaction = transactions[index];
 
             const signed = await wallet.sign(transaction.blockchain, account.index, transaction);
 
-            const client = getBlockchain(transaction.blockchain).getClient(transaction.chainId);
             try {
                 const txHash = await client.sendTransaction(signed);
 

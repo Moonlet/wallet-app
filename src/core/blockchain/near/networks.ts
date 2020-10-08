@@ -10,6 +10,10 @@ export const networks: IBlockchainNetwork[] = [
             name: 'Explorer',
             getAccountUrl: account => `https://explorer.mainnet.near.org/accounts/${account}`,
             getTransactionUrl: txn => `https://explorer.mainnet.near.org/transactions/${txn}`
+        },
+        links: {
+            getWalletLoginUrl: (publicKey: string) =>
+                `https://wallet.near.org/login/?title=Moonlet&referrer=Moonlet&public_key=${publicKey}`
         }
     },
     {
@@ -36,6 +40,10 @@ export const networks: IBlockchainNetwork[] = [
             name: 'Explorer',
             getAccountUrl: account => `https://explorer.betanet.near.org/accounts/${account}`,
             getTransactionUrl: txn => `https://explorer.betanet.near.org/transactions/${txn}`
+        },
+        links: {
+            getWalletLoginUrl: (publicKey: string) =>
+                `https://wallet.betanet.near.org/login/?title=Moonlet&referrer=Moonlet&public_key=${publicKey}`
         }
     }
 ];

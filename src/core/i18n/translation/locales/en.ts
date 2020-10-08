@@ -25,6 +25,7 @@ export const translation: ITranslations = {
                 close: 'Close',
                 claim: 'Claim',
                 claimReward: 'Claim reward',
+                claimingAccount: 'Claiming account',
                 claimingRewards: 'Claiming rewards',
                 comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
@@ -32,6 +33,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 connection: 'Connection',
                 continue: 'Continue',
+                continueWith: 'Continue with',
                 contract: 'Contract',
                 contractAddress: 'Contract address',
                 copy: 'Copy',
@@ -73,6 +75,7 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                no: 'No',
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
@@ -99,6 +102,7 @@ export const translation: ITranslations = {
                 secure: 'Secure',
                 security: 'Security',
                 send: 'Send',
+                sendingTokens: 'Sending tokens',
                 sender: 'Sender',
                 settings: 'Settings',
                 setup: 'Setup',
@@ -120,6 +124,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 theRequested: 'the requested',
+                transaction: 'transaction',
                 transactions: 'Transactions',
                 transfer: 'Transfer',
                 tryAgain: 'Try again',
@@ -140,7 +145,8 @@ export const translation: ITranslations = {
                 watch: 'Watch mode',
                 withdraw: 'Withdraw',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet',
-                youAreUsing: 'You are now using your'
+                youAreUsing: 'You are now using your',
+                yes: 'Yes'
                 // please try to add keys in alphabetic order
             },
             buttons: {
@@ -327,6 +333,7 @@ export const translation: ITranslations = {
                 Success: 'Success'
             },
             signTransaction: 'Sign transaction',
+            signAll: 'Sign all transactions',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
@@ -441,6 +448,8 @@ export const translation: ITranslations = {
             authMoonlet: 'Authorize Moonlet',
             congrats: 'Congrats! {{name}} can be added to Moonlet.',
             needAuthorize: 'You need to authorize Moonlet to add {{name}}.',
+            needAuthorizeLockup:
+                'You need to authorize Moonlet the owner account {{owner}} in order to add {{lockup}}.',
             authProgress: 'Authorization in progress ...',
             notRegistered:
                 'Account name not registered. If you want to use it, you need first to create it.',
@@ -557,7 +566,8 @@ export const translation: ITranslations = {
                 'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
             alreadyStaked:
                 'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
-            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`
+            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,
+            selectStakingPool: 'Selecting staking pool'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',
@@ -618,6 +628,21 @@ export const translation: ITranslations = {
             reviewTransaction: 'Review transaction',
             reviewTransactionDevice:
                 'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.'
+        },
+        ProcessTransactions: {
+            ledgerSignButton: {
+                ordinal: true,
+                text: 'Sign {{txNumber}}th transaction',
+                forms: {
+                    one: 'Sign {{txNumber}}st transaction',
+                    two: 'Sign {{txNumber}}nd transaction',
+                    few: 'Sign {{txNumber}}rd transaction',
+                    other: 'Sign {{txNumber}}th transaction' // this is not needed since we have the default text above
+                }
+            },
+            alertCancelTitle: 'Transactions pending',
+            alertCancelMessage:
+                'There are transaction pending signing. Are you sure you want to cancel?'
         }
     },
     plural: (n: number, ord?: boolean) => {

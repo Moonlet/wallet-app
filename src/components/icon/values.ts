@@ -54,6 +54,7 @@ export enum IconValues {
     SATURN_ICON = 'saturn-icon',
     SEARCH = 'search',
     SETTINGS = 'settings',
+    SIGNED = 'signed-icon',
     SINGLE_MAN_HIERACHY = 'single-man-hierachy',
     TOUCH_ID = 'touch-id',
     UNLOCK = 'unlock',

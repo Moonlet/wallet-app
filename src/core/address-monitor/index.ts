@@ -5,7 +5,7 @@ import { IWalletsState, IAccountState } from '../../redux/wallets/state';
 import { CONFIG } from '../../config';
 import { HttpClient } from '../utils/http-client';
 
-const url = CONFIG.dataApiUrl + '/notifications/register';
+const url = CONFIG.walletApiBaseUrl + '/data//notifications/register';
 const http = new HttpClient(url);
 const monitoredBlockchains = [Blockchain.ETHEREUM, Blockchain.ZILLIQA];
 

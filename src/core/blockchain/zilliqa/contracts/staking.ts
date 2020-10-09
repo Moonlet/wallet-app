@@ -312,6 +312,7 @@ export class Staking {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
+        // TODO find a better way to get the rewards amount.
         const chartData = tx.validators[0].chartStats.find(chart => chart.title === 'Reward');
 
         transaction.toAddress = contractAddress;

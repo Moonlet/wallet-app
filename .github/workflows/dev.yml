@@ -2,116 +2,115 @@ on:
   push:
     branches:
       - master
-      - ios-fix
 
 name: Beta build & deploy
 jobs:
-  # unit-tests:
-  #   name: Unit tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - name: Create version tag
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: |-
-  #         BUILD=$(git rev-list --count $GITHUB_SHA)
-  #         VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-  #         TAG_NAME="v${VERSION}.${BUILD}"
-  #         curl --request POST \
-  #              --url https://api.github.com/repos/moonlet/wallet-app/git/refs \
-  #              --header "authorization: token $GITHUB_TOKEN" \
-  #              --header "content-type: application/json" \
-  #              --data "{\"ref\": \"refs/tags/$TAG_NAME\",\"sha\": \"$GITHUB_SHA\"}"
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - name: Create version tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          TAG_NAME="v${VERSION}.${BUILD}"
+          curl --request POST \
+               --url https://api.github.com/repos/moonlet/wallet-app/git/refs \
+               --header "authorization: token $GITHUB_TOKEN" \
+               --header "content-type: application/json" \
+               --data "{\"ref\": \"refs/tags/$TAG_NAME\",\"sha\": \"$GITHUB_SHA\"}"
 
-  #     - name: Cache node modules
-  #       uses: actions/cache@v1
-  #       id: cache
-  #       with:
-  #         path: node_modules
-  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Generate icons
-  #       run: npm run generate-icons
-  #     - name: Generate firebase web config file
-  #       run: |
-  #         echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
-  #         echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
-  #     - name: Run unit tests
-  #       run: npm test
-  #     - name: Upload coverage to Codecov
-  #       env:
-  #         CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-  #       run: |-
-  #         curl -s https://codecov.io/bash | bash -s -- \
-  #         -F "unittests" \
-  #         -Z || echo 'Codecov upload failed'
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: NPM install
+        run: npm i
+      - name: Generate icons
+        run: npm run generate-icons
+      - name: Generate firebase web config file
+        run: |
+          echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
+          echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+      - name: Run unit tests
+        run: npm test
+      - name: Upload coverage to Codecov
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+        run: |-
+          curl -s https://codecov.io/bash | bash -s -- \
+          -F "unittests" \
+          -Z || echo 'Codecov upload failed'
 
-  #     - name: Sentry release setup
-  #       env:
-  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-  #         SENTRY_ORG: moonlet
-  #       run: |-
-  #         BUILD=$(git rev-list --count $GITHUB_SHA)
-  #         VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+      - name: Sentry release setup
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: moonlet
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
 
-  #         npx sentry-cli releases new "com.moonlet.beta@$VERSION+$BUILD" -p wallet-app-android -p wallet-app-ios -p wallet-extension -p beta-app-android -p beta-app-ios -p beta-extension
-  #         npx sentry-cli releases set-commits "com.moonlet.beta@$VERSION+$BUILD" --auto
-  # beta-android:
-  #   name: Android app
-  #   runs-on: ubuntu-latest
-  #   needs: unit-tests
-  #   steps:
-  #     - name: Increase watchers
-  #       run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-  #     - uses: actions/checkout@v1
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - uses: actions/setup-ruby@v1
-  #       with:
-  #         ruby-version: "2.x"
-  #     - name: Generate firebase config file
-  #       run: |
-  #         echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/google-services.json
-  #         echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
-  #         echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
-  #     - name: Setup key
-  #       uses: webfactory/ssh-agent@v0.1.1
-  #       with:
-  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
-  #     - name: Add to host
-  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-  #     - name: Dependencies install
-  #       run: cd android && bundle install
-  #     - name: Cache node modules
-  #       uses: actions/cache@v1
-  #       id: cache
-  #       with:
-  #         path: node_modules
-  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Get sign ssh-keys
-  #       run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
-  #     - name: Generate fonts and icons
-  #       run: npm run generate-icons
-  #     - name: Run fastlane beta
-  #       run: cd android/fastlane && bundle exec fastlane beta
-  #       env:
-  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-  #         APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
-  #         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-  #         NODE_OPTIONS: --max_old_space_size=4096
-  #         NODE_ENV: production
+          npx sentry-cli releases new "com.moonlet.beta@$VERSION+$BUILD" -p wallet-app-android -p wallet-app-ios -p wallet-extension -p beta-app-android -p beta-app-ios -p beta-extension
+          npx sentry-cli releases set-commits "com.moonlet.beta@$VERSION+$BUILD" --auto
+  beta-android:
+    name: Android app
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Increase watchers
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "2.x"
+      - name: Generate firebase config file
+        run: |
+          echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/google-services.json
+          echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
+          echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+      - name: Setup key
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_CERTS }}
+      - name: Add to host
+        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+      - name: Dependencies install
+        run: cd android && bundle install
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: NPM install
+        run: npm i
+      - name: Get sign ssh-keys
+        run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+      - name: Generate fonts and icons
+        run: npm run generate-icons
+      - name: Run fastlane beta
+        run: cd android/fastlane && bundle exec fastlane beta
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          NODE_OPTIONS: --max_old_space_size=4096
+          NODE_ENV: production
   beta-ios:
     name: iOS app
     runs-on: macos-latest
-    # needs: unit-tests
+    needs: unit-tests
     steps:
       - uses: actions/setup-node@v1
         with:
@@ -150,50 +149,50 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
           NODE_ENV: production
-  # beta-ext-chrome:
-  #   name: Chrome extension
-  #   runs-on: ubuntu-latest
-  #   needs: unit-tests
-  #   steps:
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - uses: actions/checkout@v1
-  #     - name: Cache node modules
-  #       uses: actions/cache@v1
-  #       id: cache
-  #       with:
-  #         path: node_modules
-  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-  #     - name: Generate firebase web config file
-  #       run: |
-  #         echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
-  #         echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Generate icons
-  #       run: npm run generate-icons
-  #     - name: Build Chrome extension
-  #       run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
-  #       env:
-  #         NODE_OPTIONS: --max_old_space_size=4096
-  #     - name: Set tag name
-  #       run: |-
-  #         BUILD=$(git rev-list --count $GITHUB_SHA)
-  #         VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-  #         echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
-  #     - name: Create Chrome extenion zip
-  #       run: cd extension/build/beta/chrome && zip -r ./chrome-extension-dev-$TAG_NAME.zip ./
-  #     - name: Upload Chrome extenion zip via FTP
-  #       env:
-  #         FTP_USER: ${{ secrets.MOONLET_DEV_FTP_USER }}
-  #         FTP_PASS: ${{ secrets.MOONLET_DEV_FTP_PASS }}
-  #       run: curl -T extension/build/beta/chrome/*.zip ftp://$FTP_USER:$FTP_PASS@files.moonlet.dev/subdomains/files.moonlet.dev/extension/chrome/
-  #     # - name: Upload binaries to release
-  #     #   uses: svenstaro/upload-release-action@v1-release
-  #     #   with:
-  #     #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #     #     file: extension/build/beta/chrome/*.zip
-  #     #     tag: ${{ env.TAG_NAME }}
-  #     #     overwrite: true
-  #     #     file_glob: true
+  beta-ext-chrome:
+    name: Chrome extension
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Generate firebase web config file
+        run: |
+          echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
+          echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+      - name: NPM install
+        run: npm i
+      - name: Generate icons
+        run: npm run generate-icons
+      - name: Build Chrome extension
+        run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+      - name: Set tag name
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+      - name: Create Chrome extenion zip
+        run: cd extension/build/beta/chrome && zip -r ./chrome-extension-dev-$TAG_NAME.zip ./
+      - name: Upload Chrome extenion zip via FTP
+        env:
+          FTP_USER: ${{ secrets.MOONLET_DEV_FTP_USER }}
+          FTP_PASS: ${{ secrets.MOONLET_DEV_FTP_PASS }}
+        run: curl -T extension/build/beta/chrome/*.zip ftp://$FTP_USER:$FTP_PASS@files.moonlet.dev/subdomains/files.moonlet.dev/extension/chrome/
+      # - name: Upload binaries to release
+      #   uses: svenstaro/upload-release-action@v1-release
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: extension/build/beta/chrome/*.zip
+      #     tag: ${{ env.TAG_NAME }}
+      #     overwrite: true
+      #     file_glob: true

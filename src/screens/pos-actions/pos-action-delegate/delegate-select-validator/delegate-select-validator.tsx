@@ -275,7 +275,6 @@ export class DelegateSelectValidatorComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-        const { headerSteps } = this.state;
 
         return (
             <View style={styles.container}>

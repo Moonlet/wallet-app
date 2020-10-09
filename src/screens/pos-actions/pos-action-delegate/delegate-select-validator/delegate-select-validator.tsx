@@ -20,7 +20,6 @@ import { AccountType, IAccountState, ITokenState } from '../../../../redux/walle
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
-import { HeaderStepByStep } from '../../../send/components/header-step-by-step/header-step-by-step';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator, CardActionType } from '../../../../core/blockchain/types/stats';
 import { ValidatorsList } from '../../../token/components/delegate-token/components/validators/validators-list/validators-list';
@@ -276,7 +275,6 @@ export class DelegateSelectValidatorComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-        const { headerSteps } = this.state;
 
         return (
             <View style={styles.container}>
@@ -287,12 +285,7 @@ export class DelegateSelectValidatorComponent extends React.Component<
                     showsVerticalScrollIndicator={false}
                     alwaysBounceVertical={false}
                 >
-                    <View style={styles.content}>
-                        <View style={styles.headerSteps}>
-                            <HeaderStepByStep steps={headerSteps} />
-                        </View>
-                        {this.renderValidatorList()}
-                    </View>
+                    <View style={styles.content}>{this.renderValidatorList()}</View>
                 </KeyboardAwareScrollView>
 
                 {this.renderBottomConfirm()}

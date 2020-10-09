@@ -19,6 +19,7 @@ export interface IExternalProps {
     value: string;
     onChange: (value: string) => any;
     insufficientFunds: boolean;
+    insufficientFundsNotice?: string;
     insufficientMinimumAmount: boolean;
 }
 
@@ -30,6 +31,7 @@ export const EnterAmountComponent = (
         theme,
         styles,
         insufficientFunds,
+        insufficientFundsNotice,
         onChange,
         availableAmount,
         insufficientMinimumAmount,
@@ -70,7 +72,17 @@ export const EnterAmountComponent = (
             <View style={styles.buttonRightOptions}>
                 <Text style={styles.displayError}>
                     {insufficientFunds
-                        ? translate('Send.insufficientFunds')
+                        ? [
+                              <Text style={styles.displayError}>
+                                  {translate('Send.insufficientFunds')}
+                              </Text>,
+                              insufficientFundsNotice ? (
+                                  <Text style={styles.displayNotice}>
+                                      {'\n'}
+                                      {insufficientFundsNotice}
+                                  </Text>
+                              ) : null
+                          ]
                         : insufficientMinimumAmount
                         ? translate('Send.mimimumAmount', {
                               value: minimumAmount,

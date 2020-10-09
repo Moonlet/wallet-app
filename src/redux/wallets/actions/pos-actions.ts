@@ -392,12 +392,12 @@ export const signAndSendTransactions = (
                         updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED)
                     );
                 }
-            } catch (error) {
+            } catch (err) {
                 error = true;
                 dispatch(setProcessTxCompleted(true, true));
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED));
 
-                throw error;
+                throw err;
             }
         }
         dispatch(setProcessTxCompleted(true, false));

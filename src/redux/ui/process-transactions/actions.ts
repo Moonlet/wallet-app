@@ -5,9 +5,11 @@ import { IAccountState } from '../../wallets/state';
 export const OPEN_PROCESS_TXS = 'OPEN_PROCESS_TXS';
 export const CLOSE_PROCESS_TXS = 'CLOSE_PROCESS_TXS';
 export const SET_PROCESS_TXS = 'SET_PROCESS_TXS';
+export const SET_PROCESS_TX_INDEX = 'SET_PROCESS_TX_INDEX';
 export const UPDATE_PROCESS_TX_STATUS = 'UPDATE_PROCESS_TX_STATUS';
 export const UPDATE_PROCESS_TX_ID = 'UPDATE_PROCESS_TX_ID';
 export const SET_CREATE_ACCOUNT = 'SET_CREATE_ACCOUNT';
+export const SET_PROCESS_TX_SIGNING_COMPLETED = 'SET_PROCESS_TX_SIGNING_COMPLETED';
 
 export const openProcessTransactions = () => {
     return {
@@ -59,6 +61,26 @@ export const setProcessTxCreateAccount = (account: IAccountState) => {
         type: SET_CREATE_ACCOUNT,
         data: {
             account
+        }
+    };
+};
+
+export const setProcessTxIndex = (index: number) => {
+    return {
+        type: SET_PROCESS_TX_INDEX,
+        data: {
+            index
+        }
+    };
+};
+
+export const setProcessTxCompleted = (signingCompleted: boolean, signingError: boolean = false) => {
+    return {
+        type: SET_PROCESS_TX_SIGNING_COMPLETED,
+        data: {
+            signingInProgress: !signingCompleted,
+            signingCompleted,
+            signingError
         }
     };
 };

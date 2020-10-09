@@ -41,6 +41,10 @@ import { Dialog } from '../../../components/dialog/dialog';
 interface IReduxProps {
     isVisible: boolean;
     transactions: IBlockchainTransaction[];
+    signingInProgress: boolean;
+    signingCompleted: boolean;
+    signingError: boolean;
+    currentTxIndex: number;
     closeProcessTransactions: typeof closeProcessTransactions;
     signAndSendTransactions: typeof signAndSendTransactions;
     selectedWallet: IWalletState;
@@ -57,6 +61,10 @@ const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.processTransactions.isVisible,
         transactions: state.ui.processTransactions.data.txs,
+        signingInProgress: state.ui.processTransactions.data.signingInProgress,
+        signingCompleted: state.ui.processTransactions.data.signingCompleted,
+        signingError: state.ui.processTransactions.data.signingError,
+        currentTxIndex: state.ui.processTransactions.data.currentTxIndex,
         createAccount: state.ui.processTransactions.data.createAccount,
         selectedWallet: getSelectedWallet(state),
         selectedAccount,
@@ -72,25 +80,11 @@ const mapDispatchToProps = {
     signAndSendTransactions
 };
 
-interface IState {
-    currentIndex: number;
-}
-
 export class ProcessTransactionsComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    {}
 > {
     public iconSpinValue = new Animated.Value(0);
-
-    constructor(
-        props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
-    ) {
-        super(props);
-
-        this.state = {
-            currentIndex: 0
-        };
-    }
 
     public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
         const filteredTransactions = this.props.accountTransactions.filter(
@@ -268,11 +262,10 @@ export class ProcessTransactionsComponent extends React.Component<
         let iconColor = '';
         let enableAnimation = false;
 
-        const dontDisplayActivityIndicator =
-            this.isTransactionPublished(tx) ||
-            status === TransactionStatus.FAILED ||
-            status === TransactionStatus.DROPPED ||
-            index > this.state.currentIndex;
+        const displayActivityIndicator =
+            (status === TransactionStatus.SIGNED || status === TransactionStatus.CREATED) &&
+            this.props.signingInProgress &&
+            this.props.currentTxIndex === index;
 
         switch (status) {
             case TransactionStatus.FAILED: {
@@ -300,20 +293,24 @@ export class ProcessTransactionsComponent extends React.Component<
                 leftIcon = IconValues.PENDING;
                 iconColor = theme.colors.warning;
 
-                if (index <= this.state.currentIndex) {
-                    this.startIconSpin();
-                    enableAnimation = true;
-                }
-
+                this.startIconSpin();
+                enableAnimation = true;
+                break;
+            }
+            case TransactionStatus.SIGNED: {
+                leftIcon = IconValues.SIGNED;
+                iconColor = theme.colors.accent;
+                break;
+            }
+            case TransactionStatus.CREATED: {
+                leftIcon = IconValues.SIGNED;
+                iconColor = theme.colors.warning;
                 break;
             }
             default: {
-                leftIcon = IconValues.PENDING;
+                leftIcon = IconValues.SIGNED;
                 rightText = '';
                 iconColor = theme.colors.warning;
-
-                this.startIconSpin();
-                enableAnimation = true;
             }
         }
 
@@ -359,7 +356,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     ) : (
                         <Text style={styles.failedText}>{rightText}</Text>
                     )
-                ) : dontDisplayActivityIndicator ? (
+                ) : !displayActivityIndicator ? (
                     <View />
                 ) : (
                     <View>
@@ -401,11 +398,13 @@ export class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private onPressSignTransaction(transaction: IBlockchainTransaction) {
-        this.props.signAndSendTransactions([transaction], this.state.currentIndex);
+        throw new Error('check this out!!!');
+        // this.props.signAndSendTransactions([transaction], this.props.currentTxIndex);
     }
 
     @bind
     private signAllTransactions() {
+        this.setState({ flowStarted: true });
         // sign all transactions - HD wallet
         this.props.signAndSendTransactions(this.props.transactions);
     }
@@ -414,19 +413,7 @@ export class ProcessTransactionsComponent extends React.Component<
         const { styles } = this.props;
         if (this.props.transactions.length === 0) return <View />;
 
-        let allTransactionPublished = 0;
-        let transactionsFailed = 0;
-
-        for (const tx of this.props.transactions) {
-            if (this.isTransactionPublished(tx)) {
-                allTransactionPublished++;
-            }
-            if (tx.status === TransactionStatus.DROPPED || tx.status === TransactionStatus.FAILED) {
-                transactionsFailed++;
-            }
-        }
-
-        if (allTransactionPublished + transactionsFailed === this.props.transactions.length) {
+        if (this.props.signingCompleted) {
             return (
                 <Button
                     primary
@@ -444,7 +431,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         primary
                         onPress={this.signAllTransactions}
                         wrapperStyle={styles.continueButton}
-                        disabled={false}
+                        disabled={this.props.signingInProgress}
                     >
                         {translate('Transaction.signAll')}
                     </Button>
@@ -455,14 +442,14 @@ export class ProcessTransactionsComponent extends React.Component<
                         primary
                         onPress={() =>
                             this.onPressSignTransaction(
-                                this.props.transactions[this.state.currentIndex]
+                                this.props.transactions[this.props.currentTxIndex]
                             )
                         }
                         wrapperStyle={styles.continueButton}
                         disabled={false}
                     >
                         {translate('ProcessTransactions.ledgerSignButton', {
-                            txNumber: this.state.currentIndex + 1
+                            txNumber: this.props.currentTxIndex + 1
                         })}
                     </Button>
                 );
@@ -471,7 +458,7 @@ export class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private onPressBackButton() {
-        if (this.state.currentIndex > 0) {
+        if (this.props.signingInProgress) {
             Dialog.alert(
                 translate('ProcessTransactions.alertCancelTitle'),
                 translate('ProcessTransactions.alertCancelMessage'),
@@ -489,21 +476,31 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        const title =
-            this.props.selectedWallet?.type === WalletType.HW
-                ? translate('Transaction.processTitleTextLedger')
-                : translate('Transaction.processTitleText');
+        let title = '';
+
+        if (!this.props.signingCompleted) {
+            title =
+                this.props.selectedWallet?.type === WalletType.HW
+                    ? translate('Transaction.processTitleTextLedger')
+                    : translate('Transaction.processTitleText');
+        } else if (this.props.signingError) {
+            title = translate('Transaction.processTitleErrorText');
+        } else {
+            title = translate('Transaction.processTitleCompletedText');
+        }
 
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.defaultHeaderContainer}>
-                            <HeaderLeft
-                                testID="go-back"
-                                icon={IconValues.ARROW_LEFT}
-                                onPress={this.onPressBackButton}
-                            />
+                            {!this.props.signingInProgress && !this.props.signingCompleted && (
+                                <HeaderLeft
+                                    testID="go-back"
+                                    icon={IconValues.ARROW_LEFT}
+                                    onPress={this.onPressBackButton}
+                                />
+                            )}
                         </View>
                         <View style={styles.headerTitleContainer}>
                             <Text style={styles.headerTitleStyle}>

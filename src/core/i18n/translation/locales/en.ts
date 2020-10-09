@@ -341,6 +341,10 @@ export const translation: ITranslations = {
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
             processTitleText:
                 'Please sign all transactions and wait while are being broadcasted to the blockchain network',
+            processTitleCompletedText:
+                'Some transactions may still pe pending on the blokchain, it is safe to continue. You can check the status of the transactions at any time in Transactions section.',
+            processTitleErrorText:
+                'There was an error! Some of your transaction were not broadcasted or failed on broadcasting. The transactions that were not successfully broadcasted will not be displayed under Transaction section.\n We advise to carefully check your account and try to redo the transactions that failed.',
             processTitleTextLedger:
                 'Please sign each transaction from your Ledger and wait while is being broadcasted to the blockchain network',
             registerAccount: 'Registering account',
@@ -635,6 +639,7 @@ export const translation: ITranslations = {
                 'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.'
         },
         ProcessTransactions: {
+            title: 'Confirm',
             ledgerSignButton: {
                 ordinal: true,
                 text: 'Sign {{txNumber}}th transaction',

@@ -7,6 +7,8 @@ export enum WalletType {
 }
 
 export enum TransactionStatus {
+    CREATED = 'CREATED',
+    SIGNED = 'SIGNED',
     PENDING = 'PENDING',
     FAILED = 'FAILED',
     DROPPED = 'DROPPED',

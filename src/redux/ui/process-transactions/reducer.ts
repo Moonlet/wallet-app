@@ -6,13 +6,19 @@ import {
     SET_PROCESS_TXS,
     UPDATE_PROCESS_TX_ID,
     UPDATE_PROCESS_TX_STATUS,
-    SET_CREATE_ACCOUNT
+    SET_CREATE_ACCOUNT,
+    SET_PROCESS_TX_INDEX,
+    SET_PROCESS_TX_SIGNING_COMPLETED
 } from './actions';
 
 const intialState: IProcessTransactionsState = {
     isVisible: false,
     data: {
         txs: [],
+        currentTxIndex: -1,
+        signingCompleted: false,
+        signingError: false,
+        signingInProgress: false,
         createAccount: undefined
     }
 };
@@ -59,7 +65,21 @@ export default (
                 ...state,
                 data: {
                     ...state.data,
+                    signingInProgress: false,
+                    signingCompleted: false,
+                    signingError: false,
+                    currentTxIndex: -1,
                     txs: action.data.txs
+                }
+            };
+
+        case SET_PROCESS_TX_INDEX:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    signingInProgress: action.data.index >= 0,
+                    currentTxIndex: action.data.index
                 }
             };
 
@@ -72,6 +92,14 @@ export default (
                 data: {
                     ...state.data,
                     createAccount: action.data.account
+                }
+            };
+        case SET_PROCESS_TX_SIGNING_COMPLETED:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    ...action.data
                 }
             };
 

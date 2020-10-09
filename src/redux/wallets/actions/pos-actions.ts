@@ -25,7 +25,9 @@ import {
     openProcessTransactions,
     setProcessTransactions,
     updateProcessTransactionIdForIndex,
-    updateProcessTransactionStatusForIndex
+    updateProcessTransactionStatusForIndex,
+    setProcessTxIndex,
+    setProcessTxCompleted
 } from '../../ui/process-transactions/actions';
 import { TransactionStatus, WalletType } from '../../../core/wallet/types';
 import { cloneDeep } from 'lodash';
@@ -275,7 +277,14 @@ export const posAction = (
             },
             type
         );
-        dispatch(setProcessTransactions(cloneDeep(txs)));
+        dispatch(
+            setProcessTransactions(
+                cloneDeep(txs).map(tx => {
+                    tx.status = TransactionStatus.CREATED;
+                    return tx;
+                })
+            )
+        );
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
     }
@@ -317,12 +326,26 @@ export const signAndSendTransactions = (
         }
 
         const client = getBlockchain(account.blockchain).getClient(chainId);
+        let error = false;
         for (let index = 0; index < transactions.length; index++) {
+            if (error) break;
+            const txIndex = specificIndex || index;
             const transaction = transactions[index];
 
+            dispatch(setProcessTxIndex(txIndex));
+            // await delay(5000);
             const signed = await wallet.sign(transaction.blockchain, account.index, transaction);
+            dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
+
+            if (appWallet.type === WalletType.HW) {
+                await LedgerConnect.close();
+            }
 
             try {
+                await delay(500);
+
+                // const txHash = signed;
+                // console.log(client);
                 const txHash = await client.sendTransaction(signed);
 
                 // SELECT_STAKING_POOL: delay 2 seconds
@@ -342,51 +365,42 @@ export const signAndSendTransactions = (
                 }
 
                 if (txHash) {
-                    dispatch(updateProcessTransactionIdForIndex(specificIndex || index, txHash));
+                    dispatch(updateProcessTransactionIdForIndex(txIndex, txHash));
                     dispatch({
                         type: TRANSACTION_PUBLISHED,
                         data: {
                             hash: txHash,
-                            tx: transaction,
+                            tx: {
+                                ...transaction,
+                                status: TransactionStatus.PENDING
+                            },
                             walletId: appWallet.id
                         }
                     });
                     dispatch(
-                        updateProcessTransactionStatusForIndex(
-                            specificIndex || index,
-                            TransactionStatus.PENDING
-                        )
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.PENDING)
                     );
-
-                    if (appWallet.type === WalletType.HW) {
-                        await LedgerConnect.close();
-                    }
                 } else {
-                    if (appWallet.type === WalletType.HW) {
-                        await LedgerConnect.close();
-                    }
                     SentryAddBreadcrumb({
                         message: JSON.stringify({ transactions: transaction })
                     });
 
+                    error = true;
+                    dispatch(setProcessTxCompleted(true, true));
+
                     dispatch(
-                        updateProcessTransactionStatusForIndex(
-                            specificIndex || index,
-                            TransactionStatus.FAILED
-                        )
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED)
                     );
                 }
             } catch (error) {
-                dispatch(
-                    updateProcessTransactionStatusForIndex(
-                        specificIndex || index,
-                        TransactionStatus.FAILED
-                    )
-                );
+                error = true;
+                dispatch(setProcessTxCompleted(true, true));
+                dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED));
 
                 throw error;
             }
         }
+        dispatch(setProcessTxCompleted(true, false));
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
         if (appWallet.type === WalletType.HD) {

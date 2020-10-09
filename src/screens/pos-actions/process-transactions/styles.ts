@@ -94,7 +94,8 @@ export default (theme: ITheme) =>
         },
         header: {
             flexDirection: 'row',
-            width: '100%'
+            width: '100%',
+            height: 44
         },
         defaultHeaderContainer: {
             flex: 1

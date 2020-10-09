@@ -21,6 +21,9 @@ export default (theme: ITheme) =>
             borderWidth: 2,
             borderColor: theme.colors.cardBackground
         },
+        cardDisabled: {
+            opacity: 0.6
+        },
         labelContainer: {
             flex: 1
         },
@@ -41,5 +44,10 @@ export default (theme: ITheme) =>
         },
         icon: {
             color: theme.colors.accent
+        },
+        disabledMessage: {
+            fontSize: normalizeFontAndLineHeight(14),
+            lineHeight: normalizeFontAndLineHeight(17),
+            color: theme.colors.textTertiary
         }
     });

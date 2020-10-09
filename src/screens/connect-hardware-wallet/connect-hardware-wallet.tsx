@@ -21,13 +21,14 @@ import bind from 'bind-decorator';
 import { createHWWallet } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
-export interface IReduxProps {
+interface IReduxProps {
     createHWWallet: typeof createHWWallet;
     walletsExist: boolean;
 }
 
-export interface IState {
+interface IState {
     device: HWModel;
     blockchain: Blockchain;
     connection: HWConnection;
@@ -99,6 +100,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         this.props.navigation.setParams({ resetAll: this.resetAll });
     }
 
+    // TODO: refactor this component
     public renderHeader() {
         const styles = this.props.styles;
         const { ledgerTypeActive, connectionActive } = this.state;
@@ -290,6 +292,15 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 leftIcon={String(connection).toLowerCase()}
                                 rightIcon={this.state.connection === connection && IconValues.CHECK}
                                 selected={this.state.connection === connection}
+                                disabled={{
+                                    value:
+                                        // Disable Near Nano_X BLE connection
+                                        !isFeatureActive(RemoteFeature.NEAR_LEDGER_BLE) &&
+                                        this.state.blockchain === Blockchain.NEAR &&
+                                        this.state.device === HWModel.NANO_X &&
+                                        connection === HWConnection.BLE,
+                                    message: translate('CreateHardwareWallet.disableNearNanoXBle')
+                                }}
                             />
                         )
                     )}

@@ -476,18 +476,10 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        let title = '';
-
-        if (!this.props.signingCompleted) {
-            title =
-                this.props.selectedWallet?.type === WalletType.HW
-                    ? translate('Transaction.processTitleTextLedger')
-                    : translate('Transaction.processTitleText');
-        } else if (this.props.signingError) {
-            title = translate('Transaction.processTitleErrorText');
-        } else {
-            title = translate('Transaction.processTitleCompletedText');
-        }
+        const title =
+            this.props.selectedWallet?.type === WalletType.HW
+                ? translate('Transaction.processTitleTextLedger')
+                : translate('Transaction.processTitleText');
 
         if (this.props.isVisible) {
             return (

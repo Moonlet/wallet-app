@@ -234,6 +234,10 @@ export class ProcessTransactionsComponent extends React.Component<
                 middleText = formatValidatorName(tx.additionalInfo?.validatorName, 20);
                 break;
             }
+            case PosBasicActionType.UNSELECT_STAKING_POOL: {
+                topText = translate('Validator.unselectStakingPool');
+                break;
+            }
             default: {
                 middleText = '';
                 topText = amount;

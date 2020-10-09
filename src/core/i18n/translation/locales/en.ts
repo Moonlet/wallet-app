@@ -568,6 +568,7 @@ export const translation: ITranslations = {
                 'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
             multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,
             selectStakingPool: 'Selecting staking pool',
+            unselectStakingPool: 'Unselecting staking pool',
             allBalanceNotice:
                 'Notice: Moonlet keeps some tokens in your wallet for future transactions fees.'
         },

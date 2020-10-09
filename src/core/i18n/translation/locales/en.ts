@@ -380,8 +380,7 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
-            welcomeText:
-                'A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet',
+            welcomeText: 'A portal to the decentralised world',
             welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
             webStep1: 'Open Moonlet app on your mobile',
             webStep2: 'Tap on menu icon from the header',

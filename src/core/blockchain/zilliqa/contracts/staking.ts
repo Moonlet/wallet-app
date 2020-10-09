@@ -82,6 +82,47 @@ export class Staking {
         }
     }
 
+    public async getNrCyclesSinceLastWithdraw(
+        accountAddress: string,
+        ssnaddr: string
+    ): Promise<number> {
+        const address = isBech32(accountAddress)
+            ? fromBech32Address(accountAddress).toLowerCase()
+            : accountAddress.toLowerCase();
+
+        try {
+            const contract = await this.getContractImplementation();
+
+            const cycleCalls = [
+                this.client.getSmartContractSubState(
+                    contract.implementation,
+                    ContractFields.LAST_WITHDRAW_CYCLE_DELEG,
+                    [address]
+                ),
+                this.client.getSmartContractSubState(
+                    contract.implementation,
+                    ContractFields.LASTREWARDCYCLE
+                )
+            ];
+
+            const res = await Promise.all(cycleCalls);
+
+            const lastWithdrawCycleDeleg =
+                res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG][address];
+
+            const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
+
+            let lastWithdrawCycleDelegValue = 0;
+            if (lastWithdrawCycleDeleg && lastWithdrawCycleDeleg[ssnaddr]) {
+                lastWithdrawCycleDelegValue = Number(lastWithdrawCycleDeleg[ssnaddr]);
+            }
+
+            return lastRewardCycle - lastWithdrawCycleDelegValue;
+        } catch (error) {
+            return 10;
+        }
+    }
+
     public async canWithdrawStakeRewardsFromSsn(
         accountAddress: string,
         ssnaddr: string
@@ -312,6 +353,15 @@ export class Staking {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
+        let nrCyclesPassed = 0;
+        try {
+            nrCyclesPassed = await this.getNrCyclesSinceLastWithdraw(
+                tx.account.address,
+                validator.id
+            );
+        } catch {
+            // doesnt need a catch handle
+        }
         // TODO find a better way to get the rewards amount.
         const chartData = tx.validators[0].chartStats.find(chart => chart.title === 'Reward');
 
@@ -343,7 +393,29 @@ export class Staking {
             },
             TokenType.ZRC2
         );
-        transaction.feeOptions = fees;
+
+        let gasLimitBasedOnCycles = 3125; // default value
+        if (nrCyclesPassed >= 365) {
+            gasLimitBasedOnCycles = 32000;
+        } else if (nrCyclesPassed >= 180) {
+            gasLimitBasedOnCycles = 18000;
+        } else if (nrCyclesPassed >= 180) {
+            gasLimitBasedOnCycles = 18000;
+        } else if (nrCyclesPassed >= 30) {
+            gasLimitBasedOnCycles = 6125;
+        } else if (nrCyclesPassed >= 7) {
+            gasLimitBasedOnCycles = 4000;
+        } else {
+            gasLimitBasedOnCycles = 2000;
+        }
+
+        transaction.feeOptions = {
+            feeTotal: new BigNumber(fees.gasPrice)
+                .multipliedBy(new BigNumber(gasLimitBasedOnCycles))
+                .toFixed(),
+            gasLimit: gasLimitBasedOnCycles.toString(),
+            gasPrice: new BigNumber(fees.gasPrice).toFixed()
+        };
 
         transaction.data = {
             method: 'Claim Rewards',

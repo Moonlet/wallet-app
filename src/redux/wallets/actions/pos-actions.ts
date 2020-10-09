@@ -264,12 +264,13 @@ export const posAction = (
                     .amountToStd(amount, tokenConfig.decimals)
                     .toFixed(),
                 token,
-                feeOptions: feeOptions
-                    ? {
-                          gasPrice: feeOptions.gasPrice.toString(),
-                          gasLimit: feeOptions.gasLimit.toString()
-                      }
-                    : undefined,
+                feeOptions:
+                    feeOptions?.gasPrice && feeOptions?.gasLimit
+                        ? {
+                              gasPrice: feeOptions.gasPrice.toString(),
+                              gasLimit: feeOptions.gasLimit.toString()
+                          }
+                        : undefined,
                 extraFields: extra
             },
             type

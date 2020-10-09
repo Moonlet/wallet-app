@@ -9,12 +9,7 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../../navigation/with-navigation-params';
 import { getAccount } from '../../../redux/wallets/selectors';
-import {
-    Blockchain,
-    ChainIdType,
-    IFeeOptions,
-    TransactionType
-} from '../../../core/blockchain/types';
+import { Blockchain, ChainIdType } from '../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { TestnetBadge } from '../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -31,7 +26,6 @@ import {
 } from '../../../core/utils/available-funds';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
-import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { unlock, unvote, unstake, claimRewardNoInput } from '../../../redux/wallets/actions';
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
@@ -75,7 +69,6 @@ export interface INavigationParams {
 interface IState {
     amount: string;
     insufficientFunds: boolean;
-    feeOptions: IFeeOptions;
     insufficientFundsFees: boolean;
 }
 
@@ -100,7 +93,6 @@ export class PosBasicActionComponent extends React.Component<
         this.state = {
             amount: '',
             insufficientFunds: false,
-            feeOptions: undefined,
             insufficientFundsFees: false
         };
 
@@ -141,7 +133,7 @@ export class PosBasicActionComponent extends React.Component<
                     this.props.account,
                     this.state.amount,
                     this.props.token.symbol,
-                    this.state.feeOptions,
+                    undefined,
                     this.props.navigation,
                     undefined
                 );
@@ -153,7 +145,7 @@ export class PosBasicActionComponent extends React.Component<
                     this.state.amount,
                     this.props.validators,
                     this.props.token.symbol,
-                    this.state.feeOptions,
+                    undefined,
                     this.props.navigation,
                     undefined
                 );
@@ -165,7 +157,7 @@ export class PosBasicActionComponent extends React.Component<
                     this.state.amount,
                     this.props.validators,
                     this.props.token.symbol,
-                    this.state.feeOptions,
+                    undefined,
                     this.props.navigation,
                     undefined
                 );
@@ -223,9 +215,7 @@ export class PosBasicActionComponent extends React.Component<
         if (
             this.state.amount === '' ||
             this.state.insufficientFunds ||
-            this.state.insufficientFundsFees ||
-            isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-            isNaN(Number(this.state.feeOptions?.gasPrice))
+            this.state.insufficientFundsFees
         )
             disableButton = true;
 
@@ -256,21 +246,6 @@ export class PosBasicActionComponent extends React.Component<
         );
     }
 
-    public onFeesChanged(feeOptions: IFeeOptions) {
-        this.setState({ feeOptions }, () => {
-            const { insufficientFunds, insufficientFundsFees } = availableFunds(
-                this.state.amount,
-                this.props.account,
-                this.props.token,
-                this.props.chainId,
-                feeOptions,
-                this.props.validators[0].totalVotes
-            );
-
-            this.setState({ insufficientFunds, insufficientFundsFees });
-        });
-    }
-
     public addAmount(value: string) {
         const amount = value.replace(/,/g, '.');
         const blockchainInstance = getBlockchain(this.props.blockchain);
@@ -289,7 +264,7 @@ export class PosBasicActionComponent extends React.Component<
                 this.props.account,
                 this.props.token,
                 this.props.chainId,
-                this.state.feeOptions,
+                undefined,
                 activeBalance
             );
 
@@ -322,7 +297,7 @@ export class PosBasicActionComponent extends React.Component<
                     availableAmount={availableAmount(
                         this.props.account,
                         this.props.token,
-                        this.state.feeOptions,
+                        undefined,
                         activeBalance
                     )}
                     value={this.state.amount}
@@ -332,19 +307,6 @@ export class PosBasicActionComponent extends React.Component<
                     account={this.props.account}
                     minimumAmount={'0.001'}
                     onChange={amount => this.addAmount(amount)}
-                />
-                <FeeOptions
-                    transactionType={TransactionType.CONTRACT_CALL}
-                    token={
-                        this.props.account.tokens[this.props.chainId][
-                            blockchainInstance.config.coin
-                        ]
-                    }
-                    sendingToken={this.props.token}
-                    account={this.props.account}
-                    toAddress={''}
-                    onFeesChanged={(feeOptions: IFeeOptions) => this.onFeesChanged(feeOptions)}
-                    insufficientFundsFees={this.state.insufficientFundsFees}
                 />
             </View>
         );

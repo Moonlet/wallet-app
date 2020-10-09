@@ -20,6 +20,7 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { Dialog } from '../../../../components/dialog/dialog';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -51,6 +52,7 @@ const mapDispatchToProps = {
 };
 
 interface IState {
+    loading: boolean;
     amount: string;
     minimumDelegateAmount: BigNumber;
 }
@@ -71,6 +73,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         super(props);
 
         this.state = {
+            loading: true,
             amount: undefined,
             minimumDelegateAmount: undefined
         };
@@ -82,6 +85,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
         try {
+            this.setState({ loading: true });
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
                 .getAvailableBalanceForDelegate(this.props.account);
@@ -118,6 +122,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                     value.id.toLowerCase()
                 )
             });
+        this.setState({ loading: false });
 
         if (performAction && performAction.value === false) {
             Dialog.alert(
@@ -146,22 +151,27 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
     }
 
     public render() {
-        return (
-            <EnterAmountComponent
-                account={this.props.account}
-                chainId={this.props.chainId}
-                token={this.props.token}
-                balanceForDelegate={this.state.amount}
-                validators={this.props.validators}
-                actionText={this.props.actionText}
-                bottomColor={this.props.theme.colors.accent}
-                bottomActionText={'App.labels.for'}
-                bottomButtonText={'App.labels.confirm'}
-                showSteps={false}
-                minimumDelegateAmount={this.state.minimumDelegateAmount}
-                onPressNext={this.onPressConfirm}
-            />
-        );
+        if (this.state.loading) {
+            return <LoadingIndicator />;
+        } else {
+            return (
+                <EnterAmountComponent
+                    account={this.props.account}
+                    chainId={this.props.chainId}
+                    token={this.props.token}
+                    balanceForDelegate={this.state.amount}
+                    validators={this.props.validators}
+                    actionText={this.props.actionText}
+                    bottomColor={this.props.theme.colors.accent}
+                    bottomActionText={'App.labels.for'}
+                    bottomButtonText={'App.labels.confirm'}
+                    showSteps={false}
+                    minimumDelegateAmount={this.state.minimumDelegateAmount}
+                    allBalanceNotice={translate('Validator.allBalanceNotice')}
+                    onPressNext={this.onPressConfirm}
+                />
+            );
+        }
     }
 }
 

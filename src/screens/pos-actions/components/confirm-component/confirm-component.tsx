@@ -19,7 +19,6 @@ import { AmountCtaField } from '../../../../components/bottom-cta/amount-cta-fie
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { getInputAmountToStd } from '../../../../core/utils/available-funds';
 import { BASE_DIMENSION } from '../../../../styles/dimensions';
-import { Amount } from '../../../../components/amount/amount';
 import { formatAddress } from '../../../../core/utils/format-address';
 import { valuePrimaryCtaField, formatValidatorName } from '../../../../core/utils/format-string';
 import { formatNumber } from '../../../../core/utils/format-number';
@@ -108,15 +107,8 @@ export class ConfirmComponentComponent extends React.Component<
     }
 
     private renderConfirmTransaction() {
-        const { account, chainId, styles } = this.props;
+        const { account, styles } = this.props;
         const { blockchain } = account;
-        const config = getBlockchain(blockchain).config;
-
-        const feeToken = getTokenConfig(
-            account.blockchain,
-            account.tokens[chainId][config.coin].symbol
-        );
-        const feeTokenSymbol = config.feeOptions.gasPriceToken;
 
         let receipientText = '';
 
@@ -147,17 +139,6 @@ export class ConfirmComponentComponent extends React.Component<
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>{formatAmount}</Text>
-                </View>
-
-                <Text style={styles.receipientLabel}>{translate('App.labels.fees')}</Text>
-                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
-                    <Amount
-                        style={styles.confirmTransactionText}
-                        token={feeTokenSymbol}
-                        tokenDecimals={feeToken.decimals}
-                        amount={this.props.feeOptions?.feeTotal}
-                        blockchain={blockchain}
-                    />
                 </View>
             </View>
         );

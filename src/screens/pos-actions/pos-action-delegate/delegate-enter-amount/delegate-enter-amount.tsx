@@ -126,7 +126,7 @@ export class DelegateEnterAmountComponent extends React.Component<
                 .amountFromStd(new BigNumber(this.props.token.balance.value), tokenConfig.decimals)
                 .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
 
-            this.setState({ amount }); // set balance to the available balance at least
+            this.setState({ loading: false, amount }); // set balance to the available balance at least
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }

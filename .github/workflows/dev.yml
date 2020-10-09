@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - ios-fix
 
 name: Beta build & deploy
 jobs:

@@ -317,12 +317,22 @@ export class Client extends BlockchainGenericClient {
                         });
                     }
 
-                    const stakingAccountId = await this.contractCall({
-                        contractName: options.account.address,
-                        methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
-                    });
+                    const [stakingAccountId, depositBalance] = await Promise.all([
+                        this.contractCall({
+                            contractName: options.account.address,
+                            methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                        }),
+                        this.contractCall({
+                            contractName: options.account.address,
+                            methodName: NearAccountViewMethods.GET_KNOWN_DEPOSITED_BALANCE
+                        })
+                    ]);
 
-                    if (stakingAccountId && stakingAccountId !== options.validatorAddress[0]) {
+                    if (
+                        stakingAccountId &&
+                        stakingAccountId !== options.validatorAddress[0] &&
+                        depositBalance !== '0'
+                    ) {
                         return Promise.resolve({
                             value: false,
                             message: translate('Validator.alreadyStaked', {

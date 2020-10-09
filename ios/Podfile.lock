@@ -463,7 +463,7 @@ DEPENDENCIES:
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - RNVoipPushNotification (from `../node_modules/react-native-voip-push-notification`)
   - TouchID (from `../node_modules/react-native-touch-id`)
-  - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+  - Yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
 
 SPEC REPOS:
   trunk:
@@ -597,7 +597,7 @@ EXTERNAL SOURCES:
   TouchID:
     :path: "../node_modules/react-native-touch-id"
   Yoga:
-    :path: "../node_modules/react-native/ReactCommon/yoga"
+    :path: "../node_modules/react-native/ReactCommon/yoga/Yoga.podspec"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -678,6 +678,6 @@ SPEC CHECKSUMS:
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: d8c572ddec8d05b7dba08e4e5f1924004a177078
 
-PODFILE CHECKSUM: eb4c90488aa13900d7ec0ed35cd04b71cd4508c6
+PODFILE CHECKSUM: abcd4467678f4f10620af65b1b62ce812796ee8f
 
 COCOAPODS: 1.9.3

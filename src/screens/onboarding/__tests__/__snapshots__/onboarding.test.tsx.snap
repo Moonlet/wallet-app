@@ -11,7 +11,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         Welcome to Moonlet!
       </withTheme(TextComponent)>
       <withTheme(TextComponent) style={{...}}>
-        A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet
+        A portal to the decentralised world
       </withTheme(TextComponent)>
     </View>
   </View>

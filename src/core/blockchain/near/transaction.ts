@@ -177,12 +177,41 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
 
                     try {
-                        const stakingPoolId = await client.contractCall({
-                            contractName: tx.account.address,
-                            methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
-                        });
+                        const [stakingPoolId, depositBalance] = await Promise.all([
+                            client.contractCall({
+                                contractName: tx.account.address,
+                                methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                            }),
+                            client.contractCall({
+                                contractName: tx.account.address,
+                                methodName: NearAccountViewMethods.GET_KNOWN_DEPOSITED_BALANCE
+                            })
+                        ]);
+
+                        if (
+                            stakingPoolId &&
+                            stakingPoolId !== validator.id &&
+                            depositBalance === '0'
+                        ) {
+                            // UNSELECT STAKING POOL
+                            const unselectSPTx = await client.lockup.unselectStakingPool(
+                                txDelegate,
+                                validator
+                            );
+                            unselectSPTx.nonce = nonce + transactions.length;
+                            transactions.push(unselectSPTx);
+
+                            // SELECT STAKING POOL
+                            const selectSPTx = await client.lockup.selectStakingPool(
+                                txDelegate,
+                                validator
+                            );
+                            selectSPTx.nonce = nonce + transactions.length;
+                            transactions.push(selectSPTx);
+                        }
 
                         if (!stakingPoolId) {
+                            // SELECT STAKING POOL
                             const selectSPTx = await client.lockup.selectStakingPool(
                                 txDelegate,
                                 validator

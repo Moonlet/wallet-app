@@ -41,6 +41,35 @@ export class Lockup {
         return transaction;
     }
 
+    public async unselectStakingPool(
+        tx: IPosTransaction,
+        validator: IValidator
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
+        const transaction = await buildBaseTransaction(tx);
+        const gas = NEAR_LOCKUP_BASE_GAS;
+
+        transaction.address = tx.account.meta.owner;
+        transaction.toAddress = tx.account.address;
+        transaction.feeOptions = { feeTotal: gas.toString() };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.UNSELECT_STAKING_POOL;
+        transaction.additionalInfo.validatorName = validator.name;
+
+        transaction.additionalInfo.actions = [
+            {
+                type: NearTransactionActionType.FUNCTION_CALL,
+                params: [
+                    NearFunctionCallMethods.UNSELECT_STAKING_POOL,
+                    { staking_pool_account_id: validator.id },
+                    gas,
+                    new BN(0)
+                ]
+            }
+        ];
+
+        return transaction;
+    }
+
     public async stake(
         tx: IPosTransaction,
         validator: IValidator,

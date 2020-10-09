@@ -12,20 +12,20 @@ import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import {
-    DELEGATE_CONFIRMATION,
-    navigateToConfirmationStep
-} from '../../../../redux/ui/screens/posActions/actions';
+import { navigateToConfirmationStep } from '../../../../redux/ui/screens/posActions/actions';
+import { delegate } from '../../../../redux/wallets/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     navigateToConfirmationStep: typeof navigateToConfirmationStep;
+    delegate: typeof delegate;
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
@@ -48,10 +48,12 @@ export const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    navigateToConfirmationStep
+    navigateToConfirmationStep,
+    delegate
 };
 
 interface IState {
+    loading: boolean;
     amount: string;
     minimumDelegateAmount: BigNumber;
 }
@@ -83,6 +85,7 @@ export class DelegateEnterAmountComponent extends React.Component<
         });
 
         this.state = {
+            loading: true,
             amount: undefined,
             minimumDelegateAmount: undefined
         };
@@ -95,6 +98,7 @@ export class DelegateEnterAmountComponent extends React.Component<
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
 
         try {
+            this.setState({ loading: true });
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
                 .getAvailableBalanceForDelegate(this.props.account);
@@ -109,6 +113,7 @@ export class DelegateEnterAmountComponent extends React.Component<
             );
 
             this.setState({
+                loading: false,
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)
                     .toFixed(),
@@ -117,43 +122,46 @@ export class DelegateEnterAmountComponent extends React.Component<
                     new BigNumber(0)
             });
         } catch (err) {
-            this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
+            this.setState({ loading: false, amount: this.props.token.balance.value }); // set balance to the available balance at least
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }
 
     @bind
     public onPressNext(amount: string, feeOptions: IFeeOptions) {
-        this.props.navigateToConfirmationStep(
-            this.props.accountIndex,
-            this.props.blockchain,
-            this.props.token,
-            this.props.validators,
-            this.props.actionText,
-            'DelegateConfirm',
-            DELEGATE_CONFIRMATION,
+        this.props.delegate(
+            this.props.account,
             amount,
-            feeOptions
+            this.props.validators,
+            this.props.token.symbol,
+            feeOptions,
+            this.props.navigation,
+            undefined
         );
     }
 
     public render() {
-        return (
-            <EnterAmountComponent
-                account={this.props.account}
-                chainId={this.props.chainId}
-                token={this.props.token}
-                balanceForDelegate={this.state.amount}
-                validators={this.props.validators}
-                actionText={this.props.actionText}
-                bottomColor={this.props.theme.colors.accent}
-                bottomActionText={'App.labels.for'}
-                bottomButtonText={'App.labels.next'}
-                showSteps={true}
-                minimumDelegateAmount={this.state.minimumDelegateAmount}
-                onPressNext={this.onPressNext}
-            />
-        );
+        if (this.state.loading) {
+            return <LoadingIndicator />;
+        } else {
+            return (
+                <EnterAmountComponent
+                    account={this.props.account}
+                    chainId={this.props.chainId}
+                    token={this.props.token}
+                    balanceForDelegate={this.state.amount}
+                    validators={this.props.validators}
+                    actionText={this.props.actionText}
+                    bottomColor={this.props.theme.colors.accent}
+                    bottomActionText={'App.labels.for'}
+                    bottomButtonText={'App.labels.next'}
+                    showSteps={false}
+                    minimumDelegateAmount={this.state.minimumDelegateAmount}
+                    allBalanceNotice={translate('Validator.allBalanceNotice')}
+                    onPressNext={this.onPressNext}
+                />
+            );
+        }
     }
 }
 export const DelegateEnterAmount = smartConnect(DelegateEnterAmountComponent, [

@@ -355,7 +355,7 @@ export const translation: ITranslations = {
         },
         SmartScan: {
             title: 'Smart scan',
-            newSection: 'A new section of smart scannig is in the work.'
+            newSection: 'A new section of smart scanning is in the work.'
         },
         Settings: {
             appVersion: 'Application version',

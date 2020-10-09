@@ -8,7 +8,7 @@ import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { translate } from '../../../core/i18n';
 import Icon from '../../../components/icon/icon';
 import { IconValues } from '../../../components/icon/values';
-import { normalize } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import { closeProcessTransactions } from '../../../redux/ui/process-transactions/actions';
 import { IReduxState } from '../../../redux/state';
@@ -89,6 +89,7 @@ export class ProcessTransactionsComponent extends React.Component<
     IState
 > {
     private iconSpinValue = new Animated.Value(0);
+    private scrollViewRef: any;
 
     constructor(
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -97,6 +98,20 @@ export class ProcessTransactionsComponent extends React.Component<
         this.state = {
             cardHeight: undefined
         };
+        this.scrollViewRef = React.createRef();
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (
+            this.props.signingInProgress === true &&
+            this.props.currentTxIndex !== prevProps.currentTxIndex
+        ) {
+            this.state.cardHeight &&
+                this.scrollViewRef.scrollTo({
+                    y: this.props.currentTxIndex * this.state.cardHeight,
+                    animated: true // check if needed
+                });
+        }
     }
 
     public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
@@ -321,7 +336,9 @@ export class ProcessTransactionsComponent extends React.Component<
                 style={styles.cardContainer}
                 onLayout={event =>
                     !this.state.cardHeight &&
-                    this.setState({ cardHeight: event.nativeEvent.layout.height })
+                    this.setState({
+                        cardHeight: event.nativeEvent.layout.height + BASE_DIMENSION * 2 // also add bottom margin
+                    })
                 }
             >
                 <Animated.View
@@ -505,7 +522,10 @@ export class ProcessTransactionsComponent extends React.Component<
                     <Text style={styles.title}>{title}</Text>
 
                     {this.props.transactions.length ? (
-                        <ScrollView contentContainerStyle={styles.contentScrollView}>
+                        <ScrollView
+                            ref={ref => (this.scrollViewRef = ref)}
+                            contentContainerStyle={styles.contentScrollView}
+                        >
                             {this.props.transactions.map((tx, index) => this.renderCard(tx, index))}
                         </ScrollView>
                     ) : (

@@ -38,8 +38,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 6,
             textAlign: 'center'
         },
-        content: {
-            flex: 1
+        contentScrollView: {
+            flexGrow: 1
         },
         cardContainer: {
             flexDirection: 'row',
@@ -75,6 +75,7 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary
         },
         continueButton: {
+            marginTop: BASE_DIMENSION,
             marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 5
         },
@@ -94,7 +95,9 @@ export default (theme: ITheme) =>
         },
         header: {
             flexDirection: 'row',
-            width: '100%'
+            width: '100%',
+            height: 44,
+            marginBottom: BASE_DIMENSION * 2
         },
         defaultHeaderContainer: {
             flex: 1

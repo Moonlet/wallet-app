@@ -576,7 +576,7 @@ export const translation: ITranslations = {
             selectStakingPool: 'Selecting staking pool',
             unselectStakingPool: 'Unselecting staking pool',
             allBalanceNotice:
-                'Notice: Moonlet keeps some tokens in your wallet for future transactions fees.'
+                'Notice: Moonlet keeps some tokens in your account for future transaction fees.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

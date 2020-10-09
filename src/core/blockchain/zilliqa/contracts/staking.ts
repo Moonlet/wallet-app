@@ -363,7 +363,7 @@ export class Staking {
             // doesnt need a catch handle
         }
         // TODO find a better way to get the rewards amount.
-        const chartData = tx.validators[0].chartStats.find(chart => chart.title === 'Reward');
+        // const chartData = tx.validators[0].chartStats.find(chart => chart.title === 'Reward');
 
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
@@ -417,7 +417,7 @@ export class Staking {
 
         transaction.data = {
             method: 'Claim Rewards',
-            params: [validator.id, chartData.data.value],
+            params: [validator.id, undefined],
             raw
         };
 

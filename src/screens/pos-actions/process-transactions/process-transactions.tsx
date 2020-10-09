@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Animated, Easing, ScrollView, View } from 'react-native';
 import { Text, Button } from '../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
@@ -8,7 +8,7 @@ import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { translate } from '../../../core/i18n';
 import Icon from '../../../components/icon/icon';
 import { IconValues } from '../../../components/icon/values';
-import { normalize } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import { closeProcessTransactions } from '../../../redux/ui/process-transactions/actions';
 import { IReduxState } from '../../../redux/state';
@@ -80,11 +80,46 @@ const mapDispatchToProps = {
     signAndSendTransactions
 };
 
+interface IState {
+    cardHeight: number;
+    txContainerHeight: number;
+}
+
 export class ProcessTransactionsComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    {}
+    IState
 > {
-    public iconSpinValue = new Animated.Value(0);
+    private iconSpinValue = new Animated.Value(0);
+    private scrollViewRef: any;
+
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+        this.state = {
+            cardHeight: undefined,
+            txContainerHeight: undefined
+        };
+        this.scrollViewRef = React.createRef();
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (
+            this.props.signingInProgress === true &&
+            this.props.currentTxIndex !== prevProps.currentTxIndex
+        ) {
+            this.state.cardHeight &&
+                this.state.txContainerHeight &&
+                this.scrollViewRef.scrollTo({
+                    y:
+                        (this.props.currentTxIndex +
+                            1 -
+                            Math.floor(this.state.txContainerHeight / this.state.cardHeight)) *
+                        this.state.cardHeight,
+                    animated: true
+                });
+        }
+    }
 
     public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
         const filteredTransactions = this.props.accountTransactions.filter(
@@ -92,25 +127,6 @@ export class ProcessTransactionsComponent extends React.Component<
         );
 
         return filteredTransactions.length > 0;
-    }
-
-    public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.transactions !== prevProps.transactions) {
-            let lastIndexPublished = -1;
-            for (let index = 0; index < this.props.transactions.length; index++) {
-                const tx = this.props.transactions[index];
-
-                if (
-                    this.isTransactionPublished(tx) ||
-                    tx.status === TransactionStatus.DROPPED ||
-                    tx.status === TransactionStatus.FAILED
-                ) {
-                    lastIndexPublished = index;
-                }
-            }
-
-            this.setState({ currentIndex: lastIndexPublished + 1 });
-        }
     }
 
     private formatTopMiddleAndBottomText(
@@ -322,7 +338,16 @@ export class ProcessTransactionsComponent extends React.Component<
         });
 
         return (
-            <View key={index + '-view-key'} style={styles.cardContainer}>
+            <View
+                key={index + '-view-key'}
+                style={styles.cardContainer}
+                onLayout={event =>
+                    !this.state.cardHeight &&
+                    this.setState({
+                        cardHeight: event.nativeEvent.layout.height + BASE_DIMENSION * 4
+                    })
+                }
+            >
                 <Animated.View
                     style={[
                         styles.transactionIconContainer,
@@ -404,7 +429,6 @@ export class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private signAllTransactions() {
-        this.setState({ flowStarted: true });
         // sign all transactions - HD wallet
         this.props.signAndSendTransactions(this.props.transactions);
     }
@@ -476,18 +500,10 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        let title = '';
-
-        if (!this.props.signingCompleted) {
-            title =
-                this.props.selectedWallet?.type === WalletType.HW
-                    ? translate('Transaction.processTitleTextLedger')
-                    : translate('Transaction.processTitleText');
-        } else if (this.props.signingError) {
-            title = translate('Transaction.processTitleErrorText');
-        } else {
-            title = translate('Transaction.processTitleCompletedText');
-        }
+        const title =
+            this.props.selectedWallet?.type === WalletType.HW
+                ? translate('Transaction.processTitleTextLedger')
+                : translate('Transaction.processTitleText');
 
         if (this.props.isVisible) {
             return (
@@ -513,11 +529,17 @@ export class ProcessTransactionsComponent extends React.Component<
                     <Text style={styles.title}>{title}</Text>
 
                     {this.props.transactions.length ? (
-                        <View style={styles.content}>
-                            {this.props.transactions.map((tx, index) => {
-                                return this.renderCard(tx, index);
-                            })}
-                        </View>
+                        <ScrollView
+                            ref={ref => (this.scrollViewRef = ref)}
+                            contentContainerStyle={styles.contentScrollView}
+                            onLayout={event =>
+                                this.setState({
+                                    txContainerHeight: event.nativeEvent.layout.height
+                                })
+                            }
+                        >
+                            {this.props.transactions.map((tx, index) => this.renderCard(tx, index))}
+                        </ScrollView>
                     ) : (
                         <LoadingIndicator />
                     )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Animated, Easing, ScrollView, View } from 'react-native';
 import { Text, Button } from '../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
@@ -80,11 +80,24 @@ const mapDispatchToProps = {
     signAndSendTransactions
 };
 
+interface IState {
+    cardHeight: number;
+}
+
 export class ProcessTransactionsComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    {}
+    IState
 > {
-    public iconSpinValue = new Animated.Value(0);
+    private iconSpinValue = new Animated.Value(0);
+
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+        this.state = {
+            cardHeight: undefined
+        };
+    }
 
     public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
         const filteredTransactions = this.props.accountTransactions.filter(
@@ -92,25 +105,6 @@ export class ProcessTransactionsComponent extends React.Component<
         );
 
         return filteredTransactions.length > 0;
-    }
-
-    public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.transactions !== prevProps.transactions) {
-            let lastIndexPublished = -1;
-            for (let index = 0; index < this.props.transactions.length; index++) {
-                const tx = this.props.transactions[index];
-
-                if (
-                    this.isTransactionPublished(tx) ||
-                    tx.status === TransactionStatus.DROPPED ||
-                    tx.status === TransactionStatus.FAILED
-                ) {
-                    lastIndexPublished = index;
-                }
-            }
-
-            this.setState({ currentIndex: lastIndexPublished + 1 });
-        }
     }
 
     private formatTopMiddleAndBottomText(
@@ -322,7 +316,14 @@ export class ProcessTransactionsComponent extends React.Component<
         });
 
         return (
-            <View key={index + '-view-key'} style={styles.cardContainer}>
+            <View
+                key={index + '-view-key'}
+                style={styles.cardContainer}
+                onLayout={event =>
+                    !this.state.cardHeight &&
+                    this.setState({ cardHeight: event.nativeEvent.layout.height })
+                }
+            >
                 <Animated.View
                     style={[
                         styles.transactionIconContainer,
@@ -404,7 +405,6 @@ export class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private signAllTransactions() {
-        this.setState({ flowStarted: true });
         // sign all transactions - HD wallet
         this.props.signAndSendTransactions(this.props.transactions);
     }
@@ -505,11 +505,9 @@ export class ProcessTransactionsComponent extends React.Component<
                     <Text style={styles.title}>{title}</Text>
 
                     {this.props.transactions.length ? (
-                        <View style={styles.content}>
-                            {this.props.transactions.map((tx, index) => {
-                                return this.renderCard(tx, index);
-                            })}
-                        </View>
+                        <ScrollView contentContainerStyle={styles.contentScrollView}>
+                            {this.props.transactions.map((tx, index) => this.renderCard(tx, index))}
+                        </ScrollView>
                     ) : (
                         <LoadingIndicator />
                     )}

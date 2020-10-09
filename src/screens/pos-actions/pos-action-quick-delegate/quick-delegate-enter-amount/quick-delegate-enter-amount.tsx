@@ -105,10 +105,14 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                     new BigNumber(0),
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)
-                    .toFixed()
+                    .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN)
             });
         } catch (err) {
-            this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
+            const amount = blockchainInstance.account
+                .amountFromStd(new BigNumber(this.props.token.balance.value), tokenConfig.decimals)
+                .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
+
+            this.setState({ amount }); // set balance to the available balance at least
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
 

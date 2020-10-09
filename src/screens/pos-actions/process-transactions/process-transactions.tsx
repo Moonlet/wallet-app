@@ -109,7 +109,7 @@ export class ProcessTransactionsComponent extends React.Component<
             this.state.cardHeight &&
                 this.scrollViewRef.scrollTo({
                     y: this.props.currentTxIndex * this.state.cardHeight,
-                    animated: true // check if needed
+                    animated: true
                 });
         }
     }

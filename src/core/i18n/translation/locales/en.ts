@@ -334,13 +334,15 @@ export const translation: ITranslations = {
                 Success: 'Success'
             },
             signTransaction: 'Sign transaction',
+            signTransactions: 'Sign transaction(s)',
             signAll: 'Sign all transactions',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
-            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleText:
+                'Please sign all transactions and wait while are being broadcasted to the blockchain network',
             processTitleTextLedger:
-                'Please sign each transaction from your Ledger and wait while is being processed!',
+                'Please sign each transaction from your Ledger and wait while is being broadcasted to the blockchain network',
             registerAccount: 'Registering account',
             transactionType: 'Transaction Type'
         },

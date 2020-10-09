@@ -5,6 +5,12 @@ export interface IProcessTransactionsState {
     isVisible: boolean;
     data: {
         txs: IBlockchainTransaction[];
+
+        signingInProgress: boolean;
+        signingCompleted: boolean;
+        signingError: boolean;
+
+        currentTxIndex: number;
         createAccount: IAccountState;
     };
 }

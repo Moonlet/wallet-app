@@ -71,24 +71,18 @@ export const EnterAmountComponent = (
 
             <View style={styles.buttonRightOptions}>
                 <Text style={styles.displayError}>
-                    {insufficientFunds
-                        ? [
-                              <Text style={styles.displayError}>
-                                  {translate('Send.insufficientFunds')}
-                              </Text>,
-                              insufficientFundsNotice ? (
-                                  <Text style={styles.displayNotice}>
-                                      {'\n'}
-                                      {insufficientFundsNotice}
-                                  </Text>
-                              ) : null
-                          ]
-                        : insufficientMinimumAmount
-                        ? translate('Send.mimimumAmount', {
-                              value: minimumAmount,
-                              coin: props.token.symbol
-                          })
-                        : ''}
+                    {insufficientFunds ? (
+                        <Text style={styles.displayError}>
+                            {translate('Send.insufficientFunds')}
+                        </Text>
+                    ) : insufficientMinimumAmount ? (
+                        translate('Send.mimimumAmount', {
+                            value: minimumAmount,
+                            coin: props.token.symbol
+                        })
+                    ) : (
+                        ''
+                    )}
                 </Text>
 
                 <View style={{ flexDirection: 'row' }}>
@@ -108,6 +102,14 @@ export const EnterAmountComponent = (
                     />
                 </View>
             </View>
+            {insufficientFunds && insufficientFundsNotice && (
+                <View style={styles.noticeView}>
+                    <Text style={styles.displayNotice}>
+                        {insufficientFundsNotice}
+                        {'\n'}
+                    </Text>
+                </View>
+            )}
 
             <View style={styles.amountsContainer}>
                 <TouchableOpacity

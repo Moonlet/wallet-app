@@ -155,5 +155,8 @@ export default (theme: ITheme) =>
             width: normalize(38),
             height: normalize(38),
             marginRight: BASE_DIMENSION
+        },
+        arrowContainer: {
+            backgroundColor: theme.colors.cardBackground
         }
     });

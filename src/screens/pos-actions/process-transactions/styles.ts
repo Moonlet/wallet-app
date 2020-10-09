@@ -100,7 +100,6 @@ export default (theme: ITheme) =>
             flex: 1
         },
         headerTitleContainer: {
-            flex: 1,
             justifyContent: 'center'
         },
         headerTitleStyle: {

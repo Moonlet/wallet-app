@@ -187,7 +187,8 @@ export const translation: ITranslations = {
             BLE: 'Bluetooth',
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
-            openApp: 'Open {{app}} app on your Ledger to continue...'
+            openApp: 'Open {{app}} app on your Ledger to continue...',
+            disableNearNanoXBle: 'Not supported yet by Ledger Nano X Near App'
         },
         Fee: {
             feeTitle: 'Transaction fee',

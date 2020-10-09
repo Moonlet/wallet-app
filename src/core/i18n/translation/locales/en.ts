@@ -80,7 +80,7 @@ export const translation: ITranslations = {
                 ok: 'OK',
                 paste: 'Paste',
                 processing: 'Processing',
-                privacyPolicy: 'Privacy policy',
+                privacyPolicy: 'Privacy Policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
                 quickStake: 'Quick Stake',
@@ -157,7 +157,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTc: {
-            body: 'Make sure you review our\nPrivacy policy and Terms of Service'
+            body: 'Make sure you review our\nPrivacy Policy and Terms of Service'
         },
         CreateWalletMnemonic: {
             body:
@@ -364,7 +364,7 @@ export const translation: ITranslations = {
             defaultCurrency: 'Default currency',
             manageWallet: 'Manage wallet',
             networkOptions: 'Network options',
-            privacyPolicy: 'Privacy policy',
+            privacyPolicy: 'Privacy Policy',
             reportIssue: 'Report issue',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',

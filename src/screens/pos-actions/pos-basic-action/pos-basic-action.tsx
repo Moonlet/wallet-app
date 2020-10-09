@@ -257,7 +257,7 @@ export class PosBasicActionComponent extends React.Component<
                 new BigNumber(this.props.validators[0].amountDelegated.active),
                 tokenConfig.decimals
             )
-            .toFixed();
+            .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
         this.setState({ amount }, () => {
             const { insufficientFunds, insufficientFundsFees } = availableFunds(
                 amount,
@@ -282,7 +282,7 @@ export class PosBasicActionComponent extends React.Component<
                 new BigNumber(this.props.validators[0].amountDelegated.active),
                 tokenConfig.decimals
             )
-            .toFixed();
+            .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
 
         // const pendingBalance = blockchainInstance.account
         //     .amountFromStd(

@@ -60,6 +60,9 @@ export class AccountSummaryComponent extends React.Component<
         if (this.props.data !== prevProps.data) {
             this.handleComponentVisibility();
         }
+        if (this.props.data.blockchain !== prevProps.data.blockchain) {
+            this.setState({ expanded: false });
+        }
     }
 
     private handleComponentVisibility() {

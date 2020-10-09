@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, TouchableHighlight, View } from 'react-native';
+import { FlatList, View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -200,7 +200,11 @@ export class AccountSummaryComponent extends React.Component<
 
         return (
             <View style={[styles.container, this.props?.style]}>
-                <View style={styles.summaryContainer}>
+                <TouchableOpacity
+                    style={styles.summaryContainer}
+                    onPress={() => this.setState({ expanded: !this.state.expanded })}
+                    activeOpacity={1}
+                >
                     <View style={styles.topContainer}>
                         <Text
                             style={
@@ -213,10 +217,7 @@ export class AccountSummaryComponent extends React.Component<
                         </Text>
 
                         {this.props.enableExpand && (
-                            <TouchableHighlight
-                                onPress={() => this.setState({ expanded: !this.state.expanded })}
-                                underlayColor={this.props.theme.colors.cardBackground}
-                            >
+                            <View style={styles.arrowContainer}>
                                 <Icon
                                     name={
                                         this.state.expanded
@@ -226,7 +227,7 @@ export class AccountSummaryComponent extends React.Component<
                                     size={normalize(16)}
                                     style={styles.icon}
                                 />
-                            </TouchableHighlight>
+                            </View>
                         )}
                     </View>
 
@@ -313,7 +314,7 @@ export class AccountSummaryComponent extends React.Component<
                     ) : (
                         this.renderDetailsSection()
                     )}
-                </View>
+                </TouchableOpacity>
             </View>
         );
     }

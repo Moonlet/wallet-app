@@ -80,7 +80,7 @@ export const translation: ITranslations = {
                 ok: 'OK',
                 paste: 'Paste',
                 processing: 'Processing',
-                privacyPolicy: 'Privacy policy',
+                privacyPolicy: 'Privacy Policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
                 quickStake: 'Quick Stake',
@@ -157,7 +157,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTc: {
-            body: 'Make sure you review our\nPrivacy policy and Terms of Service'
+            body: 'Make sure you review our\nPrivacy Policy and Terms of Service'
         },
         CreateWalletMnemonic: {
             body:
@@ -334,13 +334,15 @@ export const translation: ITranslations = {
                 Success: 'Success'
             },
             signTransaction: 'Sign transaction',
+            signTransactions: 'Sign transaction(s)',
             signAll: 'Sign all transactions',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
-            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleText:
+                'Please sign all transactions and wait while are being broadcasted to the blockchain network',
             processTitleTextLedger:
-                'Please sign each transaction from your Ledger and wait while is being processed!',
+                'Please sign each transaction from your Ledger and wait while is being broadcasted to the blockchain network',
             registerAccount: 'Registering account',
             transactionType: 'Transaction Type'
         },
@@ -353,7 +355,7 @@ export const translation: ITranslations = {
         },
         SmartScan: {
             title: 'Smart scan',
-            newSection: 'A new section of smart scannig is in the work.'
+            newSection: 'A new section of smart scanning is in the work.'
         },
         Settings: {
             appVersion: 'Application version',
@@ -362,7 +364,7 @@ export const translation: ITranslations = {
             defaultCurrency: 'Default currency',
             manageWallet: 'Manage wallet',
             networkOptions: 'Network options',
-            privacyPolicy: 'Privacy policy',
+            privacyPolicy: 'Privacy Policy',
             reportIssue: 'Report issue',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
@@ -380,8 +382,7 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
-            welcomeText:
-                'A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet',
+            welcomeText: 'A portal to the decentralised world',
             welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
             webStep1: 'Open Moonlet app on your mobile',
             webStep2: 'Tap on menu icon from the header',

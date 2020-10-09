@@ -294,9 +294,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 selected={this.state.connection === connection}
                                 disabled={{
                                     value:
-                                        // Disable iOS Near Nano_X BLE connection
-                                        Platform.OS === 'ios' &&
-                                        !isFeatureActive(RemoteFeature.NEAR_LEDGER_IOS_BLE) &&
+                                        // Disable Near Nano_X BLE connection
+                                        !isFeatureActive(RemoteFeature.NEAR_LEDGER_BLE) &&
                                         this.state.blockchain === Blockchain.NEAR &&
                                         this.state.device === HWModel.NANO_X &&
                                         connection === HWConnection.BLE,

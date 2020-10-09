@@ -157,7 +157,8 @@ export const config: IBlockchainConfig = {
         displayName: 'COSMOS',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X
-        }
+        },
+        fetchAccountStatsSec: 5
     },
     networks: {
         testNet: 'gaia-13007',

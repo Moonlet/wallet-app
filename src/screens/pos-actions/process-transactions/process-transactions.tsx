@@ -264,6 +264,12 @@ export class ProcessTransactionsComponent extends React.Component<
         let iconColor = '';
         let enableAnimation = false;
 
+        const dontDisplayActivityIndicator =
+            this.isTransactionPublished(tx) ||
+            status === TransactionStatus.FAILED ||
+            status === TransactionStatus.DROPPED ||
+            index > this.state.currentIndex;
+
         switch (status) {
             case TransactionStatus.FAILED: {
                 leftIcon = IconValues.FAILED;
@@ -289,7 +295,8 @@ export class ProcessTransactionsComponent extends React.Component<
             case TransactionStatus.PENDING: {
                 leftIcon = IconValues.PENDING;
                 iconColor = theme.colors.warning;
-                if (this.state.currentIndex === index) {
+
+                if (index <= this.state.currentIndex) {
                     this.startIconSpin();
                     enableAnimation = true;
                 }
@@ -300,20 +307,13 @@ export class ProcessTransactionsComponent extends React.Component<
                 leftIcon = IconValues.PENDING;
                 rightText = '';
                 iconColor = theme.colors.warning;
-                if (this.state.currentIndex === index) {
-                    this.startIconSpin();
-                    enableAnimation = true;
-                }
+
+                this.startIconSpin();
+                enableAnimation = true;
             }
         }
 
         const isPublished = this.isTransactionPublished(tx);
-
-        const dontDisplayActivityIndicator =
-            this.isTransactionPublished(tx) ||
-            status === TransactionStatus.FAILED ||
-            status === TransactionStatus.DROPPED ||
-            index > this.state.currentIndex;
 
         const iconSpin = this.iconSpinValue.interpolate({
             inputRange: [0, 1],

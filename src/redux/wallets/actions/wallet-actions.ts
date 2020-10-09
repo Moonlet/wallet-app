@@ -631,7 +631,9 @@ export const sendTransferTransaction = (
                 await LedgerConnect.close();
             }
             dispatch(closeTransactionRequest());
-            goBack && navigation.goBack();
+            NavigationService.navigate('Token', {
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+            });
             return;
         } else {
             throw new Error('GENERIC_ERROR');

@@ -11,14 +11,12 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            // padding: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION,
             flexDirection: 'column',
+            justifyContent: 'space-evenly',
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT // used for web
-        },
-        content: {
-            flex: 1,
-            justifyContent: 'center'
         },
         qrCodeContainer: {
             flexDirection: 'column',
@@ -32,8 +30,7 @@ export default (theme: ITheme) =>
             borderWidth: BASE_DIMENSION * 2
         },
         bottomButton: {
-            marginHorizontal: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 3
+            marginHorizontal: BASE_DIMENSION * 4
         },
         fullAddressContainer: {
             justifyContent: 'center',

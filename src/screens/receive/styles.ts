@@ -11,15 +11,12 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            padding: BASE_DIMENSION * 2,
-            paddingTop: BASE_DIMENSION * 4,
+            paddingTop: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION,
             flexDirection: 'column',
+            justifyContent: 'space-evenly',
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT // used for web
-        },
-        content: {
-            flex: 1,
-            justifyContent: 'center'
         },
         qrCodeContainer: {
             flexDirection: 'column',
@@ -28,12 +25,12 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2
         },
         qrCode: {
-            padding: BASE_DIMENSION * 2,
-            color: theme.colors.white
+            color: theme.colors.white,
+            borderColor: theme.colors.white,
+            borderWidth: BASE_DIMENSION * 2
         },
         bottomButton: {
-            marginHorizontal: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 3
+            marginHorizontal: BASE_DIMENSION * 4
         },
         fullAddressContainer: {
             justifyContent: 'center',
@@ -42,8 +39,8 @@ export default (theme: ITheme) =>
         fullAddress: {
             flexShrink: 1,
             flexWrap: 'wrap',
-            fontSize: normalizeFontAndLineHeight(18),
-            lineHeight: normalizeFontAndLineHeight(25),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(20),
             letterSpacing: LETTER_SPACING,
             color: theme.colors.textTertiary,
             textAlign: 'center',

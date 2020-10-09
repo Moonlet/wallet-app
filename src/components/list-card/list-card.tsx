@@ -57,7 +57,7 @@ export const ListCardComponent = (
 
                 <View style={styles.labelContainer}>
                     {label}
-                    {props?.disabled?.message && (
+                    {props?.disabled?.value === true && props?.disabled?.message && (
                         <Text style={styles.disabledMessage}>{props.disabled.message}</Text>
                     )}
                 </View>

@@ -188,7 +188,7 @@ export const translation: ITranslations = {
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
             openApp: 'Open {{app}} app on your Ledger to continue...',
-            disableNearNanoXBle: 'Not supported yet by Ledger Nano X Near App'
+            disableNearNanoXBle: 'Not supported yet by Nano X Near App'
         },
         Fee: {
             feeTitle: 'Transaction fee',

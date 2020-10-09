@@ -87,7 +87,7 @@ export const availableAmount = (
             new BigNumber(balance),
             tokenConfig.decimals
         );
-        return amountFromStd.toFixed(tokenConfig.ui.decimals);
+        return amountFromStd.toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
     } else {
         return new BigNumber(0).toString();
     }

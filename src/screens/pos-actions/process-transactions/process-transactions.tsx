@@ -82,6 +82,7 @@ const mapDispatchToProps = {
 
 interface IState {
     cardHeight: number;
+    txContainerHeight: number;
 }
 
 export class ProcessTransactionsComponent extends React.Component<
@@ -96,7 +97,8 @@ export class ProcessTransactionsComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            cardHeight: undefined
+            cardHeight: undefined,
+            txContainerHeight: undefined
         };
         this.scrollViewRef = React.createRef();
     }
@@ -107,8 +109,13 @@ export class ProcessTransactionsComponent extends React.Component<
             this.props.currentTxIndex !== prevProps.currentTxIndex
         ) {
             this.state.cardHeight &&
+                this.state.txContainerHeight &&
                 this.scrollViewRef.scrollTo({
-                    y: this.props.currentTxIndex * this.state.cardHeight,
+                    y:
+                        (this.props.currentTxIndex +
+                            1 -
+                            Math.floor(this.state.txContainerHeight / this.state.cardHeight)) *
+                        this.state.cardHeight,
                     animated: true
                 });
         }
@@ -337,7 +344,7 @@ export class ProcessTransactionsComponent extends React.Component<
                 onLayout={event =>
                     !this.state.cardHeight &&
                     this.setState({
-                        cardHeight: event.nativeEvent.layout.height + BASE_DIMENSION * 2 // also add bottom margin
+                        cardHeight: event.nativeEvent.layout.height + BASE_DIMENSION * 4
                     })
                 }
             >
@@ -525,6 +532,11 @@ export class ProcessTransactionsComponent extends React.Component<
                         <ScrollView
                             ref={ref => (this.scrollViewRef = ref)}
                             contentContainerStyle={styles.contentScrollView}
+                            onLayout={event =>
+                                this.setState({
+                                    txContainerHeight: event.nativeEvent.layout.height
+                                })
+                            }
                         >
                             {this.props.transactions.map((tx, index) => this.renderCard(tx, index))}
                         </ScrollView>

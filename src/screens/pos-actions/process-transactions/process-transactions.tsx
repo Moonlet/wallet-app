@@ -507,7 +507,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         </View>
                         <View style={styles.headerTitleContainer}>
                             <Text style={styles.headerTitleStyle}>
-                                {translate('App.labels.processing')}
+                                {translate('Transaction.signTransactions')}
                             </Text>
                         </View>
                         <View style={styles.defaultHeaderContainer} />

@@ -18,8 +18,10 @@ export enum LedgerSignEvent {
     APP_OPENED = 'APP_OPENED',
     SIGN_TX = 'SIGN_TX',
     TX_SIGNED = 'TX_SIGNED',
+    TX_SIGN_DECLINED = 'TX_SIGN_DECLINED',
     DONE = 'DONE',
-    ERROR = 'ERROR'
+    ERROR = 'ERROR',
+    TERMINATED = 'TERMINATED'
 }
 
 export class LedgerWallet implements IWallet {
@@ -177,9 +179,16 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.DONE);
             return signature;
         } catch (e) {
-            // console.log('smart sign', e, shouldTerminate);
+            // console.log('smart sign', e);
             if (e !== 'TERMINATED') {
-                cb(LedgerSignEvent.ERROR);
+                const message = e?.message || '';
+                if (message?.indexOf('denied by the user') >= 0) {
+                    cb(LedgerSignEvent.TX_SIGN_DECLINED);
+                } else {
+                    cb(LedgerSignEvent.ERROR);
+                }
+            } else {
+                cb(LedgerSignEvent.TERMINATED);
             }
             return Promise.reject(e);
         }

@@ -1,7 +1,12 @@
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
-import { getSelectedAccount, getSelectedBlockchain } from '../wallets/selectors';
-import { getBalance, setSelectedBlockchain, generateTokensForChainId } from '../wallets/actions';
+import { getAccount, getSelectedAccount, getSelectedBlockchain } from '../wallets/selectors';
+import {
+    getBalance,
+    setSelectedBlockchain,
+    generateTokensForChainId,
+    setSelectedAccount
+} from '../wallets/actions';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 import { IAction } from '../types';
@@ -65,6 +70,8 @@ export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainI
         type: PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
         data: { blockchain, chainId }
     });
+
+    setSelectedAcc(blockchain)(dispatch, getState);
 };
 
 export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
@@ -81,7 +88,23 @@ export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IRe
         setSelectedBlockchain(Blockchain[blockchains[0]])(dispatch, getState);
     }
 
-    const selectedAccount = getSelectedAccount(getState());
+    setSelectedAcc(selectedBlockchain)(dispatch, getState);
+};
+
+const setSelectedAcc = (blockchain: Blockchain) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    let selectedAccount = getSelectedAccount(getState());
+
+    if (blockchain === Blockchain.NEAR) {
+        // On NEAR activate the implicit account
+        selectedAccount = getAccount(state, 0, blockchain);
+        setSelectedAccount(selectedAccount)(dispatch, getState);
+    }
+
     if (selectedAccount) {
         getBalance(
             selectedAccount.blockchain,

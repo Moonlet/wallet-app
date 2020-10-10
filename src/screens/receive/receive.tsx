@@ -16,17 +16,17 @@ import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { BASE_DIMENSION, SCREEN_WIDTH } from '../../styles/dimensions';
 
-export interface INavigationParams {
+interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain)
     };
@@ -42,16 +42,19 @@ export const ReceiveScreenComponent = (
         IReduxProps &
         IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const [copied, setCopied] = useState(false);
+    const { account, styles } = props;
+
+    const [copied, setCopied] = useState<boolean>(false);
 
     return (
-        <View style={props.styles.container}>
-            <AccountAddress account={props.account} token={props.navigation.state.params.token} />
-            <View style={props.styles.content}>
-                <View style={props.styles.qrCodeContainer}>
-                    <View style={props.styles.qrCode}>
+        <View style={styles.container}>
+            <AccountAddress account={account} token={props.navigation.state.params.token} />
+
+            <View>
+                <View style={styles.qrCodeContainer}>
+                    <View style={styles.qrCode}>
                         <QRCode
-                            value={props.account.address}
+                            value={account.address}
                             size={
                                 Platform.OS === 'web'
                                     ? (SCREEN_WIDTH * 2) / 3
@@ -61,16 +64,16 @@ export const ReceiveScreenComponent = (
                     </View>
                 </View>
 
-                <View style={props.styles.fullAddressContainer}>
-                    <Text style={props.styles.fullAddress}>{props.account.address}</Text>
+                <View style={styles.fullAddressContainer}>
+                    <Text style={styles.fullAddress}>{account.address}</Text>
                 </View>
             </View>
 
             <Button
                 testID="copy-clipboard"
-                style={props.styles.bottomButton}
+                wrapperStyle={styles.bottomButton}
                 onPress={() => {
-                    Clipboard.setString(props.account.address);
+                    Clipboard.setString(account.address);
                     setCopied(true);
                 }}
             >

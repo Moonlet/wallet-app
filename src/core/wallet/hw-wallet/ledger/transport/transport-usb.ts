@@ -8,10 +8,7 @@ export class USB {
             return Promise.reject(translate('CreateHardwareWallet.notSupported'));
         }
 
-        const devices = await TransportHID.list();
-        if (devices.length) {
-            return this.connect(devices[0]);
-        }
+        return TransportHID.create();
     }
 
     public static async scan(callback: (event: { name: string; data?: any }) => any): Promise<any> {

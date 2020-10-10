@@ -141,7 +141,7 @@ export class LedgerWallet implements IWallet {
 
             // detect device, if device is not connected or not found within 300ms, trigger connect device event
             const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
-            const transport = await this.getTransport();
+            let transport = await this.getTransport();
             terminateIfNeeded();
             clearTimeout(connectTimeout);
             cb(LedgerSignEvent.DEVICE_CONNECTED);
@@ -155,6 +155,9 @@ export class LedgerWallet implements IWallet {
 
             // review tx
             cb(LedgerSignEvent.SIGN_TX);
+            if (this.connectionType === HWConnection.USB) {
+                transport = await this.getTransport();
+            }
             const app = await AppFactory.get(blockchain, transport);
             terminateIfNeeded();
             const signature = await app.signTransaction(accountIndex, 0, undefined, tx);
@@ -164,6 +167,7 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.DONE);
             return signature;
         } catch (e) {
+            // console.log('smart sign', e);
             if (e !== 'TERMINATED') {
                 cb(LedgerSignEvent.ERROR);
             }

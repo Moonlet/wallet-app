@@ -156,13 +156,6 @@ export class LedgerConnectComponent extends React.Component<
             stepContainerTranslateAnimation: new Animated.Value(0)
         });
 
-        // console.log('connecting to ledger');
-        // await this.getLegderWalletInstance().getTransport();
-        // console.log('ledger connected', ' -----------------------------');
-        // console.log('check app opened');
-        // await this.getLegderWalletInstance().onAppOpened(this.state.blockchain);
-        // console.log('app opened', '------------------------------');
-
         this.trySign();
         return this.resultDeferred.promise;
     }
@@ -176,6 +169,7 @@ export class LedgerConnectComponent extends React.Component<
                 this.state.accountIndex,
                 this.state.transaction,
                 (event: LedgerSignEvent) => {
+                    // console.log('TrySign', event);
                     switch (event) {
                         case LedgerSignEvent.LOADING:
                         case LedgerSignEvent.CONNECT_DEVICE:

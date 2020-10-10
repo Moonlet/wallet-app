@@ -441,6 +441,7 @@ export const signAndSendTransactions = (
             };
         }
 
+        // console.log('PosActions:sign()', errorMessage);
         if (errorMessage !== 'LEDGER_SIGN_CANCELLED') {
             if (TransactionMessageText[errorMessage]) {
                 Dialog.alert(

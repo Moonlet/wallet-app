@@ -39,7 +39,7 @@ export class BLE {
                 }
             },
             error: error => {
-                // todo handle possible errors
+                callback({ name: 'scanError', data: error });
             }
         });
     }

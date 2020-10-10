@@ -478,10 +478,12 @@ export const signAndSendTransactions = (
 const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {
     return (
         txs.filter(tx => {
-            tx.status === TransactionStatus.FAILED ||
+            return (
+                tx.status === TransactionStatus.FAILED ||
                 tx.status === TransactionStatus.DROPPED ||
                 tx.status === TransactionStatus.PENDING ||
-                tx.status === TransactionStatus.SUCCESS;
+                tx.status === TransactionStatus.SUCCESS
+            );
         }).length > 0
     );
 };

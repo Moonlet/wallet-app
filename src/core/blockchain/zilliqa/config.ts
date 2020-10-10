@@ -18,7 +18,7 @@ export const ZIL_NATIVE: ITokenConfigState = {
     removable: false,
     decimals: 12,
     ui: {
-        decimals: 3,
+        decimals: 4,
         tokenScreenComponent: TokenScreenComponentType.DELEGATE
     },
     type: TokenType.NATIVE,

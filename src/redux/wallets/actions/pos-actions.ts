@@ -329,7 +329,8 @@ export const signAndSendTransactions = (
 
         const client = getBlockchain(account.blockchain).getClient(chainId);
         let error = false;
-        for (let index = 0; index < transactions.length; index++) {
+        const startIndex = specificIndex === undefined ? 0 : specificIndex;
+        for (let index = startIndex; index < transactions.length; index++) {
             if (error) break;
             const txIndex = specificIndex || index;
             const transaction = transactions[index];

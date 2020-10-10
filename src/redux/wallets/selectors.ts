@@ -155,7 +155,7 @@ export const getWalletWithAddress = (
     blockchain: Blockchain
 ): IWalletState[] =>
     Object.values(state.wallets).filter(wallet =>
-        (wallet.accounts || []).some(
+        (wallet?.accounts || []).some(
             account =>
                 account.blockchain === blockchain &&
                 addresses.includes(account.address.toLowerCase())

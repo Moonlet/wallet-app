@@ -6,15 +6,16 @@ import {
     ITransactionExtraFields,
     TransactionMessageText
 } from '../../../core/blockchain/types';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
 import { getSelectedAccount, getSelectedWallet } from '../selectors';
+import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { generateAccountTokenState, getTokenConfig } from '../../tokens/static-selectors';
+import { getTokenConfig } from '../../tokens/static-selectors';
 import { TRANSACTION_PUBLISHED } from '../actions';
 import { translate } from '../../../core/i18n';
 import { Dialog } from '../../../components/dialog/dialog';
@@ -26,8 +27,7 @@ import {
     updateProcessTransactionIdForIndex,
     updateProcessTransactionStatusForIndex,
     setProcessTxIndex,
-    setProcessTxCompleted,
-    closeProcessTransactions
+    setProcessTxCompleted
 } from '../../ui/process-transactions/actions';
 import { TransactionStatus, WalletType } from '../../../core/wallet/types';
 import { cloneDeep } from 'lodash';
@@ -39,7 +39,6 @@ import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { delay } from '../../../core/utils/time';
 import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
-import { NavigationService } from '../../../navigation/navigation-service';
 
 export const redelegate = (
     account: IAccountState,
@@ -400,69 +399,39 @@ export const signAndSendTransactions = (
 
                 throw err;
             }
+
+            if (specificIndex !== undefined) {
+                // just stop, we had to sign only one tx (ledger)
+                break;
+            }
         }
-        dispatch(setProcessTxCompleted(true, false));
+
+        // console.log({ specificIndex, transactionLength: transactions.length });
+        if (
+            specificIndex === undefined ||
+            (specificIndex !== undefined && specificIndex + 1 >= transactions.length)
+        ) {
+            // we need to check if all txs were signed before marking the flow complete.
+            dispatch(setProcessTxCompleted(true, false));
+        }
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
-        if (appWallet.type === WalletType.HW) {
+        if (appWallet.type === WalletType.HD) {
+            await LoadingModal.close();
+        } else {
             await LedgerConnect.close();
         }
 
-        const atLeastOneTransactionBroadcasted = transactionsBroadcasted(
-            getState().ui.processTransactions.data.txs
-        );
-        const tokenConfig = getTokenConfig(account.blockchain, transactions[0].token.symbol);
-        const blockchainInstance = getBlockchain(account.blockchain);
-        let navigationParams: NavigationParams = {
-            blockchain: account.blockchain,
-            accountIndex: account.index,
-            token: generateAccountTokenState(tokenConfig),
-            tokenLogo: tokenConfig.icon
-        };
-        if (atLeastOneTransactionBroadcasted) {
-            navigationParams = {
-                ...navigationParams,
-                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
-            };
-        }
-
         if (TransactionMessageText[errorMessage]) {
-            Dialog.alert(
+            Dialog.info(
                 translate('LoadingModal.txFailed'),
-                translate(`LoadingModal.${errorMessage}`),
-                undefined,
-                {
-                    text: translate('App.labels.ok'),
-                    onPress: () => {
-                        dispatch(closeProcessTransactions());
-                        NavigationService.navigate('Token', navigationParams);
-                    }
-                }
+                translate(`LoadingModal.${errorMessage}`)
             );
         } else {
-            Dialog.alert(
+            Dialog.info(
                 translate('LoadingModal.txFailed'),
-                translate('LoadingModal.GENERIC_ERROR'),
-                undefined,
-                {
-                    text: translate('App.labels.ok'),
-                    onPress: () => {
-                        dispatch(closeProcessTransactions());
-                        NavigationService.navigate('Token', navigationParams);
-                    }
-                }
+                translate('LoadingModal.GENERIC_ERROR')
             );
         }
     }
-};
-
-const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {
-    return (
-        txs.filter(tx => {
-            tx.status === TransactionStatus.FAILED ||
-                tx.status === TransactionStatus.DROPPED ||
-                tx.status === TransactionStatus.PENDING ||
-                tx.status === TransactionStatus.SUCCESS;
-        }).length > 0
-    );
 };

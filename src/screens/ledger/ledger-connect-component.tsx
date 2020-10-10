@@ -83,12 +83,14 @@ export class LedgerConnectComponent extends React.Component<
         connectionType: HWConnection
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
+        // console.log('LedgerConnet', 'getAccountsAndDeviceId');
         this.setState({
             blockchain,
             deviceModel,
             connectionType,
             visible: true,
-            step: ScreenStep.SEARCH_LEDGER
+            step: ScreenStep.SEARCH_LEDGER,
+            stepContainerTranslateAnimation: new Animated.Value(0)
         });
 
         return this.resultDeferred.promise;
@@ -130,7 +132,8 @@ export class LedgerConnectComponent extends React.Component<
             connectionType,
             visible: true,
             step: ScreenStep.SEARCH_LEDGER,
-            currentFlow: ScreenStep.REVIEW_TRANSACTION
+            currentFlow: ScreenStep.REVIEW_TRANSACTION,
+            stepContainerTranslateAnimation: new Animated.Value(0)
         });
 
         return this.resultDeferred.promise;
@@ -164,6 +167,7 @@ export class LedgerConnectComponent extends React.Component<
     }
     public componentWillUnmount() {
         //
+        // console.log('LedgerConnect:componentWillUnmount()');
     }
     @bind
     private async onConnectedDevice(item: any) {
@@ -246,6 +250,7 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     private async selectStep(step: ScreenStep) {
+        // console.log('LedgerConnect:selectStep()', step);
         await this.stepContainerFadeOut();
         this.setState({ step, stepContainerTranslateAnimation: new Animated.Value(400) });
         await this.stepContainerFadeIn();
@@ -379,10 +384,13 @@ export class LedgerConnectComponent extends React.Component<
                         connectionType={this.state.connectionType}
                     />
                 );
+            default:
+                return null;
         }
     }
 
     public render() {
+        // console.log('LedgerConnect:render()', this.state.step);
         const { styles } = this.props;
 
         const displayTopHeader =
@@ -401,7 +409,7 @@ export class LedgerConnectComponent extends React.Component<
                                     testID="go-back"
                                     icon={IconValues.ARROW_LEFT}
                                     onPress={() => {
-                                        this.setState({ visible: false });
+                                        this.setState({ visible: false, step: undefined });
                                     }}
                                 />
                             </View>

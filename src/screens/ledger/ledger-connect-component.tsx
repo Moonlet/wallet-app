@@ -122,7 +122,6 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     public async walletCreated(walletId: string) {
-        this.resultDeferred = new Deferred();
         await this.selectStep(ScreenStep.SUCCESS_CONNECT);
     }
 
@@ -432,7 +431,7 @@ export class LedgerConnectComponent extends React.Component<
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
-                        walletName={'Wallet 1'} // TODO
+                        walletName={this.props.wallet.name}
                         deviceName={
                             this.state.ledgerDevice?.localName !== undefined
                                 ? this.state.ledgerDevice?.localName

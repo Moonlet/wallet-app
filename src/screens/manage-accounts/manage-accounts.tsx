@@ -25,7 +25,7 @@ import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
 import { normalize } from '../../styles/dimensions';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { removeAccount } from '../../redux/wallets/actions';
+import { removeAccount, setSelectedAccount } from '../../redux/wallets/actions';
 
 interface IReduxProps {
     selectedAccount: IAccountState;
@@ -34,6 +34,7 @@ interface IReduxProps {
     chainId: ChainIdType;
     selectedWallet: IWalletState;
     removeAccount: typeof removeAccount;
+    setSelectedAccount: typeof setSelectedAccount;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -49,7 +50,8 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    removeAccount
+    removeAccount,
+    setSelectedAccount
 };
 
 export const navigationOptions = () => ({
@@ -131,7 +133,7 @@ export class ManageAccountsComponent extends React.Component<
     }
 
     private renderAccount(account: IAccountState, index: number) {
-        const { styles } = this.props;
+        const { selectedAccount, styles } = this.props;
 
         const blockchainConfig = getBlockchain(account.blockchain).config;
         const tokenConfig = getTokenConfig(account.blockchain, blockchainConfig.coin);
@@ -140,6 +142,8 @@ export class ManageAccountsComponent extends React.Component<
             calculateBalance(account, this.props.chainId, this.props.exchangeRates, tokenConfig);
 
         const swipeIndex = `account-${index}`;
+
+        const selected = selectedAccount.address === account.address;
 
         return (
             <Swipeable
@@ -187,7 +191,7 @@ export class ManageAccountsComponent extends React.Component<
                             />
                         </View>
                     }
-                    isActive={true}
+                    isActive={selected}
                     checkBox={{
                         visible: false // TODO: implement this
                     }}
@@ -195,6 +199,13 @@ export class ManageAccountsComponent extends React.Component<
                         visible: false // TODO: implement this
                     }}
                     imageIcon={{ iconComponent: blockchainConfig.iconComponent }}
+                    onPress={{
+                        active: true,
+                        action: () => {
+                            this.props.setSelectedAccount(account);
+                            NavigationService.goBack();
+                        }
+                    }}
                 />
             </Swipeable>
         );

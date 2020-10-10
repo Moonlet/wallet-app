@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -10,10 +10,14 @@ import Icon from '../icon/icon';
 import { ITokenIcon } from '../../core/blockchain/types/token';
 import { Text } from '../../library';
 
-export interface IExternalProps {
+interface IExternalProps {
     mainText: string | JSX.Element;
     subtitleText?: string | JSX.Element;
     isActive: boolean;
+    onPress?: {
+        active: boolean;
+        action: () => void;
+    };
     checkBox: {
         visible: boolean;
         onPress?: () => void;
@@ -61,49 +65,57 @@ export const DraggableCardWithCheckboxComponent = (
     }
 
     return (
-        <View
-            style={[
-                styles.container,
-                props.isActive && styles.containerActive,
-                props?.draggable?.isDragging && styles.containerDragging
-            ]}
+        <TouchableHighlight
+            underlayColor={props.theme.colors.bottomSheetBackground}
+            onPress={() => props.onPress.action()}
+            disabled={!props?.onPress?.active}
         >
-            <View style={styles.infoContainer}>
-                <SmartImage source={props.imageIcon} style={styles.imageIcon} />
-                <View style={styles.textContainer}>
-                    {mainLabel}
-                    {subtitleLabel}
+            <View
+                style={[
+                    styles.container,
+                    props.isActive && styles.containerActive,
+                    props?.draggable?.isDragging && styles.containerDragging
+                ]}
+            >
+                <View style={styles.infoContainer}>
+                    <SmartImage source={props.imageIcon} style={styles.imageIcon} />
+                    <View style={styles.textContainer}>
+                        {mainLabel}
+                        {subtitleLabel}
+                    </View>
                 </View>
+
+                {props.checkBox.visible && (
+                    <TouchableOpacity
+                        style={styles.iconContainer}
+                        onPressOut={() => props.checkBox.onPress()}
+                    >
+                        <Icon
+                            size={normalize(18)}
+                            name={checkBoxIcon}
+                            style={{
+                                color: props.isActive
+                                    ? theme.colors.accent
+                                    : theme.colors.textSecondary
+                            }}
+                        />
+                    </TouchableOpacity>
+                )}
+
+                {props.draggable.visible && (
+                    <TouchableOpacity
+                        style={styles.iconContainer}
+                        onLongPress={() => props.draggable.onPress()}
+                    >
+                        <Icon
+                            size={normalize(18)}
+                            name={IconValues.NAVIGATION_MENU}
+                            style={styles.menuIcon}
+                        />
+                    </TouchableOpacity>
+                )}
             </View>
-
-            {props.checkBox.visible && (
-                <TouchableOpacity
-                    style={styles.iconContainer}
-                    onPressOut={() => props.checkBox.onPress()}
-                >
-                    <Icon
-                        size={normalize(18)}
-                        name={checkBoxIcon}
-                        style={{
-                            color: props.isActive ? theme.colors.accent : theme.colors.textSecondary
-                        }}
-                    />
-                </TouchableOpacity>
-            )}
-
-            {props.draggable.visible && (
-                <TouchableOpacity
-                    style={styles.iconContainer}
-                    onLongPress={() => props.draggable.onPress()}
-                >
-                    <Icon
-                        size={normalize(18)}
-                        name={IconValues.NAVIGATION_MENU}
-                        style={styles.menuIcon}
-                    />
-                </TouchableOpacity>
-            )}
-        </View>
+        </TouchableHighlight>
     );
 };
 

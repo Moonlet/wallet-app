@@ -559,22 +559,25 @@ export const sendTransferTransaction = (
                 type: TransactionMessageType.INFO,
                 text: TransactionMessageText.SIGNING
             });
-        } else {
-            await LedgerConnect.signTransaction(
-                account.blockchain,
-                appWallet.hwOptions?.deviceModel,
-                appWallet.hwOptions?.connectionType,
-                appWallet.hwOptions?.deviceId
-            );
         }
 
-        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
-            pass: password,
-            deviceVendor: appWallet.hwOptions?.deviceVendor,
-            deviceModel: appWallet.hwOptions?.deviceModel,
-            deviceId: appWallet.hwOptions?.deviceId,
-            connectionType: appWallet.hwOptions?.connectionType
-        }); // encrypted string: pass)
+        const wallet: {
+            sign: (
+                blockchain: Blockchain,
+                accountIndex: number,
+                transaction: IBlockchainTransaction
+            ) => Promise<any>;
+        } =
+            appWallet.type === WalletType.HW
+                ? LedgerConnect
+                : await WalletFactory.get(appWallet.id, appWallet.type, {
+                      pass: password,
+                      deviceVendor: appWallet.hwOptions?.deviceVendor,
+                      deviceModel: appWallet.hwOptions?.deviceModel,
+                      deviceId: appWallet.hwOptions?.deviceId,
+                      connectionType: appWallet.hwOptions?.connectionType
+                  }); // encrypted string: pass)
+
         const blockchainInstance = getBlockchain(account.blockchain);
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
@@ -593,12 +596,12 @@ export const sendTransferTransaction = (
 
         const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
-        if (appWallet.type === WalletType.HD) {
-            await LoadingModal.showMessage({
-                text: TransactionMessageText.BROADCASTING,
-                type: TransactionMessageType.INFO
-            });
-        }
+        // if (appWallet.type === WalletType.HD) {
+        await LoadingModal.showMessage({
+            text: TransactionMessageText.BROADCASTING,
+            type: TransactionMessageType.INFO
+        });
+        // }
 
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -625,11 +628,11 @@ export const sendTransferTransaction = (
                 dispatch({ type: CLOSE_TX_REQUEST });
             }
 
-            if (appWallet.type === WalletType.HD) {
-                await LoadingModal.close();
-            } else {
-                await LedgerConnect.close();
-            }
+            // if (appWallet.type === WalletType.HD) {
+            await LoadingModal.close();
+            // } else {
+            //     await LedgerConnect.close();
+            // }
             dispatch(closeTransactionRequest());
             NavigationService.navigate('Token', {
                 activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions

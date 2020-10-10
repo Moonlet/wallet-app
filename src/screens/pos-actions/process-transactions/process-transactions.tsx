@@ -422,9 +422,8 @@ export class ProcessTransactionsComponent extends React.Component<
     }
 
     @bind
-    private onPressSignTransaction(transaction: IBlockchainTransaction) {
-        throw new Error('check this out!!!');
-        // this.props.signAndSendTransactions([transaction], this.props.currentTxIndex);
+    private onPressSignTransaction() {
+        this.props.signAndSendTransactions(this.props.transactions, this.props.currentTxIndex + 1);
     }
 
     @bind
@@ -460,23 +459,31 @@ export class ProcessTransactionsComponent extends React.Component<
                         {translate('Transaction.signAll')}
                     </Button>
                 );
-            else
+            else if (this.props.currentTxIndex + 2 <= this.props.transactions.length) {
                 return (
                     <Button
                         primary
                         onPress={() =>
-                            this.onPressSignTransaction(
-                                this.props.transactions[this.props.currentTxIndex]
-                            )
+                            this
+                                .onPressSignTransaction
+                                // this.props.transactions[this.props.currentTxIndex]
+                                ()
                         }
                         wrapperStyle={styles.continueButton}
                         disabled={false}
                     >
-                        {translate('ProcessTransactions.ledgerSignButton', {
-                            txNumber: this.props.currentTxIndex + 1
-                        })}
+                        {translate(
+                            'ProcessTransactions.ledgerSignButton',
+                            {
+                                txNumber: this.props.currentTxIndex + 2
+                            },
+                            this.props.currentTxIndex + 2
+                        )}
                     </Button>
                 );
+            } else {
+                return null;
+            }
         }
     }
 

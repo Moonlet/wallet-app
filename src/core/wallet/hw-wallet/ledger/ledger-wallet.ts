@@ -10,6 +10,18 @@ import { getBlockchain } from '../../../blockchain/blockchain-factory';
 import { Mnemonic } from '../../hd-wallet/mnemonic';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 
+export enum LedgerSignEvent {
+    LOADING = 'LOADING',
+    CONNECT_DEVICE = 'CONNECT_DEVICE',
+    DEVICE_CONNECTED = 'DEVICE_CONNECTED',
+    OPEN_APP = 'OPEN_APP',
+    APP_OPENED = 'APP_OPENED',
+    SIGN_TX = 'SIGN_TX',
+    TX_SIGNED = 'TX_SIGNED',
+    DONE = 'DONE',
+    ERROR = 'ERROR'
+}
+
 export class LedgerWallet implements IWallet {
     private deviceId: string;
     private deviceModel: HWModel;
@@ -23,9 +35,12 @@ export class LedgerWallet implements IWallet {
 
     public async isAppOpened(blockchain: Blockchain): Promise<boolean> {
         try {
+            // console.log('isAppOpened');
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);
+            // console.log('isAppOpened', 'getInfo');
             const info = await app.getInfo();
+            // console.log('isAppOpened', 'getInfo', info);
 
             if (info) return true;
             return false;
@@ -35,6 +50,7 @@ export class LedgerWallet implements IWallet {
     }
 
     public onAppOpened(blockchain: Blockchain): Promise<void> {
+        // console.log('onAppOpened');
         return new Promise(async resolve => {
             let opened = false;
             while (opened === false) {
@@ -92,6 +108,69 @@ export class LedgerWallet implements IWallet {
 
             return Promise.resolve(app.signTransaction(accountIndex, 0, undefined, tx));
         } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    public async smartSign(
+        blockchain: Blockchain,
+        accountIndex: number,
+        tx: IBlockchainTransaction,
+        cb: (event: LedgerSignEvent) => any,
+        setTerminate?: (terminate: () => any) => any
+    ): Promise<any> {
+        let shouldTerminate = false;
+        const terminate = () => {
+            shouldTerminate = true;
+        };
+
+        const terminateIfNeeded = () => {
+            if (shouldTerminate) {
+                throw new Error('TERMINATED');
+            }
+        };
+
+        if (typeof setTerminate === 'function') {
+            setTerminate(terminate);
+        }
+
+        try {
+            terminateIfNeeded();
+            // return loading
+            cb(LedgerSignEvent.LOADING);
+
+            // detect device, if device is not connected or not found within 300ms, trigger connect device event
+            const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
+            let transport = await this.getTransport();
+            terminateIfNeeded();
+            clearTimeout(connectTimeout);
+            cb(LedgerSignEvent.DEVICE_CONNECTED);
+
+            // detect if app is opened
+            const appOpenedTimeout = setTimeout(() => cb(LedgerSignEvent.OPEN_APP), 2000);
+            await this.onAppOpened(blockchain);
+            terminateIfNeeded();
+            clearTimeout(appOpenedTimeout);
+            cb(LedgerSignEvent.APP_OPENED);
+
+            // review tx
+            cb(LedgerSignEvent.SIGN_TX);
+            if (this.connectionType === HWConnection.USB) {
+                transport = await this.getTransport();
+            }
+            const app = await AppFactory.get(blockchain, transport);
+            terminateIfNeeded();
+            const signature = await app.signTransaction(accountIndex, 0, undefined, tx);
+            terminateIfNeeded();
+            cb(LedgerSignEvent.TX_SIGNED);
+
+            cb(LedgerSignEvent.DONE);
+            return signature;
+        } catch (e) {
+            // console.log('smart sign', e);
+            if (e !== 'TERMINATED') {
+                cb(LedgerSignEvent.ERROR);
+            }
             return Promise.reject(e);
         }
     }

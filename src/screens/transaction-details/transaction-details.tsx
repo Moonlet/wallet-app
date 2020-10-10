@@ -97,7 +97,7 @@ export class TransactionDetailsComponent extends React.Component<
             transactionType = Capitalize(transaction.data.method);
         }
 
-        if (transaction?.additionalInfo.posAction) {
+        if (transaction?.additionalInfo?.posAction) {
             transactionType = Capitalize(transaction.additionalInfo.posAction)
                 .split('_')
                 .join(' ');

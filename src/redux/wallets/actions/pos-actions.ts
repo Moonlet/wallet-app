@@ -309,22 +309,23 @@ export const signAndSendTransactions = (
                 { sensitive: true, showCloseButton: true }
             );
         }
-        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
-            pass: password,
-            deviceVendor: appWallet.hwOptions?.deviceVendor,
-            deviceModel: appWallet.hwOptions?.deviceModel,
-            deviceId: appWallet.hwOptions?.deviceId,
-            connectionType: appWallet.hwOptions?.connectionType
-        }); // encrypted string: pass)
 
-        if (appWallet.type === WalletType.HW) {
-            await LedgerConnect.signTransaction(
-                account.blockchain,
-                appWallet.hwOptions?.deviceModel,
-                appWallet.hwOptions?.connectionType,
-                appWallet.hwOptions?.deviceId
-            );
-        }
+        const wallet: {
+            sign: (
+                blockchain: Blockchain,
+                accountIndex: number,
+                transaction: IBlockchainTransaction
+            ) => Promise<any>;
+        } =
+            appWallet.type === WalletType.HW
+                ? LedgerConnect
+                : await WalletFactory.get(appWallet.id, appWallet.type, {
+                      pass: password,
+                      deviceVendor: appWallet.hwOptions?.deviceVendor,
+                      deviceModel: appWallet.hwOptions?.deviceModel,
+                      deviceId: appWallet.hwOptions?.deviceId,
+                      connectionType: appWallet.hwOptions?.connectionType
+                  }); // encrypted string: pass)
 
         const client = getBlockchain(account.blockchain).getClient(chainId);
         let error = false;
@@ -335,11 +336,15 @@ export const signAndSendTransactions = (
 
             dispatch(setProcessTxIndex(txIndex));
             // await delay(5000);
-            const signed = await wallet.sign(transaction.blockchain, account.index, transaction);
-            dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
-
-            if (appWallet.type === WalletType.HW) {
-                await LedgerConnect.close();
+            let signed;
+            try {
+                signed = await wallet.sign(transaction.blockchain, account.index, transaction);
+                dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
+            } catch (e) {
+                if (e === 'LEDGER_SIGN_CANCELLED') {
+                    dispatch(setProcessTxIndex(txIndex - 1));
+                }
+                throw e;
             }
 
             try {
@@ -417,9 +422,6 @@ export const signAndSendTransactions = (
         }
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
-        if (appWallet.type === WalletType.HW) {
-            await LedgerConnect.close();
-        }
 
         const atLeastOneTransactionBroadcasted = transactionsBroadcasted(
             getState().ui.processTransactions.data.txs
@@ -439,32 +441,34 @@ export const signAndSendTransactions = (
             };
         }
 
-        if (TransactionMessageText[errorMessage]) {
-            Dialog.alert(
-                translate('LoadingModal.txFailed'),
-                translate(`LoadingModal.${errorMessage}`),
-                undefined,
-                {
-                    text: translate('App.labels.ok'),
-                    onPress: () => {
-                        dispatch(closeProcessTransactions());
-                        NavigationService.navigate('Token', navigationParams);
+        if (errorMessage !== 'LEDGER_SIGN_CANCELLED') {
+            if (TransactionMessageText[errorMessage]) {
+                Dialog.alert(
+                    translate('LoadingModal.txFailed'),
+                    translate(`LoadingModal.${errorMessage}`),
+                    undefined,
+                    {
+                        text: translate('App.labels.ok'),
+                        onPress: () => {
+                            dispatch(closeProcessTransactions());
+                            NavigationService.navigate('Token', navigationParams);
+                        }
                     }
-                }
-            );
-        } else {
-            Dialog.alert(
-                translate('LoadingModal.txFailed'),
-                translate('LoadingModal.GENERIC_ERROR'),
-                undefined,
-                {
-                    text: translate('App.labels.ok'),
-                    onPress: () => {
-                        dispatch(closeProcessTransactions());
-                        NavigationService.navigate('Token', navigationParams);
+                );
+            } else {
+                Dialog.alert(
+                    translate('LoadingModal.txFailed'),
+                    translate('LoadingModal.GENERIC_ERROR'),
+                    undefined,
+                    {
+                        text: translate('App.labels.ok'),
+                        onPress: () => {
+                            dispatch(closeProcessTransactions());
+                            NavigationService.navigate('Token', navigationParams);
+                        }
                     }
-                }
-            );
+                );
+            }
         }
     }
 };

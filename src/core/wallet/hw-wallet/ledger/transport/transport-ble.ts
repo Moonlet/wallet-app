@@ -14,11 +14,15 @@ export class BLE {
         if (transportOpenInProgress && transportPromise) {
             return transportPromise;
         }
-        transportOpenInProgress = true;
-        transportPromise = TransportBLE.open(deviceId).then(transport => {
+        try {
+            transportOpenInProgress = true;
+            transportPromise = TransportBLE.open(deviceId);
             transportOpenInProgress = false;
-            return transport;
-        });
+        } catch (e) {
+            transportOpenInProgress = false;
+            return Promise.reject(e);
+        }
+
         return transportPromise;
     }
 

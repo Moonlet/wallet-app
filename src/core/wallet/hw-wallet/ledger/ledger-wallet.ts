@@ -121,11 +121,14 @@ export class LedgerWallet implements IWallet {
     ): Promise<any> {
         let shouldTerminate = false;
         const terminate = () => {
+            // console.log('terminate');
             shouldTerminate = true;
         };
 
         const terminateIfNeeded = () => {
+            // console.log('run terminate check');
             if (shouldTerminate) {
+                // console.log('run terminate');
                 throw new Error('TERMINATED');
             }
         };
@@ -140,10 +143,17 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.LOADING);
 
             // detect device, if device is not connected or not found within 300ms, trigger connect device event
-            const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
-            let transport = await this.getTransport();
+            // const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
+            cb(LedgerSignEvent.CONNECT_DEVICE);
+            let transport;
+            try {
+                transport = await this.getTransport();
+            } catch (e) {
+                // add some delay for the cases of instant fails, CONNECT_DEVICE and ERROR events are too quick triggerd
+                await delay(2000);
+                throw e;
+            }
             terminateIfNeeded();
-            clearTimeout(connectTimeout);
             cb(LedgerSignEvent.DEVICE_CONNECTED);
 
             // detect if app is opened
@@ -167,7 +177,7 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.DONE);
             return signature;
         } catch (e) {
-            // console.log('smart sign', e);
+            // console.log('smart sign', e, shouldTerminate);
             if (e !== 'TERMINATED') {
                 cb(LedgerSignEvent.ERROR);
             }

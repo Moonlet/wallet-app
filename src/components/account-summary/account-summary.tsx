@@ -158,7 +158,7 @@ export class AccountSummaryComponent extends React.Component<
                             <Text style={styles.detailsExtraText}>
                                 {`${formatNumber(new BigNumber(amountFromStd), {
                                     currency: this.props.data.extraToken.symbol,
-                                    maximumFractionDigits: 4
+                                    maximumFractionDigits: extraTokenConfig.ui.decimals
                                 })}`}
                             </Text>
                         </View>

@@ -27,6 +27,7 @@ import { Troubleshooting } from './components/troubleshooting/troubleshooting';
 import { ReviewTransaction } from './components/review-transaction/review-transaction';
 import { delay } from '../../core/utils/time';
 import { AnimatedValue } from 'react-navigation';
+import { SignDeclined } from './components/sign-declined/sign-declined';
 
 const ANIMATION_TIME = 300;
 
@@ -41,6 +42,7 @@ enum ScreenStep {
     OPEN_APP = 'OPEN_APP',
     VERIFY_ADDRESS = 'VERIFY_ADDRESS',
     ERROR_SCREEN = 'ERROR_SCREEN',
+    SIGN_DECLINED = 'SIGN_DECLINED',
     LOCATION_REQUIRED = 'LOCATION_REQUIRED',
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
     SUCCESS_CONNECT = 'SUCCESS_CONNECT',
@@ -122,7 +124,6 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     public async walletCreated(walletId: string) {
-        this.resultDeferred = new Deferred();
         await this.selectStep(ScreenStep.SUCCESS_CONNECT);
     }
 
@@ -181,6 +182,7 @@ export class LedgerConnectComponent extends React.Component<
                         case LedgerSignEvent.SIGN_TX:
                             this.selectStep(ScreenStep.REVIEW_TRANSACTION);
                             break;
+                        case LedgerSignEvent.TX_SIGN_DECLINED:
                     }
                 },
                 terminate => (this.ledgerSignTerminate = terminate)
@@ -191,7 +193,12 @@ export class LedgerConnectComponent extends React.Component<
             })
             .catch(err => {
                 if (err !== 'TERMINATED') {
-                    this.selectStep(ScreenStep.ERROR_SCREEN);
+                    const message = err?.message || '';
+                    if (message?.indexOf('denied by the user') >= 0) {
+                        this.selectStep(ScreenStep.SIGN_DECLINED);
+                    } else {
+                        this.selectStep(ScreenStep.ERROR_SCREEN);
+                    }
                 }
             });
     }
@@ -432,7 +439,7 @@ export class LedgerConnectComponent extends React.Component<
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
-                        walletName={'Wallet 1'} // TODO
+                        walletName={this.props.wallet.name}
                         deviceName={
                             this.state.ledgerDevice?.localName !== undefined
                                 ? this.state.ledgerDevice?.localName
@@ -450,6 +457,19 @@ export class LedgerConnectComponent extends React.Component<
                         connectionType={this.state.connectionType}
                         onRetry={this.onRetry}
                         onTroubleshootPress={this.showTroubleShootPage}
+                    />
+                );
+            case ScreenStep.SIGN_DECLINED:
+                return (
+                    <SignDeclined
+                        onRetry={this.onRetry}
+                        onCancel={() => {
+                            this.setState({ visible: false, step: undefined });
+                            if (typeof this.ledgerSignTerminate === 'function') {
+                                this.ledgerSignTerminate();
+                            }
+                            this.resultDeferred.reject('LEDGER_SIGN_CANCELLED');
+                        }}
                     />
                 );
             case ScreenStep.TROUBLESHOOTING:

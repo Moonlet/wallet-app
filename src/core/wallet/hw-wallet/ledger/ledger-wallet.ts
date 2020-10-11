@@ -18,8 +18,10 @@ export enum LedgerSignEvent {
     APP_OPENED = 'APP_OPENED',
     SIGN_TX = 'SIGN_TX',
     TX_SIGNED = 'TX_SIGNED',
+    TX_SIGN_DECLINED = 'TX_SIGN_DECLINED',
     DONE = 'DONE',
-    ERROR = 'ERROR'
+    ERROR = 'ERROR',
+    TERMINATED = 'TERMINATED'
 }
 
 export class LedgerWallet implements IWallet {
@@ -121,11 +123,14 @@ export class LedgerWallet implements IWallet {
     ): Promise<any> {
         let shouldTerminate = false;
         const terminate = () => {
+            // console.log('terminate');
             shouldTerminate = true;
         };
 
         const terminateIfNeeded = () => {
+            // console.log('run terminate check');
             if (shouldTerminate) {
+                // console.log('run terminate');
                 throw new Error('TERMINATED');
             }
         };
@@ -140,10 +145,17 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.LOADING);
 
             // detect device, if device is not connected or not found within 300ms, trigger connect device event
-            const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
-            let transport = await this.getTransport();
+            // const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
+            cb(LedgerSignEvent.CONNECT_DEVICE);
+            let transport;
+            try {
+                transport = await this.getTransport();
+            } catch (e) {
+                // add some delay for the cases of instant fails, CONNECT_DEVICE and ERROR events are too quick triggerd
+                await delay(2000);
+                throw e;
+            }
             terminateIfNeeded();
-            clearTimeout(connectTimeout);
             cb(LedgerSignEvent.DEVICE_CONNECTED);
 
             // detect if app is opened
@@ -169,7 +181,14 @@ export class LedgerWallet implements IWallet {
         } catch (e) {
             // console.log('smart sign', e);
             if (e !== 'TERMINATED') {
-                cb(LedgerSignEvent.ERROR);
+                const message = e?.message || '';
+                if (message?.indexOf('denied by the user') >= 0) {
+                    cb(LedgerSignEvent.TX_SIGN_DECLINED);
+                } else {
+                    cb(LedgerSignEvent.ERROR);
+                }
+            } else {
+                cb(LedgerSignEvent.TERMINATED);
             }
             return Promise.reject(e);
         }

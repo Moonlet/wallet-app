@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { IReduxState } from '../../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import {
@@ -15,8 +14,7 @@ import {
 import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
-import { normalize } from '../../../../styles/dimensions';
-import { AccountType, IAccountState, ITokenState } from '../../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
@@ -31,9 +29,7 @@ import {
     navigateToEnterAmountStep,
     DELEGATE_ENTER_AMOUNT
 } from '../../../../redux/ui/screens/posActions/actions';
-import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
-import { IconValues } from '../../../../components/icon/values';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
@@ -156,71 +152,73 @@ export class DelegateSelectValidatorComponent extends React.Component<
     }
 
     private renderValidatorList() {
-        const { styles } = this.props;
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        const maximumNumberOfValidatorsReached =
-            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
-            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
-                this.state.nrValidators;
+        // const { styles } = this.props;
+        // const blockchainInstance = getBlockchain(this.props.blockchain);
+        // const maximumNumberOfValidatorsReached =
+        //     blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
+        //     blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
+        //         this.state.nrValidators;
+
+        // Hide this feature for now
         return [
-            <View key={'increase-list'} style={styles.actionContainer}>
-                <TouchableOpacity
-                    style={styles.actionIconContainer}
-                    onPress={() => {
-                        if (this.state.nrValidators > 1) {
-                            const nrValidatorsNew = this.state.nrValidators - 1;
+            // <View key={'increase-list'} style={styles.actionContainer}>
+            //     <TouchableOpacity
+            //         style={styles.actionIconContainer}
+            //         onPress={() => {
+            //             if (this.state.nrValidators > 1) {
+            //                 const nrValidatorsNew = this.state.nrValidators - 1;
 
-                            const aditionalValidators = this.props.allValidators.slice(
-                                0,
-                                nrValidatorsNew - 1
-                            );
-                            this.setState({
-                                nrValidators: nrValidatorsNew,
-                                validatorsList: this.props.validators.concat(aditionalValidators)
-                            });
-                        }
-                        // decrease
-                    }}
-                >
-                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
-                </TouchableOpacity>
-                <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
-                <TouchableOpacity
-                    style={styles.actionIconContainer}
-                    onPress={() => {
-                        if (
-                            this.props.account.type === AccountType.LOCKUP_CONTRACT &&
-                            this.state.nrValidators === 1
-                        ) {
-                            Dialog.info(
-                                translate('Validator.operationNotAvailable'),
-                                translate('Validator.multipleNodes')
-                            );
-                            return;
-                        }
+            //                 const aditionalValidators = this.props.allValidators.slice(
+            //                     0,
+            //                     nrValidatorsNew - 1
+            //                 );
+            //                 this.setState({
+            //                     nrValidators: nrValidatorsNew,
+            //                     validatorsList: this.props.validators.concat(aditionalValidators)
+            //                 });
+            //             }
+            //             // decrease
+            //         }}
+            //     >
+            //         <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
+            //     </TouchableOpacity>
+            //     <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
+            //     <TouchableOpacity
+            //         style={styles.actionIconContainer}
+            //         onPress={() => {
+            //             if (
+            //                 this.props.account.type === AccountType.LOCKUP_CONTRACT &&
+            //                 this.state.nrValidators === 1
+            //             ) {
+            //                 Dialog.info(
+            //                     translate('Validator.operationNotAvailable'),
+            //                     translate('Validator.multipleNodes')
+            //                 );
+            //                 return;
+            //             }
 
-                        if (
-                            this.props.allValidators.length >= this.state.nrValidators &&
-                            !maximumNumberOfValidatorsReached
-                        ) {
-                            const nrValidatorsNew = this.state.nrValidators + 1;
+            //             if (
+            //                 this.props.allValidators.length >= this.state.nrValidators &&
+            //                 !maximumNumberOfValidatorsReached
+            //             ) {
+            //                 const nrValidatorsNew = this.state.nrValidators + 1;
 
-                            const aditionalValidators =
-                                this.props.allValidators.length > nrValidatorsNew - 1
-                                    ? this.props.allValidators.slice(0, nrValidatorsNew - 1)
-                                    : this.props.allValidators;
+            //                 const aditionalValidators =
+            //                     this.props.allValidators.length > nrValidatorsNew - 1
+            //                         ? this.props.allValidators.slice(0, nrValidatorsNew - 1)
+            //                         : this.props.allValidators;
 
-                            this.setState({
-                                nrValidators: nrValidatorsNew,
-                                validatorsList: this.props.validators.concat(aditionalValidators)
-                            });
-                        }
-                        // increase
-                    }}
-                >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
-                </TouchableOpacity>
-            </View>,
+            //                 this.setState({
+            //                     nrValidators: nrValidatorsNew,
+            //                     validatorsList: this.props.validators.concat(aditionalValidators)
+            //                 });
+            //             }
+            //             // increase
+            //         }}
+            //     >
+            //         <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+            //     </TouchableOpacity>
+            // </View>
             <View key={'validator-list'} style={this.props.styles.listContainer}>
                 <ValidatorsList
                     validators={this.state.validatorsList}

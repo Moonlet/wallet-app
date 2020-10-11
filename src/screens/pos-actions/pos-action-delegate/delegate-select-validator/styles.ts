@@ -26,6 +26,7 @@ export default (theme: ITheme) =>
             })
         },
         listContainer: {
+            flex: 1,
             marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
         },

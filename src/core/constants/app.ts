@@ -1,13 +1,13 @@
 export const AVAILABLE_CURRENCIES = [
-    'USD',
-    'EUR',
     'AUD',
+    'CNY',
+    'DAI',
+    'EUR',
     'GBP',
     'JPY',
     'SGD',
-    'CNY',
-    'USDT',
-    'DAI'
+    'USD',
+    'USDT'
 ];
 export const WC_CONNECTION = 'wcConnection';
 export const WC = {

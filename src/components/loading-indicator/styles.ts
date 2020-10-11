@@ -5,7 +5,6 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            justifyContent: 'center',
-            backgroundColor: theme.colors.appBackground
+            justifyContent: 'center'
         }
     });

@@ -396,7 +396,8 @@ export const translation: ITranslations = {
             noTransactions: 'No transactions available',
             transactionHistory:
                 'Transaction history will appear here once you start to send tokens to other accounts',
-            manageAccounts: 'Manage accounts'
+            manageAccounts: 'Manage accounts',
+            switchAccounts: 'Switch accounts'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',

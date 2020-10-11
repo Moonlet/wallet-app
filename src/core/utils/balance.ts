@@ -68,3 +68,7 @@ export const convertAmount = (
 
     return new BigNumber(0);
 };
+
+export const splitStake = (amount: BigNumber, validators: number): BigNumber => {
+    return new BigNumber(amount || 0).dividedBy(validators);
+};

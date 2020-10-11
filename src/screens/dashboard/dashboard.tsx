@@ -320,63 +320,83 @@ export class DashboardScreenComponent extends React.Component<
             <Animated.View
                 style={[styles.coinBalanceCard, { height: animateCoinBalanceCardHeight }]}
             >
-                {selectedAccount && (
+                <TouchableOpacity
+                    testID="coin-balance-card"
+                    onPress={() => {
+                        // TODO: fix bottom sheet experience
+                        // this.props.openBottomSheet(BottomSheetType.ACCOUNTS, { blockchain });
+                    }}
+                    activeOpacity={1}
+                >
+                    {selectedAccount && (
+                        <Animated.View
+                            style={[
+                                styles.row,
+                                {
+                                    flex: animateHideAccountAddress,
+                                    opacity: Platform.select({
+                                        default: 1,
+                                        web: animateOpacityAccountAddressWeb
+                                    })
+                                }
+                            ]}
+                        >
+                            <Text
+                                testID={
+                                    blockchain.toLocaleLowerCase() +
+                                    '-' +
+                                    defaultAccountName.replace(/ /g, '-').toLowerCase()
+                                }
+                                style={styles.account}
+                            >
+                                {selectedAccount.name || defaultAccountName}
+                            </Text>
+                            <Text style={styles.address}>
+                                {formatAddress(selectedAccount.address, blockchain)}
+                            </Text>
+                        </Animated.View>
+                    )}
+
                     <Animated.View
                         style={[
                             styles.row,
-                            {
-                                flex: animateHideAccountAddress,
-                                opacity: Platform.select({
-                                    default: 1,
-                                    web: animateOpacityAccountAddressWeb
-                                })
-                            }
+                            { paddingVertical: animateParimaryAmountVerticalPadding }
                         ]}
                     >
-                        <Text
-                            testID={
-                                blockchain.toLocaleLowerCase() +
-                                '-' +
-                                defaultAccountName.replace(/ /g, '-').toLowerCase()
-                            }
-                            style={styles.account}
-                        >
-                            {selectedAccount.name || defaultAccountName}
-                        </Text>
-                        <Text style={styles.address}>
-                            {formatAddress(selectedAccount.address, blockchain)}
-                        </Text>
+                        <Amount
+                            style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
+                            amount={String(balance)}
+                            token={tokenConfig.symbol}
+                            tokenDecimals={tokenConfig.decimals}
+                            blockchain={blockchain}
+                            isAnimated={true}
+                            smallFontToken={{
+                                visible: true
+                            }}
+                        />
+                        <Icon
+                            name={IconValues.CHEVRON_DOWN}
+                            size={normalize(18)}
+                            style={styles.icon}
+                        />
                     </Animated.View>
-                )}
 
-                <Animated.View
-                    style={[styles.row, { paddingVertical: animateParimaryAmountVerticalPadding }]}
-                >
-                    <Amount
-                        style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
-                        amount={String(balance)}
-                        token={tokenConfig.symbol}
-                        tokenDecimals={tokenConfig.decimals}
-                        blockchain={blockchain}
-                        isAnimated={true}
-                        smallFontToken={{
-                            visible: true
-                        }}
-                    />
-                </Animated.View>
-
-                <View style={styles.row}>
-                    <Amount
-                        testID={this.props.userCurrency}
-                        style={[styles.secondaryText, { fontSize: animateConvertedAmountFontSize }]}
-                        amount={String(balance)}
-                        token={blockchainConfig.coin}
-                        tokenDecimals={tokenConfig.decimals}
-                        blockchain={blockchain}
-                        convert
-                        isAnimated={true}
-                    />
-                </View>
+                    <View style={styles.row}>
+                        <Amount
+                            testID={this.props.userCurrency}
+                            style={[
+                                styles.secondaryText,
+                                { fontSize: animateConvertedAmountFontSize }
+                            ]}
+                            amount={String(balance)}
+                            token={blockchainConfig.coin}
+                            tokenDecimals={tokenConfig.decimals}
+                            blockchain={blockchain}
+                            convert
+                            isAnimated={true}
+                        />
+                    </View>
+                </TouchableOpacity>
             </Animated.View>
         );
     }

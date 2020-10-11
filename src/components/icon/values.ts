@@ -1,5 +1,6 @@
 export enum IconValues {
     // please try to add keys in alphabetic order
+    ACTION_UP_DOWN = 'action-up-down',
     ADD = 'add',
     ADD_CIRCLE = 'add-circle',
     ALARM_BELL = 'alarm-bell',

@@ -17,6 +17,7 @@ import elliptic from 'elliptic';
 import { Contracts } from './config';
 import { fixEthAddress } from '../../utils/format-address';
 import cloneDeep from 'lodash/cloneDeep';
+import { splitStake } from '../../utils/balance';
 
 const toHex = value => {
     if (value && value !== '0x') {
@@ -119,11 +120,11 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     transactions.push(transaction);
                 }
 
-                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
 
                 for (const validator of tx.validators) {
                     const txVote: IPosTransaction = cloneDeep(tx);
-                    txVote.amount = splitAmount.toString();
+                    txVote.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
                     const transaction: IBlockchainTransaction = await client.contracts[
                         Contracts.ELECTION
                     ].vote(txVote, validator);

@@ -25,6 +25,7 @@ import {
 } from '../../../../core/utils/available-funds';
 import { EnterAmount } from '../../../send/components/enter-amount/enter-amount';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
+import { splitStake } from '../../../../core/utils/balance';
 
 interface IHeaderStep {
     step: number;
@@ -129,14 +130,23 @@ export class EnterAmountComponentComponent extends React.Component<
     }
 
     private renderValidatorList() {
-        const spliAmountToEachValidator = new BigNumber(this.state.amount || 0).dividedBy(
-            this.props.validators.length
+        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const stdAmount = blockchainInstance.account.amountToStd(
+            this.state.amount || 0,
+            tokenConfig.decimals
         );
+        const splitAmount = splitStake(stdAmount, this.props.validators.length);
+        const amountFromStd = blockchainInstance.account.amountFromStd(
+            splitAmount,
+            tokenConfig.decimals
+        );
+
         return this.props.validators.map((validator, index) => (
             <ValidatorDelegateAmount
                 key={index}
                 validator={validator}
-                amount={spliAmountToEachValidator.toString()}
+                amount={amountFromStd.toFixed(2, BigNumber.ROUND_DOWN)}
                 symbol={this.props.token.symbol}
             />
         ));

@@ -140,8 +140,8 @@ export class TokenDashboardComponent extends React.Component<
             <View style={styles.container}>
                 <View style={styles.cardWrapper}>
                     {this.renderCard({
-                        title: translate('Account.manageAccounts'),
-                        icon: IconValues.PENCIL,
+                        title: translate('Account.switchAccounts'), // manageAccounts
+                        icon: IconValues.ACTION_UP_DOWN, // IconValues.PENCIL,
                         onPress: () => NavigationService.navigate('ManageAccounts', {})
                     })}
 

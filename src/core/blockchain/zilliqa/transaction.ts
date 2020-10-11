@@ -19,6 +19,7 @@ import { Contracts } from './config';
 import BigNumber from 'bignumber.js';
 import { cloneDeep } from 'lodash';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
+import { splitStake } from '../../utils/balance';
 
 export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public schnorrSign(msg: Buffer, privateKey: string): string {
@@ -83,11 +84,11 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE: {
-                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
 
                 for (const validator of tx.validators) {
                     const txStake: IPosTransaction = cloneDeep(tx);
-                    txStake.amount = splitAmount.toString();
+                    txStake.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
                     const transaction: IBlockchainTransaction = await client.contracts[
                         Contracts.STAKING
                     ].delegateStake(txStake, validator);

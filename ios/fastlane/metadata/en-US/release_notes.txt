@@ -1,5 +1,4 @@
-Team's log. Stardate 2009.11:
+Team's log. Stardate 2010.12:
 
-We're thrilled to announce that you can use both Moonlet and Ledger S/X wallets all-together to manage and spend securely your $ZIL.
-
+Welcome to Moonlet. It's staking time! This release comes with staking feature and bunch of improvements that makes your experience much better. 
 Moonlet Team

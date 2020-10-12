@@ -31,8 +31,33 @@ export class Client extends BlockchainGenericClient {
         this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
+    public async fetchRewardsForTransaction(
+        txHash: string
+    ): Promise<{ gZil: string; zil: string }> {
+        // try {
+        //     // let zil = 0;
+        //     // this.call('GetTransaction', [txHash]).then(response => {
+        //     //     if (response?.result?.receipt?.event_logs) {
+        //     //         const logs = response?.result?.receipt?.event_logs;
+        //     //         console.log('logs', logs);
+        //     //         const zilObject = logs.filter(v => (v._eventname = 'Send deleg rewards'));
+        //     //         if (zilObject.length){
+        //     //             const params = zilObject.filter(v => (v.vname = 'amt'));
+        //     //             if (params.length)
+        //     //         }
+        //     //     }
+        //     // });
+        // } catch (e) {}
+
+        return { gZil: '1231234243', zil: '10000' };
+    }
+
     public async getBalance(address: string): Promise<IBalance> {
         try {
+            // const x = await this.fetchRewardsForTransaction(
+            //     '49dc1686385db6a96e8a5f9c3f6b48fbd0aeeba1a5eb36972da927aa0f6feb2c'
+            // );
+
             const data = await new ApiClient().validators.getBalance(
                 address,
                 Blockchain.ZILLIQA,

@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { translate } from '../../core/i18n';
+import { Text } from '../../library';
 
 interface Props {
     styles: ReturnType<typeof stylesProvider>;

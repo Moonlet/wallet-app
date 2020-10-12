@@ -43,7 +43,6 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
-import { DelegateSelectValidator } from '../screens/pos-actions/pos-action-delegate/delegate-select-validator/delegate-select-validator';
 import { QuickDelegateSelectValidator } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-select-validator/quick-delegate-select-validator';
 import { PosBasicAction } from '../screens/pos-actions/pos-basic-action/pos-basic-action';
 import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
@@ -163,7 +162,7 @@ export const WalletNavigation = createStackNavigator(
             screen: ValidatorScreen
         },
         PosDelegate: {
-            screen: DelegateSelectValidator
+            screen: DelegateEnterAmount
         },
         DelegateEnterAmount: {
             screen: DelegateEnterAmount

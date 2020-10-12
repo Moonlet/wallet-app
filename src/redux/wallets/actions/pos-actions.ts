@@ -1,4 +1,4 @@
-import { IAccountState } from '../state';
+import { AccountType, IAccountState } from '../state';
 import {
     Blockchain,
     IBlockchainTransaction,
@@ -11,7 +11,7 @@ import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
-import { getSelectedAccount, getSelectedWallet } from '../selectors';
+import { getNrPendingTransasctions, getSelectedAccount, getSelectedWallet } from '../selectors';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { generateAccountTokenState, getTokenConfig } from '../../tokens/static-selectors';
@@ -331,14 +331,29 @@ export const signAndSendTransactions = (
         let error = false;
         const startIndex = specificIndex === undefined ? 0 : specificIndex;
         for (let index = startIndex; index < transactions.length; index++) {
+            await delay(0);
             if (error) break;
             const txIndex = specificIndex || index;
-            const transaction = transactions[index];
+            let transaction = transactions[index];
 
             dispatch(setProcessTxIndex(txIndex));
-            // await delay(5000);
             let signed;
             try {
+                const currentBlockchainNonce = await client.getNonce(
+                    account.type === AccountType.LOCKUP_CONTRACT
+                        ? account.meta.owner
+                        : account.address,
+                    account.publicKey
+                );
+                const nrPendingTransactions = getNrPendingTransasctions(getState());
+                transaction = {
+                    ...transaction,
+                    nonce: currentBlockchainNonce + nrPendingTransactions
+                };
+
+                // console.log('updated', updatedTransaction);
+                // return;
+
                 signed = await wallet.sign(transaction.blockchain, account.index, transaction);
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
             } catch (e) {
@@ -349,8 +364,6 @@ export const signAndSendTransactions = (
             }
 
             try {
-                await delay(500);
-
                 // const txHash = signed;
                 // console.log(client);
                 const txHash = await client.sendTransaction(signed);

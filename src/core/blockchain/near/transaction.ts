@@ -31,6 +31,7 @@ import {
 import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { NEAR_TLD } from '../../constants/app';
 import { NEAR_DEFAULT_FUNC_CALL_GAS, NEAR_CREATE_ACCOUNT_MIN_BALANCE } from './consts';
+import { splitStake } from '../../utils/balance';
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -135,10 +136,10 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE: {
-                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
 
                 const txDelegate: IPosTransaction = cloneDeep(tx);
-                txDelegate.amount = splitAmount.toFixed();
+                txDelegate.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
 
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT

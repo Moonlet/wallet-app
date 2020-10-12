@@ -30,6 +30,7 @@ import { IReduxState } from '../../redux/state';
 import { AccountStats } from '../../core/blockchain/types/stats';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -136,6 +137,11 @@ export class TokenDashboardComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
+        let displayStakingFeatures = true;
+        if (this.props.blockchain === Blockchain.ZILLIQA && !isFeatureActive(RemoteFeature.ZIL)) {
+            displayStakingFeatures = false;
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.cardWrapper}>
@@ -168,25 +174,29 @@ export class TokenDashboardComponent extends React.Component<
                         style={styles.affiliateBanner}
                     />
 
-                    <AccountSummary
-                        isLoading={this.state.loadingAccountStats}
-                        style={styles.accountSummary}
-                        data={{
-                            accountStats: this.props.accountStats,
-                            blockchain: this.props.blockchain,
-                            token: this.state.token,
-                            extraToken: this.props.account?.tokens[this.props.chainId].gZIL
-                        }}
-                        enableExpand={true}
-                    />
+                    {displayStakingFeatures && (
+                        <AccountSummary
+                            isLoading={this.state.loadingAccountStats}
+                            style={styles.accountSummary}
+                            data={{
+                                accountStats: this.props.accountStats,
+                                blockchain: this.props.blockchain,
+                                token: this.state.token,
+                                extraToken: this.props.account?.tokens[this.props.chainId].gZIL
+                            }}
+                            enableExpand={true}
+                        />
+                    )}
 
-                    <QuickDelegateBanner
-                        blockchain={this.props.blockchain}
-                        account={this.props.account}
-                        chainId={this.props.chainId}
-                        style={styles.quickDelegateBannerContainer}
-                        accountStats={this.props.accountStats}
-                    />
+                    {displayStakingFeatures && (
+                        <QuickDelegateBanner
+                            blockchain={this.props.blockchain}
+                            account={this.props.account}
+                            chainId={this.props.chainId}
+                            style={styles.quickDelegateBannerContainer}
+                            accountStats={this.props.accountStats}
+                        />
+                    )}
 
                     {this.props.account?.tokens &&
                         this.props.chainId &&

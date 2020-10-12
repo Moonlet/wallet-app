@@ -196,6 +196,21 @@ export class TransactionsHistoryListComponent extends React.Component<
             outputRange: ['360deg', '0deg']
         });
 
+        let transactionType: string;
+        if (tx.additionalInfo?.posAction) {
+            const posAction = tx.additionalInfo.posAction;
+            if (
+                posAction === PosBasicActionType.CLAIM_REWARD ||
+                posAction === PosBasicActionType.STAKE ||
+                posAction === PosBasicActionType.UNSTAKE ||
+                posAction === PosBasicActionType.WITHDRAW
+            ) {
+                transactionType = Capitalize(posAction)
+                    .split('_')
+                    .join(' ');
+            }
+        }
+
         return (
             <TouchableOpacity
                 testID={`transaction-${index}`}
@@ -228,6 +243,12 @@ export class TransactionsHistoryListComponent extends React.Component<
                 </Animated.View>
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
+                        {transactionType && (
+                            <Text style={styles.transactionTextPrimary}>
+                                {`${transactionType} `}
+                            </Text>
+                        )}
+
                         {amount && (
                             <Amount
                                 amount={amount}

@@ -213,7 +213,6 @@ export class AccountTabComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
         const affiliateBanner = blockchainInstance.config.ui.affiliateBanners.account;

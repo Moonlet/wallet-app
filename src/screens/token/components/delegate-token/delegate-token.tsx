@@ -21,11 +21,10 @@ import { AccountTab } from './components/tabs/account-tab/account-tab';
 import { DelegationsTab } from './components/tabs/delegations-tab/delegations-tab';
 import { ValidatorsTab } from './components/tabs/validators-tab/validators-tab';
 import { TransactionsTab } from './components/tabs/transactions-tab/transactions-tab';
-import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationScreenProp, NavigationState, NavigationEvents } from 'react-navigation';
 import { TransactionStatus } from '../../../../core/wallet/types';
-import { updateTransactionFromBlockchain } from '../../../../redux/wallets/actions';
+import { updateTransactionFromBlockchain, getBalance } from '../../../../redux/wallets/actions';
 import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
-
 export interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
@@ -39,6 +38,7 @@ export interface IReduxProps {
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
     chainId: ChainIdType;
+    getBalance: typeof getBalance;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
 }
@@ -48,6 +48,7 @@ export interface IState {
 }
 
 const mapDispatchToProps = {
+    getBalance,
     updateTransactionFromBlockchain,
     fetchDelegatedValidators
 };
@@ -106,6 +107,17 @@ export class DelegateTokenScreenComponent extends React.Component<
         });
     }
 
+    public fetchAccountBalance() {
+        if (this.props.account) {
+            this.props.getBalance(
+                this.props.account.blockchain,
+                this.props.account.address,
+                undefined,
+                true
+            );
+        }
+    }
+
     private updateTransactionFromBlockchain() {
         this.props.transactions?.map((transaction: IBlockchainTransaction) => {
             if (transaction.status === TransactionStatus.PENDING) {
@@ -124,7 +136,9 @@ export class DelegateTokenScreenComponent extends React.Component<
 
         const blockchainConfigTokenLabels = getBlockchain(this.props.blockchain).config.ui.token
             .labels;
-
+        if (tab === blockchainConfigTokenLabels.tabAccount) {
+            this.fetchAccountBalance();
+        }
         if (tab === blockchainConfigTokenLabels.tabTransactions) {
             this.updateTransactionFromBlockchain();
         } else if (tab === blockchainConfigTokenLabels.tabDelegations) {
@@ -217,6 +231,7 @@ export class DelegateTokenScreenComponent extends React.Component<
             <View testID="delegate-token-screen" style={styles.container}>
                 {this.renderTabButtons()}
                 {this.renderTabs()}
+                <NavigationEvents onWillFocus={() => this.fetchAccountBalance()} />
             </View>
         );
     }

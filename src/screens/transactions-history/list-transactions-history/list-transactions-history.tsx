@@ -203,7 +203,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 posAction === PosBasicActionType.UNSTAKE ||
                 posAction === PosBasicActionType.WITHDRAW
             ) {
-                transactionType = posAction;
+                transactionType = posAction + ' ';
             }
 
             if (
@@ -247,9 +247,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
                         {transactionType && (
-                            <Text style={styles.transactionTextPrimary}>
-                                {`${transactionType} `}
-                            </Text>
+                            <Text style={styles.transactionTextPrimary}>{transactionType}</Text>
                         )}
 
                         {amount && (

@@ -22,7 +22,12 @@ import { PosBasicActionType } from '../../../../../../../core/blockchain/types/t
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
-import { withdraw, activate, claimRewardNoInput } from '../../../../../../../redux/wallets/actions';
+import {
+    withdraw,
+    activate,
+    claimRewardNoInput,
+    getBalance
+} from '../../../../../../../redux/wallets/actions';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
@@ -43,6 +48,7 @@ interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     accountStats: AccountStats;
+    getBalance: typeof getBalance;
     withdraw: typeof withdraw;
     claimRewardNoInput: typeof claimRewardNoInput;
     activate: typeof activate;
@@ -63,6 +69,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 const mapDispatchToProps = {
+    getBalance,
     withdraw,
     activate,
     fetchValidators,
@@ -78,6 +85,18 @@ export class AccountTabComponent extends React.Component<
         this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
         this.props.fetchDelegatedValidators(this.props.account);
         this.props.fetchAccountDelegateStats(this.props.account, this.props.token);
+        this.onFocus();
+    }
+
+    public onFocus() {
+        if (this.props.account) {
+            this.props.getBalance(
+                this.props.account.blockchain,
+                this.props.account.address,
+                undefined,
+                true
+            );
+        }
     }
 
     @bind
@@ -213,7 +232,6 @@ export class AccountTabComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
         const affiliateBanner = blockchainInstance.config.ui.affiliateBanners.account;

@@ -7,18 +7,24 @@ import { View, TouchableHighlight } from 'react-native';
 import Icon from '../icon/icon';
 import { ICON_SIZE, normalize } from '../../styles/dimensions';
 
-export interface IProps {
+interface IExternalProps {
     label: string | JSX.Element;
     leftIcon?: string;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;
     style?: any;
+    disabled?: {
+        value: boolean;
+        message?: string;
+    };
 }
 
 export const ListCardComponent = (
-    props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
+    const { styles } = props;
+
     const label =
         typeof props.label === 'string' ? (
             <Text style={props.styles.label}>{props.label}</Text>
@@ -33,23 +39,32 @@ export const ListCardComponent = (
                 .toLowerCase()}
             onPress={props.onPress}
             underlayColor={props.theme.colors.appBackground}
+            disabled={props?.disabled?.value}
         >
-            <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
+            <View
+                style={[
+                    styles.card,
+                    props.selected && styles.selected,
+                    props.style,
+                    props?.disabled?.value === true && styles.cardDisabled
+                ]}
+            >
                 {props.leftIcon && (
-                    <View style={[props.styles.iconContainer, { alignItems: 'flex-start' }]}>
-                        <Icon name={props.leftIcon} size={ICON_SIZE} style={props.styles.icon} />
+                    <View style={[styles.iconContainer, { alignItems: 'flex-start' }]}>
+                        <Icon name={props.leftIcon} size={ICON_SIZE} style={styles.icon} />
                     </View>
                 )}
 
-                <View style={props.styles.labelContainer}>{label}</View>
+                <View style={styles.labelContainer}>
+                    {label}
+                    {props?.disabled?.value === true && props?.disabled?.message && (
+                        <Text style={styles.disabledMessage}>{props.disabled.message}</Text>
+                    )}
+                </View>
 
                 {props.rightIcon && (
-                    <View style={[props.styles.iconContainer, { alignItems: 'flex-end' }]}>
-                        <Icon
-                            name={props.rightIcon}
-                            size={normalize(18)}
-                            style={props.styles.icon}
-                        />
+                    <View style={[styles.iconContainer, { alignItems: 'flex-end' }]}>
+                        <Icon name={props.rightIcon} size={normalize(18)} style={styles.icon} />
                     </View>
                 )}
             </View>
@@ -57,4 +72,6 @@ export const ListCardComponent = (
     );
 };
 
-export const ListCard = smartConnect<IProps>(ListCardComponent, [withTheme(stylesProvider)]);
+export const ListCard = smartConnect<IExternalProps>(ListCardComponent, [
+    withTheme(stylesProvider)
+]);

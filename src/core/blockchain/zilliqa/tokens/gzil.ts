@@ -12,7 +12,7 @@ export const GZIL_TESTNET: ITokenConfigState = {
     defaultOrder: 999,
     decimals: 15,
     ui: {
-        decimals: 3,
+        decimals: 8,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
     type: TokenType.ZRC2
@@ -29,7 +29,7 @@ export const GZIL_MAINNET: ITokenConfigState = {
     defaultOrder: 999,
     decimals: 15,
     ui: {
-        decimals: 3,
+        decimals: 8,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
     type: TokenType.ZRC2

@@ -95,6 +95,7 @@ export interface IBlockchainConfig {
         affiliateBanners: {
             account: IAffiliateBannerType;
         };
+        fetchAccountStatsSec: number;
     };
     networks: {
         testNet: ChainIdType;
@@ -102,4 +103,5 @@ export interface IBlockchainConfig {
     };
     defaultOrder: number;
     nameServices?: INameService[];
+    amountToKeepInAccount: BigNumber;
 }

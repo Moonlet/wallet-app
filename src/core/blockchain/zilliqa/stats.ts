@@ -3,6 +3,7 @@ import { Client } from './client';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { BigNumber } from 'bignumber.js';
+import { config } from './config';
 
 export class Stats extends GenericStats<Client> {
     public async getAccountDelegateStats(
@@ -24,6 +25,12 @@ export class Stats extends GenericStats<Client> {
             this.client.chainId.toString()
         );
 
-        return new BigNumber(data.balance.available).toFixed();
+        let availableToDelegate = new BigNumber(0);
+        if (new BigNumber(data.balance.available).gt(config.amountToKeepInAccount)) {
+            availableToDelegate = availableToDelegate.plus(
+                new BigNumber(data.balance.available).minus(config.amountToKeepInAccount)
+            );
+        }
+        return availableToDelegate.toFixed();
     }
 }

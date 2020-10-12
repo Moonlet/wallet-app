@@ -50,6 +50,7 @@ import {
 } from '../../redux/notifications/actions';
 import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { StakingBetaBadge } from '../../components/staking-beta-badge/staking-beta-badge';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -319,81 +320,63 @@ export class DashboardScreenComponent extends React.Component<
             <Animated.View
                 style={[styles.coinBalanceCard, { height: animateCoinBalanceCardHeight }]}
             >
-                <TouchableOpacity
-                    testID="coin-balance-card"
-                    onPress={() =>
-                        this.props.openBottomSheet(BottomSheetType.ACCOUNTS, { blockchain })
-                    }
-                >
-                    {selectedAccount && (
-                        <Animated.View
-                            style={[
-                                styles.row,
-                                {
-                                    flex: animateHideAccountAddress,
-                                    opacity: Platform.select({
-                                        default: 1,
-                                        web: animateOpacityAccountAddressWeb
-                                    })
-                                }
-                            ]}
-                        >
-                            <Text
-                                testID={
-                                    blockchain.toLocaleLowerCase() +
-                                    '-' +
-                                    defaultAccountName.replace(/ /g, '-').toLowerCase()
-                                }
-                                style={styles.account}
-                            >
-                                {selectedAccount.name || defaultAccountName}
-                            </Text>
-                            <Text style={styles.address}>
-                                {formatAddress(selectedAccount.address, blockchain)}
-                            </Text>
-                        </Animated.View>
-                    )}
-
+                {selectedAccount && (
                     <Animated.View
                         style={[
                             styles.row,
-                            { paddingVertical: animateParimaryAmountVerticalPadding }
+                            {
+                                flex: animateHideAccountAddress,
+                                opacity: Platform.select({
+                                    default: 1,
+                                    web: animateOpacityAccountAddressWeb
+                                })
+                            }
                         ]}
                     >
-                        <Amount
-                            style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
-                            amount={String(balance)}
-                            token={tokenConfig.symbol}
-                            tokenDecimals={tokenConfig.decimals}
-                            blockchain={blockchain}
-                            isAnimated={true}
-                            smallFontToken={{
-                                visible: true
-                            }}
-                        />
-                        <Icon
-                            name={IconValues.CHEVRON_DOWN}
-                            size={normalize(18)}
-                            style={styles.icon}
-                        />
+                        <Text
+                            testID={
+                                blockchain.toLocaleLowerCase() +
+                                '-' +
+                                defaultAccountName.replace(/ /g, '-').toLowerCase()
+                            }
+                            style={styles.account}
+                        >
+                            {selectedAccount.name || defaultAccountName}
+                        </Text>
+                        <Text style={styles.address}>
+                            {formatAddress(selectedAccount.address, blockchain)}
+                        </Text>
                     </Animated.View>
+                )}
 
-                    <View style={styles.row}>
-                        <Amount
-                            testID={this.props.userCurrency}
-                            style={[
-                                styles.secondaryText,
-                                { fontSize: animateConvertedAmountFontSize }
-                            ]}
-                            amount={String(balance)}
-                            token={blockchainConfig.coin}
-                            tokenDecimals={tokenConfig.decimals}
-                            blockchain={blockchain}
-                            convert
-                            isAnimated={true}
-                        />
-                    </View>
-                </TouchableOpacity>
+                <Animated.View
+                    style={[styles.row, { paddingVertical: animateParimaryAmountVerticalPadding }]}
+                >
+                    <Amount
+                        style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
+                        amount={String(balance)}
+                        token={tokenConfig.symbol}
+                        tokenDecimals={tokenConfig.decimals}
+                        blockchain={blockchain}
+                        isAnimated={true}
+                        smallFontToken={{
+                            visible: true
+                        }}
+                    />
+                </Animated.View>
+
+                <View style={styles.row}>
+                    <Amount
+                        testID={this.props.userCurrency}
+                        style={[styles.secondaryText, { fontSize: animateConvertedAmountFontSize }]}
+                        amount={String(balance)}
+                        token={blockchainConfig.coin}
+                        tokenDecimals={tokenConfig.decimals}
+                        blockchain={blockchain}
+                        convert
+                        isAnimated={true}
+                    />
+                </View>
             </Animated.View>
         );
     }
@@ -452,6 +435,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
+                {isFeatureActive(RemoteFeature.BETA_BADGE) && <StakingBetaBadge />}
                 <TestnetBadge />
                 <LedgerBadge hwOptions={wallet?.hwOptions} />
 

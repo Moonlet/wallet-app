@@ -140,13 +140,15 @@ export const config: IBlockchainConfig = {
         displayName: 'CELO',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X
-        }
+        },
+        fetchAccountStatsSec: 5
     },
     networks: {
         testNet: 44787,
         mainNet: 42220
     },
-    defaultOrder: 1
+    defaultOrder: 1,
+    amountToKeepInAccount: new BigNumber(0)
 };
 
 export enum Contracts {

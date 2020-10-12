@@ -18,7 +18,7 @@ import { getValidators } from '../../../../../../../redux/ui/validators/selector
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
 
-interface IProps {
+interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
@@ -29,57 +29,61 @@ interface IReduxProps {
     validators: IValidator[];
 }
 
-const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         validators: getValidators(state, ownProps.blockchain, ownProps.chainId)
     };
 };
 
 interface IState {
-    validatorsFilteredList: IValidator[];
-    unfilteredList: IValidator[];
+    validators: IValidator[];
 }
 
 export class ValidatorsTabComponent extends React.Component<
-    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private searchTimeoutTimer;
+    private searchTimeoutTimer: any;
 
-    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
-            validatorsFilteredList: this.props.validators,
-            unfilteredList: this.props.validators
+            validators: this.props.validators
         };
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.validators !== prevProps.validators) {
-            this.setState({
-                validatorsFilteredList: this.props.validators,
-                unfilteredList: this.props.validators
-            });
+        if (this.props.validators && this.props.validators !== prevProps.validators) {
+            this.setState({ validators: this.props.validators });
         }
+    }
+
+    public componentWillUnmount() {
+        this.searchTimeoutTimer && clearTimeout(this.searchTimeoutTimer);
     }
 
     @bind
     public onSearchInput(text: string) {
+        if (text === '') {
+            // Reset filters
+            this.setState({ validators: this.props.validators });
+        }
+
         this.searchTimeoutTimer && clearTimeout(this.searchTimeoutTimer);
         this.searchTimeoutTimer = setTimeout(async () => {
-            const filteredList = this.state.unfilteredList.filter(
+            const filteredList = this.state.validators.filter(
                 validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
             );
-            this.setState({ validatorsFilteredList: filteredList });
+            this.setState({ validators: filteredList });
         }, 200);
     }
 
     @bind
     public onClose() {
-        this.setState({
-            validatorsFilteredList: this.state.unfilteredList
-        });
+        this.setState({ validators: this.props.validators });
     }
 
     @bind
@@ -94,6 +98,8 @@ export class ValidatorsTabComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
+        const { validators } = this.state;
+
         const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
         return (
             <View style={styles.container}>
@@ -105,12 +111,10 @@ export class ValidatorsTabComponent extends React.Component<
                             onClose={this.onClose}
                         />
                     </View>
-                    {!this.state.validatorsFilteredList && (
-                        <View style={{ flex: 1 }}>
-                            <LoadingIndicator />
-                        </View>
-                    )}
-                    {this.state.validatorsFilteredList?.length === 0 ? (
+
+                    {!validators ? (
+                        <LoadingIndicator />
+                    ) : validators.length === 0 ? (
                         <View style={styles.emptySection}>
                             <Image
                                 style={styles.logoImage}
@@ -120,7 +124,7 @@ export class ValidatorsTabComponent extends React.Component<
                         </View>
                     ) : (
                         <ValidatorsList
-                            validators={this.state.validatorsFilteredList}
+                            validators={validators}
                             blockchain={this.props.blockchain}
                             token={this.props.token}
                             onSelect={this.onSelect}
@@ -144,7 +148,7 @@ export class ValidatorsTabComponent extends React.Component<
     }
 }
 
-export const ValidatorsTab = smartConnect<IProps>(ValidatorsTabComponent, [
+export const ValidatorsTab = smartConnect<IExternalProps>(ValidatorsTabComponent, [
     connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

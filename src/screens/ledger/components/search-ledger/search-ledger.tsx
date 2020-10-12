@@ -22,6 +22,7 @@ interface IExternalProps {
     deviceModel: HWModel;
     connectionType: HWConnection;
     deviceId: string;
+    scanForDevices: boolean;
     onSelect: () => void;
     onConnect: (item: any) => void;
     onError: (error: any) => void;
@@ -54,12 +55,17 @@ export class SearchLedgerComponent extends React.Component<
             this.props.connectionType
         );
 
+        // todo: make sure that:
+        // - Bluetooth is enabled
+        // - location permission is active at app level (android)
+        // - location is active system level (android)
         if (!permissionsEnabled) {
             this.props.onError(new Error('Location disabled'));
-        } else
+        } else if (this.props.scanForDevices) {
             this.scannerUnsubscribe = await TransportFactory.scan(
                 this.props.connectionType,
                 event => {
+                    // console.log(event.name, event.data);
                     this.setState(this.deviceAddition(event.data));
                     if (this.props.connectionType === HWConnection.USB) {
                         //
@@ -74,6 +80,15 @@ export class SearchLedgerComponent extends React.Component<
                     }
                 }
             );
+        }
+    }
+
+    public componentWillUnmount() {
+        // console.log('SearchLedger:componentWillUnmount()', this.scannerUnsubscribe);
+        if (typeof this.scannerUnsubscribe?.unsubscribe === 'function') {
+            // console.log('SearchLedger:componentWillUnmount()', 'unsubscribed');
+            this.scannerUnsubscribe?.unsubscribe();
+        }
     }
 
     public async connect(item) {
@@ -114,7 +129,6 @@ export class SearchLedgerComponent extends React.Component<
         const { styles } = this.props;
 
         const isNanoS = this.props.deviceModel === HWModel.NANO_S;
-
         return (
             <View style={styles.container}>
                 {isNanoS ? (

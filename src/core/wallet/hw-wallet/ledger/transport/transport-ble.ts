@@ -2,13 +2,28 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import { Platform, PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
+let transportOpenInProgress = false;
+let transportPromise;
+
 export class BLE {
     public static async get(deviceId): Promise<Transport> {
         return this.connect(deviceId);
     }
 
     public static async connect(deviceId): Promise<Transport> {
-        return TransportBLE.open(deviceId);
+        if (transportOpenInProgress && transportPromise) {
+            return transportPromise;
+        }
+        try {
+            transportOpenInProgress = true;
+            transportPromise = TransportBLE.open(deviceId);
+            transportOpenInProgress = false;
+        } catch (e) {
+            transportOpenInProgress = false;
+            return Promise.reject(e);
+        }
+
+        return transportPromise;
     }
 
     public static async scan(callback: (event: { name: string; data?: any }) => any): Promise<any> {
@@ -24,7 +39,7 @@ export class BLE {
                 }
             },
             error: error => {
-                // todo handle possible errors
+                callback({ name: 'scanError', data: error });
             }
         });
     }

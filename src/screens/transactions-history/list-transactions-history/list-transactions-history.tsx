@@ -27,6 +27,7 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
 import { PosBasicActionType, TokenType } from '../../../core/blockchain/types/token';
 import bind from 'bind-decorator';
+import { Capitalize } from '../../../core/utils/format-string';
 
 interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -97,6 +98,17 @@ export class TransactionsHistoryListComponent extends React.Component<
                     translate('App.labels.claimingRewards') + ` ${formattedAmount} ${toAddress}`;
                 break;
             }
+            case PosBasicActionType.SELECT_STAKING_POOL:
+                primaryText =
+                    Capitalize(tx.additionalInfo.posAction)
+                        .split('_')
+                        .join(' ') + ` - ${toAddress}`;
+                break;
+            case PosBasicActionType.UNSELECT_STAKING_POOL:
+                primaryText = Capitalize(tx.additionalInfo.posAction)
+                    .split('_')
+                    .join(' ');
+                break;
             default:
                 primaryText = ` ${formattedAmount} ${toAddress}`;
         }
@@ -117,10 +129,8 @@ export class TransactionsHistoryListComponent extends React.Component<
     private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
 
-        // console.log('transaction', tx);
-
         const blockchainInstance = getBlockchain(account.blockchain);
-        const amount = blockchainInstance.transaction.getTransactionAmount(tx);
+        let amount = blockchainInstance.transaction.getTransactionAmount(tx);
 
         const date = new Date(tx.date.signed);
 
@@ -143,6 +153,14 @@ export class TransactionsHistoryListComponent extends React.Component<
 
                 if (tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20) {
                     toAddress = tx.data?.params && tx.data?.params[0];
+                }
+
+                // remove amount from primary text
+                if (
+                    tx.additionalInfo?.posAction === PosBasicActionType.SELECT_STAKING_POOL ||
+                    tx.additionalInfo?.posAction === PosBasicActionType.UNSELECT_STAKING_POOL
+                ) {
+                    amount = null;
                 }
 
                 if (
@@ -219,7 +237,11 @@ export class TransactionsHistoryListComponent extends React.Component<
                             />
                         )}
 
-                        <Text style={styles.transactionTextPrimary}>
+                        <Text
+                            style={styles.transactionTextPrimary}
+                            numberOfLines={1}
+                            ellipsizeMode={'tail'}
+                        >
                             {this.getTransactionPrimaryText(tx, account)}
                         </Text>
                     </View>

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, View, Easing } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import { Text } from '../../library';
 import { Deferred } from '../../core/utils/deferred';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 import { HWConnection, HWModel, HWVendor } from '../../core/wallet/hw-wallet/types';
 import { SearchLedger } from './components/search-ledger/search-ledger';
 import { IconValues } from '../../components/icon/values';
@@ -16,18 +16,20 @@ import { ConfirmConnection } from './components/confirm-connections/confirm-conn
 import { OpenApp } from './components/open-app/open-app';
 import { VerifyAddress } from './components/verify-address/verify-address';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
-import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
+import { LedgerWallet, LedgerSignEvent } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { IWallet } from '../../core/wallet/types';
 import { setInstance, waitForInstance } from '../../core/utils/class-registry';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
 import { LocationRequired } from './components/location-required/location-required';
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
 import { ReviewTransaction } from './components/review-transaction/review-transaction';
 import { delay } from '../../core/utils/time';
+import { AnimatedValue } from 'react-navigation';
+import { SignDeclined } from './components/sign-declined/sign-declined';
 
-const FADE_ANIMATION_TIME = 300;
+const ANIMATION_TIME = 300;
 
 export const svgDimmensions = {
     width: 345,
@@ -40,6 +42,7 @@ enum ScreenStep {
     OPEN_APP = 'OPEN_APP',
     VERIFY_ADDRESS = 'VERIFY_ADDRESS',
     ERROR_SCREEN = 'ERROR_SCREEN',
+    SIGN_DECLINED = 'SIGN_DECLINED',
     LOCATION_REQUIRED = 'LOCATION_REQUIRED',
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
     SUCCESS_CONNECT = 'SUCCESS_CONNECT',
@@ -47,24 +50,42 @@ enum ScreenStep {
     REVIEW_TRANSACTION = 'REVIEW_TRANSACTION'
 }
 
+enum LedgerFlow {
+    CREATE_WALLET = 'CREATE_WALLET',
+    SIGN_TRANSACTION = 'SIGN_TRANSACTION'
+}
+
+export interface IReduxProps {
+    wallet: IWalletState;
+}
+
 interface IState {
     step: ScreenStep;
-    showErrorScreen: boolean;
     ledgerDevice: any;
     visible: boolean;
     blockchain: Blockchain;
+    accountIndex: number;
+    transaction: IBlockchainTransaction;
     deviceModel: HWModel;
     deviceId: string;
     connectionType: HWConnection;
-    currentFlow: ScreenStep;
+    currentFlow: LedgerFlow;
+    stepContainerFadeAnimation: AnimatedValue;
+    stepContainerTranslateAnimation: AnimatedValue;
 }
 
 export class LedgerConnectComponent extends React.Component<
-    IThemeProps<ReturnType<typeof stylesProvider>>,
+    IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,
     IState
 > {
     private resultDeferred: Deferred;
-    private stepContainetFadeAnimation = new Animated.Value(1);
+    private ledgerWallet: {
+        deviceModel: HWModel;
+        deviceId: string;
+        connectionType: HWConnection;
+        instance: LedgerWallet;
+    };
+    private ledgerSignTerminate;
 
     public static async getAccountsAndDeviceId(
         blockchain: Blockchain,
@@ -82,12 +103,15 @@ export class LedgerConnectComponent extends React.Component<
         connectionType: HWConnection
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
+        // console.log('LedgerConnet', 'getAccountsAndDeviceId');
         this.setState({
             blockchain,
             deviceModel,
             connectionType,
             visible: true,
-            step: ScreenStep.SEARCH_LEDGER
+            step: ScreenStep.SEARCH_LEDGER,
+            currentFlow: LedgerFlow.CREATE_WALLET,
+            stepContainerTranslateAnimation: new Animated.Value(0)
         });
 
         return this.resultDeferred.promise;
@@ -100,39 +124,106 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     public async walletCreated(walletId: string) {
-        this.resultDeferred = new Deferred();
         await this.selectStep(ScreenStep.SUCCESS_CONNECT);
     }
 
-    public static async signTransaction(
+    public static async sign(
         blockchain: Blockchain,
-        deviceModel: HWModel,
-        connectionType: HWConnection,
-        deviceId: string
+        accountIndex: number,
+        transaction: IBlockchainTransaction
     ) {
         return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
-            ref.signTransaction(blockchain, deviceModel, connectionType, deviceId)
+            ref.sign(blockchain, accountIndex, transaction)
         );
     }
 
-    public signTransaction(
+    public async sign(
         blockchain: Blockchain,
-        deviceModel: HWModel,
-        connectionType: HWConnection,
-        deviceId: string
+        accountIndex: number,
+        transaction: IBlockchainTransaction
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
+        const { deviceModel, deviceId, connectionType } = this.props.wallet.hwOptions;
         this.setState({
             blockchain,
+            accountIndex,
+            transaction,
             deviceModel,
             deviceId,
             connectionType,
             visible: true,
             step: ScreenStep.SEARCH_LEDGER,
-            currentFlow: ScreenStep.REVIEW_TRANSACTION
+            currentFlow: LedgerFlow.SIGN_TRANSACTION,
+            stepContainerTranslateAnimation: new Animated.Value(0)
         });
 
+        this.trySign();
         return this.resultDeferred.promise;
+    }
+
+    private trySign() {
+        this.selectStep(ScreenStep.SEARCH_LEDGER);
+
+        this.getLegderWalletInstance()
+            .smartSign(
+                this.state.blockchain,
+                this.state.accountIndex,
+                this.state.transaction,
+                (event: LedgerSignEvent) => {
+                    // console.log('TrySign', event);
+                    switch (event) {
+                        case LedgerSignEvent.LOADING:
+                        case LedgerSignEvent.CONNECT_DEVICE:
+                            this.selectStep(ScreenStep.SEARCH_LEDGER);
+                            break;
+                        case LedgerSignEvent.OPEN_APP:
+                            this.selectStep(ScreenStep.OPEN_APP);
+                            break;
+                        case LedgerSignEvent.SIGN_TX:
+                            this.selectStep(ScreenStep.REVIEW_TRANSACTION);
+                            break;
+                        case LedgerSignEvent.TX_SIGN_DECLINED:
+                    }
+                },
+                terminate => (this.ledgerSignTerminate = terminate)
+            )
+            .then(signature => {
+                this.setState({ visible: false });
+                this.resultDeferred.resolve(signature);
+            })
+            .catch(err => {
+                if (err !== 'TERMINATED') {
+                    const message = err?.message || '';
+                    if (message?.indexOf('denied by the user') >= 0) {
+                        this.selectStep(ScreenStep.SIGN_DECLINED);
+                    } else {
+                        this.selectStep(ScreenStep.ERROR_SCREEN);
+                    }
+                }
+            });
+    }
+
+    private getLegderWalletInstance(): LedgerWallet {
+        const { deviceModel, deviceId, connectionType } = this.state;
+        const ledgetWallet = this.ledgerWallet;
+
+        if (
+            deviceId === ledgetWallet?.deviceId &&
+            deviceModel === ledgetWallet?.deviceModel &&
+            connectionType === ledgetWallet?.connectionType &&
+            ledgetWallet.instance
+        ) {
+            return ledgetWallet.instance;
+        }
+
+        this.ledgerWallet = {
+            deviceModel,
+            deviceId,
+            connectionType,
+            instance: new LedgerWallet(deviceModel, connectionType, deviceId)
+        };
+
+        return this.ledgerWallet.instance;
     }
 
     public static async close() {
@@ -145,24 +236,27 @@ export class LedgerConnectComponent extends React.Component<
         this.setState({ visible: false });
     }
 
-    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps) {
         super(props);
         setInstance(LedgerConnectComponent, this);
         this.state = {
             step: ScreenStep.SEARCH_LEDGER,
-            showErrorScreen: false,
             ledgerDevice: undefined,
             visible: false,
             blockchain: undefined,
+            accountIndex: undefined,
+            transaction: undefined,
             connectionType: undefined,
             deviceModel: undefined,
-            deviceId: undefined,
-            currentFlow: undefined
+            currentFlow: undefined,
+            stepContainerFadeAnimation: new Animated.Value(1),
+            stepContainerTranslateAnimation: new Animated.Value(0),
+            deviceId: undefined
         };
     }
-
     public componentWillUnmount() {
         //
+        // console.log('LedgerConnect:componentWillUnmount()');
     }
     @bind
     private async onConnectedDevice(item: any) {
@@ -187,9 +281,9 @@ export class LedgerConnectComponent extends React.Component<
             await (wallet as LedgerWallet).onAppOpened(this.state.blockchain);
         }
 
-        if (this.state.currentFlow === ScreenStep.REVIEW_TRANSACTION) {
+        if (this.state.currentFlow === LedgerFlow.SIGN_TRANSACTION) {
             // Review Transaction Flow
-
+            // todo
             await this.selectStep(ScreenStep.REVIEW_TRANSACTION);
             this.resultDeferred.resolve();
         } else {
@@ -236,7 +330,9 @@ export class LedgerConnectComponent extends React.Component<
 
     @bind
     private onRetry() {
-        this.setState({ visible: false });
+        if (this.state.currentFlow === LedgerFlow.SIGN_TRANSACTION) {
+            this.trySign();
+        }
     }
 
     @bind
@@ -245,25 +341,48 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     private async selectStep(step: ScreenStep) {
-        await this.stepContainerFadeOut();
-        this.setState({ step });
-        await this.stepContainerFadeIn();
+        if (this.state.step !== step) {
+            // console.log('LedgerConnect:selectStep()', step);
+            await this.stepContainerFadeOut();
+            this.setState({ step, stepContainerTranslateAnimation: new Animated.Value(400) });
+            await this.stepContainerFadeIn();
+        }
     }
 
     private async stepContainerFadeIn() {
-        Animated.timing(this.stepContainetFadeAnimation, {
-            toValue: 1,
-            duration: FADE_ANIMATION_TIME
-        }).start();
-        await delay(FADE_ANIMATION_TIME);
+        Animated.parallel([
+            Animated.timing(this.state.stepContainerFadeAnimation, {
+                toValue: 1,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true,
+                easing: Easing.ease
+            }),
+            Animated.timing(this.state.stepContainerTranslateAnimation, {
+                toValue: 0,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true,
+                easing: Easing.ease
+            })
+        ]).start();
+
+        await delay(ANIMATION_TIME);
     }
 
     private async stepContainerFadeOut() {
-        Animated.timing(this.stepContainetFadeAnimation, {
-            toValue: 0,
-            duration: FADE_ANIMATION_TIME
-        }).start();
-        await delay(FADE_ANIMATION_TIME);
+        Animated.parallel([
+            Animated.timing(this.state.stepContainerFadeAnimation, {
+                toValue: 0,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true
+            }),
+            Animated.timing(this.state.stepContainerTranslateAnimation, {
+                toValue: -300,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true
+            })
+        ]).start();
+
+        await delay(ANIMATION_TIME);
     }
 
     private displaySteps() {
@@ -275,6 +394,7 @@ export class LedgerConnectComponent extends React.Component<
                         deviceModel={this.state.deviceModel}
                         deviceId={this.state.deviceId}
                         connectionType={this.state.connectionType}
+                        scanForDevices={this.state.currentFlow === LedgerFlow.CREATE_WALLET}
                         onSelect={this.onSelectDevice}
                         onConnect={this.onConnectedDevice}
                         onError={this.onErrorConnection}
@@ -319,7 +439,7 @@ export class LedgerConnectComponent extends React.Component<
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
-                        walletName={'Wallet 1'} // TODO
+                        walletName={this.props.wallet.name}
                         deviceName={
                             this.state.ledgerDevice?.localName !== undefined
                                 ? this.state.ledgerDevice?.localName
@@ -337,6 +457,19 @@ export class LedgerConnectComponent extends React.Component<
                         connectionType={this.state.connectionType}
                         onRetry={this.onRetry}
                         onTroubleshootPress={this.showTroubleShootPage}
+                    />
+                );
+            case ScreenStep.SIGN_DECLINED:
+                return (
+                    <SignDeclined
+                        onRetry={this.onRetry}
+                        onCancel={() => {
+                            this.setState({ visible: false, step: undefined });
+                            if (typeof this.ledgerSignTerminate === 'function') {
+                                this.ledgerSignTerminate();
+                            }
+                            this.resultDeferred.reject('LEDGER_SIGN_CANCELLED');
+                        }}
                     />
                 );
             case ScreenStep.TROUBLESHOOTING:
@@ -358,10 +491,13 @@ export class LedgerConnectComponent extends React.Component<
                         connectionType={this.state.connectionType}
                     />
                 );
+            default:
+                return null;
         }
     }
 
     public render() {
+        // console.log('LedgerConnect:render()', this.state.step);
         const { styles } = this.props;
 
         const displayTopHeader =
@@ -380,7 +516,17 @@ export class LedgerConnectComponent extends React.Component<
                                     testID="go-back"
                                     icon={IconValues.ARROW_LEFT}
                                     onPress={() => {
-                                        this.setState({ visible: false });
+                                        this.setState({ visible: false, step: undefined });
+                                        if (typeof this.ledgerSignTerminate === 'function') {
+                                            this.ledgerSignTerminate();
+                                        }
+                                        if (
+                                            this.state.currentFlow === LedgerFlow.SIGN_TRANSACTION
+                                        ) {
+                                            this.resultDeferred.reject('LEDGER_SIGN_CANCELLED');
+                                        } else {
+                                            this.resultDeferred.reject('LEDGER_FLOW_CANCELLED');
+                                        }
                                     }}
                                 />
                             </View>
@@ -392,7 +538,17 @@ export class LedgerConnectComponent extends React.Component<
                             <View style={styles.defaultHeaderContainer} />
                         </View>
                     )}
-                    <Animated.View style={{ flex: 1, opacity: this.stepContainetFadeAnimation }}>
+                    <Animated.View
+                        style={{
+                            flex: 1,
+                            opacity: this.state.stepContainerFadeAnimation,
+                            transform: [
+                                {
+                                    translateX: this.state.stepContainerTranslateAnimation
+                                }
+                            ]
+                        }}
+                    >
                         {this.displaySteps()}
                     </Animated.View>
                 </View>

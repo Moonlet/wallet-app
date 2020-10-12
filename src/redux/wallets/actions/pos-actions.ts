@@ -1,25 +1,21 @@
 import { IAccountState } from '../state';
 import {
+    Blockchain,
+    IBlockchainTransaction,
     IFeeOptions,
     ITransactionExtraFields,
     TransactionMessageText
-    // TransactionMessageType,
-    // TransactionMessageText,
-    // IBlockchainTransaction
 } from '../../../core/blockchain/types';
-import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
-import { getSelectedWallet } from '../selectors';
-import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-// import { WalletType } from '../../../core/wallet/types';
+import { getSelectedAccount, getSelectedWallet } from '../selectors';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { getTokenConfig } from '../../tokens/static-selectors';
-// import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
-// import { TRANSACTION_PUBLISHED } from '../actions';
+import { generateAccountTokenState, getTokenConfig } from '../../tokens/static-selectors';
+import { TRANSACTION_PUBLISHED } from '../actions';
 import { translate } from '../../../core/i18n';
 import { Dialog } from '../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
@@ -28,9 +24,11 @@ import {
     openProcessTransactions,
     setProcessTransactions,
     updateProcessTransactionIdForIndex,
-    updateProcessTransactionStatusForIndex
+    updateProcessTransactionStatusForIndex,
+    setProcessTxIndex,
+    setProcessTxCompleted,
+    closeProcessTransactions
 } from '../../ui/process-transactions/actions';
-import { TRANSACTION_PUBLISHED } from './wallet-actions';
 import { TransactionStatus, WalletType } from '../../../core/wallet/types';
 import { cloneDeep } from 'lodash';
 import {
@@ -39,6 +37,9 @@ import {
 } from '@sentry/react-native';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
+import { delay } from '../../../core/utils/time';
+import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
+import { NavigationService } from '../../../navigation/navigation-service';
 
 export const redelegate = (
     account: IAccountState,
@@ -246,23 +247,13 @@ export const posAction = (
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    const appWallet = getSelectedWallet(state);
-    let password = '';
     try {
-        if (appWallet.type === WalletType.HD) {
-            password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-        }
-
         const extra: ITransactionExtraFields = {
             ...extraFields,
             posAction: type
         };
-
         const blockchainInstance = getBlockchain(account.blockchain);
+
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
         dispatch(openProcessTransactions());
@@ -276,110 +267,223 @@ export const posAction = (
                     .amountToStd(amount, tokenConfig.decimals)
                     .toFixed(),
                 token,
-                feeOptions: feeOptions
-                    ? {
-                          gasPrice: feeOptions.gasPrice.toString(),
-                          gasLimit: feeOptions.gasLimit.toString()
-                      }
-                    : undefined,
+                feeOptions:
+                    feeOptions?.gasPrice && feeOptions?.gasLimit
+                        ? {
+                              gasPrice: feeOptions.gasPrice.toString(),
+                              gasLimit: feeOptions.gasLimit.toString()
+                          }
+                        : undefined,
                 extraFields: extra
             },
             type
         );
+        dispatch(
+            setProcessTransactions(
+                cloneDeep(txs).map(tx => {
+                    tx.status = TransactionStatus.CREATED;
+                    return tx;
+                })
+            )
+        );
+    } catch (errorMessage) {
+        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
+    }
+};
 
-        dispatch(setProcessTransactions(cloneDeep(txs)));
+export const signAndSendTransactions = (
+    transactions: IBlockchainTransaction[],
+    specificIndex?: number
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const state = getState();
 
-        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
-            pass: password,
-            deviceVendor: appWallet.hwOptions?.deviceVendor,
-            deviceModel: appWallet.hwOptions?.deviceModel,
-            deviceId: appWallet.hwOptions?.deviceId,
-            connectionType: appWallet.hwOptions?.connectionType
-        }); // encrypted string: pass)
+    const appWallet = getSelectedWallet(state);
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+    let password = '';
+    try {
+        if (appWallet.type === WalletType.HD) {
+            password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+        }
 
-        for (let index = 0; index < txs.length; index++) {
-            const client = getBlockchain(account.blockchain).getClient(chainId);
+        const wallet: {
+            sign: (
+                blockchain: Blockchain,
+                accountIndex: number,
+                transaction: IBlockchainTransaction
+            ) => Promise<any>;
+        } =
+            appWallet.type === WalletType.HW
+                ? LedgerConnect
+                : await WalletFactory.get(appWallet.id, appWallet.type, {
+                      pass: password,
+                      deviceVendor: appWallet.hwOptions?.deviceVendor,
+                      deviceModel: appWallet.hwOptions?.deviceModel,
+                      deviceId: appWallet.hwOptions?.deviceId,
+                      connectionType: appWallet.hwOptions?.connectionType
+                  }); // encrypted string: pass)
 
-            if (appWallet.type === WalletType.HW) {
-                await LedgerConnect.signTransaction(
-                    account.blockchain,
-                    appWallet.hwOptions?.deviceModel,
-                    appWallet.hwOptions?.connectionType,
-                    appWallet.hwOptions?.deviceId
-                );
+        const client = getBlockchain(account.blockchain).getClient(chainId);
+        let error = false;
+        const startIndex = specificIndex === undefined ? 0 : specificIndex;
+        for (let index = startIndex; index < transactions.length; index++) {
+            if (error) break;
+            const txIndex = specificIndex || index;
+            const transaction = transactions[index];
+
+            dispatch(setProcessTxIndex(txIndex));
+            // await delay(5000);
+            let signed;
+            try {
+                signed = await wallet.sign(transaction.blockchain, account.index, transaction);
+                dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
+            } catch (e) {
+                if (e === 'LEDGER_SIGN_CANCELLED') {
+                    dispatch(setProcessTxIndex(txIndex - 1));
+                }
+                throw e;
             }
 
-            const transaction = await wallet.sign(account.blockchain, account.index, txs[index]);
-
             try {
-                const txHash = await client.sendTransaction(transaction);
+                await delay(500);
+
+                // const txHash = signed;
+                // console.log(client);
+                const txHash = await client.sendTransaction(signed);
+
+                // SELECT_STAKING_POOL: delay 2 seconds
+                // Needed only if there are multiple operations, such as select_staking_pool and deposit_and_stake
+                // Need to increase the number of blocks between transactions
+                const { additionalInfo } = transaction;
+                if (
+                    account.blockchain === Blockchain.NEAR &&
+                    additionalInfo &&
+                    transactions.length > 1
+                ) {
+                    for (const action of additionalInfo?.actions || []) {
+                        if (action?.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL) {
+                            await delay(2000);
+                        }
+                    }
+                }
 
                 if (txHash) {
-                    dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                    dispatch(updateProcessTransactionIdForIndex(txIndex, txHash));
                     dispatch({
                         type: TRANSACTION_PUBLISHED,
                         data: {
                             hash: txHash,
-                            tx: txs[index],
+                            tx: {
+                                ...transaction,
+                                status: TransactionStatus.PENDING
+                            },
                             walletId: appWallet.id
                         }
                     });
                     dispatch(
-                        updateProcessTransactionStatusForIndex(index, TransactionStatus.PENDING)
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.PENDING)
                     );
-
-                    if (appWallet.type === WalletType.HW) {
-                        await LedgerConnect.close();
-                    }
                 } else {
-                    if (appWallet.type === WalletType.HW) {
-                        await LedgerConnect.close();
-                    }
                     SentryAddBreadcrumb({
-                        message: JSON.stringify({ transactions: txs[index] })
+                        message: JSON.stringify({ transactions: transaction })
                     });
 
-                    dispatch(
-                        updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
-                    );
-                    for (let i = index + 1; i < txs.length; i++) {
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED)
-                        );
-                    }
-                    break;
-                }
-            } catch (error) {
-                if (appWallet.type === WalletType.HW) {
-                    await LedgerConnect.close();
-                }
-                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
+                    error = true;
+                    dispatch(setProcessTxCompleted(true, true));
 
-                // TODO  we should stop all other transactions? if one fails?
-                for (let i = index + 1; i < txs.length; i++) {
-                    dispatch(updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED));
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED)
+                    );
                 }
-                throw error;
+            } catch (err) {
+                error = true;
+                dispatch(setProcessTxCompleted(true, true));
+                dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED));
+
+                throw err;
             }
+
+            if (specificIndex !== undefined) {
+                // just stop, we had to sign only one tx (ledger)
+                break;
+            }
+        }
+
+        // console.log({ specificIndex, transactionLength: transactions.length });
+        if (
+            specificIndex === undefined ||
+            (specificIndex !== undefined && specificIndex + 1 >= transactions.length)
+        ) {
+            // we need to check if all txs were signed before marking the flow complete.
+            dispatch(setProcessTxCompleted(true, false));
         }
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
-        if (appWallet.type === WalletType.HD) {
-            await LoadingModal.close();
-        } else {
-            await LedgerConnect.close();
+
+        const atLeastOneTransactionBroadcasted = transactionsBroadcasted(
+            getState().ui.processTransactions.data.txs
+        );
+        const tokenConfig = getTokenConfig(account.blockchain, transactions[0].token.symbol);
+        const blockchainInstance = getBlockchain(account.blockchain);
+        let navigationParams: NavigationParams = {
+            blockchain: account.blockchain,
+            accountIndex: account.index,
+            token: generateAccountTokenState(tokenConfig),
+            tokenLogo: tokenConfig.icon
+        };
+        if (atLeastOneTransactionBroadcasted) {
+            navigationParams = {
+                ...navigationParams,
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+            };
         }
 
-        if (TransactionMessageText[errorMessage]) {
-            Dialog.info(
-                translate('LoadingModal.txFailed'),
-                translate(`LoadingModal.${errorMessage}`)
-            );
-        } else {
-            Dialog.info(
-                translate('LoadingModal.txFailed'),
-                translate('LoadingModal.GENERIC_ERROR')
-            );
+        // console.log('PosActions:sign()', errorMessage);
+        if (errorMessage !== 'LEDGER_SIGN_CANCELLED') {
+            if (TransactionMessageText[errorMessage]) {
+                Dialog.alert(
+                    translate('LoadingModal.txFailed'),
+                    translate(`LoadingModal.${errorMessage}`),
+                    undefined,
+                    {
+                        text: translate('App.labels.ok'),
+                        onPress: () => {
+                            dispatch(closeProcessTransactions());
+                            NavigationService.navigate('Token', navigationParams);
+                        }
+                    }
+                );
+            } else {
+                Dialog.alert(
+                    translate('LoadingModal.txFailed'),
+                    translate('LoadingModal.GENERIC_ERROR'),
+                    undefined,
+                    {
+                        text: translate('App.labels.ok'),
+                        onPress: () => {
+                            dispatch(closeProcessTransactions());
+                            NavigationService.navigate('Token', navigationParams);
+                        }
+                    }
+                );
+            }
         }
     }
+};
+
+const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {
+    return (
+        txs.filter(tx => {
+            return (
+                tx.status === TransactionStatus.FAILED ||
+                tx.status === TransactionStatus.DROPPED ||
+                tx.status === TransactionStatus.PENDING ||
+                tx.status === TransactionStatus.SUCCESS
+            );
+        }).length > 0
+    );
 };

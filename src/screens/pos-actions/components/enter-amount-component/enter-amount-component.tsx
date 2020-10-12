@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { ChainIdType, IFeeOptions, TransactionType } from '../../../../core/blockchain/types';
+import { ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
@@ -24,7 +24,6 @@ import {
     availableAmount
 } from '../../../../core/utils/available-funds';
 import { EnterAmount } from '../../../send/components/enter-amount/enter-amount';
-import { FeeOptions } from '../../../send/components/fee-options/fee-options';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 
 interface IHeaderStep {
@@ -46,6 +45,7 @@ export interface IProps {
     fromValidator?: IValidator;
     balanceForDelegate: string;
     minimumDelegateAmount: BigNumber;
+    allBalanceNotice?: string;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
 }
 
@@ -54,7 +54,6 @@ interface IState {
     amount: string;
     insufficientFunds: boolean;
     insufficientMinimumAmount: boolean;
-    feeOptions: IFeeOptions;
     insufficientFundsFees: boolean;
 }
 
@@ -81,7 +80,6 @@ export class EnterAmountComponentComponent extends React.Component<
             headerSteps: stepList,
             amount: '',
             insufficientFunds: false,
-            feeOptions: undefined,
             insufficientFundsFees: false,
             insufficientMinimumAmount: false
         };
@@ -95,8 +93,6 @@ export class EnterAmountComponentComponent extends React.Component<
             this.state.amount === '' ||
             this.state.insufficientFunds ||
             this.state.insufficientFundsFees ||
-            isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-            isNaN(Number(this.state.feeOptions?.gasPrice)) ||
             this.state.insufficientMinimumAmount
         )
             disableButton = true;
@@ -110,7 +106,7 @@ export class EnterAmountComponentComponent extends React.Component<
                 label={translate(this.props.bottomButtonText)}
                 disabled={disableButton}
                 onPress={() => {
-                    this.props.onPressNext(this.state.amount, this.state.feeOptions);
+                    this.props.onPressNext(this.state.amount, {});
                 }}
             >
                 <PrimaryCtaField
@@ -146,20 +142,6 @@ export class EnterAmountComponentComponent extends React.Component<
         ));
     }
 
-    public onFeesChanged(feeOptions: IFeeOptions) {
-        this.setState({ feeOptions }, () => {
-            const { insufficientFunds, insufficientFundsFees } = availableFunds(
-                this.state.amount,
-                this.props.account,
-                this.props.token,
-                this.props.chainId,
-                feeOptions
-            );
-
-            this.setState({ insufficientFunds, insufficientFundsFees });
-        });
-    }
-
     public addAmount(value: string) {
         const amount = value.replace(/,/g, '.');
         this.setState({ amount }, () => {
@@ -168,7 +150,8 @@ export class EnterAmountComponentComponent extends React.Component<
                 this.props.account,
                 this.props.token,
                 this.props.chainId,
-                this.state.feeOptions
+                { feeTotal: '0' },
+                this.props.balanceForDelegate
             );
 
             let insufficientMinimumAmount = false;
@@ -184,41 +167,28 @@ export class EnterAmountComponentComponent extends React.Component<
     }
 
     private renderEnterAmount() {
-        const blockchainInstance = getBlockchain(this.props.account.blockchain);
-
+        // const blockchainInstance = getBlockchain(this.props.account.blockchain);
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
                     availableAmount={availableAmount(
                         this.props.account,
                         this.props.token,
-                        this.state.feeOptions,
+                        undefined, // removed fee options, we have a minimum amount that we keep in account, for future transactions
                         this.props.balanceForDelegate
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
+                    insufficientFundsNotice={this.props.allBalanceNotice}
                     insufficientMinimumAmount={this.state.insufficientMinimumAmount}
                     token={this.props.token}
                     account={this.props.account}
                     minimumAmount={
                         this.props.minimumDelegateAmount
-                            ? this.props.minimumDelegateAmount.toString()
+                            ? this.props.minimumDelegateAmount.toFixed()
                             : '0'
                     }
                     onChange={amount => this.addAmount(amount)}
-                />
-                <FeeOptions
-                    transactionType={TransactionType.CONTRACT_CALL}
-                    token={
-                        this.props.account.tokens[this.props.chainId][
-                            blockchainInstance.config.coin
-                        ]
-                    }
-                    sendingToken={this.props.token}
-                    account={this.props.account}
-                    toAddress={''}
-                    onFeesChanged={(feeOptions: IFeeOptions) => this.onFeesChanged(feeOptions)}
-                    insufficientFundsFees={this.state.insufficientFundsFees}
                 />
             </View>
         );

@@ -36,7 +36,8 @@ interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onClose: () => void;
 }
-export interface IReduxProps {
+
+interface IReduxProps {
     setSelectedAccount: typeof setSelectedAccount;
     selectedAccount: IAccountState;
     selectedWallet: IWalletState;
@@ -46,6 +47,7 @@ export interface IReduxProps {
     chainId: ChainIdType;
     removeAccount: typeof removeAccount;
 }
+
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
     return {
@@ -56,6 +58,7 @@ const mapStateToProps = (state: IReduxState) => {
         selectedWallet: getSelectedWallet(state)
     };
 };
+
 const mapDispatchToProps = {
     setSelectedAccount,
     getBalance,
@@ -86,7 +89,7 @@ export class AccountsBottomSheetComponent extends React.Component<
 
     private showHints() {
         if (this.props.accounts && this.props.accounts.length > 1) {
-            const accountIndex = `account-0`;
+            const accountIndex = `account-1`; // Account 0 cannot be deleted
             this.onSwipeableWillOpen(accountIndex);
             this.accountsSwipeableRef[accountIndex] &&
                 this.accountsSwipeableRef[accountIndex].openLeft();
@@ -223,7 +226,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 ref={ref => (this.accountsSwipeableRef[swipeIndex] = ref)}
                                 renderLeftActions={() =>
                                     account.blockchain === Blockchain.NEAR &&
-                                    this.props.accounts.length > 1 && // should not delete all the accounts, need min 1 account to be available
+                                    account.index !== 0 && // cannot delete account of index 0
                                     this.renderLeftActions(account)
                                 }
                                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(swipeIndex)}

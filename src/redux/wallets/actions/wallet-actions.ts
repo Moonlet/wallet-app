@@ -38,7 +38,6 @@ import {
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
-import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../../ui/password-modal/actions';
 import {
@@ -242,7 +241,6 @@ export const createHWWallet = (
         LedgerConnect.walletCreated(walletId);
 
         dispatch(setSelectedWallet(walletId));
-        updateAddressMonitorTokens(getState().wallets);
 
         NavigationService.navigate('MainNavigation', {});
         NavigationService.navigate('Dashboard', {});
@@ -331,7 +329,6 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             callback && callback();
             await LoadingModal.close();
 
-            updateAddressMonitorTokens(getState().wallets);
             startNotificationsHandlers()(dispatch, getState);
         });
     } catch (err) {
@@ -562,22 +559,25 @@ export const sendTransferTransaction = (
                 type: TransactionMessageType.INFO,
                 text: TransactionMessageText.SIGNING
             });
-        } else {
-            await LedgerConnect.signTransaction(
-                account.blockchain,
-                appWallet.hwOptions?.deviceModel,
-                appWallet.hwOptions?.connectionType,
-                appWallet.hwOptions?.deviceId
-            );
         }
 
-        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
-            pass: password,
-            deviceVendor: appWallet.hwOptions?.deviceVendor,
-            deviceModel: appWallet.hwOptions?.deviceModel,
-            deviceId: appWallet.hwOptions?.deviceId,
-            connectionType: appWallet.hwOptions?.connectionType
-        }); // encrypted string: pass)
+        const wallet: {
+            sign: (
+                blockchain: Blockchain,
+                accountIndex: number,
+                transaction: IBlockchainTransaction
+            ) => Promise<any>;
+        } =
+            appWallet.type === WalletType.HW
+                ? LedgerConnect
+                : await WalletFactory.get(appWallet.id, appWallet.type, {
+                      pass: password,
+                      deviceVendor: appWallet.hwOptions?.deviceVendor,
+                      deviceModel: appWallet.hwOptions?.deviceModel,
+                      deviceId: appWallet.hwOptions?.deviceId,
+                      connectionType: appWallet.hwOptions?.connectionType
+                  }); // encrypted string: pass)
+
         const blockchainInstance = getBlockchain(account.blockchain);
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
@@ -596,12 +596,12 @@ export const sendTransferTransaction = (
 
         const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
-        if (appWallet.type === WalletType.HD) {
-            await LoadingModal.showMessage({
-                text: TransactionMessageText.BROADCASTING,
-                type: TransactionMessageType.INFO
-            });
-        }
+        // if (appWallet.type === WalletType.HD) {
+        await LoadingModal.showMessage({
+            text: TransactionMessageText.BROADCASTING,
+            type: TransactionMessageType.INFO
+        });
+        // }
 
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -628,13 +628,15 @@ export const sendTransferTransaction = (
                 dispatch({ type: CLOSE_TX_REQUEST });
             }
 
-            if (appWallet.type === WalletType.HD) {
-                await LoadingModal.close();
-            } else {
-                await LedgerConnect.close();
-            }
+            // if (appWallet.type === WalletType.HD) {
+            await LoadingModal.close();
+            // } else {
+            //     await LedgerConnect.close();
+            // }
             dispatch(closeTransactionRequest());
-            goBack && navigation.goBack();
+            NavigationService.navigate('Token', {
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+            });
             return;
         } else {
             throw new Error('GENERIC_ERROR');

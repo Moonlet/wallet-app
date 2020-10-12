@@ -21,7 +21,6 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { PosBasicActionType } from '../types/token';
 import { Client as NearClient } from './client';
 import cloneDeep from 'lodash/cloneDeep';
-import { ApiClient } from '../../utils/api-client/api-client';
 import BigNumber from 'bignumber.js';
 import {
     INearTransactionAdditionalInfoType,
@@ -144,16 +143,20 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT
                     for (const validator of tx.validators) {
-                        const res = await new ApiClient().validators.getBalance(
-                            tx.account.address,
-                            tx.account.blockchain,
-                            client.chainId.toString(),
-                            validator.id
-                        );
-
-                        const depositAmount = new BigNumber(txDelegate.amount).minus(
-                            new BigNumber(res.balance.unstaked)
-                        );
+                        let depositAmount = new BigNumber(0);
+                        try {
+                            const unstaked = await client.contractCall({
+                                contractName: validator.id,
+                                methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                                args: { account_id: tx.account.address }
+                            });
+                            depositAmount = new BigNumber(txDelegate.amount).minus(
+                                new BigNumber(unstaked)
+                            );
+                        } catch (err) {
+                            // no need to handle this
+                            // maybe sentry?
+                        }
 
                         // Stake
                         const stakeTx: IBlockchainTransaction = await client.stakingPool.stake(
@@ -174,12 +177,41 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
 
                     try {
-                        const stakingPoolId = await client.contractCall({
-                            contractName: tx.account.address,
-                            methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
-                        });
+                        const [stakingPoolId, depositBalance] = await Promise.all([
+                            client.contractCall({
+                                contractName: tx.account.address,
+                                methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                            }),
+                            client.contractCall({
+                                contractName: tx.account.address,
+                                methodName: NearAccountViewMethods.GET_KNOWN_DEPOSITED_BALANCE
+                            })
+                        ]);
+
+                        if (
+                            stakingPoolId &&
+                            stakingPoolId !== validator.id &&
+                            depositBalance === '0'
+                        ) {
+                            // UNSELECT STAKING POOL
+                            const unselectSPTx = await client.lockup.unselectStakingPool(
+                                txDelegate,
+                                validator
+                            );
+                            unselectSPTx.nonce = nonce + transactions.length;
+                            transactions.push(unselectSPTx);
+
+                            // SELECT STAKING POOL
+                            const selectSPTx = await client.lockup.selectStakingPool(
+                                txDelegate,
+                                validator
+                            );
+                            selectSPTx.nonce = nonce + transactions.length;
+                            transactions.push(selectSPTx);
+                        }
 
                         if (!stakingPoolId) {
+                            // SELECT STAKING POOL
                             const selectSPTx = await client.lockup.selectStakingPool(
                                 txDelegate,
                                 validator
@@ -247,6 +279,11 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT
                     withdrawTx = await client.stakingPool.withdraw(txWithdraw);
+                } else if (accountType === AccountType.LOCKUP_CONTRACT) {
+                    // LOCKUP_CONTRACT
+                    withdrawTx = await client.lockup.withdraw(txWithdraw);
+                    const nonce = await client.getNonce(withdrawTx.address, tx.account.publicKey);
+                    withdrawTx.nonce = nonce;
                 } else {
                     // future account types
                 }

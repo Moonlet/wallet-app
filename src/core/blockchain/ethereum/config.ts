@@ -93,7 +93,8 @@ export const config: IBlockchainConfig = {
         displayName: 'ETH',
         affiliateBanners: {
             account: AffiliateBannerType.UNSTOPPABLE_DOMAINS
-        }
+        },
+        fetchAccountStatsSec: 5
     },
     networks: {
         testNet: 4,
@@ -115,5 +116,6 @@ export const config: IBlockchainConfig = {
             service: BlockchainNameService.CNS,
             record: ['crypto.ETH.address']
         }
-    ]
+    ],
+    amountToKeepInAccount: new BigNumber(0)
 };

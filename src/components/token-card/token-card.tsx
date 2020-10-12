@@ -51,6 +51,7 @@ export const TokenCardComponent = (
                             style={styles.firstAmount}
                             token={props.token.symbol}
                             tokenDecimals={tokenConfig.decimals}
+                            uiDecimals={tokenConfig.ui.decimals}
                             amount={props.token.balance?.value}
                             blockchain={props.blockchain}
                         />

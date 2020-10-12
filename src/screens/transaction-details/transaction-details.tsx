@@ -76,25 +76,32 @@ export class TransactionDetailsComponent extends React.Component<
         const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
 
         const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);
+        const tokenType = transaction.token.type;
 
         let recipient =
-            transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
+            tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20
                 ? formatAddress(transaction.data.params[0], account.blockchain)
                 : formatAddress(transaction.toAddress, account.blockchain);
 
-        if (transaction.additionalInfo?.validatorName) {
+        if (transaction?.additionalInfo?.validatorName) {
             recipient = transaction.additionalInfo.validatorName;
         }
 
-        // TODO - refactor this :)
-        const transactionType =
-            transaction.additionalInfo && transaction.additionalInfo.posAction
-                ? Capitalize(transaction.additionalInfo.posAction)
-                : transaction.token.type === TokenType.ZRC2 ||
-                  transaction.token.type === TokenType.ERC20 ||
-                  transaction.type === TransactionType.CONTRACT_CALL
-                ? Capitalize(transaction.data.method)
-                : translate('App.labels.transfer');
+        let transactionType = translate('App.labels.transfer');
+
+        if (
+            tokenType === TokenType.ZRC2 ||
+            tokenType === TokenType.ERC20 ||
+            transactionType === TransactionType.CONTRACT_CALL
+        ) {
+            transactionType = Capitalize(transaction.data.method);
+        }
+
+        if (transaction?.additionalInfo?.posAction) {
+            transactionType = Capitalize(transaction.additionalInfo.posAction)
+                .split('_')
+                .join(' ');
+        }
 
         return (
             <View style={styles.container}>

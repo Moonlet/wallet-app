@@ -75,11 +75,12 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                no: 'No',
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
                 processing: 'Processing',
-                privacyPolicy: 'Privacy policy',
+                privacyPolicy: 'Privacy Policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
                 quickStake: 'Quick Stake',
@@ -111,6 +112,7 @@ export const translation: ITranslations = {
                 standard: 'Standard',
                 stake: 'Stake',
                 staked: 'Staked',
+                stakingPublicBeta: 'Moonlet Staking - Public Beta',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
                 status: 'Status',
@@ -122,6 +124,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 theRequested: 'the requested',
+                transaction: 'transaction',
                 transactions: 'Transactions',
                 transfer: 'Transfer',
                 tryAgain: 'Try again',
@@ -142,7 +145,8 @@ export const translation: ITranslations = {
                 watch: 'Watch mode',
                 withdraw: 'Withdraw',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet',
-                youAreUsing: 'You are now using your'
+                youAreUsing: 'You are now using your',
+                yes: 'Yes'
                 // please try to add keys in alphabetic order
             },
             buttons: {
@@ -153,7 +157,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTc: {
-            body: 'Make sure you review our\nPrivacy policy and Terms of Service'
+            body: 'Make sure you review our\nPrivacy Policy and Terms of Service'
         },
         CreateWalletMnemonic: {
             body:
@@ -183,7 +187,8 @@ export const translation: ITranslations = {
             BLE: 'Bluetooth',
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
-            openApp: 'Open {{app}} app on your Ledger to continue...'
+            openApp: 'Open {{app}} app on your Ledger to continue...',
+            disableNearNanoXBle: 'Not supported yet by Nano X Near App'
         },
         Fee: {
             feeTitle: 'Transaction fee',
@@ -329,12 +334,19 @@ export const translation: ITranslations = {
                 Success: 'Success'
             },
             signTransaction: 'Sign transaction',
+            signTransactions: 'Sign transaction(s)',
+            signAll: 'Sign all transactions',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
-            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleText:
+                'Please sign all transactions and wait while are being broadcasted to the blockchain network',
+            processTitleCompletedText:
+                'Some transactions may still pe pending on the blokchain, it is safe to continue. You can check the status of the transactions at any time in Transactions section.',
+            processTitleErrorText:
+                'There was an error! Some of your transaction were not broadcasted or failed on broadcasting. The transactions that were not successfully broadcasted will not be displayed under Transaction section.\n We advise to carefully check your account and try to redo the transactions that failed.',
             processTitleTextLedger:
-                'Please sign each transaction from your Ledger and wait while is being processed!',
+                'Please sign each transaction from your Ledger and wait while is being broadcasted to the blockchain network',
             registerAccount: 'Registering account',
             transactionType: 'Transaction Type'
         },
@@ -347,7 +359,7 @@ export const translation: ITranslations = {
         },
         SmartScan: {
             title: 'Smart scan',
-            newSection: 'A new section of smart scannig is in the work.'
+            newSection: 'A new section of smart scanning is in the work.'
         },
         Settings: {
             appVersion: 'Application version',
@@ -356,7 +368,7 @@ export const translation: ITranslations = {
             defaultCurrency: 'Default currency',
             manageWallet: 'Manage wallet',
             networkOptions: 'Network options',
-            privacyPolicy: 'Privacy policy',
+            privacyPolicy: 'Privacy Policy',
             reportIssue: 'Report issue',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
@@ -374,8 +386,7 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
-            welcomeText:
-                'A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet',
+            welcomeText: 'A portal to the decentralised world',
             welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
             webStep1: 'Open Moonlet app on your mobile',
             webStep2: 'Tap on menu icon from the header',
@@ -562,7 +573,10 @@ export const translation: ITranslations = {
             alreadyStaked:
                 'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
             multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,
-            selectStakingPool: 'Selecting staking pool'
+            selectStakingPool: 'Selecting staking pool',
+            unselectStakingPool: 'Unselecting staking pool',
+            allBalanceNotice:
+                'Notice: Moonlet keeps some tokens in your account for future transaction fees.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',
@@ -622,7 +636,26 @@ export const translation: ITranslations = {
                 'Location is disabled, therefore Moonlet is not able to scan for nearby Bluetooth devices. Enable Location from Settings and try again.',
             reviewTransaction: 'Review transaction',
             reviewTransactionDevice:
-                'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.'
+                'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.',
+
+            transactionDeclined: 'Transaction declined',
+            transactionDeclinedDetails: 'Either try again or cancel this operation.'
+        },
+        ProcessTransactions: {
+            title: 'Confirm',
+            ledgerSignButton: {
+                ordinal: true,
+                text: 'Sign {{txNumber}}th transaction',
+                forms: {
+                    one: 'Sign {{txNumber}}st transaction',
+                    two: 'Sign {{txNumber}}nd transaction',
+                    few: 'Sign {{txNumber}}rd transaction',
+                    other: 'Sign {{txNumber}}th transaction' // this is not needed since we have the default text above
+                }
+            },
+            alertCancelTitle: 'Transactions pending',
+            alertCancelMessage:
+                'There are transaction pending signing. Are you sure you want to cancel?'
         }
     },
     plural: (n: number, ord?: boolean) => {

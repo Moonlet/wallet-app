@@ -119,11 +119,13 @@ export const config: IBlockchainConfig = {
         displayName: 'NEAR',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X
-        }
+        },
+        fetchAccountStatsSec: 1
     },
     networks: {
         mainNet: 'mainnet',
         testNet: 'testnet'
     },
-    defaultOrder: 2
+    defaultOrder: 2,
+    amountToKeepInAccount: new BigNumber(10).pow(24)
 };

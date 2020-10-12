@@ -32,6 +32,14 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(19)
         },
+        displayNotice: {
+            flex: 1,
+            paddingLeft: BASE_DIMENSION,
+            color: theme.colors.warning,
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
+        },
+        noticeView: {},
         receipientWarning: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,

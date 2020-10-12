@@ -18,7 +18,7 @@ export const ZIL_NATIVE: ITokenConfigState = {
     removable: false,
     decimals: 12,
     ui: {
-        decimals: 3,
+        decimals: 4,
         tokenScreenComponent: TokenScreenComponentType.DELEGATE
     },
     type: TokenType.NATIVE,
@@ -109,7 +109,7 @@ export const config: IBlockchainConfig = {
             gasPrice: new BigNumber(2000000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(1),
-                [TokenType.ZRC2]: new BigNumber(25000)
+                [TokenType.ZRC2]: new BigNumber(3125)
             }
         },
         ui: {
@@ -154,7 +154,8 @@ export const config: IBlockchainConfig = {
         displayName: 'ZIL',
         affiliateBanners: {
             account: AffiliateBannerType.UNSTOPPABLE_DOMAINS
-        }
+        },
+        fetchAccountStatsSec: 5
     },
     networks: {
         testNet: 333,
@@ -172,7 +173,8 @@ export const config: IBlockchainConfig = {
             service: BlockchainNameService.CNS,
             record: ['crypto.ZIL.address']
         }
-    ]
+    ],
+    amountToKeepInAccount: new BigNumber(10).pow(14)
 };
 
 export enum Contracts {

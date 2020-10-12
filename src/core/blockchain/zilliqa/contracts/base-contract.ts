@@ -4,6 +4,7 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 import { TransactionStatus } from '../../../wallet/types';
 import { Contracts } from '../config';
 import { Zilliqa } from '..';
+import { Client as ZilliqaClient } from '../client';
 import { ApiClient } from '../../../utils/api-client/api-client';
 
 const contracts = {};
@@ -54,8 +55,9 @@ export const buildBaseTransaction = async (
 ): Promise<IBlockchainTransaction> => {
     const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
-    const client = Zilliqa.getClient(tx.chainId);
-    const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
+    const client = Zilliqa.getClient(tx.chainId) as ZilliqaClient;
+    const nonce = await client.getNonce(tx.account.address);
+
     const blockInfo = await client.getCurrentBlock();
 
     return {

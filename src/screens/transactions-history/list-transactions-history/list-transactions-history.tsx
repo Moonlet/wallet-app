@@ -203,7 +203,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 posAction === PosBasicActionType.UNSTAKE ||
                 posAction === PosBasicActionType.WITHDRAW
             ) {
-                transactionType = posAction;
+                transactionType = Capitalize(posAction);
             }
 
             if (

@@ -94,8 +94,7 @@ export class TransactionsHistoryListComponent extends React.Component<
             case PosBasicActionType.CLAIM_REWARD:
             case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
                 formattedAmount = translate('App.labels.from').toLowerCase();
-                primaryText =
-                    translate('App.labels.claimingRewards') + ` ${formattedAmount} ${toAddress}`;
+                primaryText = ` ${formattedAmount} ${toAddress}`;
                 break;
             }
             case PosBasicActionType.SELECT_STAKING_POOL:
@@ -200,14 +199,18 @@ export class TransactionsHistoryListComponent extends React.Component<
         if (tx.additionalInfo?.posAction) {
             const posAction = tx.additionalInfo.posAction;
             if (
-                posAction === PosBasicActionType.CLAIM_REWARD ||
                 posAction === PosBasicActionType.STAKE ||
                 posAction === PosBasicActionType.UNSTAKE ||
                 posAction === PosBasicActionType.WITHDRAW
             ) {
-                transactionType = Capitalize(posAction)
-                    .split('_')
-                    .join(' ');
+                transactionType = posAction;
+            }
+
+            if (
+                posAction === PosBasicActionType.CLAIM_REWARD ||
+                posAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT
+            ) {
+                transactionType = translate('App.labels.claimingRewards');
             }
         }
 

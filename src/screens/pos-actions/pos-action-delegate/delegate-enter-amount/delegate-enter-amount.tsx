@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { IReduxState } from '../../../../redux/state';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
@@ -136,7 +137,11 @@ export class DelegateEnterAmountComponent extends React.Component<
 
     public render() {
         if (this.state.loading) {
-            return <LoadingIndicator />;
+            return (
+                <View style={this.props.styles.container}>
+                    <LoadingIndicator />
+                </View>
+            );
         } else {
             return (
                 <EnterAmountComponent

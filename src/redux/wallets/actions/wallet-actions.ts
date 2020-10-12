@@ -596,7 +596,7 @@ export const sendTransferTransaction = (
         });
 
         const client = getBlockchain(account.blockchain).getClient(chainId);
-        const currentBlockchainNonce = await client.getNonce(account.address);
+        const currentBlockchainNonce = await client.getNonce(account.address, account.publicKey);
         const nrPendingTransactions = getNrPendingTransasctions(state);
         const updatedTransaction = {
             ...tx,

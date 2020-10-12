@@ -338,7 +338,10 @@ export const signAndSendTransactions = (
             dispatch(setProcessTxIndex(txIndex));
             let signed;
             try {
-                const currentBlockchainNonce = await client.getNonce(account.address);
+                const currentBlockchainNonce = await client.getNonce(
+                    account.address,
+                    account.publicKey
+                );
                 const nrPendingTransactions = getNrPendingTransasctions(state);
                 const updatedTransaction = {
                     ...transaction,

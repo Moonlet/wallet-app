@@ -56,7 +56,7 @@ export const buildBaseTransaction = async (
     const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
     const client = Zilliqa.getClient(tx.chainId) as ZilliqaClient;
-    const nonce = await client.getNonce(tx.account.address);
+    const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 
     const blockInfo = await client.getCurrentBlock();
 

@@ -11,8 +11,10 @@ import { Blockchain, ChainIdType, IFeeOptions } from '../../../../core/blockchai
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
-import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import { navigateToConfirmationStep } from '../../../../redux/ui/screens/posActions/actions';
+import {
+    INavigationProps,
+    withNavigationParams
+} from '../../../../navigation/with-navigation-params';
 import { delegate } from '../../../../redux/wallets/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
@@ -21,11 +23,13 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
-    navigateToConfirmationStep: typeof navigateToConfirmationStep;
     delegate: typeof delegate;
+}
+
+interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
@@ -33,22 +37,15 @@ export interface IReduxProps {
     actionText: string;
 }
 
-export const mapStateToProps = (state: IReduxState) => {
-    const accountIndex = state.ui.screens.posActions.delegateEnterAmount.accountIndex;
-    const blockchain = state.ui.screens.posActions.delegateEnterAmount.blockchain;
+export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const chainId = getChainId(state, ownProps.blockchain);
     return {
-        account: getAccount(state, accountIndex, blockchain),
-        chainId: getChainId(state, blockchain),
-        accountIndex,
-        blockchain,
-        token: state.ui.screens.posActions.delegateEnterAmount.token,
-        validators: state.ui.screens.posActions.delegateEnterAmount.validators,
-        actionText: state.ui.screens.posActions.delegateEnterAmount.actionText
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        chainId
     };
 };
 
 const mapDispatchToProps = {
-    navigateToConfirmationStep,
     delegate
 };
 
@@ -63,26 +60,19 @@ export const navigationOptions = ({ navigation }: any) => ({
 });
 
 export class DelegateEnterAmountComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    INavigationProps<INavigationParams> &
+        IReduxProps &
+        IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static navigationOptions = navigationOptions;
 
     constructor(
-        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+        props: INavigationProps<INavigationParams> &
+            IReduxProps &
+            IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
-
-        const blockchainInstance = getBlockchain(props.account.blockchain);
-
-        const stepList = [];
-        blockchainInstance.config.ui.token.sendStepLabels.map((step, index) => {
-            stepList.push({
-                step: index,
-                title: translate(step),
-                active: index === 1 ? true : false
-            });
-        });
 
         this.state = {
             loading: true,
@@ -170,5 +160,6 @@ export class DelegateEnterAmountComponent extends React.Component<
 }
 export const DelegateEnterAmount = smartConnect(DelegateEnterAmountComponent, [
     connect(mapStateToProps, mapDispatchToProps),
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

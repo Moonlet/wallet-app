@@ -1,4 +1,4 @@
-import { IAccountState } from '../state';
+import { AccountType, IAccountState } from '../state';
 import {
     Blockchain,
     IBlockchainTransaction,
@@ -339,7 +339,9 @@ export const signAndSendTransactions = (
             let signed;
             try {
                 const currentBlockchainNonce = await client.getNonce(
-                    account.address,
+                    account.type === AccountType.LOCKUP_CONTRACT
+                        ? account.meta.owner
+                        : account.address,
                     account.publicKey
                 );
                 const nrPendingTransactions = getNrPendingTransasctions(state);

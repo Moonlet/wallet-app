@@ -331,9 +331,10 @@ export const signAndSendTransactions = (
         let error = false;
         const startIndex = specificIndex === undefined ? 0 : specificIndex;
         for (let index = startIndex; index < transactions.length; index++) {
+            await delay(0);
             if (error) break;
             const txIndex = specificIndex || index;
-            const transaction = transactions[index];
+            let transaction = transactions[index];
 
             dispatch(setProcessTxIndex(txIndex));
             let signed;
@@ -344,16 +345,16 @@ export const signAndSendTransactions = (
                         : account.address,
                     account.publicKey
                 );
-                const nrPendingTransactions = getNrPendingTransasctions(state);
-                const updatedTransaction = {
+                const nrPendingTransactions = getNrPendingTransasctions(getState());
+                transaction = {
                     ...transaction,
                     nonce: currentBlockchainNonce + nrPendingTransactions
                 };
-                signed = await wallet.sign(
-                    transaction.blockchain,
-                    account.index,
-                    updatedTransaction
-                );
+
+                // console.log('updated', updatedTransaction);
+                // return;
+
+                signed = await wallet.sign(transaction.blockchain, account.index, transaction);
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
             } catch (e) {
                 if (e === 'LEDGER_SIGN_CANCELLED') {

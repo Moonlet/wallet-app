@@ -582,7 +582,7 @@ export const sendTransferTransaction = (
         const blockchainInstance = getBlockchain(account.blockchain);
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
-        const tx = await blockchainInstance.transaction.buildTransferTransaction({
+        let tx = await blockchainInstance.transaction.buildTransferTransaction({
             chainId,
             account,
             toAddress,
@@ -598,15 +598,11 @@ export const sendTransferTransaction = (
         const client = getBlockchain(account.blockchain).getClient(chainId);
         const currentBlockchainNonce = await client.getNonce(account.address, account.publicKey);
         const nrPendingTransactions = getNrPendingTransasctions(state);
-        const updatedTransaction = {
+        tx = {
             ...tx,
             nonce: currentBlockchainNonce + nrPendingTransactions
         };
-        const transaction = await wallet.sign(
-            account.blockchain,
-            account.index,
-            updatedTransaction
-        );
+        const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
         // if (appWallet.type === WalletType.HD) {
         await LoadingModal.showMessage({

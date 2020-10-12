@@ -29,19 +29,31 @@ import { openURL } from '../../core/utils/linking-handler';
 import { IconValues } from '../../components/icon/values';
 import { TokenType } from '../../core/blockchain/types/token';
 import { Capitalize } from '../../core/utils/format-string';
+import { TransactionStatus } from '../../core/wallet/types';
+import { Client as ZilliqaClient } from '../../core/blockchain/zilliqa/client';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import BigNumber from 'bignumber.js';
+import { formatNumber } from '../../core/utils/format-number';
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
 }
 
-export interface INavigationParams {
+interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     transaction: IBlockchainTransaction;
 }
 
-export const navigationOptions = ({ navigation }: any) => ({
+interface IState {
+    zilRewards: {
+        gZil: string;
+        zil: string;
+    };
+}
+
+const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: translate('Transaction.transactionDetails')
 });
@@ -49,9 +61,68 @@ export const navigationOptions = ({ navigation }: any) => ({
 export class TransactionDetailsComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IThemeProps<ReturnType<typeof stylesProvider>> &
-        IReduxProps
+        IReduxProps,
+    IState
 > {
     public static navigationOptions = navigationOptions;
+
+    constructor(
+        props: INavigationProps<INavigationParams> &
+            IThemeProps<ReturnType<typeof stylesProvider>> &
+            IReduxProps
+    ) {
+        super(props);
+
+        this.state = {
+            zilRewards: undefined
+        };
+    }
+
+    public async componentDidMount() {
+        const { account, transaction } = this.props;
+        const { blockchain } = account;
+
+        if (blockchain === Blockchain.ZILLIQA && transaction?.data?.raw) {
+            try {
+                const raw = JSON.parse(transaction.data.raw);
+
+                if (raw?._tag === 'WithdrawStakeRewards') {
+                    const blockchainConfig = getBlockchain(blockchain);
+                    const zilClient = blockchainConfig.getClient(
+                        this.props.chainId
+                    ) as ZilliqaClient;
+
+                    const zilRewards = await zilClient.fetchRewardsForTransaction(
+                        this.props.transaction.id
+                    );
+
+                    // ZIL
+                    const amountZil = blockchainConfig.account.amountFromStd(
+                        new BigNumber(zilRewards.zil),
+                        12
+                    );
+                    const formatAmountZil = formatNumber(amountZil, {
+                        currency: blockchainConfig.config.coin,
+                        maximumFractionDigits: 4
+                    });
+
+                    // gZIL
+                    const amountGzil = blockchainConfig.account.amountFromStd(
+                        new BigNumber(zilRewards.zil),
+                        15
+                    );
+                    const formatAmountGzil = formatNumber(amountGzil, {
+                        currency: blockchainConfig.config.coin,
+                        maximumFractionDigits: 8
+                    });
+
+                    this.setState({ zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil } });
+                }
+            } catch {
+                this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
+            }
+        }
+    }
 
     public goToExplorer() {
         const url = getBlockchain(this.props.account.blockchain)
@@ -103,6 +174,28 @@ export class TransactionDetailsComponent extends React.Component<
                 .join(' ');
         }
 
+        let isZilRewardsFlow = false;
+        if (account.blockchain === Blockchain.ZILLIQA && transaction?.data?.raw) {
+            try {
+                const raw = JSON.parse(transaction.data.raw);
+                if (raw?._tag === 'WithdrawStakeRewards') {
+                    isZilRewardsFlow = true;
+                }
+            } catch (err) {
+                // no need to handle this
+            }
+        }
+
+        const txStatus = transaction.status;
+
+        if (isZilRewardsFlow && !this.state.zilRewards) {
+            return (
+                <View style={styles.container}>
+                    <LoadingIndicator />
+                </View>
+            );
+        }
+
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -125,16 +218,44 @@ export class TransactionDetailsComponent extends React.Component<
                         </Text>
                     </View>
 
-                    <View style={styles.rowContainer}>
-                        <Amount
-                            style={styles.textPrimary}
-                            amount={amount}
-                            blockchain={account.blockchain}
-                            token={transaction?.token?.symbol || coin}
-                            tokenDecimals={tokenConfig.decimals}
-                        />
-                        <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
-                    </View>
+                    {isZilRewardsFlow ? (
+                        <View>
+                            {/* ZILLIQA ZIL and gZIL rewards */}
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.textPrimary}>
+                                    {txStatus === TransactionStatus.PENDING
+                                        ? 'Waiting confirmation'
+                                        : txStatus === TransactionStatus.SUCCESS
+                                        ? this.state.zilRewards.zil
+                                        : 'N/A'}
+                                </Text>
+                                <Text style={styles.textSecondary}>{'ZIL Rewards'}</Text>
+                            </View>
+
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.textPrimary}>
+                                    {txStatus === TransactionStatus.PENDING
+                                        ? 'Waiting confirmation'
+                                        : txStatus === TransactionStatus.SUCCESS
+                                        ? this.state.zilRewards.gZil
+                                        : 'N/A'}
+                                </Text>
+                                <Text style={styles.textSecondary}>{'gZIL Rewards'}</Text>
+                            </View>
+                        </View>
+                    ) : (
+                        // Amount
+                        <View style={styles.rowContainer}>
+                            <Amount
+                                style={styles.textPrimary}
+                                amount={amount}
+                                blockchain={account.blockchain}
+                                token={transaction?.token?.symbol || coin}
+                                tokenDecimals={tokenConfig.decimals}
+                            />
+                            <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
+                        </View>
+                    )}
 
                     {/* TODO: Fees */}
                     {/* <View style={styles.rowContainer}>

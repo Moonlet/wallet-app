@@ -21,7 +21,7 @@ import { formatAddress } from '../../../core/utils/format-address';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import moment from 'moment';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { IBlockchainTransaction } from '../../../core/blockchain/types';
+import { IBlockchainTransaction, TransactionType } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
@@ -196,6 +196,23 @@ export class TransactionsHistoryListComponent extends React.Component<
         });
 
         let transactionType: string;
+
+        if (tx.additionalInfo?.actions) {
+            for (const action of tx.additionalInfo.actions) {
+                if (action?.type === TransactionType.TRANSFER) {
+                    transactionType = translate('App.labels.transfer') + ' ';
+                }
+            }
+        }
+
+        if (
+            tx.token.type === TokenType.ZRC2 ||
+            tx.token.type === TokenType.ERC20 ||
+            transactionType === TransactionType.CONTRACT_CALL
+        ) {
+            transactionType = Capitalize(tx.data.method) + ' ';
+        }
+
         if (tx.additionalInfo?.posAction) {
             const posAction = tx.additionalInfo.posAction;
             if (

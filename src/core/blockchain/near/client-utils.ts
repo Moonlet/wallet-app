@@ -45,6 +45,9 @@ export class ClientUtils implements IClientUtils {
         for (const action of txData.transaction.actions) {
             if (action?.Transfer) {
                 transaction.amount = action.Transfer.deposit;
+                transaction.additionalInfo = {
+                    actions: [{ type: TransactionType.TRANSFER }]
+                };
             } else if (action?.FunctionCall) {
                 transaction.type = TransactionType.CONTRACT_CALL;
 

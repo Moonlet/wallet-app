@@ -353,7 +353,11 @@ export class PosBasicActionComponent extends React.Component<
         const config = getBlockchain(this.props.blockchain).config;
 
         if (this.props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT)
-            return <LoadingIndicator />;
+            return (
+                <View style={styles.container}>
+                    <LoadingIndicator />
+                </View>
+            );
 
         return (
             <View style={styles.container}>

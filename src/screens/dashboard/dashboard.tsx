@@ -374,11 +374,6 @@ export class DashboardScreenComponent extends React.Component<
                                 visible: true
                             }}
                         />
-                        <Icon
-                            name={IconValues.CHEVRON_DOWN}
-                            size={normalize(18)}
-                            style={styles.icon}
-                        />
                     </Animated.View>
 
                     <View style={styles.row}>

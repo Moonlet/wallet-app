@@ -6,6 +6,7 @@ import { createSelector } from 'reselect';
 import { getChainId, getBlockchains } from '../preferences/selectors';
 import { ITokenState } from '../wallets/state';
 import { generateTokensConfig } from '../tokens/static-selectors';
+import { TransactionStatus } from '../../core/wallet/types';
 
 export const getWalletSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
@@ -188,4 +189,10 @@ export const generateAccountConfig = (blockchain: Blockchain): IAccountState => 
         blockchain,
         tokens: generateTokensConfig(blockchain)
     };
+};
+
+export const getNrPendingTransasctions = (state: IReduxState): number => {
+    const transactions = getSelectedAccountTransactions(state);
+
+    return transactions.filter(tx => tx.status === TransactionStatus.PENDING).length;
 };

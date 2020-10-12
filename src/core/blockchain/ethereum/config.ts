@@ -49,14 +49,14 @@ export const config: IBlockchainConfig = {
             DAI: DAI_MAINNET,
             USDT: USDT_MAINNET,
             LINK: LINK_MAINNET,
-            COMP: COMP_MAINNET,
+            USDC: USDC_MAINNET,
             LEND: LEND_MAINNET,
+            UNI: UNI_MAINNET,
+            YFI: YFI_MAINNET,
             MKR: MKR_MAINNET,
             OMG: OMG_MAINNET,
-            SNX: SNX_MAINNET,
-            UNI: UNI_MAINNET,
-            USDC: USDC_MAINNET,
-            YFI: YFI_MAINNET
+            COMP: COMP_MAINNET,
+            SNX: SNX_MAINNET
         }
     },
     tokens: {

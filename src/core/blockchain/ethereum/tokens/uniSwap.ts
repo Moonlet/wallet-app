@@ -5,7 +5,7 @@ export const UNI_MAINNET: ITokenConfigState = {
     name: 'Uniswap',
     symbol: 'UNI',
     icon: {
-        uri: 'https://s2.coinmarketcap.com/static/icons/ethereum/uniswap.png'
+        uri: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png'
     },
     contractAddress: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
     removable: true,

@@ -37,7 +37,8 @@ export class Near {
     constructor(private transport) {}
 
     private getPath(index) {
-        return `44'/397'/0'/0'/${index + 1}'`; // +1 because near uses index 1 not 0.
+        index = 1;
+        return `44'/397'/0'/0'/${index}'`; // +1 because near uses index 1 not 0.
     }
 
     /**

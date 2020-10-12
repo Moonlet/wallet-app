@@ -16,10 +16,16 @@ export const statGetValueString = (stat: IStatValue, tokenConfig: ITokenConfigSt
         case IStatValueType.AMOUNT: {
             const blockchainInstance = getBlockchain(stat.data.blockchain as Blockchain);
 
-            const amountFromStd = blockchainInstance.account.amountFromStd(
+            let amountFromStd = blockchainInstance.account.amountFromStd(
                 new BigNumber(stat.data.value),
                 tokenConfig.decimals
             );
+
+            // remove decimals if amount is grater than 10 000
+            if (new BigNumber(amountFromStd).isGreaterThan(new BigNumber('10000'))) {
+                amountFromStd = new BigNumber(amountFromStd.toFixed(0));
+            }
+
             return formatNumber(new BigNumber(amountFromStd), {
                 currency: blockchainInstance.config.coin,
                 maximumFractionDigits: 4

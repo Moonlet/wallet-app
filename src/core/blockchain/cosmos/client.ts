@@ -58,7 +58,7 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async getNonce(address: string): Promise<number> {
+    public async getNonce(address: string, publicKey: string): Promise<number> {
         try {
             const res = await this.http.get('/auth/accounts/' + address);
             return res.result.sequence;

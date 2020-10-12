@@ -11,7 +11,7 @@ import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
-import { getSelectedAccount, getSelectedWallet } from '../selectors';
+import { getNrPendingTransasctions, getSelectedAccount, getSelectedWallet } from '../selectors';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { generateAccountTokenState, getTokenConfig } from '../../tokens/static-selectors';
@@ -336,10 +336,19 @@ export const signAndSendTransactions = (
             const transaction = transactions[index];
 
             dispatch(setProcessTxIndex(txIndex));
-            // await delay(5000);
             let signed;
             try {
-                signed = await wallet.sign(transaction.blockchain, account.index, transaction);
+                const currentBlockchainNonce = await client.getNonce(account.address);
+                const nrPendingTransactions = getNrPendingTransasctions(state);
+                const updatedTransaction = {
+                    ...transaction,
+                    nonce: currentBlockchainNonce + nrPendingTransactions
+                };
+                signed = await wallet.sign(
+                    transaction.blockchain,
+                    account.index,
+                    updatedTransaction
+                );
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
             } catch (e) {
                 if (e === 'LEDGER_SIGN_CANCELLED') {
@@ -349,8 +358,6 @@ export const signAndSendTransactions = (
             }
 
             try {
-                await delay(500);
-
                 // const txHash = signed;
                 // console.log(client);
                 const txHash = await client.sendTransaction(signed);

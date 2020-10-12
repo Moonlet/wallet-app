@@ -34,7 +34,8 @@ import {
     getSelectedAccount,
     getWalletWithAddress,
     getWalletAndTransactionForHash,
-    generateAccountConfig
+    generateAccountConfig,
+    getNrPendingTransasctions
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -594,7 +595,18 @@ export const sendTransferTransaction = (
             extraFields
         });
 
-        const transaction = await wallet.sign(account.blockchain, account.index, tx);
+        const client = getBlockchain(account.blockchain).getClient(chainId);
+        const currentBlockchainNonce = await client.getNonce(account.address);
+        const nrPendingTransactions = getNrPendingTransasctions(state);
+        const updatedTransaction = {
+            ...tx,
+            nonce: currentBlockchainNonce + nrPendingTransactions
+        };
+        const transaction = await wallet.sign(
+            account.blockchain,
+            account.index,
+            updatedTransaction
+        );
 
         // if (appWallet.type === WalletType.HD) {
         await LoadingModal.showMessage({

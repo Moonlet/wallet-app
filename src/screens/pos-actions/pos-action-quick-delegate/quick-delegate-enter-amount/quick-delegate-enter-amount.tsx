@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { IReduxState } from '../../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -156,7 +157,11 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
 
     public render() {
         if (this.state.loading) {
-            return <LoadingIndicator />;
+            return (
+                <View style={this.props.styles.container}>
+                    <LoadingIndicator />
+                </View>
+            );
         } else {
             return (
                 <EnterAmountComponent

@@ -13,12 +13,7 @@ export const LoadingIndicatorComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     return (
-        <View
-            style={[
-                props.styles.container,
-                { backgroundColor: props?.backgroundColor || props.theme.colors.appBackground }
-            ]}
-        >
+        <View style={[props.styles.container, { backgroundColor: props.backgroundColor }]}>
             <ActivityIndicator
                 size="large"
                 color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}

@@ -27,7 +27,7 @@ import { normalize } from '../../styles/dimensions';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { openURL } from '../../core/utils/linking-handler';
 import { IconValues } from '../../components/icon/values';
-import { PosBasicActionType, TokenType } from '../../core/blockchain/types/token';
+import { TokenType } from '../../core/blockchain/types/token';
 import { Capitalize } from '../../core/utils/format-string';
 import { TransactionStatus } from '../../core/wallet/types';
 import { Client as ZilliqaClient } from '../../core/blockchain/zilliqa/client';
@@ -79,37 +79,48 @@ export class TransactionDetailsComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        const blockchainConfig = getBlockchain(this.props.account.blockchain);
-        const zilClient = blockchainConfig.getClient(this.props.chainId) as ZilliqaClient;
+        const { account, transaction } = this.props;
+        const { blockchain } = account;
 
-        try {
-            const zilRewards = await zilClient.fetchRewardsForTransaction(
-                this.props.transaction.id
-            );
+        if (blockchain === Blockchain.ZILLIQA && transaction?.data?.raw) {
+            try {
+                const raw = JSON.parse(transaction.data.raw);
 
-            // ZIL
-            const amountZil = blockchainConfig.account.amountFromStd(
-                new BigNumber(zilRewards.zil),
-                12
-            );
-            const formatAmountZil = formatNumber(amountZil, {
-                currency: blockchainConfig.config.coin,
-                maximumFractionDigits: 4
-            });
+                if (raw?._tag === 'WithdrawStakeRewards') {
+                    const blockchainConfig = getBlockchain(blockchain);
+                    const zilClient = blockchainConfig.getClient(
+                        this.props.chainId
+                    ) as ZilliqaClient;
 
-            // gZIL
-            const amountGzil = blockchainConfig.account.amountFromStd(
-                new BigNumber(zilRewards.zil),
-                15
-            );
-            const formatAmountGzil = formatNumber(amountGzil, {
-                currency: blockchainConfig.config.coin,
-                maximumFractionDigits: 8
-            });
+                    const zilRewards = await zilClient.fetchRewardsForTransaction(
+                        this.props.transaction.id
+                    );
 
-            this.setState({ zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil } });
-        } catch {
-            this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
+                    // ZIL
+                    const amountZil = blockchainConfig.account.amountFromStd(
+                        new BigNumber(zilRewards.zil),
+                        12
+                    );
+                    const formatAmountZil = formatNumber(amountZil, {
+                        currency: blockchainConfig.config.coin,
+                        maximumFractionDigits: 4
+                    });
+
+                    // gZIL
+                    const amountGzil = blockchainConfig.account.amountFromStd(
+                        new BigNumber(zilRewards.zil),
+                        15
+                    );
+                    const formatAmountGzil = formatNumber(amountGzil, {
+                        currency: blockchainConfig.config.coin,
+                        maximumFractionDigits: 8
+                    });
+
+                    this.setState({ zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil } });
+                }
+            } catch {
+                this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
+            }
         }
     }
 
@@ -163,11 +174,17 @@ export class TransactionDetailsComponent extends React.Component<
                 .join(' ');
         }
 
-        const isZilRewardsFlow =
-            account.blockchain === Blockchain.ZILLIQA &&
-            (transaction?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD ||
-                transaction?.additionalInfo?.posAction ===
-                    PosBasicActionType.CLAIM_REWARD_NO_INPUT);
+        let isZilRewardsFlow = false;
+        if (account.blockchain === Blockchain.ZILLIQA && transaction?.data?.raw) {
+            try {
+                const raw = JSON.parse(transaction.data.raw);
+                if (raw?._tag === 'WithdrawStakeRewards') {
+                    isZilRewardsFlow = true;
+                }
+            } catch (err) {
+                // no need to handle this
+            }
+        }
 
         const txStatus = transaction.status;
 

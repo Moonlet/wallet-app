@@ -37,6 +37,7 @@ export class Client extends BlockchainGenericClient {
         try {
             let zil = 0;
             let gZil = 0;
+
             return this.call('GetTransaction', [txHash]).then(response => {
                 if (response?.result?.receipt?.event_logs) {
                     const logs = response?.result?.receipt?.event_logs;
@@ -59,8 +60,8 @@ export class Client extends BlockchainGenericClient {
 
                 return { gZil: new BigNumber(gZil).toFixed(), zil: new BigNumber(zil).toFixed() };
             });
-        } catch (e) {
-            return { gZil: 'N/A', zil: 'N/A' };
+        } catch (err) {
+            throw new Error(err);
         }
     }
 

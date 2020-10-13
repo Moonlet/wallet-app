@@ -13,7 +13,7 @@ import {
     getPinCode,
     setPinCode
 } from '../../core/secure/keychain/keychain';
-import { changePIN } from '../../redux/wallets/actions';
+import { changePIN } from '../../redux/wallets/actions/password-actions';
 import { Text } from '../../library';
 import { IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -34,7 +34,6 @@ import { NavigationService } from '../../navigation/navigation-service';
 import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
 import CONFIG from '../../config';
-import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { waitForInstance, setInstance } from '../../core/utils/class-registry';
 
 const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
@@ -83,7 +82,6 @@ export interface IReduxProps {
     resetFailedLogins: typeof resetFailedLogins;
     setAppBlockUntil: typeof setAppBlockUntil;
     resetAllData: typeof resetAllData;
-    setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
 export const mapStateToProps = (state: IReduxState) => ({
@@ -99,8 +97,7 @@ export const mapDispatchToProps = {
     incrementFailedLogins,
     resetFailedLogins,
     setAppBlockUntil,
-    resetAllData,
-    setDisplayPasswordModal
+    resetAllData
 };
 
 export class PasswordModalComponent extends React.Component<

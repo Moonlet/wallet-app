@@ -24,6 +24,7 @@ interface INavigationParams {
     blockchain: Blockchain;
     accountIndex: number;
     token: ITokenState;
+    canPerformAction: boolean;
 }
 
 const HeaderTitleComponent = (
@@ -122,7 +123,8 @@ export class ValidatorScreenComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [validator]
+                            validators: [validator],
+                            canPerformAction: this.props.canPerformAction
                         }}
                     />
                 </View>

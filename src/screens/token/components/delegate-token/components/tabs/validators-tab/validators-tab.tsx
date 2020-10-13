@@ -17,6 +17,7 @@ import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
+import { getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
 
 interface IExternalProps {
     accountIndex: number;
@@ -27,11 +28,13 @@ interface IExternalProps {
 
 interface IReduxProps {
     validators: IValidator[];
+    hasPendingTransactions: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
-        validators: getValidators(state, ownProps.blockchain, ownProps.chainId)
+        validators: getValidators(state, ownProps.blockchain, ownProps.chainId),
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 
@@ -92,7 +95,8 @@ export class ValidatorsTabComponent extends React.Component<
             blockchain: this.props.blockchain,
             validator,
             accountIndex: this.props.accountIndex,
-            token: this.props.token
+            token: this.props.token,
+            canPerformAction: !this.props.hasPendingTransactions
         });
     }
 
@@ -139,7 +143,8 @@ export class ValidatorsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: []
+                            validators: [],
+                            canPerformAction: !this.props.hasPendingTransactions
                         }}
                     />
                 </View>

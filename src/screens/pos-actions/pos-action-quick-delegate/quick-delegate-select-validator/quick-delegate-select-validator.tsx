@@ -10,7 +10,7 @@ import {
     withNavigationParams,
     INavigationProps
 } from '../../../../navigation/with-navigation-params';
-import { getAccount } from '../../../../redux/wallets/selectors';
+import { getAccount, getNrPendingTransactions } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
@@ -35,6 +35,8 @@ import { fetchValidators } from '../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { Dialog } from '../../../../components/dialog/dialog';
+import { NavigationService } from '../../../../navigation/navigation-service';
 
 interface IReduxProps {
     account: IAccountState;
@@ -43,6 +45,7 @@ interface IReduxProps {
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
     fetchValidators: typeof fetchValidators;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
+    hasPendingTransactions: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -50,7 +53,8 @@ const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
-        validators: getValidators(state, ownProps.blockchain, chainId, PosBasicActionType.DELEGATE)
+        validators: getValidators(state, ownProps.blockchain, chainId, PosBasicActionType.DELEGATE),
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 
@@ -96,8 +100,20 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
-        this.props.fetchDelegatedValidators(this.props.account);
+        if (this.props.hasPendingTransactions) {
+            Dialog.alert(
+                translate('Validator.cannotInitiateTxTitle'),
+                translate('Validator.cannotInitiateTxMessage'),
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => NavigationService.navigate('TransactonsHistory', {})
+                }
+            );
+        } else {
+            this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
+            this.props.fetchDelegatedValidators(this.props.account);
+        }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {

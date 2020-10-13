@@ -577,7 +577,10 @@ export const translation: ITranslations = {
             selectStakingPool: 'Selecting staking pool',
             unselectStakingPool: 'Unselecting staking pool',
             allBalanceNotice:
-                'Notice: Moonlet keeps some tokens in your account for future transaction fees.'
+                'Notice: Moonlet keeps some tokens in your account for future transaction fees.',
+            cannotInitiateTxTitle: 'You have pending transactions',
+            cannotInitiateTxMessage:
+                'Please make sure all transactions are finalised before initiating a new one.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

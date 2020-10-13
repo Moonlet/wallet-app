@@ -1,6 +1,6 @@
-Team's log. Stardate 2010.12:
+Team's log. Stardate 2010.14:
 
-Welcome to Moonlet. It's staking time! This release comes with staking feature and bunch of improvements that will make your experience much better. 
+We had some fixes here and there to improve the whole staking experience. Balances are updating properly now, as well the rewards and commission rates.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our website moonlet.io
 

@@ -37,6 +37,7 @@ interface IState {
     expanded: boolean;
     barWidth: number;
     hideComponent: boolean;
+    extraTokenAmount: BigNumber;
 }
 
 export class AccountSummaryComponent extends React.Component<
@@ -48,17 +49,20 @@ export class AccountSummaryComponent extends React.Component<
         this.state = {
             expanded: false,
             barWidth: undefined,
-            hideComponent: true
+            hideComponent: true,
+            extraTokenAmount: undefined
         };
     }
 
     public componentDidMount() {
         this.handleComponentVisibility();
+        this.handleExtraToken();
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
         if (this.props.data !== prevProps.data) {
             this.handleComponentVisibility();
+            this.handleExtraToken();
         }
         if (this.props.data.blockchain !== prevProps.data.blockchain) {
             this.setState({ expanded: false });
@@ -75,6 +79,23 @@ export class AccountSummaryComponent extends React.Component<
         } else {
             this.setState({ hideComponent: true });
         }
+    }
+
+    private handleExtraToken() {
+        const { data } = this.props;
+        const { blockchain } = data;
+
+        const extraTokenConfig =
+            data?.extraToken && getTokenConfig(blockchain, data.extraToken.symbol);
+
+        const amountFromStd =
+            data?.extraToken &&
+            getBlockchain(blockchain).account.amountFromStd(
+                new BigNumber(data.extraToken.balance.value),
+                extraTokenConfig.decimals
+            );
+
+        this.setState({ extraTokenAmount: amountFromStd });
     }
 
     private renderDetailsSection() {
@@ -95,6 +116,29 @@ export class AccountSummaryComponent extends React.Component<
                             </View>
                         ))}
                     </SkeletonPlaceholder>
+
+                    {data.extraToken && (
+                        <View style={styles.detailsExtraPlaceholderWrapper}>
+                            <View style={styles.divider} />
+
+                            <View
+                                style={[
+                                    styles.detailsExtraTextContainer,
+                                    styles.detailsExtraPlaceholderContainer
+                                ]}
+                            >
+                                <SkeletonPlaceholder>
+                                    <View style={styles.detailsSkeletonIcon} />
+                                    <View
+                                        style={[
+                                            styles.detailsSkeletonPrimaryValue,
+                                            { width: normalize(160) }
+                                        ]}
+                                    />
+                                </SkeletonPlaceholder>
+                            </View>
+                        </View>
+                    )}
                 </View>
             );
         }
@@ -103,19 +147,11 @@ export class AccountSummaryComponent extends React.Component<
             return null;
         }
 
-        const tokenConfig =
-            this.props.data?.token &&
-            getTokenConfig(this.props.data.blockchain, this.props.data.token.symbol);
+        const tokenConfig = data?.token && getTokenConfig(blockchain, data.token.symbol);
 
         const extraTokenConfig =
             data?.extraToken && getTokenConfig(blockchain, data.extraToken.symbol);
 
-        const amountFromStd =
-            data?.extraToken &&
-            getBlockchain(blockchain).account.amountFromStd(
-                new BigNumber(data.extraToken.balance.value),
-                extraTokenConfig.decimals
-            );
         return (
             <View>
                 <View style={styles.detailsContainer}>
@@ -146,7 +182,7 @@ export class AccountSummaryComponent extends React.Component<
                     />
                 </View>
 
-                {this.props.data.extraToken && (
+                {this.state.extraTokenAmount && extraTokenConfig && (
                     <View style={styles.detailsExtraContainer}>
                         <View style={styles.divider} />
                         <View style={styles.detailsExtraTextContainer}>
@@ -156,8 +192,8 @@ export class AccountSummaryComponent extends React.Component<
                             />
 
                             <Text style={styles.detailsExtraText}>
-                                {`${formatNumber(new BigNumber(amountFromStd), {
-                                    currency: this.props.data.extraToken.symbol,
+                                {`${formatNumber(this.state.extraTokenAmount, {
+                                    currency: data.extraToken.symbol,
                                     maximumFractionDigits: extraTokenConfig.ui.decimals
                                 })}`}
                             </Text>

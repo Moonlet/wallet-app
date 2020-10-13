@@ -120,9 +120,16 @@ export default (theme: ITheme) =>
         },
         detailsExtraTextContainer: {
             flexDirection: 'row',
-            marginTop: BASE_DIMENSION * 2 + BASE_DIMENSION / 2,
+            marginTop: BASE_DIMENSION * 2,
             justifyContent: 'center',
             marginBottom: BASE_DIMENSION
+        },
+        detailsExtraPlaceholderWrapper: {
+            width: '100%'
+        },
+        detailsExtraPlaceholderContainer: {
+            alignItems: 'center',
+            marginBottom: BASE_DIMENSION * 2
         },
         detailsExtraText: {
             fontSize: normalizeFontAndLineHeight(23),

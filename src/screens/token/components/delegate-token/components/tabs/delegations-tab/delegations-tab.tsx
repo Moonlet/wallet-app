@@ -16,10 +16,7 @@ import { ChainIdType } from '../../../../../../../core/blockchain/types';
 import { ITokenState, IAccountState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { connect } from 'react-redux';
-import {
-    getAccount,
-    getNrPendingTransasctions
-} from '../../../../../../../redux/wallets/selectors';
+import { getAccount, getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { getDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/selectors';
 import { Text } from '../../../../../../../library';
@@ -41,7 +38,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         validators: getDelegatedValidators(state, ownProps.blockchain, ownProps.chainId),
-        hasPendingTransactions: getNrPendingTransasctions(state)
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 

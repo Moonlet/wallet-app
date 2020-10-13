@@ -7,10 +7,7 @@ import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/ty
 import { AccountAddress } from '../../../../../../../components/account-address/account-address';
 import { AccountType, IAccountState, ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
-import {
-    getAccount,
-    getNrPendingTransasctions
-} from '../../../../../../../redux/wallets/selectors';
+import { getAccount, getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { bind } from 'bind-decorator';
 import { StatsComponent } from '../../stats-component/stats-component';
@@ -64,7 +61,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
         account,
         chainId,
         accountStats: getAccountStats(state, ownProps.blockchain, chainId, account.address),
-        hasPendingTransactions: getNrPendingTransasctions(state)
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 

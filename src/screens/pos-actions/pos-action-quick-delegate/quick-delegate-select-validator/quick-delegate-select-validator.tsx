@@ -10,7 +10,7 @@ import {
     withNavigationParams,
     INavigationProps
 } from '../../../../navigation/with-navigation-params';
-import { getAccount, getNrPendingTransasctions } from '../../../../redux/wallets/selectors';
+import { getAccount, getNrPendingTransactions } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
@@ -54,7 +54,7 @@ const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
         validators: getValidators(state, ownProps.blockchain, chainId, PosBasicActionType.DELEGATE),
-        hasPendingTransactions: getNrPendingTransasctions(state)
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 

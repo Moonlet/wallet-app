@@ -17,7 +17,7 @@ import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
-import { getNrPendingTransasctions } from '../../../../../../../redux/wallets/selectors';
+import { getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
 
 interface IExternalProps {
     accountIndex: number;
@@ -34,7 +34,7 @@ interface IReduxProps {
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         validators: getValidators(state, ownProps.blockchain, ownProps.chainId),
-        hasPendingTransactions: getNrPendingTransasctions(state)
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 

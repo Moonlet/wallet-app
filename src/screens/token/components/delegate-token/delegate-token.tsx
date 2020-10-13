@@ -6,7 +6,7 @@ import {
     getAccountFilteredTransactions,
     getAccount,
     getSelectedWallet,
-    getNrPendingTransasctions
+    getNrPendingTransactions
 } from '../../../../redux/wallets/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -66,7 +66,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) =>
         ),
         wallet: getSelectedWallet(state),
         chainId: getChainId(state, ownProps.blockchain),
-        hasPendingTransactions: getNrPendingTransasctions(state)
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 

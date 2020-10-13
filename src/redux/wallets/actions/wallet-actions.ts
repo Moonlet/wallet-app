@@ -14,11 +14,7 @@ import { IAction } from '../../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../../state';
 import uuidv4 from 'uuid/v4';
-import {
-    storeEncrypted,
-    deleteFromStorage,
-    readEncrypted
-} from '../../../core/secure/storage/storage';
+import { storeEncrypted, deleteFromStorage } from '../../../core/secure/storage/storage';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
@@ -48,7 +44,6 @@ import {
 } from '../../tokens/static-selectors';
 import {
     getEncryptionKey,
-    generateEncryptionKey,
     clearEncryptionKey,
     clearPinCode,
     getWalletCredentialsKey,
@@ -924,24 +919,6 @@ const handleCreateAccountError = (errorMessage: any, newAccountId: string) => {
             })
         )
     );
-};
-
-export const changePIN = (newPassword: string, oldPassword: string) => async (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
-    const state = getState();
-
-    const encryptionKey = await getEncryptionKey(oldPassword);
-    const newEncryptionKey = await generateEncryptionKey(newPassword);
-
-    Object.values(state.wallets).map(async (wallet: IWalletState) => {
-        const walletId = wallet.id;
-
-        const mnemonic = await readEncrypted(walletId, encryptionKey);
-
-        await storeEncrypted(mnemonic, walletId, newEncryptionKey);
-    });
 };
 
 export const addPublishedTxToAccount = (

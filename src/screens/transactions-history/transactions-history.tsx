@@ -14,9 +14,19 @@ import { IBlockchainTransaction } from '../../core/blockchain/types';
 import { TransactionStatus } from '../../core/wallet/types';
 import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { HeaderLeft } from '../../components/header-left/header-left';
+import { IconValues } from '../../components/icon/values';
+import { NavigationService } from '../../navigation/navigation-service';
 
 export const navigationOptions = () => ({
-    title: translate('DashboardMenu.transactionHistory')
+    title: translate('DashboardMenu.transactionHistory'),
+    headerLeft: (
+        <HeaderLeft
+            testID="go-back"
+            icon={IconValues.ARROW_LEFT}
+            onPress={() => NavigationService.popToTop()}
+        />
+    )
 });
 
 export interface IReduxProps {

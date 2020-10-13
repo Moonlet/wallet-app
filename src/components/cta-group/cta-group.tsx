@@ -11,12 +11,14 @@ import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
 import { IValidator } from '../../core/blockchain/types/stats';
+import { Dialog } from '../dialog/dialog';
 
 export interface INavParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     validators: IValidator[];
+    canPerformAction: boolean;
 }
 
 export interface IExternalProps {
@@ -35,12 +37,28 @@ export const CtaGroupComponent = (
                     {props.otherCtas.length === 1 ? (
                         <Button
                             leftIcon={props.otherCtas[0].iconName}
-                            onPress={() =>
-                                NavigationService.navigate(props.otherCtas[0].navigateTo.screen, {
-                                    ...props.otherCtas[0].navigateTo.params,
-                                    ...props.params
-                                })
-                            }
+                            onPress={() => {
+                                if (props.params.canPerformAction) {
+                                    NavigationService.navigate(
+                                        props.otherCtas[0].navigateTo.screen,
+                                        {
+                                            ...props.otherCtas[0].navigateTo.params,
+                                            ...props.params
+                                        }
+                                    );
+                                } else {
+                                    Dialog.alert(
+                                        translate('Validator.cannotInitiateTxTitle'),
+                                        translate('Validator.cannotInitiateTxMessage'),
+                                        undefined,
+                                        {
+                                            text: translate('App.labels.ok'),
+                                            onPress: () =>
+                                                NavigationService.navigate('TransactonsHistory', {})
+                                        }
+                                    );
+                                }
+                            }}
                             wrapperStyle={{ width: '100%' }}
                         >
                             {translate(props.otherCtas[0].title)}
@@ -50,12 +68,28 @@ export const CtaGroupComponent = (
                             <Button
                                 key={`cta-${index}`}
                                 leftIcon={cta.iconName}
-                                onPress={() =>
-                                    NavigationService.navigate(cta.navigateTo.screen, {
-                                        ...cta.navigateTo.params,
-                                        ...props.params
-                                    })
-                                }
+                                onPress={() => {
+                                    if (props.params.canPerformAction) {
+                                        NavigationService.navigate(cta.navigateTo.screen, {
+                                            ...cta.navigateTo.params,
+                                            ...props.params
+                                        });
+                                    } else {
+                                        Dialog.alert(
+                                            translate('Validator.cannotInitiateTxTitle'),
+                                            translate('Validator.cannotInitiateTxMessage'),
+                                            undefined,
+                                            {
+                                                text: translate('App.labels.ok'),
+                                                onPress: () =>
+                                                    NavigationService.navigate(
+                                                        'TransactonsHistory',
+                                                        {}
+                                                    )
+                                            }
+                                        );
+                                    }
+                                }}
                                 bottomLabel={translate(cta.title)}
                                 style={{ borderRadius: BORDER_RADIUS + BORDER_RADIUS / 2 }}
                             />
@@ -66,12 +100,24 @@ export const CtaGroupComponent = (
             <Button
                 primary
                 leftIcon={props.mainCta.iconName}
-                onPress={() =>
-                    NavigationService.navigate(props.mainCta.navigateTo.screen, {
-                        ...props.mainCta.navigateTo.params,
-                        ...props.params
-                    })
-                }
+                onPress={() => {
+                    if (props.params.canPerformAction) {
+                        NavigationService.navigate(props.mainCta.navigateTo.screen, {
+                            ...props.mainCta.navigateTo.params,
+                            ...props.params
+                        });
+                    } else {
+                        Dialog.alert(
+                            translate('Validator.cannotInitiateTxTitle'),
+                            translate('Validator.cannotInitiateTxMessage'),
+                            undefined,
+                            {
+                                text: translate('App.labels.ok'),
+                                onPress: () => NavigationService.navigate('TransactonsHistory', {})
+                            }
+                        );
+                    }
+                }}
             >
                 {translate(props.mainCta.title)}
             </Button>

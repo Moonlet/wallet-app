@@ -5,7 +5,8 @@ import { IAccountState, IWalletState, ITokenState } from '../../../../redux/wall
 import {
     getAccountFilteredTransactions,
     getAccount,
-    getSelectedWallet
+    getSelectedWallet,
+    getNrPendingTransasctions
 } from '../../../../redux/wallets/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -41,6 +42,7 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
+    hasPendingTransactions: boolean;
 }
 
 export interface IState {
@@ -63,7 +65,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) =>
             ownProps.token
         ),
         wallet: getSelectedWallet(state),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId: getChainId(state, ownProps.blockchain),
+        hasPendingTransactions: getNrPendingTransasctions(state)
     };
 };
 

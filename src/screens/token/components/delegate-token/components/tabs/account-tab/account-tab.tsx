@@ -7,7 +7,10 @@ import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/ty
 import { AccountAddress } from '../../../../../../../components/account-address/account-address';
 import { AccountType, IAccountState, ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
-import { getAccount } from '../../../../../../../redux/wallets/selectors';
+import {
+    getAccount,
+    getNrPendingTransasctions
+} from '../../../../../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { bind } from 'bind-decorator';
 import { StatsComponent } from '../../stats-component/stats-component';
@@ -31,6 +34,7 @@ import { AffiliateBanner } from '../../../../../../../components/affiliate-banne
 import { fetchAccountDelegateStats } from '../../../../../../../redux/ui/stats/actions';
 import { getAccountStats } from '../../../../../../../redux/ui/stats/selectors';
 import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
+import { Dialog } from '../../../../../../../components/dialog/dialog';
 
 interface IExternalProps {
     accountIndex: number;
@@ -49,6 +53,7 @@ interface IReduxProps {
     fetchValidators: typeof fetchValidators;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
     fetchAccountDelegateStats: typeof fetchAccountDelegateStats;
+    hasPendingTransactions: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -58,7 +63,8 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         account,
         chainId,
-        accountStats: getAccountStats(state, ownProps.blockchain, chainId, account.address)
+        accountStats: getAccountStats(state, ownProps.blockchain, chainId, account.address),
+        hasPendingTransactions: getNrPendingTransasctions(state)
     };
 };
 
@@ -231,13 +237,29 @@ export class AccountTabComponent extends React.Component<
                                 key={`cta-send`}
                                 style={styles.button}
                                 wrapperStyle={{ flex: 1 }}
-                                onPress={() =>
-                                    NavigationService.navigate('Send', {
-                                        accountIndex: this.props.account.index,
-                                        blockchain: this.props.account.blockchain,
-                                        token: this.props.token
-                                    })
-                                }
+                                onPress={() => {
+                                    if (!this.props.hasPendingTransactions) {
+                                        NavigationService.navigate('Send', {
+                                            accountIndex: this.props.account.index,
+                                            blockchain: this.props.account.blockchain,
+                                            token: this.props.token
+                                        });
+                                    } else {
+                                        Dialog.alert(
+                                            translate('Validator.cannotInitiateTxTitle'),
+                                            translate('Validator.cannotInitiateTxMessage'),
+                                            undefined,
+                                            {
+                                                text: translate('App.labels.ok'),
+                                                onPress: () =>
+                                                    NavigationService.navigate(
+                                                        'TransactonsHistory',
+                                                        {}
+                                                    )
+                                            }
+                                        );
+                                    }
+                                }}
                                 disabledSecondary={
                                     this.props.account.type === AccountType.LOCKUP_CONTRACT
                                 }
@@ -279,7 +301,8 @@ export class AccountTabComponent extends React.Component<
                             accountIndex: this.props.account.index,
                             blockchain: this.props.account.blockchain,
                             token: this.props.token,
-                            validators: []
+                            validators: [],
+                            canPerformAction: !this.props.hasPendingTransactions
                         }}
                     />
                 </View>

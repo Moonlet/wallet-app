@@ -17,11 +17,14 @@ interface IReduxProps {
 }
 
 const mapStateToProps = (state: IReduxState) => {
+    const wallet = getSelectedWallet(state);
     return {
         chainId: getChainId(state, Blockchain.ZILLIQA),
-        addresses: getSelectedWallet(state)
-            .accounts.filter(acc => acc.blockchain === Blockchain.ZILLIQA)
-            .map(acc => fromBech32Address(acc.address).toLowerCase())
+        addresses: wallet
+            ? wallet.accounts
+                  .filter(acc => acc.blockchain === Blockchain.ZILLIQA)
+                  .map(acc => fromBech32Address(acc.address).toLowerCase())
+            : []
     };
 };
 

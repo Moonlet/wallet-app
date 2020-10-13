@@ -196,7 +196,11 @@ export const getNrPendingTransactions = (state: IReduxState): number => {
 
     const selectedAccount = getSelectedAccount(state);
 
-    return transactions.filter(
-        tx => tx.status === TransactionStatus.PENDING && tx.address === selectedAccount.address
-    ).length;
+    if (selectedAccount) {
+        return transactions.filter(
+            tx => tx.status === TransactionStatus.PENDING && tx.address === selectedAccount.address
+        ).length;
+    }
+
+    return transactions.filter(tx => tx.status === TransactionStatus.PENDING).length;
 };

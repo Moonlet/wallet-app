@@ -4,6 +4,7 @@ export interface IBlockchainNetwork {
     name: string;
     chainId: ChainIdType;
     url: string;
+    wsUrl?: string;
     mainNet: boolean;
     explorer: {
         name: string;

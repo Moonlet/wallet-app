@@ -194,5 +194,13 @@ export const generateAccountConfig = (blockchain: Blockchain): IAccountState => 
 export const getNrPendingTransactions = (state: IReduxState): number => {
     const transactions = getSelectedAccountTransactions(state) || [];
 
+    const selectedAccount = getSelectedAccount(state);
+
+    if (selectedAccount) {
+        return transactions.filter(
+            tx => tx.status === TransactionStatus.PENDING && tx.address === selectedAccount.address
+        ).length;
+    }
+
     return transactions.filter(tx => tx.status === TransactionStatus.PENDING).length;
 };

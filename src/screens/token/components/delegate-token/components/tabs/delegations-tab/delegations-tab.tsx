@@ -16,7 +16,7 @@ import { ChainIdType } from '../../../../../../../core/blockchain/types';
 import { ITokenState, IAccountState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { connect } from 'react-redux';
-import { getAccount } from '../../../../../../../redux/wallets/selectors';
+import { getAccount, getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { getDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/selectors';
 import { Text } from '../../../../../../../library';
@@ -31,12 +31,14 @@ interface IExternalProps {
 interface IReduxProps {
     validators: IValidator[];
     account: IAccountState;
+    hasPendingTransactions: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        validators: getDelegatedValidators(state, ownProps.blockchain, ownProps.chainId)
+        validators: getDelegatedValidators(state, ownProps.blockchain, ownProps.chainId),
+        hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 
@@ -97,7 +99,8 @@ export class DelegationsTabComponent extends React.Component<
             blockchain: this.props.blockchain,
             validator,
             accountIndex: this.props.accountIndex,
-            token: this.props.token
+            token: this.props.token,
+            canPerformAction: !this.props.hasPendingTransactions
         });
     }
 
@@ -150,7 +153,8 @@ export class DelegationsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: []
+                            validators: [],
+                            canPerformAction: !this.props.hasPendingTransactions
                         }}
                     />
                 </View>

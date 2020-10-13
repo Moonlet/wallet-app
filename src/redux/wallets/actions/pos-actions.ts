@@ -11,7 +11,7 @@ import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
-import { getNrPendingTransasctions, getSelectedAccount, getSelectedWallet } from '../selectors';
+import { getNrPendingTransactions, getSelectedAccount, getSelectedWallet } from '../selectors';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { generateAccountTokenState, getTokenConfig } from '../../tokens/static-selectors';
@@ -345,7 +345,7 @@ export const signAndSendTransactions = (
                         : account.address,
                     account.publicKey
                 );
-                const nrPendingTransactions = getNrPendingTransasctions(getState());
+                const nrPendingTransactions = getNrPendingTransactions(getState());
                 transaction = {
                     ...transaction,
                     nonce: currentBlockchainNonce + nrPendingTransactions

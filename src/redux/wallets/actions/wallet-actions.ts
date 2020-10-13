@@ -35,7 +35,7 @@ import {
     getWalletWithAddress,
     getWalletAndTransactionForHash,
     generateAccountConfig,
-    getNrPendingTransasctions
+    getNrPendingTransactions
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -597,7 +597,7 @@ export const sendTransferTransaction = (
 
         const client = getBlockchain(account.blockchain).getClient(chainId);
         const currentBlockchainNonce = await client.getNonce(account.address, account.publicKey);
-        const nrPendingTransactions = getNrPendingTransasctions(state);
+        const nrPendingTransactions = getNrPendingTransactions(state);
         tx = {
             ...tx,
             nonce: currentBlockchainNonce + nrPendingTransactions

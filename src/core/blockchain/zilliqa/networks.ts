@@ -6,6 +6,7 @@ export const networks: IBlockchainNetwork[] = [
         chainId: 1,
         mainNet: true,
         url: 'https://api.zilliqa.com/',
+        wsUrl: 'wss://api-ws.zilliqa.com/',
         explorer: {
             name: 'Viewblock',
             getAccountUrl: addr => `https://viewblock.io/zilliqa/address/${addr}`,
@@ -17,6 +18,7 @@ export const networks: IBlockchainNetwork[] = [
         chainId: 333,
         mainNet: false,
         url: 'https://dev-api.zilliqa.com/',
+        wsUrl: 'wss://dev-ws.zilliqa.com/',
         explorer: {
             name: 'Viewblock',
             getAccountUrl: addr => `https://viewblock.io/zilliqa/address/${addr}?network=testnet`,

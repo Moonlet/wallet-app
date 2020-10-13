@@ -36,6 +36,7 @@ import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
 import { ProcessTransactions } from './screens/pos-actions/process-transactions/process-transactions';
 import { LedgerConnect } from './screens/ledger/ledger-connect';
 import { updateTokenContracts } from './redux/tokens/actions';
+import { ZilliqaTransactionUpdate } from './components/zilliqa-transaction-update/zilliqa-transaction-update';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -226,6 +227,7 @@ export default class App extends React.Component<{}, IState> {
                             <LoadingModal.Component />
                             <LegalModal navigationState={this.state.navigationState} />
                             <LedgerConnect.Component />
+                            <ZilliqaTransactionUpdate />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

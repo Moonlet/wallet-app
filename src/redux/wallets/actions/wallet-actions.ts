@@ -1053,3 +1053,34 @@ export const getWalletAndAccountNameByAddress = (address: string) => (
 
     return undefined;
 };
+
+export const updateTransactionsStatus = (transactions: []) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const selectedWallet: IWalletState = getSelectedWallet(getState());
+
+    transactions.map((objectx: any) => {
+        const objectLog: any = objectx.log;
+        if (objectLog) {
+            for (const value of objectLog) {
+                const id: any = value.ID;
+                if (selectedWallet.transactions[id]) {
+                    dispatch({
+                        type: TRANSACTION_UPSERT,
+                        data: {
+                            walletId: selectedWallet.id,
+                            transaction: {
+                                id,
+                                status:
+                                    value.success === true
+                                        ? TransactionStatus.SUCCESS
+                                        : TransactionStatus.FAILED
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    });
+};

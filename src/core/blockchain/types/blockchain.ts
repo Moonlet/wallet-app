@@ -25,3 +25,8 @@ export interface IBlockchain {
     getStats: (chainId: ChainIdType) => GenericStats;
     getClient: (chainId: ChainIdType) => BlockchainGenericClient;
 }
+
+export enum WsEvent {
+    NEW_BLOCK = 'NEW_BLOCK',
+    TXN_LOG = 'TXN_LOG'
+}

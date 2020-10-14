@@ -22,6 +22,7 @@ interface IExternalProps {
     blockchain: Blockchain;
     onSelect: (validator: IValidator) => void;
     actionType: CardActionType;
+    contentContainerStyle?: any;
 }
 
 export const ValidatorsListComponent = (
@@ -68,7 +69,9 @@ export const ValidatorsListComponent = (
                     }}
                 />
             )}
-            keyExtractor={(item, index) => `device-${index}`}
+            keyExtractor={(_, index) => `validator-card-${index}`}
+            contentContainerStyle={props?.contentContainerStyle}
+            showsVerticalScrollIndicator={false}
         />
     );
 };

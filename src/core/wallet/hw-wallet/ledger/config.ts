@@ -90,6 +90,16 @@ const ledgerSetup = (): ILedgerTransportConfig => {
         delete ledgerConfigInternal.ios.COSMOS;
         delete ledgerConfigInternal.web.COSMOS;
     }
+    if (!isFeatureActive(RemoteFeature.NEAR)) {
+        delete ledgerConfigInternal.android.NEAR;
+        delete ledgerConfigInternal.ios.NEAR;
+        delete ledgerConfigInternal.web.NEAR;
+    }
+    if (!isFeatureActive(RemoteFeature.CELO)) {
+        delete ledgerConfigInternal.android.CELO;
+        delete ledgerConfigInternal.ios.CELO;
+        delete ledgerConfigInternal.web.CELO;
+    }
     return ledgerConfigInternal;
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
+import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -213,6 +214,14 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     {!this.props.validators ? (
                         <View style={styles.loadingContainer}>
                             <LoadingIndicator />
+                        </View>
+                    ) : this.props.validators.length === 0 ? (
+                        <View style={styles.emptySection}>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                            />
+                            <Text style={styles.noNodesText}>{translate('Validator.noNodes')}</Text>
                         </View>
                     ) : (
                         this.renderValidatorList()

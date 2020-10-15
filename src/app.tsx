@@ -25,7 +25,7 @@ import { LegalModal } from './components/legal/legal-modal/legal-modal';
 import { IExchangeRates } from './redux/market/state';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
-import { SecurityChecks } from './components/security-checks/security-checks';
+// import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
@@ -57,7 +57,7 @@ export default class App extends React.Component<{}, IState> {
     private remoteFeatureConfigLoaded: boolean = false;
     private unsub: any;
     private notificationsConfigured: boolean = false;
-    private securityChecksDone: boolean = false;
+    private securityChecksDone: boolean = true;
 
     constructor(props: any) {
         super(props);
@@ -236,12 +236,12 @@ export default class App extends React.Component<{}, IState> {
             return (
                 <>
                     <SplashScreen />
-                    <SecurityChecks
+                    {/* <SecurityChecks
                         onReady={() => {
                             this.securityChecksDone = true;
                             this.updateAppReady();
                         }}
-                    />
+                    /> */}
                 </>
             );
         }

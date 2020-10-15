@@ -155,9 +155,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             depositAmount = new BigNumber(txDelegate.amount).minus(
                                 new BigNumber(unstaked)
                             );
-                        } catch (err) {
-                            // no need to handle this
-                            // maybe sentry?
+                        } catch (error) {
+                            SentryCaptureException(new Error(JSON.stringify(error)));
                         }
 
                         // Stake
@@ -221,8 +220,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             selectSPTx.nonce = nonce + transactions.length;
                             transactions.push(selectSPTx);
                         }
-                    } catch (err) {
-                        // no need to handed?
+                    } catch (error) {
+                        SentryCaptureException(new Error(JSON.stringify(error)));
                     }
 
                     let unstakedAmount = new BigNumber(0);
@@ -233,9 +232,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             args: { account_id: tx.account.address }
                         });
                         unstakedAmount = new BigNumber(unstaked);
-                    } catch (err) {
-                        // no need to handle this
-                        // maybe sentry?
+                    } catch (error) {
+                        SentryCaptureException(new Error(JSON.stringify(error)));
                     }
 
                     const stakeTx = await client.lockup.stake(

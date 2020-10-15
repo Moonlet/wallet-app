@@ -26,9 +26,11 @@ export class Stats extends GenericStats<Client> {
         );
 
         let availableToDelegate = new BigNumber(0);
-        if (new BigNumber(data.balance.available).gt(config.amountToKeepInAccount)) {
+        if (new BigNumber(data.balance.available).gt(config.amountToKeepInAccount[account.type])) {
             availableToDelegate = availableToDelegate.plus(
-                new BigNumber(data.balance.available).minus(config.amountToKeepInAccount)
+                new BigNumber(data.balance.available).minus(
+                    config.amountToKeepInAccount[account.type]
+                )
             );
         }
         return availableToDelegate.toFixed();

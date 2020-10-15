@@ -5,6 +5,7 @@ import NearIcon from '../../../assets/icons/blockchains/near.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
+import { AccountType } from '../../../redux/wallets/state';
 
 export const NEAR_NATIVE: ITokenConfigState = {
     name: 'Near',
@@ -127,5 +128,8 @@ export const config: IBlockchainConfig = {
         testNet: 'testnet'
     },
     defaultOrder: 2,
-    amountToKeepInAccount: new BigNumber(10).pow(24)
+    amountToKeepInAccount: {
+        [AccountType.DEFAULT]: new BigNumber(10).pow(24),
+        [AccountType.LOCKUP_CONTRACT]: new BigNumber(10).pow(24).multipliedBy(40)
+    }
 };

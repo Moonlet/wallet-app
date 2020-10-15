@@ -5,6 +5,7 @@ import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
+import { AccountType } from '../../../redux/wallets/state';
 
 export const ATOM_NATIVE: ITokenConfigState = {
     name: 'Atom',
@@ -165,5 +166,7 @@ export const config: IBlockchainConfig = {
         mainNet: 'cosmoshub-3'
     },
     defaultOrder: 3,
-    amountToKeepInAccount: new BigNumber(0)
+    amountToKeepInAccount: {
+        [AccountType.DEFAULT]: new BigNumber(0)
+    }
 };

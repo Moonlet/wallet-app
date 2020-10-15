@@ -32,6 +32,7 @@ import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { NEAR_TLD } from '../../constants/app';
 import { NEAR_DEFAULT_FUNC_CALL_GAS, NEAR_CREATE_ACCOUNT_MIN_BALANCE } from './consts';
 import { splitStake } from '../../utils/balance';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -282,9 +283,21 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     withdrawTx = await client.stakingPool.withdraw(txWithdraw);
                 } else if (accountType === AccountType.LOCKUP_CONTRACT) {
                     // LOCKUP_CONTRACT
+
                     withdrawTx = await client.lockup.withdraw(txWithdraw);
                     const nonce = await client.getNonce(withdrawTx.address, tx.account.publicKey);
                     withdrawTx.nonce = nonce;
+
+                    try {
+                        const unstaked = await client.contractCall({
+                            contractName: withdrawTx.additionalInfo.validatorId,
+                            methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                            args: { account_id: tx.account.address }
+                        });
+                        withdrawTx.amount = unstaked;
+                    } catch (error) {
+                        SentryCaptureException(new Error(JSON.stringify(error)));
+                    }
                 } else {
                     // future account types
                 }

@@ -215,7 +215,7 @@ const migrations = {
 
 export const persistConfig = {
     key: 'root',
-    version: 5,
+    version: 6,
     storage: AsyncStorage,
     blacklist: ['ui'],
     migrate: createMigrate(migrations, { debug: false })

@@ -35,7 +35,6 @@ import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
 import { IconValues } from '../../components/icon/values';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -166,19 +165,7 @@ export class TokenScreenComponent extends React.Component<
 
     private renderComponent() {
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
-        if (
-            this.props.account.blockchain === Blockchain.ZILLIQA &&
-            !isFeatureActive(RemoteFeature.ZIL)
-        ) {
-            return (
-                <DefaultTokenScreen
-                    accountIndex={this.props.accountIndex}
-                    blockchain={this.props.blockchain}
-                    token={this.props.token}
-                    navigation={this.props.navigation}
-                />
-            );
-        }
+
         switch (tokenConfig.ui.tokenScreenComponent) {
             case TokenScreenComponentType.DELEGATE:
                 return (

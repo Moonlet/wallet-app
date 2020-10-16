@@ -30,8 +30,6 @@ export const getRemoteConfigFeatures = async () => {
             .config()
             .getValues([
                 RemoteFeature.BETA_BADGE,
-                RemoteFeature.ZIL,
-                RemoteFeature.NEAR,
                 RemoteFeature.NEAR_LEDGER_BLE,
                 RemoteFeature.COSMOS,
                 RemoteFeature.CELO,
@@ -47,8 +45,6 @@ export const getRemoteConfigFeatures = async () => {
         // Set default values
         featuresConfig = {
             [RemoteFeature.BETA_BADGE]: JSON.stringify([]),
-            [RemoteFeature.ZIL]: JSON.stringify([]),
-            [RemoteFeature.NEAR]: JSON.stringify([]),
             [RemoteFeature.NEAR_LEDGER_BLE]: JSON.stringify([]),
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),

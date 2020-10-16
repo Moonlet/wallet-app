@@ -15,6 +15,7 @@ import { USDT_MAINNET } from './tokens/theter';
 import { UNI_MAINNET } from './tokens/uniSwap';
 import { USDC_MAINNET } from './tokens/usdCoin';
 import { YFI_MAINNET } from './tokens/yearnFinance';
+import { AccountType } from '../../../redux/wallets/state';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -117,5 +118,7 @@ export const config: IBlockchainConfig = {
             record: ['crypto.ETH.address']
         }
     ],
-    amountToKeepInAccount: new BigNumber(0)
+    amountToKeepInAccount: {
+        [AccountType.DEFAULT]: new BigNumber(0)
+    }
 };

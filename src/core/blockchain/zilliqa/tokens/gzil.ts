@@ -24,7 +24,7 @@ export const GZIL_MAINNET: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },
-    contractAddress: 'zil10w2fwf5kdwqvjd2zyv6nr7da2d2z63g5dvtvsy', // TODO Must be updated
+    contractAddress: 'zil14pzuzq6v6pmmmrfjhczywguu0e97djepxt8g3e',
     removable: true,
     defaultOrder: 999,
     decimals: 15,

@@ -147,20 +147,22 @@ export class ProcessTransactionsComponent extends React.Component<
                 currency: blockchainInstance.config.coin
             });
 
-        if (tx.amount === '0' && tx.data?.params) {
-            tx.amount = tx.data.params.length > 1 ? tx.data.params[1] : tx.data.params[0];
+        let amount = tx.amount;
+
+        if (amount === '0' && tx.data?.params) {
+            amount = tx.data.params.length > 1 ? tx.data.params[1] : tx.data.params[0];
         }
 
         if (tx.additionalInfo?.posAction === PosBasicActionType.SEND) {
-            tx.amount = tx.additionalInfo.actions[0].params[3].toString();
+            amount = tx.additionalInfo.actions[0].params[3].toString();
         }
 
         const amountNumber = blockchainInstance.account.amountFromStd(
-            new BigNumber(tx.amount),
+            new BigNumber(amount),
             tokenConfig.decimals
         );
 
-        const amount = formatNumber(new BigNumber(amountNumber), {
+        amount = formatNumber(new BigNumber(amountNumber), {
             currency: blockchainInstance.config.coin
         });
 
@@ -430,13 +432,13 @@ export class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private onPressSignTransaction() {
-        this.props.signAndSendTransactions(this.props.transactions, this.props.currentTxIndex + 1);
+        this.props.signAndSendTransactions(this.props.currentTxIndex + 1);
     }
 
     @bind
     private signAllTransactions() {
         // sign all transactions - HD wallet
-        this.props.signAndSendTransactions(this.props.transactions);
+        this.props.signAndSendTransactions();
     }
 
     public renderBottomButton() {

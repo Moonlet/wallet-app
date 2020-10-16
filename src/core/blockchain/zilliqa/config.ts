@@ -7,6 +7,7 @@ import { XSGD_MAINNET } from './tokens/xsgd';
 import { IconValues } from '../../../components/icon/values';
 import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
+import { AccountType } from '../../../redux/wallets/state';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -174,7 +175,9 @@ export const config: IBlockchainConfig = {
             record: ['crypto.ZIL.address']
         }
     ],
-    amountToKeepInAccount: new BigNumber(10).pow(14)
+    amountToKeepInAccount: {
+        [AccountType.DEFAULT]: new BigNumber(10).pow(14)
+    }
 };
 
 export enum Contracts {

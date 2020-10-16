@@ -103,5 +103,7 @@ export interface IBlockchainConfig {
     };
     defaultOrder: number;
     nameServices?: INameService[];
-    amountToKeepInAccount: BigNumber;
+    amountToKeepInAccount: {
+        [accountType: string]: BigNumber;
+    };
 }

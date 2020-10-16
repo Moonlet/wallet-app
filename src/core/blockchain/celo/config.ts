@@ -15,6 +15,7 @@ import {
 } from './tokens/cUSD';
 import { IconValues } from '../../../components/icon/values';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
+import { AccountType } from '../../../redux/wallets/state';
 
 export const accountCTA = {
     mainCta: {
@@ -148,7 +149,9 @@ export const config: IBlockchainConfig = {
         mainNet: 42220
     },
     defaultOrder: 1,
-    amountToKeepInAccount: new BigNumber(0)
+    amountToKeepInAccount: {
+        [AccountType.DEFAULT]: new BigNumber(0)
+    }
 };
 
 export enum Contracts {

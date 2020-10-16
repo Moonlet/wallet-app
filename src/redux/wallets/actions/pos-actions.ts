@@ -291,11 +291,13 @@ export const posAction = (
     }
 };
 
-export const signAndSendTransactions = (
-    transactions: IBlockchainTransaction[],
-    specificIndex?: number
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+export const signAndSendTransactions = (specificIndex?: number) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
     const state = getState();
+
+    const transactions: IBlockchainTransaction[] = state.ui.processTransactions.data.txs;
 
     const appWallet = getSelectedWallet(state);
     const account = getSelectedAccount(state);

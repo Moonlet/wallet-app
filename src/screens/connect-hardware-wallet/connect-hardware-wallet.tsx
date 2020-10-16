@@ -347,7 +347,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                 {!this.state.ledgerConfig ? (
                     <LoadingIndicator />
                 ) : (
-                    <View>
+                    <View style={{ flex: 1 }}>
                         {this.renderConfig(this.state.ledgerConfig)}
                         {(device && connection && blockchain) !== undefined && (
                             <View style={styles.bottomContainer}>

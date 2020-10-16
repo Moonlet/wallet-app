@@ -32,8 +32,8 @@ import {
 import moment from 'moment';
 import { NavigationService } from '../../navigation/navigation-service';
 import NetInfo from '@react-native-community/netinfo';
-import ntpClient from 'react-native-ntp-client';
-import CONFIG from '../../config';
+// import ntpClient from 'react-native-ntp-client';
+// import CONFIG from '../../config';
 import { waitForInstance, setInstance } from '../../core/utils/class-registry';
 
 const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
@@ -208,21 +208,21 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private getCurrentDate(callback: (date: Date) => void) {
-        ntpClient.getNetworkTime(CONFIG.ntpServer, CONFIG.ntpPort, (error: any, date: any) => {
-            if (date) {
-                const currentDate: Date = new Date(date);
-                if (
-                    moment(new Date(currentDate)).isValid() &&
-                    moment(new Date(currentDate)).year() >= 2020
-                ) {
-                    this.setState({ currentDate }, () => callback(currentDate));
-                } else {
-                    this.setState({ currentDate: undefined }, () => callback(undefined));
-                }
-            } else {
-                this.setState({ currentDate: undefined }, () => callback(undefined));
-            }
-        });
+        // ntpClient.getNetworkTime(CONFIG.ntpServer, CONFIG.ntpPort, (error: any, date: any) => {
+        // if (date) {
+        //     const currentDate: Date = new Date(date);
+        //     if (
+        //         moment(new Date(currentDate)).isValid() &&
+        //         moment(new Date(currentDate)).year() >= 2020
+        //     ) {
+        //         this.setState({ currentDate }, () => callback(currentDate));
+        //     } else {
+        //         this.setState({ currentDate: undefined }, () => callback(undefined));
+        //     }
+        // } else {
+        this.setState({ currentDate: new Date() }, () => callback(undefined));
+        // }
+        // });
     }
 
     private setCountdownListener() {

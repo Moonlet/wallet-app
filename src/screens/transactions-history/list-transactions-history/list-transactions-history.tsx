@@ -68,6 +68,10 @@ export class TransactionsHistoryListComponent extends React.Component<
             toAddress = tx.additionalInfo.validatorName;
         }
 
+        if (tx.additionalInfo?.validator?.name) {
+            toAddress = tx.additionalInfo.validator.name;
+        }
+
         let primaryText = '';
 
         switch (tx.additionalInfo?.posAction) {

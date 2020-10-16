@@ -32,6 +32,7 @@ import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { NEAR_TLD } from '../../constants/app';
 import { NEAR_DEFAULT_FUNC_CALL_GAS, NEAR_CREATE_ACCOUNT_MIN_BALANCE } from './consts';
 import { splitStake } from '../../utils/balance';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -154,9 +155,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             depositAmount = new BigNumber(txDelegate.amount).minus(
                                 new BigNumber(unstaked)
                             );
-                        } catch (err) {
-                            // no need to handle this
-                            // maybe sentry?
+                        } catch (error) {
+                            SentryCaptureException(new Error(JSON.stringify(error)));
                         }
 
                         // Stake
@@ -220,8 +220,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             selectSPTx.nonce = nonce + transactions.length;
                             transactions.push(selectSPTx);
                         }
-                    } catch (err) {
-                        // no need to handed?
+                    } catch (error) {
+                        SentryCaptureException(new Error(JSON.stringify(error)));
                     }
 
                     let unstakedAmount = new BigNumber(0);
@@ -232,9 +232,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             args: { account_id: tx.account.address }
                         });
                         unstakedAmount = new BigNumber(unstaked);
-                    } catch (err) {
-                        // no need to handle this
-                        // maybe sentry?
+                    } catch (error) {
+                        SentryCaptureException(new Error(JSON.stringify(error)));
                     }
 
                     const stakeTx = await client.lockup.stake(
@@ -280,11 +279,29 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT
                     withdrawTx = await client.stakingPool.withdraw(txWithdraw);
+
+                    withdrawTx.additionalInfo.validatorId = tx?.extraFields?.validatorId;
+                    withdrawTx.additionalInfo.validatorName = tx?.extraFields?.validatorName;
                 } else if (accountType === AccountType.LOCKUP_CONTRACT) {
                     // LOCKUP_CONTRACT
                     withdrawTx = await client.lockup.withdraw(txWithdraw);
+
+                    withdrawTx.additionalInfo.validatorId = tx?.extraFields?.validatorId;
+                    withdrawTx.additionalInfo.validatorName = tx?.extraFields?.validatorName;
+
                     const nonce = await client.getNonce(withdrawTx.address, tx.account.publicKey);
                     withdrawTx.nonce = nonce;
+
+                    try {
+                        const unstaked = await client.contractCall({
+                            contractName: withdrawTx.additionalInfo.validatorId,
+                            methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                            args: { account_id: tx.account.address }
+                        });
+                        withdrawTx.amount = unstaked;
+                    } catch (error) {
+                        SentryCaptureException(new Error(JSON.stringify(error)));
+                    }
                 } else {
                     // future account types
                 }

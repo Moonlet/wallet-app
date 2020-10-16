@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - pin-bug
 
 name: Beta build & deploy
 jobs:

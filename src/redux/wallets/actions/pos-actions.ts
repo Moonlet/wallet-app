@@ -40,6 +40,7 @@ import { PasswordModal } from '../../../components/password-modal/password-modal
 import { delay } from '../../../core/utils/time';
 import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
 import { NavigationService } from '../../../navigation/navigation-service';
+import BigNumber from 'bignumber.js';
 
 export const redelegate = (
     account: IAccountState,
@@ -265,7 +266,7 @@ export const posAction = (
                 validators,
                 amount: blockchainInstance.account
                     .amountToStd(amount, tokenConfig.decimals)
-                    .toFixed(),
+                    .toFixed(0, BigNumber.ROUND_DOWN),
                 token,
                 feeOptions:
                     feeOptions?.gasPrice && feeOptions?.gasLimit

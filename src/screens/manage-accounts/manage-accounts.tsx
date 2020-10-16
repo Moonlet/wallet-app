@@ -25,7 +25,7 @@ import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
 import { normalize } from '../../styles/dimensions';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { removeAccount, setSelectedAccount } from '../../redux/wallets/actions';
+import { removeAccount, setSelectedAccount, getBalance } from '../../redux/wallets/actions';
 
 interface IReduxProps {
     selectedAccount: IAccountState;
@@ -35,6 +35,7 @@ interface IReduxProps {
     selectedWallet: IWalletState;
     removeAccount: typeof removeAccount;
     setSelectedAccount: typeof setSelectedAccount;
+    getBalance: typeof getBalance;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -51,7 +52,8 @@ const mapStateToProps = (state: IReduxState) => {
 
 const mapDispatchToProps = {
     removeAccount,
-    setSelectedAccount
+    setSelectedAccount,
+    getBalance
 };
 
 export const navigationOptions = () => ({
@@ -68,6 +70,11 @@ export class ManageAccountsComponent extends React.Component<
 
     public componentDidMount() {
         setTimeout(() => this.showHints(), 500);
+        if (Array.isArray(this.props.accounts)) {
+            for(const account of this.props.accounts) {
+                this.props.getBalance(account.blockchain, account.address, undefined, true);
+            }
+        }
     }
 
     private showHints() {

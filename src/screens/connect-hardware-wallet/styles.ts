@@ -10,7 +10,7 @@ export default (theme: ITheme) =>
             height: '100%'
         },
         configContainer: {
-            width: '100%'
+            flex: 1
         },
         connectionContainer: {
             flexDirection: 'row',

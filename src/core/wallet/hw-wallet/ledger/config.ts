@@ -92,11 +92,6 @@ export const ledgerSetupConfig = async (): Promise<ILedgerTransportConfig> => {
             delete ledgerConfigInternal.web.COSMOS;
         }
 
-        if (!isFeatureActive(RemoteFeature.NEAR)) {
-            delete ledgerConfigInternal.android.NEAR;
-            delete ledgerConfigInternal.ios.NEAR;
-        }
-
         if (!isFeatureActive(RemoteFeature.CELO)) {
             delete ledgerConfigInternal.android.CELO;
             delete ledgerConfigInternal.ios.CELO;

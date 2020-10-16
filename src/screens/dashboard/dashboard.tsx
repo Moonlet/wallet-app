@@ -216,7 +216,7 @@ export class DashboardScreenComponent extends React.Component<
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
 
-        this.props.startNotificationsHandlers();
+        setTimeout(() => this.props.startNotificationsHandlers(), 10000);
 
         this.props.navigation.setParams({
             unseenNotifications: this.props.unseenNotifications

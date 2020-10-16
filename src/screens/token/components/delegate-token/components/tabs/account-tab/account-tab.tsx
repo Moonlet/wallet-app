@@ -114,6 +114,7 @@ export class AccountTabComponent extends React.Component<
                     {
                         witdrawIndex: widget?.index,
                         validatorId: widget?.validator?.id,
+                        validatorName: widget?.validator?.name,
                         amount: widget?.value
                     },
                     undefined

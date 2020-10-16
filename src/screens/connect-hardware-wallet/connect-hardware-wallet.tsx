@@ -8,7 +8,10 @@ import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { HWModel, HWConnection, HWVendor } from '../../core/wallet/hw-wallet/types';
-import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
+import {
+    ILedgerTransportConfig,
+    ledgerSetupConfig
+} from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
 import { ListCard } from '../../components/list-card/list-card';
 import { INavigationProps } from '../../navigation/with-navigation-params';
@@ -22,6 +25,7 @@ import { createHWWallet } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 interface IReduxProps {
     createHWWallet: typeof createHWWallet;
@@ -29,6 +33,7 @@ interface IReduxProps {
 }
 
 interface IState {
+    ledgerConfig: ILedgerTransportConfig;
     device: HWModel;
     blockchain: Blockchain;
     connection: HWConnection;
@@ -71,10 +76,13 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: any) {
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
+            ledgerConfig: undefined,
             device: undefined,
             blockchain: undefined,
             connection: undefined,
@@ -96,8 +104,10 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         });
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
         this.props.navigation.setParams({ resetAll: this.resetAll });
+        const ledgerConfig = await ledgerSetupConfig();
+        this.setState({ ledgerConfig });
     }
 
     // TODO: refactor this component
@@ -334,21 +344,27 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                {this.renderConfig(ledgerConfig)}
-                {(device && connection && blockchain) !== undefined && (
-                    <View style={styles.bottomContainer}>
-                        <Text style={styles.textIndicator}>
-                            {translate('CreateHardwareWallet.app', {
-                                app: blockchain
-                            })}
-                        </Text>
-                        <Button
-                            testID="button-next"
-                            wrapperStyle={styles.bottomButton}
-                            onPress={() => this.connect()}
-                        >
-                            {translate('App.labels.connect')}
-                        </Button>
+                {!this.state.ledgerConfig ? (
+                    <LoadingIndicator />
+                ) : (
+                    <View>
+                        {this.renderConfig(this.state.ledgerConfig)}
+                        {(device && connection && blockchain) !== undefined && (
+                            <View style={styles.bottomContainer}>
+                                <Text style={styles.textIndicator}>
+                                    {translate('CreateHardwareWallet.app', {
+                                        app: blockchain
+                                    })}
+                                </Text>
+                                <Button
+                                    testID="button-next"
+                                    wrapperStyle={styles.bottomButton}
+                                    onPress={() => this.connect()}
+                                >
+                                    {translate('App.labels.connect')}
+                                </Button>
+                            </View>
+                        )}
                     </View>
                 )}
             </View>

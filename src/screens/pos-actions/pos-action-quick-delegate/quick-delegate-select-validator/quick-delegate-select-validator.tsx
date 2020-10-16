@@ -1,5 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
+import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -15,7 +16,6 @@ import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator, CardActionType } from '../../../../core/blockchain/types/stats';
@@ -107,7 +107,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                 undefined,
                 {
                     text: translate('App.labels.ok'),
-                    onPress: () => NavigationService.navigate('TransactonsHistory', {})
+                    onPress: () => NavigationService.replace('TransactonsHistory', {})
                 }
             );
         } else {
@@ -158,6 +158,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     token={this.props.token}
                     onSelect={this.onSelect}
                     actionType={CardActionType.CHECKBOX}
+                    contentContainerStyle={this.props.styles.validatorsList}
                 />
             </View>
         );
@@ -209,21 +210,23 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
             <View style={styles.container}>
                 <TestnetBadge />
 
-                <KeyboardAwareScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    showsVerticalScrollIndicator={false}
-                    alwaysBounceVertical={false}
-                >
-                    <View style={styles.content}>
-                        {!this.props.validators ? (
-                            <View style={styles.loadingContainer}>
-                                <LoadingIndicator />
-                            </View>
-                        ) : (
-                            <View>{this.renderValidatorList()}</View>
-                        )}
-                    </View>
-                </KeyboardAwareScrollView>
+                <View style={styles.content}>
+                    {!this.props.validators ? (
+                        <View style={styles.loadingContainer}>
+                            <LoadingIndicator />
+                        </View>
+                    ) : this.props.validators.length === 0 ? (
+                        <View style={styles.emptySection}>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                            />
+                            <Text style={styles.noNodesText}>{translate('Validator.noNodes')}</Text>
+                        </View>
+                    ) : (
+                        this.renderValidatorList()
+                    )}
+                </View>
 
                 {this.renderBottomConfirm()}
             </View>

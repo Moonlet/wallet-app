@@ -1,7 +1,7 @@
 import { HWConnection } from '../types';
 import { isFeatureActive, RemoteFeature } from '../../../utils/remote-feature-config';
 
-interface ILedgerTransportConfig {
+export interface ILedgerTransportConfig {
     // ios | android | web
     [platform: string]: {
         // Blockchain
@@ -84,23 +84,24 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
     }
 };
 
-const ledgerSetup = (): ILedgerTransportConfig => {
-    if (!isFeatureActive(RemoteFeature.COSMOS)) {
-        delete ledgerConfigInternal.android.COSMOS;
-        delete ledgerConfigInternal.ios.COSMOS;
-        delete ledgerConfigInternal.web.COSMOS;
-    }
-    if (!isFeatureActive(RemoteFeature.NEAR)) {
-        delete ledgerConfigInternal.android.NEAR;
-        delete ledgerConfigInternal.ios.NEAR;
-        delete ledgerConfigInternal.web.NEAR;
-    }
-    if (!isFeatureActive(RemoteFeature.CELO)) {
-        delete ledgerConfigInternal.android.CELO;
-        delete ledgerConfigInternal.ios.CELO;
-        delete ledgerConfigInternal.web.CELO;
-    }
-    return ledgerConfigInternal;
-};
+export const ledgerSetupConfig = async (): Promise<ILedgerTransportConfig> => {
+    return new Promise(async (resolve, reject) => {
+        if (!isFeatureActive(RemoteFeature.COSMOS)) {
+            delete ledgerConfigInternal.android.COSMOS;
+            delete ledgerConfigInternal.ios.COSMOS;
+            delete ledgerConfigInternal.web.COSMOS;
+        }
 
-export const ledgerConfig: ILedgerTransportConfig = ledgerSetup();
+        if (!isFeatureActive(RemoteFeature.NEAR)) {
+            delete ledgerConfigInternal.android.NEAR;
+            delete ledgerConfigInternal.ios.NEAR;
+        }
+
+        if (!isFeatureActive(RemoteFeature.CELO)) {
+            delete ledgerConfigInternal.android.CELO;
+            delete ledgerConfigInternal.ios.CELO;
+        }
+
+        return resolve(ledgerConfigInternal);
+    });
+};

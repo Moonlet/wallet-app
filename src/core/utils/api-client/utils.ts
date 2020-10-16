@@ -1,25 +1,24 @@
 import CONFIG from '../../../config';
 import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
-// import ntpClient from 'react-native-ntp-client';
+import ntpClient from 'react-native-ntp-client';
 
 export const getCurrentTimestampNTP = (retryAttempts: number = 3) => {
     return new Promise((resolve, reject) => {
-        resolve(new Date().getTime());
-        // ntpClient.getNetworkTime(
-        //     CONFIG.ntpServer,
-        //     CONFIG.ntpPort,
-        //     async (error: any, date: any) => {
-        //         if (error) {
-        //             if (retryAttempts > 0) {
-        //                 await getCurrentTimestampNTP(retryAttempts - 1);
-        //             } else {
-        //                 reject(error);
-        //             }
-        //         } else {
-        //             resolve(new Date(date).getTime());
-        //         }
-        //     }
-        // );
+        ntpClient.getNetworkTime(
+            CONFIG.ntpServer,
+            CONFIG.ntpPort,
+            async (error: any, date: any) => {
+                if (error) {
+                    if (retryAttempts > 0) {
+                        await getCurrentTimestampNTP(retryAttempts - 1);
+                    } else {
+                        reject(error);
+                    }
+                } else {
+                    resolve(new Date(date).getTime());
+                }
+            }
+        );
     });
 };
 

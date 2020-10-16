@@ -2,6 +2,7 @@ PODS:
   - boost-for-react-native (1.63.0)
   - BVLinearGradient (2.5.6):
     - React
+  - CocoaAsyncSocket (7.6.4)
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
@@ -316,6 +317,9 @@ PODS:
     - React
   - react-native-randombytes (3.5.3):
     - React
+  - react-native-udp (3.1.0):
+    - CocoaAsyncSocket
+    - React
   - react-native-webview (9.4.0):
     - React
   - React-RCTActionSheet (0.61.1):
@@ -433,6 +437,7 @@ DEPENDENCIES:
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
+  - react-native-udp (from `../node_modules/react-native-udp`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -463,6 +468,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - CocoaAsyncSocket
     - Crashlytics
     - Fabric
     - Firebase
@@ -540,6 +546,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
+  react-native-udp:
+    :path: "../node_modules/react-native-udp"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -594,6 +602,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
@@ -639,6 +648,7 @@ SPEC CHECKSUMS:
   react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
   react-native-netinfo: 6458a467af4b3b7b0b87a179776ba6ba469e4f22
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
+  react-native-udp: 70de81f5db94503d112f6d9ca08f27adb1c2c7af
   react-native-webview: 0e2881d2e3e72ad52a82445c1a116c43205fd471
   React-RCTActionSheet: af4d951113b1e068bb30611f91b984a7a73597ff
   React-RCTAnimation: 4f518d70bb6890b7c3d9d732f84786d6693ca297

@@ -107,7 +107,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                 undefined,
                 {
                     text: translate('App.labels.ok'),
-                    onPress: () => NavigationService.navigate('TransactonsHistory', {})
+                    onPress: () => NavigationService.replace('TransactonsHistory', {})
                 }
             );
         } else {

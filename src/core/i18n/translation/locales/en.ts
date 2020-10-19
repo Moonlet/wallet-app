@@ -95,7 +95,7 @@ export const translation: ITranslations = {
                 retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',
-                restake: 'Restake',
+                restake: 'Switch Node',
                 revote: 'Revote',
                 rewards: 'Rewards',
                 save: 'Save',
@@ -577,7 +577,7 @@ export const translation: ITranslations = {
             selectStakingPool: 'Selecting staking pool',
             unselectStakingPool: 'Unselecting staking pool',
             allBalanceNotice:
-                'Notice: Moonlet keeps a minimum of 100 ZIL in your account for future transactions like Stake, Claim, Unstake or Restake.',
+                'Notice: Moonlet keeps a minimum of 100 ZIL in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
             cannotInitiateTxTitle: 'You have pending transactions',
             cannotInitiateTxMessage:
                 'Please make sure all transactions are finalised before initiating a new one.'

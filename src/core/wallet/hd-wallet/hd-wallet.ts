@@ -64,16 +64,21 @@ export class HDWallet implements IWallet {
 
         try {
             const accounts = [];
+
             const blockchainInstance = getBlockchain(blockchain);
+
             const key = HDKeyFactory.get(
                 blockchainInstance.config.derivationType,
                 this.seed
             ).derive(blockchainInstance.config.derivationPath);
+
             for (let i = index; i <= indexTo; i++) {
                 const accountDerivationPath = blockchainInstance.account.getAccountDerivationPath(
                     i
                 );
+
                 const derivation = key.derive(`m/${accountDerivationPath}`);
+
                 const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(derivation);
                 accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, i));
             }

@@ -275,6 +275,11 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, 2),
             wallet.getAccounts(Blockchain.ETHEREUM, 3),
             wallet.getAccounts(Blockchain.ETHEREUM, 4),
+            wallet.getAccounts(Blockchain.SOLANA, 0),
+            wallet.getAccounts(Blockchain.SOLANA, 1),
+            wallet.getAccounts(Blockchain.SOLANA, 2),
+            wallet.getAccounts(Blockchain.SOLANA, 3),
+            wallet.getAccounts(Blockchain.SOLANA, 4),
             wallet.getAccounts(Blockchain.CELO, 0),
             wallet.getAccounts(Blockchain.CELO, 1),
             wallet.getAccounts(Blockchain.CELO, 2),
@@ -289,6 +294,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
             //   data[5][0].selected = true; // first eth account
+
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 

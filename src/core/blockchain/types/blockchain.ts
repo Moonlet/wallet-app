@@ -12,6 +12,7 @@ export enum Blockchain {
     ETHEREUM = 'ETHEREUM',
     ZILLIQA = 'ZILLIQA',
     NEAR = 'NEAR',
+    SOLANA = 'SOLANA',
     COSMOS = 'COSMOS',
     CELO = 'CELO'
 }

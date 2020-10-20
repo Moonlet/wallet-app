@@ -95,7 +95,7 @@ export const translation: ITranslations = {
                 retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',
-                restake: 'Switch Node',
+                switchNode: 'Switch Node',
                 revote: 'Revote',
                 rewards: 'Rewards',
                 save: 'Save',

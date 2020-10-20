@@ -64,11 +64,11 @@ const validatorCTA = {
             }
         },
         {
-            title: 'App.labels.restake',
+            title: 'App.labels.switchNode',
             iconName: IconValues.REVOTE,
             navigateTo: {
                 screen: 'PosRedelegate',
-                params: { actionText: 'App.labels.restake' }
+                params: { actionText: 'App.labels.switchNode' }
             }
         },
         {

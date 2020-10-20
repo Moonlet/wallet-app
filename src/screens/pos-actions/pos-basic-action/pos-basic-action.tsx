@@ -112,8 +112,20 @@ export class PosBasicActionComponent extends React.Component<
                     value.id.toLowerCase()
                 )
             });
-
-        if (performAction && performAction.value === false) {
+        if (
+            performAction &&
+            performAction.value === false &&
+            performAction.message === 'low-funds'
+        ) {
+            Dialog.alert(
+                translate('Validator.lowFundsWarning'),
+                translate('Validator.lowFundsText'),
+                undefined,
+                {
+                    text: translate('App.labels.ok')
+                }
+            );
+        } else if (performAction && performAction.value === false) {
             Dialog.alert(
                 translate('Validator.operationNotAvailable'),
                 performAction.message,

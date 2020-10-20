@@ -14,7 +14,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
-import { ITokenState, IAccountState, AccountType } from '../../redux/wallets/state';
+import { ITokenState, IAccountState } from '../../redux/wallets/state';
 import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../core/utils/format-string';
 import { BASE_DIMENSION } from '../../styles/dimensions';
@@ -102,14 +102,6 @@ export class ValidatorScreenComponent extends React.Component<
         this.setState({ total });
     }
 
-    handleOnClaimAlert() {
-        const config = getBlockchain(this.props.blockchain).config;
-        const accountType = this.props.account?.type || AccountType.DEFAULT;
-        if (new BigNumber(config.amountToKeepForTheFees[accountType]).gt(this.state.total)) {
-            return true;
-        }
-    }
-
     public render() {
         const { styles, blockchain, validator } = this.props;
         const config = getBlockchain(blockchain).config;
@@ -173,8 +165,7 @@ export class ValidatorScreenComponent extends React.Component<
                             blockchain: this.props.blockchain,
                             token: this.props.token,
                             validators: [validator],
-                            canPerformAction: this.props.canPerformAction,
-                            onClaimAlert: this.handleOnClaimAlert()
+                            canPerformAction: this.props.canPerformAction
                         }}
                     />
                 </View>

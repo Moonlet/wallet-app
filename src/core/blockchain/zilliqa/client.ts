@@ -135,7 +135,15 @@ export class Client extends BlockchainGenericClient {
                         value: true,
                         message: ''
                     });
-
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
+                const balance = await this.getBalance(options.account.address);
+                if (
+                    new BigNumber(config.amountToKeepForTheFees[options.account.type]).gt(
+                        balance.total
+                    )
+                ) {
+                    return Promise.resolve({ value: false, message: 'low-funds' });
+                }
             default:
                 return Promise.resolve({ value: true, message: '' });
         }

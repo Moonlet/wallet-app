@@ -71,7 +71,7 @@ export class ManageAccountsComponent extends React.Component<
     public componentDidMount() {
         setTimeout(() => this.showHints(), 500);
         if (Array.isArray(this.props.accounts)) {
-            for(const account of this.props.accounts) {
+            for (const account of this.props.accounts) {
                 this.props.getBalance(account.blockchain, account.address, undefined, true);
             }
         }

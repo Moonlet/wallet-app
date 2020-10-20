@@ -120,8 +120,5 @@ export const config: IBlockchainConfig = {
     ],
     amountToKeepInAccount: {
         [AccountType.DEFAULT]: new BigNumber(0)
-    },
-    amountToKeepForTheFees: {
-        [AccountType.DEFAULT]: new BigNumber(0)
     }
 };

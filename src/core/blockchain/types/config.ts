@@ -106,7 +106,4 @@ export interface IBlockchainConfig {
     amountToKeepInAccount: {
         [accountType: string]: BigNumber;
     };
-    amountToKeepForTheFees?: {
-        [accountType: string]: BigNumber;
-    };
 }

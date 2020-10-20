@@ -87,9 +87,15 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
         try {
             this.setState({ loading: true });
+
+            let validator;
+            if (this.props.validators.length === 1) {
+                validator = this.props.validators[0];
+            }
+
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
-                .getAvailableBalanceForDelegate(this.props.account);
+                .getAvailableBalanceForDelegate(this.props.account, validator?.id);
 
             const response = await blockchainInstance
                 .getClient(this.props.chainId)

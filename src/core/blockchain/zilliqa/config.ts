@@ -177,6 +177,9 @@ export const config: IBlockchainConfig = {
     ],
     amountToKeepInAccount: {
         [AccountType.DEFAULT]: new BigNumber(10).pow(14)
+    },
+    amountToKeepForTheFees: {
+        [AccountType.DEFAULT]: new BigNumber(10).pow(12)
     }
 };
 

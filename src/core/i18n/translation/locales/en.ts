@@ -580,7 +580,9 @@ export const translation: ITranslations = {
                 'Notice: Moonlet keeps a minimum of 100 ZIL in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
             cannotInitiateTxTitle: 'You have pending transactions',
             cannotInitiateTxMessage:
-                'Please make sure all transactions are finalised before initiating a new one.'
+                'Please make sure all transactions are finalised before initiating a new one.',
+            lowFundsWarning: 'Low balance warning!',
+            lowFundsText: 'Your balance is less than 1 ZIL'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

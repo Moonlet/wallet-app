@@ -19,6 +19,7 @@ export interface INavParams {
     token: ITokenState;
     validators: IValidator[];
     canPerformAction: boolean;
+    onClaimAlert?: boolean;
 }
 
 export interface IExternalProps {
@@ -69,6 +70,20 @@ export const CtaGroupComponent = (
                                 key={`cta-${index}`}
                                 leftIcon={cta.iconName}
                                 onPress={() => {
+                                    if (
+                                        props.params.onClaimAlert &&
+                                        cta.navigateTo.params.basicAction ===
+                                            'CLAIM_REWARD_NO_INPUT'
+                                    ) {
+                                        Dialog.alert(
+                                            translate('Validator.lowFundsWarning'),
+                                            translate('Validator.lowFundsText'),
+                                            undefined,
+                                            {
+                                                text: translate('App.labels.ok')
+                                            }
+                                        );
+                                    }
                                     if (props.params.canPerformAction) {
                                         NavigationService.navigate(cta.navigateTo.screen, {
                                             ...cta.navigateTo.params,

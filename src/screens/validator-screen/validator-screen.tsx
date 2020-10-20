@@ -14,10 +14,14 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
-import { ITokenState } from '../../redux/wallets/state';
+import { ITokenState, IAccountState, AccountType } from '../../redux/wallets/state';
 import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../core/utils/format-string';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { IReduxState } from '../../redux/state';
+import { getAccount } from '../../redux/wallets/selectors';
+import { getChainId } from '../../redux/preferences/selectors';
+import { connect } from 'react-redux';
 
 interface INavigationParams {
     validator: IValidator;
@@ -26,6 +30,23 @@ interface INavigationParams {
     token: ITokenState;
     canPerformAction: boolean;
 }
+
+interface ReduxProps {
+    account: IAccountState;
+    chainId: string;
+}
+
+interface State {
+    total: BigNumber;
+}
+
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const account = getAccount(state, ownProps.accountIndex, ownProps.blockchain);
+    return {
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        chainId: getChainId(state, account.blockchain)
+    };
+};
 
 const HeaderTitleComponent = (
     props: INavigationProps<INavigationParams> & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -56,10 +77,38 @@ const navigationOptions = ({ navigation }: any) => ({
 
 export class ValidatorScreenComponent extends React.Component<
     INavigationParams &
+        ReduxProps &
         INavigationProps<INavigationParams> &
-        IThemeProps<ReturnType<typeof stylesProvider>>
+        IThemeProps<ReturnType<typeof stylesProvider>>,
+    State
 > {
+    constructor(props) {
+        super(props);
+        this.state = {
+            total: new BigNumber(0)
+        };
+    }
+
     public static navigationOptions = navigationOptions;
+
+    componentDidMount() {
+        this.getBalance();
+    }
+
+    async getBalance() {
+        const { total } = await getBlockchain(this.props.blockchain)
+            .getClient(this.props.chainId)
+            .getBalance(this.props.account.address);
+        this.setState({ total });
+    }
+
+    handleOnClaimAlert() {
+        const config = getBlockchain(this.props.blockchain).config;
+        const accountType = this.props.account?.type || AccountType.DEFAULT;
+        if (new BigNumber(config.amountToKeepForTheFees[accountType]).gt(this.state.total)) {
+            return true;
+        }
+    }
 
     public render() {
         const { styles, blockchain, validator } = this.props;
@@ -124,7 +173,8 @@ export class ValidatorScreenComponent extends React.Component<
                             blockchain: this.props.blockchain,
                             token: this.props.token,
                             validators: [validator],
-                            canPerformAction: this.props.canPerformAction
+                            canPerformAction: this.props.canPerformAction,
+                            onClaimAlert: this.handleOnClaimAlert()
                         }}
                     />
                 </View>
@@ -134,6 +184,7 @@ export class ValidatorScreenComponent extends React.Component<
 }
 
 export const ValidatorScreen = smartConnect(ValidatorScreenComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

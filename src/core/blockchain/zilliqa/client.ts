@@ -164,7 +164,7 @@ export class Client extends BlockchainGenericClient {
 
                         return Promise.resolve({
                             value: false,
-                            message: `You can unstake entire amount or value lower then ${lowerThen}`
+                            message: translate('Validator.minimumUnstake', { lowerThen })
                         });
                     }
                 }
@@ -187,9 +187,13 @@ export class Client extends BlockchainGenericClient {
                 if (countValidatorsMeetCondition === options.toValidators.length) {
                     return Promise.resolve({ value: true, message: '' });
                 } else {
+                    const higherThen = blockchainInstance.account.amountFromStd(
+                        minimum,
+                        options.tokenConfig.decimals
+                    );
                     return Promise.resolve({
                         value: false,
-                        message: `You can restake entire amount or value lower then `
+                        message: translate('Validator.adjustRestake', { higherThen })
                     });
                 }
             }

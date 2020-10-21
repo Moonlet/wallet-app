@@ -583,7 +583,9 @@ export const translation: ITranslations = {
                 'Please make sure all transactions are finalised before initiating a new one.',
             lowFundsWarning: 'Low balance warning!',
             lowFundsText: 'Your balance is less than 1 ZIL',
-            minimumUnstake: 'You can unstake entire amount or value lower then {{lowerThen}}'
+            minimumUnstake: 'You can unstake entire amount or value lower then {{lowerThen}}',
+            adjustRestake:
+                'You need to adjust the value you want to restake to be higher then  {{higherThen}} per validator'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

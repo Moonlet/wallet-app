@@ -582,7 +582,8 @@ export const translation: ITranslations = {
             cannotInitiateTxMessage:
                 'Please make sure all transactions are finalised before initiating a new one.',
             lowFundsWarning: 'Low balance warning!',
-            lowFundsText: 'Your balance is less than 1 ZIL'
+            lowFundsText: 'Your balance is less than 1 ZIL',
+            minimumUnstake: 'You can unstake entire amount or value lower then {{lowerThen}}'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

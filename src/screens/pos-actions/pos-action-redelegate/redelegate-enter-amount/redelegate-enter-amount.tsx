@@ -21,6 +21,8 @@ import { EnterAmountComponent } from '../../components/enter-amount-component/en
 import bind from 'bind-decorator';
 import BigNumber from 'bignumber.js';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
+import { Dialog } from '../../../../components/dialog/dialog';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -120,18 +122,42 @@ export class RedelegateEnterAmountComponent extends React.Component<
     }
 
     @bind
-    public onPressNext(amount: string, feeOptions: IFeeOptions) {
-        this.props.navigateToConfirmationStep(
-            this.props.accountIndex,
-            this.props.blockchain,
-            this.props.token,
-            this.props.validators,
-            this.props.actionText,
-            'RedelegateConfirm',
-            REDELEGATE_CONFIRMATION,
-            amount,
-            feeOptions
-        );
+    public async onPressNext(amount: string, feeOptions: IFeeOptions) {
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        const performAction = await blockchainInstance
+            .getClient(this.props.chainId)
+            .hasEnoughAmountToMakeAction(PosBasicActionType.REDELEGATE, {
+                fromValidator: this.props.fromValidator,
+                account: this.props.account,
+                tokenConfig,
+                toValidators: this.props.validators,
+                amount
+            });
+
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
+                }
+            );
+        } else
+            this.props.navigateToConfirmationStep(
+                this.props.accountIndex,
+                this.props.blockchain,
+                this.props.token,
+                this.props.validators,
+                this.props.actionText,
+                'RedelegateConfirm',
+                REDELEGATE_CONFIRMATION,
+                amount,
+                feeOptions
+            );
     }
 
     public render() {

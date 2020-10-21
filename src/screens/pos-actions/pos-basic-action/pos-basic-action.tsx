@@ -112,7 +112,6 @@ export class PosBasicActionComponent extends React.Component<
                     value.id.toLowerCase()
                 )
             });
-
         if (performAction && performAction.value === false) {
             Dialog.alert(
                 translate('Validator.operationNotAvailable'),

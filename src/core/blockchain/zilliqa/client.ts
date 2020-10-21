@@ -135,7 +135,6 @@ export class Client extends BlockchainGenericClient {
                         value: true,
                         message: ''
                     });
-
             default:
                 return Promise.resolve({ value: true, message: '' });
         }

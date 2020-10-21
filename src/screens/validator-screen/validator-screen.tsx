@@ -14,13 +14,10 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
-import { ITokenState, IAccountState } from '../../redux/wallets/state';
+import { ITokenState } from '../../redux/wallets/state';
 import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../core/utils/format-string';
 import { BASE_DIMENSION } from '../../styles/dimensions';
-import { IReduxState } from '../../redux/state';
-import { getAccount } from '../../redux/wallets/selectors';
-import { connect } from 'react-redux';
 
 interface INavigationParams {
     validator: IValidator;
@@ -30,17 +27,9 @@ interface INavigationParams {
     canPerformAction: boolean;
 }
 
-interface ReduxProps {
-    account: IAccountState;
-}
-
 interface State {
     total: BigNumber;
 }
-
-const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => ({
-    account: getAccount(state, ownProps.accountIndex, ownProps.blockchain)
-});
 
 const HeaderTitleComponent = (
     props: INavigationProps<INavigationParams> & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -71,7 +60,6 @@ const navigationOptions = ({ navigation }: any) => ({
 
 export class ValidatorScreenComponent extends React.Component<
     INavigationParams &
-        ReduxProps &
         INavigationProps<INavigationParams> &
         IThemeProps<ReturnType<typeof stylesProvider>>,
     State
@@ -151,7 +139,6 @@ export class ValidatorScreenComponent extends React.Component<
 }
 
 export const ValidatorScreen = smartConnect(ValidatorScreenComponent, [
-    connect(mapStateToProps, null),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

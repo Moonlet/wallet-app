@@ -46,10 +46,6 @@ export const EnterAmountComponent = (
         onChange(addedAmount.toFixed());
     };
 
-    const verifyInsuficientFunds = () => {
-        if (new BigNumber(availableAmount).eq(0)) return true;
-    };
-
     return (
         <View style={styles.container}>
             <Text style={styles.receipientLabel}>
@@ -106,7 +102,7 @@ export const EnterAmountComponent = (
                     />
                 </View>
             </View>
-            {(verifyInsuficientFunds() || (insufficientFundsNotice && insufficientFunds)) && (
+            {insufficientFundsNotice && insufficientFunds && (
                 <View style={styles.noticeView}>
                     <Text style={styles.displayNotice}>
                         {insufficientFundsNotice}

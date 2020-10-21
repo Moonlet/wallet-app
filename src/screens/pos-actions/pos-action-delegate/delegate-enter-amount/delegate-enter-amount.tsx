@@ -97,7 +97,7 @@ export class DelegateEnterAmountComponent extends React.Component<
             this.setState({ loading: true });
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
-                .getAvailableBalanceForDelegate(this.props.account);
+                .getAvailableBalanceForDelegate(this.props.account, this.props.validators[0]?.id);
 
             const response = await blockchainInstance
                 .getClient(this.props.chainId)

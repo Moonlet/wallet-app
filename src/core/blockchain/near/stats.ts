@@ -28,7 +28,9 @@ export class Stats extends GenericStats<Client> {
             validatorId
         );
 
-        let availableToDelegate = new BigNumber(data.balance.unstaked || 0);
+        const unstaked = validatorId ? data.balance.unstaked : 0;
+
+        let availableToDelegate = new BigNumber(unstaked || 0);
 
         const accountType = account?.type || AccountType.DEFAULT;
 

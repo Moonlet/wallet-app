@@ -6,6 +6,8 @@ import { HttpClient } from '../../utils/http-client';
 import { PosBasicActionType, TokenType } from './token';
 import { IClientUtils } from './client-utils';
 import { IAccountState } from '../../../redux/wallets/state';
+import { IValidator } from './stats';
+import { ITokenConfigState } from '../../../redux/tokens/state';
 
 export interface IBlockInfo {
     number: number;
@@ -47,6 +49,19 @@ export abstract class BlockchainGenericClient {
         options: {
             account: IAccountState;
             validatorAddress: string[];
+        }
+    ): Promise<{ value: boolean; message: string }> {
+        return Promise.resolve({ value: true, message: '' });
+    }
+
+    public hasEnoughAmountToMakeAction(
+        action: PosBasicActionType,
+        options: {
+            fromValidator: IValidator;
+            account: IAccountState;
+            tokenConfig: ITokenConfigState;
+            toValidators: IValidator[];
+            amount: string;
         }
     ): Promise<{ value: boolean; message: string }> {
         return Promise.resolve({ value: true, message: '' });

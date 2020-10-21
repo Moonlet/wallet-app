@@ -112,10 +112,13 @@ export class RedelegateSelectValidatorComponent extends React.Component<
             });
         });
 
+        const all = props.allValidators;
+        Object.values(all).map(object => (object.actionTypeSelected = false));
+        if (all.length) all[0].actionTypeSelected = true;
         this.state = {
             nrValidators: 1,
             headerSteps: stepList,
-            validatorsList: props.allValidators,
+            validatorsList: all,
             fromValidator: props.validators.length ? props.validators[0] : undefined
         };
     }

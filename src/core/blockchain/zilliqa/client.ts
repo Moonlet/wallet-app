@@ -21,6 +21,10 @@ import { ApiClient } from '../../utils/api-client/api-client';
 import { translate } from '../../i18n';
 import { Capitalize } from '../../utils/format-string';
 import { IAccountState } from '../../../redux/wallets/state';
+import { IValidator } from '../types/stats';
+import { ITokenConfigState } from '../../../redux/tokens/state';
+import { getBlockchain } from '../blockchain-factory';
+import { splitStake } from '../../utils/balance';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -107,6 +111,95 @@ export class Client extends BlockchainGenericClient {
         } catch (result) {
             return Promise.reject(result);
         }
+    }
+
+    public async hasEnoughAmountToMakeAction(
+        action: PosBasicActionType,
+        options: {
+            fromValidator: IValidator;
+            account: IAccountState;
+            tokenConfig: ITokenConfigState;
+            toValidators: IValidator[];
+            amount: string;
+        }
+    ): Promise<{ value: boolean; message: string }> {
+        const blockchainInstance = getBlockchain(options.account.blockchain);
+
+        const minimum = new BigNumber(await this.getMinimumAmountDelegate());
+        const delegatedAmountFrom = new BigNumber(options.fromValidator.amountDelegated.active);
+        const inputAmount: BigNumber = blockchainInstance.account.amountToStd(
+            options.amount,
+            options.tokenConfig.decimals
+        );
+
+        switch (action) {
+            case PosBasicActionType.UNSTAKE: {
+                if (inputAmount.isEqualTo(delegatedAmountFrom))
+                    return Promise.resolve({ value: true, message: '' });
+                else if (delegatedAmountFrom.minus(minimum).isGreaterThanOrEqualTo(inputAmount)) {
+                    return Promise.resolve({ value: true, message: '' });
+                } else {
+                    const lowerThen = blockchainInstance.account.amountFromStd(
+                        delegatedAmountFrom.minus(minimum),
+                        options.tokenConfig.decimals
+                    );
+
+                    return Promise.resolve({
+                        value: false,
+                        message: translate('Validator.minimumUnstake', { lowerThen })
+                    });
+                }
+            }
+            case PosBasicActionType.REDELEGATE: {
+                const unstakedAll = inputAmount.isEqualTo(delegatedAmountFrom);
+
+                if (!unstakedAll) {
+                    if (delegatedAmountFrom.minus(minimum).isGreaterThanOrEqualTo(inputAmount)) {
+                        return Promise.resolve({ value: true, message: '' });
+                    } else {
+                        const lowerThen = blockchainInstance.account.amountFromStd(
+                            delegatedAmountFrom.minus(minimum),
+                            options.tokenConfig.decimals
+                        );
+
+                        return Promise.resolve({
+                            value: false,
+                            message: translate('Validator.minimumUnstake', { lowerThen })
+                        });
+                    }
+                }
+
+                const stdAmount = blockchainInstance.account.amountToStd(
+                    inputAmount || 0,
+                    options.tokenConfig.decimals
+                );
+                const splitAmount = splitStake(stdAmount, options.toValidators.length);
+
+                let countValidatorsMeetCondition = 0;
+
+                options.toValidators.map(validator => {
+                    const amountDelegated = new BigNumber(validator.amountDelegated.active);
+                    if (splitAmount.plus(amountDelegated).isGreaterThanOrEqualTo(minimum)) {
+                        countValidatorsMeetCondition++;
+                    }
+                });
+
+                if (countValidatorsMeetCondition === options.toValidators.length) {
+                    return Promise.resolve({ value: true, message: '' });
+                } else {
+                    const higherThen = blockchainInstance.account.amountFromStd(
+                        minimum,
+                        options.tokenConfig.decimals
+                    );
+                    return Promise.resolve({
+                        value: false,
+                        message: translate('Validator.adjustRestake', { higherThen })
+                    });
+                }
+            }
+        }
+
+        return Promise.resolve({ value: true, message: '' });
     }
 
     public async canPerformAction(

@@ -27,10 +27,6 @@ interface INavigationParams {
     canPerformAction: boolean;
 }
 
-interface State {
-    total: BigNumber;
-}
-
 const HeaderTitleComponent = (
     props: INavigationProps<INavigationParams> & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
@@ -61,8 +57,7 @@ const navigationOptions = ({ navigation }: any) => ({
 export class ValidatorScreenComponent extends React.Component<
     INavigationParams &
         INavigationProps<INavigationParams> &
-        IThemeProps<ReturnType<typeof stylesProvider>>,
-    State
+        IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 

@@ -20,7 +20,6 @@ import { formatValidatorName } from '../../core/utils/format-string';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { IReduxState } from '../../redux/state';
 import { getAccount } from '../../redux/wallets/selectors';
-import { getChainId } from '../../redux/preferences/selectors';
 import { connect } from 'react-redux';
 
 interface INavigationParams {
@@ -33,20 +32,15 @@ interface INavigationParams {
 
 interface ReduxProps {
     account: IAccountState;
-    chainId: string;
 }
 
 interface State {
     total: BigNumber;
 }
 
-const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
-    const account = getAccount(state, ownProps.accountIndex, ownProps.blockchain);
-    return {
-        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, account.blockchain)
-    };
-};
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => ({
+    account: getAccount(state, ownProps.accountIndex, ownProps.blockchain)
+});
 
 const HeaderTitleComponent = (
     props: INavigationProps<INavigationParams> & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -82,25 +76,7 @@ export class ValidatorScreenComponent extends React.Component<
         IThemeProps<ReturnType<typeof stylesProvider>>,
     State
 > {
-    constructor(props) {
-        super(props);
-        this.state = {
-            total: new BigNumber(0)
-        };
-    }
-
     public static navigationOptions = navigationOptions;
-
-    componentDidMount() {
-        this.getBalance();
-    }
-
-    async getBalance() {
-        const { total } = await getBlockchain(this.props.blockchain)
-            .getClient(this.props.chainId)
-            .getBalance(this.props.account.address);
-        this.setState({ total });
-    }
 
     public render() {
         const { styles, blockchain, validator } = this.props;

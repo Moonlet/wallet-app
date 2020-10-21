@@ -167,7 +167,7 @@ export class PosBasicActionComponent extends React.Component<
                     });
                 if (performAction && performAction.value === false) {
                     Dialog.alert(
-                        translate('Validator.operationNotAvailable'),
+                        translate('Validator.minimumUnstakeTitle'),
                         performAction.message,
                         undefined,
                         {

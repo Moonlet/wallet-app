@@ -1,6 +1,6 @@
-Team's log. Stardate 2010.15:
+Team's log. Stardate 2010.22:
 
-We had some fixes here and there to improve the whole staking experience. Balances are updating properly now, as well the rewards and commission rates. 
+This release comes with some fixes and improvements. We changed the "Restake" label, which was a bit confusing. Now it's called "Switch Node". The alert for claiming rewards with low balance it's in place now. And many other small changes.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our website moonlet.io
 

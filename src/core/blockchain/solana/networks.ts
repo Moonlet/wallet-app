@@ -8,21 +8,21 @@ export const networks: IBlockchainNetwork[] = [
         url: 'https://api.mainnet-beta.solana.com',
         wsUrl: 'wss://api.mainnet-beta.solana.com/',
         explorer: {
-            name: 'Viewblock',
-            getAccountUrl: addr => `https://explorer.solana.com/${addr}`,
-            getTransactionUrl: txn => `https://viewblock.io/zilliqa/tx/${txn}`
+            name: 'Explorer',
+            getAccountUrl: addr => `https://explorer.solana.com/address/${addr}`,
+            getTransactionUrl: txn => `https://explorer.solana.com/tx/${txn}`
         }
     },
     {
-        name: 'Testnet',
+        name: 'Devnet',
         chainId: '2',
         mainNet: false,
-        url: 'https://testnet.solana.com',
-        wsUrl: 'wss://testnet.solana.com/',
+        url: 'https://devnet.solana.com',
+        wsUrl: 'wss://devnet.solana.com/',
         explorer: {
             name: 'Explorer',
-            getAccountUrl: addr => `https://explorer.solana.com/${addr}?cluster=testnet`,
-            getTransactionUrl: txn => `https://viewblock.io/zilliqa/tx/${txn}?cluster=testnet`
+            getAccountUrl: addr => `https://explorer.solana.com/address/${addr}?cluster=devnet`,
+            getTransactionUrl: txn => `https://explorer.solana.com/tx/${txn}?cluster=devnet`
         }
     }
 ];

@@ -37,12 +37,9 @@ export class LedgerWallet implements IWallet {
 
     public async isAppOpened(blockchain: Blockchain): Promise<boolean> {
         try {
-            // console.log('isAppOpened');
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);
-            // console.log('isAppOpened', 'getInfo');
             const info = await app.getInfo();
-            // console.log('isAppOpened', 'getInfo', info);
 
             if (info) return true;
             return false;
@@ -52,7 +49,6 @@ export class LedgerWallet implements IWallet {
     }
 
     public onAppOpened(blockchain: Blockchain): Promise<void> {
-        // console.log('onAppOpened');
         return new Promise(async resolve => {
             let opened = false;
             while (opened === false) {
@@ -69,6 +65,7 @@ export class LedgerWallet implements IWallet {
 
     public async getAccounts(
         blockchain: Blockchain,
+        accountType: AccountType,
         index: number,
         indexTo?: number
     ): Promise<IAccountState[]> {
@@ -123,14 +120,11 @@ export class LedgerWallet implements IWallet {
     ): Promise<any> {
         let shouldTerminate = false;
         const terminate = () => {
-            // console.log('terminate');
             shouldTerminate = true;
         };
 
         const terminateIfNeeded = () => {
-            // console.log('run terminate check');
             if (shouldTerminate) {
-                // console.log('run terminate');
                 throw new Error('TERMINATED');
             }
         };
@@ -179,7 +173,6 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.DONE);
             return signature;
         } catch (e) {
-            // console.log('smart sign', e);
             if (e !== 'TERMINATED') {
                 const message = e?.message || '';
                 if (message?.indexOf('denied by the user') >= 0) {

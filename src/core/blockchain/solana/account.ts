@@ -43,7 +43,7 @@ export class SolanaAccountUtils implements IBlockchainAccountUtils {
     public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
-            type: AccountType.DEFAULT,
+            type: index === -1 ? AccountType.ROOT : AccountType.DEFAULT,
             selected: false,
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),

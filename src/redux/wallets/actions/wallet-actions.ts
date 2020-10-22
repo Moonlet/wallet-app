@@ -9,7 +9,7 @@ import {
     IBlockchainTransaction
 } from '../../../core/blockchain/types';
 import { WalletType, IWallet, TransactionStatus } from '../../../core/wallet/types';
-import { IWalletState, IAccountState, ITokenState } from '../state';
+import { IWalletState, IAccountState, ITokenState, AccountType } from '../state';
 import { IAction } from '../../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../../state';
@@ -265,32 +265,29 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
         // generate initial accounts for each blockchain
         Promise.all([
-            wallet.getAccounts(Blockchain.ZILLIQA, 0),
-            wallet.getAccounts(Blockchain.ZILLIQA, 1),
-            wallet.getAccounts(Blockchain.ZILLIQA, 2),
-            wallet.getAccounts(Blockchain.ZILLIQA, 3),
-            wallet.getAccounts(Blockchain.ZILLIQA, 4),
-            wallet.getAccounts(Blockchain.ETHEREUM, 0),
-            wallet.getAccounts(Blockchain.ETHEREUM, 1),
-            wallet.getAccounts(Blockchain.ETHEREUM, 2),
-            wallet.getAccounts(Blockchain.ETHEREUM, 3),
-            wallet.getAccounts(Blockchain.ETHEREUM, 4),
-            wallet.getAccounts(Blockchain.SOLANA, 0),
-            wallet.getAccounts(Blockchain.SOLANA, 1),
-            wallet.getAccounts(Blockchain.SOLANA, 2),
-            wallet.getAccounts(Blockchain.SOLANA, 3),
-            wallet.getAccounts(Blockchain.SOLANA, 4),
-            wallet.getAccounts(Blockchain.CELO, 0),
-            wallet.getAccounts(Blockchain.CELO, 1),
-            wallet.getAccounts(Blockchain.CELO, 2),
-            wallet.getAccounts(Blockchain.CELO, 3),
-            wallet.getAccounts(Blockchain.CELO, 4),
-            wallet.getAccounts(Blockchain.COSMOS, 0),
-            wallet.getAccounts(Blockchain.COSMOS, 1),
-            wallet.getAccounts(Blockchain.COSMOS, 2),
-            wallet.getAccounts(Blockchain.COSMOS, 3),
-            wallet.getAccounts(Blockchain.COSMOS, 4),
-            wallet.getAccounts(Blockchain.NEAR, 1)
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, 0),
+            wallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.NEAR, AccountType.DEFAULT, 1)
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
             //   data[5][0].selected = true; // first eth account
@@ -417,7 +414,6 @@ export const getBalance = (
     } else {
         // call get balance for all tokens
         Object.keys(account.tokens[chainId] || {}).map(tokenSymbol => {
-            // console.log(`getBalance(${blockchain}, ${address}, ${tokenSymbol}, ${force})`);
             getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
         });
     }

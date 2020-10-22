@@ -67,5 +67,6 @@ export interface ITokenState {
 
 export enum AccountType {
     DEFAULT = 'DEFAULT',
+    ROOT = 'ROOT',
     LOCKUP_CONTRACT = 'LOCKUP_CONTRACT'
 }

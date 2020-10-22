@@ -95,7 +95,7 @@ export const translation: ITranslations = {
                 retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',
-                restake: 'Restake',
+                switchNode: 'Switch Node',
                 revote: 'Revote',
                 rewards: 'Rewards',
                 save: 'Save',
@@ -577,10 +577,16 @@ export const translation: ITranslations = {
             selectStakingPool: 'Selecting staking pool',
             unselectStakingPool: 'Unselecting staking pool',
             allBalanceNotice:
-                'Notice: Moonlet keeps some tokens in your account for future transaction fees.',
+                'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
             cannotInitiateTxTitle: 'You have pending transactions',
             cannotInitiateTxMessage:
-                'Please make sure all transactions are finalised before initiating a new one.'
+                'Please make sure all transactions are finalised before initiating a new one.',
+            lowFundsWarning: 'Low balance warning!',
+            lowFundsText: 'Your balance is less than 1 ZIL',
+            minimumUnstakeTitle: 'Adjust your amount',
+            minimumUnstake: 'You can either unstake the entire value or less than {{lowerThen}}',
+            adjustRestake:
+                'You need to adjust the value you want to restake to be higher then  {{higherThen}} per validator'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',
@@ -604,7 +610,7 @@ export const translation: ITranslations = {
                 NEAR: 'Stake now!',
                 COSMOS: 'Delegate now!'
             },
-            availableAmount: 'you got {{amount}} available'
+            availableAmount: 'you have {{amount}} available'
         },
         LedgerConnect: {
             searchFor: 'Searching for',

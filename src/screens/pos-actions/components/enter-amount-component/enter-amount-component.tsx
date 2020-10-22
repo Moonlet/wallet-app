@@ -86,6 +86,26 @@ export class EnterAmountComponentComponent extends React.Component<
         };
     }
 
+    componentDidMount() {
+        const amount = availableAmount(
+            this.props.account,
+            this.props.token,
+            undefined, // removed fee options, we have a minimum amount that we keep in account, for future transactions
+            this.props.balanceForDelegate
+        );
+
+        const { insufficientFunds, insufficientFundsFees } = availableFunds(
+            amount,
+            this.props.account,
+            this.props.token,
+            this.props.chainId,
+            { feeTotal: '0' },
+            this.props.balanceForDelegate
+        );
+
+        this.setState({ insufficientFunds, insufficientFundsFees });
+    }
+
     private renderBottomConfirm() {
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 

@@ -102,7 +102,7 @@ export const EnterAmountComponent = (
                     />
                 </View>
             </View>
-            {insufficientFunds && insufficientFundsNotice && (
+            {insufficientFundsNotice && insufficientFunds && (
                 <View style={styles.noticeView}>
                     <Text style={styles.displayNotice}>
                         {insufficientFundsNotice}

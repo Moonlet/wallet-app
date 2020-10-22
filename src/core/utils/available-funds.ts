@@ -38,7 +38,9 @@ export const availableFunds = (
         : new BigNumber(token.balance?.value);
 
     // Amount > available amount
-    result.insufficientFunds = inputAmount.isGreaterThan(availableBalanceValue);
+    result.insufficientFunds =
+        inputAmount.isGreaterThan(availableBalanceValue) ||
+        availableBalanceValue.eq(new BigNumber(0));
 
     if (result.insufficientFunds === true) {
         return result;
@@ -87,7 +89,7 @@ export const availableAmount = (
             new BigNumber(balance),
             tokenConfig.decimals
         );
-        return amountFromStd.toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
+        return amountFromStd.toFixed();
     } else {
         return new BigNumber(0).toString();
     }

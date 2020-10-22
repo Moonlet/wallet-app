@@ -112,7 +112,6 @@ export class PosBasicActionComponent extends React.Component<
                     value.id.toLowerCase()
                 )
             });
-
         if (performAction && performAction.value === false) {
             Dialog.alert(
                 translate('Validator.operationNotAvailable'),
@@ -152,15 +151,43 @@ export class PosBasicActionComponent extends React.Component<
                 break;
             }
             case PosBasicActionType.UNSTAKE: {
-                this.props.unstake(
-                    this.props.account,
-                    this.state.amount,
-                    this.props.validators,
-                    this.props.token.symbol,
-                    undefined,
-                    this.props.navigation,
-                    undefined
+                const blockchainInstance = getBlockchain(this.props.account.blockchain);
+                const tokenConfig = getTokenConfig(
+                    this.props.account.blockchain,
+                    this.props.token.symbol
                 );
+                const performAction = await blockchainInstance
+                    .getClient(this.props.chainId)
+                    .hasEnoughAmountToMakeAction(PosBasicActionType.UNSTAKE, {
+                        fromValidator: this.props.validators[0],
+                        account: this.props.account,
+                        tokenConfig,
+                        toValidators: [],
+                        amount: this.state.amount
+                    });
+                if (performAction && performAction.value === false) {
+                    Dialog.alert(
+                        translate('Validator.minimumUnstakeTitle'),
+                        performAction.message,
+                        undefined,
+                        {
+                            text: translate('App.labels.ok'),
+                            onPress: () => {
+                                this.setState({ amount: '' });
+                            }
+                        }
+                    );
+                } else {
+                    this.props.unstake(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.validators,
+                        this.props.token.symbol,
+                        undefined,
+                        this.props.navigation,
+                        undefined
+                    );
+                }
                 break;
             }
             case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
@@ -257,7 +284,7 @@ export class PosBasicActionComponent extends React.Component<
                 new BigNumber(this.props.validators[0].amountDelegated.active),
                 tokenConfig.decimals
             )
-            .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
+            .toFixed();
         this.setState({ amount }, () => {
             const { insufficientFunds, insufficientFundsFees } = availableFunds(
                 amount,
@@ -282,14 +309,7 @@ export class PosBasicActionComponent extends React.Component<
                 new BigNumber(this.props.validators[0].amountDelegated.active),
                 tokenConfig.decimals
             )
-            .toFixed(tokenConfig.ui.decimals, BigNumber.ROUND_DOWN);
-
-        // const pendingBalance = blockchainInstance.account
-        //     .amountFromStd(
-        //         new BigNumber(this.props.validators[0].amountDelegated.pending),
-        //         tokenConfig.decimals
-        //     )
-        //     .toFixed();
+            .toFixed();
 
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>

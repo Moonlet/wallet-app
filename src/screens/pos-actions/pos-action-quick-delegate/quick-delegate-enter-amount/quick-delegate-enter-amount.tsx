@@ -56,6 +56,8 @@ interface IState {
     loading: boolean;
     amount: string;
     minimumDelegateAmount: BigNumber;
+    minimumAmountToKeep: BigNumber;
+    tokenSymbol: string;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -76,7 +78,9 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         this.state = {
             loading: true,
             amount: undefined,
-            minimumDelegateAmount: undefined
+            minimumDelegateAmount: undefined,
+            minimumAmountToKeep: undefined,
+            tokenSymbol: undefined
         };
     }
 
@@ -85,11 +89,19 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+        const config = blockchainInstance.config;
+
         try {
             this.setState({ loading: true });
+
+            let validator;
+            if (this.props.validators.length === 1) {
+                validator = this.props.validators[0];
+            }
+
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
-                .getAvailableBalanceForDelegate(this.props.account);
+                .getAvailableBalanceForDelegate(this.props.account, validator?.id);
 
             const response = await blockchainInstance
                 .getClient(this.props.chainId)
@@ -99,6 +111,14 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 new BigNumber(response),
                 tokenConfig.decimals
             );
+
+            this.setState({
+                minimumAmountToKeep: blockchainInstance.account.amountFromStd(
+                    config.amountToKeepInAccount[this.props.account.type],
+                    tokenConfig.decimals
+                ),
+                tokenSymbol: tokenConfig.symbol
+            });
 
             this.setState({
                 minimumDelegateAmount:
@@ -176,7 +196,10 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                     bottomButtonText={'App.labels.confirm'}
                     showSteps={false}
                     minimumDelegateAmount={this.state.minimumDelegateAmount}
-                    allBalanceNotice={translate('Validator.allBalanceNotice')}
+                    allBalanceNotice={translate('Validator.allBalanceNotice', {
+                        amount: this.state.minimumAmountToKeep.toFixed(),
+                        token: this.state.tokenSymbol
+                    })}
                     onPressNext={this.onPressConfirm}
                 />
             );

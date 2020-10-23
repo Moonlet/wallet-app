@@ -79,14 +79,14 @@ export const availableAmount = (
         ? getInputAmountToStd(account, token, balanceAvailable)
         : new BigNumber(token.balance?.value);
 
-    if (feeOptions) {
+    if (feeOptions && tokenConfig.type === TokenType.NATIVE) {
         balance = balance.minus(feeOptions?.feeTotal);
     }
 
     if (balance.isGreaterThanOrEqualTo(0)) {
         const blockchainInstance = getBlockchain(account.blockchain);
         const amountFromStd = blockchainInstance.account.amountFromStd(
-            new BigNumber(balance),
+            balance,
             tokenConfig.decimals
         );
         return amountFromStd.toFixed();

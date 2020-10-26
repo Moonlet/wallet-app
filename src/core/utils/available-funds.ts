@@ -86,13 +86,13 @@ export const availableAmount = async (
     if (account.blockchain === Blockchain.NEAR && account.type === AccountType.DEFAULT) {
         const client = blockchainInstance.getClient(chainId);
 
-        const min = await client.http.jsonRpc('query', {
+        const viewAccountRes = await client.http.jsonRpc('query', {
             request_type: 'view_account',
             finality: 'final',
             account_id: account.address
         });
 
-        const minBalance = new BigNumber(min?.result?.storage_usage || 500)
+        const minBalance = new BigNumber(viewAccountRes?.result?.storage_usage || 500)
             .dividedBy(new BigNumber('10000')) // min balance = storage_used / 10^4
             .plus(new BigNumber(2)); // keep 2 NEAR in account
 

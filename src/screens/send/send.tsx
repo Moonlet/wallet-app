@@ -140,6 +140,10 @@ export class SendScreenComponent extends React.Component<
     }
 
     public async componentDidMount() {
+        this.calculateAvailableAmount();
+    }
+
+    private async calculateAvailableAmount() {
         const amount = await availableAmount(
             this.props.account,
             this.props.token,
@@ -272,6 +276,8 @@ export class SendScreenComponent extends React.Component<
 
     public onFeesChanged(feeOptions: IFeeOptions) {
         this.setState({ feeOptions }, () => {
+            this.calculateAvailableAmount();
+
             const { insufficientFunds, insufficientFundsFees } = availableFunds(
                 this.state.amount,
                 this.props.account,

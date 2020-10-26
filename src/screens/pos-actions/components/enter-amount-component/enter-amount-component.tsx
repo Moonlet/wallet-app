@@ -56,6 +56,7 @@ interface IState {
     insufficientFunds: boolean;
     insufficientMinimumAmount: boolean;
     insufficientFundsFees: boolean;
+    availableAmount: string;
 }
 
 export class EnterAmountComponentComponent extends React.Component<
@@ -82,14 +83,16 @@ export class EnterAmountComponentComponent extends React.Component<
             amount: '',
             insufficientFunds: false,
             insufficientFundsFees: false,
-            insufficientMinimumAmount: false
+            insufficientMinimumAmount: false,
+            availableAmount: '0'
         };
     }
 
-    componentDidMount() {
-        const amount = availableAmount(
+    public async componentDidMount() {
+        const amount = await availableAmount(
             this.props.account,
             this.props.token,
+            this.props.chainId,
             undefined, // removed fee options, we have a minimum amount that we keep in account, for future transactions
             this.props.balanceForDelegate
         );
@@ -103,7 +106,11 @@ export class EnterAmountComponentComponent extends React.Component<
             this.props.balanceForDelegate
         );
 
-        this.setState({ insufficientFunds, insufficientFundsFees });
+        this.setState({
+            insufficientFunds,
+            insufficientFundsFees,
+            availableAmount: amount
+        });
     }
 
     private renderBottomConfirm() {
@@ -201,12 +208,7 @@ export class EnterAmountComponentComponent extends React.Component<
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
-                    availableAmount={availableAmount(
-                        this.props.account,
-                        this.props.token,
-                        undefined, // removed fee options, we have a minimum amount that we keep in account, for future transactions
-                        this.props.balanceForDelegate
-                    )}
+                    availableAmount={this.state.availableAmount}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
                     insufficientFundsNotice={this.props.allBalanceNotice}

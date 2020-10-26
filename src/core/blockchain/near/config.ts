@@ -76,9 +76,9 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         gasPriceToken: 'NEAR',
         defaults: {
-            gasPrice: new BigNumber('10000'),
+            gasPrice: new BigNumber('100000000'),
             gasLimit: {
-                [TokenType.NATIVE]: new BigNumber('937144600000')
+                [TokenType.NATIVE]: new BigNumber('230000000000')
             }
         },
         ui: {

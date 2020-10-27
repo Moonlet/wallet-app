@@ -9,6 +9,9 @@ import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { AccountType } from '../../../wallets/state';
 import { IAction } from '../../../types';
+import { getSelectedAccount, getSelectedWallet } from '../../../wallets/selectors';
+import { Platform } from 'react-native';
+import { getChainId } from '../../../preferences/selectors';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 
@@ -23,7 +26,10 @@ export const fetchScreenData = (context: IScreenContext) => async (
     >,
     getState: () => IReduxState
 ) => {
-    // const state = getState();
+    const state = getState();
+    const wallet = getSelectedWallet(state);
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
 
     const apiClient = new ApiClient();
 
@@ -32,22 +38,21 @@ export const fetchScreenData = (context: IScreenContext) => async (
             screen: context.screen,
             tab: context?.tab
         },
-        // TODO
         user: {
-            os: 'ios',
-            deviceId: 'deviceId',
+            os: Platform.OS as 'ios' | 'android',
+            deviceId: state.preferences.deviceId,
             theme: 'dark',
             country: 'Moon',
             lang: 'en',
 
             wallet: {
-                // pubKey: 'adadasd',
-                type: 'HD'
+                pubKey: wallet.walletPublicKey,
+                type: wallet.type
             },
 
             blockchain: Blockchain.ZILLIQA,
-            chainId: '1',
-            address: 'zil14dsu2756fvn59f9ryhkdnemmtkn87e3672pfkr',
+            chainId: String(chainId),
+            address: account.address,
             accountType: AccountType.DEFAULT
         }
     };

@@ -12,35 +12,26 @@ import { withTheme } from '../../core/theme/with-theme';
 import { ImageBanner } from '../image-banner/image-banner';
 import { Summary } from '../summary/summary';
 import { SingleBalanceIcon } from '../single-balance-icon/single-balance-icon';
+import { IModules, IStaticTextColHeaderData, I3LinesCtaData, ModuleTypes } from './types';
 
 interface Props {
     styles: ReturnType<typeof stylesProvider>;
 }
-// To furthure complete
-// type StatisticsData = {
-//     headerValue: string;
-//     secondaryValue: string;
-//     secondaryColor?: string;
-// };
-
-// type ItemModule = {
-//     type: string;
-//     data: StatisticsData[];
-//     displayWhen?: string;
-// };
 
 const WidgetsComponent: React.FC<Props> = ({ styles }) => {
-    const renderItemModule = item => {
+    const renderItemModule = (item: IModules) => {
         switch (item.type) {
-            case 'static-text-columns-bottom-header':
-                return <StaticTextColumn data={item.data} />;
-            case '3-lines-cta':
-                return <ThreeLinesCta data={item.data} cta={item.cta} />;
-            case 'balances-grid-icons':
+            case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
+                return <StaticTextColumn data={item.data as IStaticTextColHeaderData[]} />;
+            case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
+                return <StaticTextColumn data={item.data as IStaticTextColHeaderData[]} inverted />;
+            case ModuleTypes.THREE_LINES_CTA:
+                return <ThreeLinesCta data={item.data as I3LinesCtaData[]} cta={item.cta} />;
+            case ModuleTypes.BALANCES_GRID_ICONS:
                 return <Summary data={item.data} />;
-            case 'separator':
+            case ModuleTypes.SEPARATOR:
                 return <View style={styles.separator} />;
-            case 'single-balance-icon':
+            case ModuleTypes.SINGLE_BALANCE_ICON:
                 return <SingleBalanceIcon data={item.data} />;
             default:
                 return null;

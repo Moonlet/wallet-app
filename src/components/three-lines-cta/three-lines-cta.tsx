@@ -4,9 +4,15 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme } from '../../core/theme/with-theme';
 
+export interface I3LinesCtaData {
+    firstLine: string;
+    secondLine: string;
+    thirdLine: string;
+}
+
 interface ExternalProps {
     cta: any;
-    data: any;
+    data: I3LinesCtaData[];
 }
 
 interface Props {

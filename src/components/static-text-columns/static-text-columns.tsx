@@ -4,46 +4,68 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme } from '../../core/theme/with-theme';
 import { ThemeContext } from '../../core/theme/theme-contex';
 import stylesProvider from './styles';
-
-type DataType = {
-    headerValue: string;
-    secondaryValue: string;
-    secondaryColor?: string;
-};
+import { IStaticTextColHeaderData } from '../widgets/types';
 
 interface ExternalProps {
-    data: DataType[];
+    data: IStaticTextColHeaderData[];
+    inverted?: boolean;
 }
 
 interface Props {
     styles: ReturnType<typeof stylesProvider>;
 }
 
-const StaticTextColumnComponent: React.FC<Props & ExternalProps> = ({ data, styles }) => {
+const StaticTextColumnComponent: React.FC<Props & ExternalProps> = ({
+    data,
+    styles,
+    inverted = false
+}) => {
     const theme = useContext(ThemeContext);
     return (
         <View style={styles.container}>
             {data.map(item => {
-                return (
-                    <View style={styles.itemContainer}>
-                        <Text
-                            style={[
-                                {
-                                    color: item.secondaryColor
-                                        ? item.secondaryColor
-                                        : theme.colors.text
-                                },
-                                styles.secondaryValueText,
-                                styles.text
-                            ]}
-                        >
-                            {item.secondaryValue}
-                        </Text>
-                        <Text style={[styles.headerValueText, styles.textColor, styles.text]}>
-                            {item.headerValue}
-                        </Text>
-                    </View>
-                );
+                if (inverted)
+                    return (
+                        <View style={styles.itemContainer}>
+                            <Text
+                                style={[
+                                    {
+                                        color: item.secondaryColor
+                                            ? item.secondaryColor
+                                            : theme.colors.text
+                                    },
+                                    styles.secondaryValueText,
+                                    styles.text
+                                ]}
+                            >
+                                {item.secondaryValue}
+                            </Text>
+                            <Text style={[styles.headerValueText, styles.textColor, styles.text]}>
+                                {item.headerValue}
+                            </Text>
+                        </View>
+                    );
+                else
+                    return (
+                        <View style={styles.itemContainer}>
+                            <Text style={[styles.headerValueText, styles.textColor, styles.text]}>
+                                {item.headerValue}
+                            </Text>
+                            <Text
+                                style={[
+                                    {
+                                        color: item.secondaryColor
+                                            ? item.secondaryColor
+                                            : theme.colors.text
+                                    },
+                                    styles.secondaryValueText,
+                                    styles.text
+                                ]}
+                            >
+                                {item.secondaryValue}
+                            </Text>
+                        </View>
+                    );
             })}
         </View>
     );

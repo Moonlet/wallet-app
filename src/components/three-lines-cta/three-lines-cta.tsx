@@ -31,7 +31,11 @@ export const ThreeLinesCtaComponent: React.FC<Props & ExternalProps> = ({ data, 
                 <TouchableOpacity
                     style={[styles.actionButton, { backgroundColor: cta.buttonProps.colors.bg }]}
                 >
-                    <Text style={{ color: cta.buttonProps.colors.label }}>{cta.label}</Text>
+                    <Text
+                        style={[{ color: cta.buttonProps.colors.label }, styles.actionButtonText]}
+                    >
+                        {cta.label}
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>

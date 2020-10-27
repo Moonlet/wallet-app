@@ -29,7 +29,7 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         actionButtonContainer: {
-            flex: 1,
+            flex: 0.7,
             justifyContent: 'center',
             alignItems: 'flex-end'
         },
@@ -40,5 +40,10 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION,
             minWidth: normalize(100), // might need a different imp
             borderRadius: BASE_DIMENSION + 2
+        },
+        actionButtonText: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
+            fontWeight: '600'
         }
     });

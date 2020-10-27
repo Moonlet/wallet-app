@@ -24,12 +24,11 @@ import { NavigationService } from '../../navigation/navigation-service';
 import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
 import { AccountSummary } from '../account-summary/account-summary';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { AffiliateBanner } from '../affiliate-banner/affiliate-banner';
-import { AffiliateBannerType } from '../affiliate-banner/types';
 import { IReduxState } from '../../redux/state';
 import { AccountStats } from '../../core/blockchain/types/stats';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
+import { Widgets } from '../widgets/widgets';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -163,11 +162,6 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    <AffiliateBanner
-                        type={AffiliateBannerType.LEDGER_NANO_X}
-                        style={styles.affiliateBanner}
-                    />
-
                     <AccountSummary
                         isLoading={this.state.loadingAccountStats}
                         style={styles.accountSummary}
@@ -188,6 +182,7 @@ export class TokenDashboardComponent extends React.Component<
                         accountStats={this.props.accountStats}
                     />
 
+                    <Widgets />
                     {this.props.account?.tokens &&
                         this.props.chainId &&
                         Object.values(this.props.account.tokens[this.props.chainId]).map(

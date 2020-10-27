@@ -1,0 +1,589 @@
+{
+    "code": 200,
+    "result": {
+        "data": {
+            "widgets": [
+                {
+                    "title": "Statistics",
+                    "expandable": true,
+                    "initialState": "collapsed",
+                    "modules": [
+                        {
+                            "type": "static-text-columns-bottom-header",
+                            "data": [
+                                {
+                                    "headerValue": "Reward (APY)",
+                                    "secondaryValue": "34%",
+                                    "secondaryColor": "#00E676"
+                                },
+                                {
+                                    "headerValue": "Supply staked",
+                                    "secondaryValue": "14%"
+                                },
+                                {
+                                    "headerValue": "Supply staked",
+                                    "secondaryValue": "99%"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "static-text-columns-bottom-header",
+                            "data": [
+                                {
+                                    "headerValue": "Stakes/Nodes",
+                                    "secondaryValue": "4641 / 7"
+                                },
+                                {
+                                    "headerValue": "Stake amount",
+                                    "secondaryValue": "1,988,901,221"
+                                },
+                                {
+                                    "headerValue": "Minted gZIL",
+                                    "secondaryValue": "5,758"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Rewards (15)",
+                    "expandable": true,
+                    "initialState": "collapsed",
+                    "modules": [
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "124446501209341",
+                                    "thirdLine": "from antonio"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "108914042425432",
+                                    "thirdLine": "from Pikachu"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "125164633701482",
+                                    "thirdLine": "from sentinel-prime"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "19712744491661",
+                                    "thirdLine": "from Bumblebee"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "23445148232328",
+                                    "thirdLine": "from RX0-Unicorn"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "120691718883004",
+                                    "thirdLine": "from ViewBlock"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "3892380625069008",
+                                    "thirdLine": "from Zillacracy"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "342336030013354",
+                                    "thirdLine": "from Zillet"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "130522470782479",
+                                    "thirdLine": "from Zillacracy 2"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "5596667277957",
+                                    "thirdLine": "from ultra-magnus"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "CLAIM_REWARD_NO_INPUT"
+                                },
+                                "label": "Claim",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Claim your rewards now",
+                                    "secondLine": "91429285705473",
+                                    "thirdLine": "from Optimus-prime"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Withdraw (6)",
+                    "expandable": true,
+                    "initialState": "collapsed",
+                    "modules": [
+                        {
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "WITHDRAW"
+                                },
+                                "label": "Withdraw",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Withdraw your ZIL now",
+                                    "secondLine": "10000000000000",
+                                    "thirdLine": "1603283850"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "WITHDRAW"
+                                },
+                                "label": "Withdraw",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Withdraw your ZIL now",
+                                    "secondLine": "1230000000000",
+                                    "thirdLine": "1603283850"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "WITHDRAW"
+                                },
+                                "label": "Withdraw",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Withdraw your ZIL now",
+                                    "secondLine": "3210000000000",
+                                    "thirdLine": "1603283850"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "WITHDRAW"
+                                },
+                                "label": "Withdraw",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Withdraw your ZIL now",
+                                    "secondLine": "4560000000000",
+                                    "thirdLine": "1603283850"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "WITHDRAW"
+                                },
+                                "label": "Withdraw",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Withdraw your ZIL now",
+                                    "secondLine": "333333000000",
+                                    "thirdLine": "1603283850"
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "3-lines-cta",
+                            "cta": {
+                                "type": "callAction",
+                                "params": {
+                                    "action": "WITHDRAW"
+                                },
+                                "label": "Withdraw",
+                                "buttonProps": {
+                                    "primary": true,
+                                    "colors": {
+                                        "label": "#000000",
+                                        "bg": "#00E676"
+                                    }
+                                }
+                            },
+                            "data": [
+                                {
+                                    "firstLine": "Withdraw your ZIL now",
+                                    "secondLine": "198314687500000",
+                                    "thirdLine": "1603284510"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "modules": [
+                        {
+                            "type": "image-banner",
+                            "cta": {
+                                "type": "openUrl",
+                                "params": {
+                                    "url": "https://shop.ledger.com/pages/ledger-nano-x?r=69d534ac55d9"
+                                }
+                            },
+                            "data": [
+                                {
+                                    "imageUrl": "https://fire.moonlet.io/static/banners/affiliate/ledger_nano_x.png"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Summary",
+                    "expandable": true,
+                    "initialState": "collapsed",
+                    "modules": [
+                        {
+                            "type": "balances-grid-icons",
+                            "data": [
+                                {
+                                    "label": "Staked",
+                                    "balance": {
+                                        "value": "19370468014991405",
+                                        "symbol": "ZIL"
+                                    },
+                                    "icon": {
+                                        "value": "vote",
+                                        "color": "#00DAFF"
+                                    }
+                                },
+                                {
+                                    "label": "Rewards",
+                                    "balance": {
+                                        "value": "4994215789878844",
+                                        "symbol": "ZIL"
+                                    },
+                                    "icon": {
+                                        "value": "claim-reward",
+                                        "color": "#00E676"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "displayWhen": "expanded",
+                            "type": "balances-grid-icons",
+                            "data": [
+                                {
+                                    "label": "Available",
+                                    "balance": {
+                                        "value": "10393094581531585",
+                                        "symbol": "ZIL"
+                                    },
+                                    "icon": {
+                                        "value": "money-wallet",
+                                        "color": "#9A99A2"
+                                    }
+                                },
+                                {
+                                    "label": "Unstaked",
+                                    "balance": {
+                                        "value": "217648020500000",
+                                        "symbol": "ZIL"
+                                    },
+                                    "icon": {
+                                        "value": "key-lock",
+                                        "color": "#FFAB91"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "separator",
+                            "data": []
+                        },
+                        {
+                            "type": "single-balance-icon",
+                            "data": [
+                                {
+                                    "balance": {
+                                        "value": "5485786699280914",
+                                        "symbol": "gZIL"
+                                    },
+                                    "icon": {
+                                        "value": "https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png",
+                                        "color": "#FFFFFF"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -15,7 +15,13 @@ import { SingleBalanceIcon } from './components/single-balance-icon/single-balan
 import { Separator } from './components/separator/sepratator';
 import { I3LinesCtaData, IScreenModule, IStaticTextColumnData, ModuleTypes } from './types';
 
-const WidgetsComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>>> = ({ styles }) => {
+interface IExternalProps {
+    actions: any;
+}
+
+const WidgetsComponent = (props: IThemeProps<ReturnType<typeof stylesProvider>>) => {
+    const styles = props.styles;
+
     const renderItemModule = (item: IScreenModule) => {
         switch (item.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
@@ -86,4 +92,4 @@ const WidgetsComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>>>
     );
 };
 
-export const Widgets = smartConnect(WidgetsComponent, [withTheme(stylesProvider)]);
+export const Widgets = smartConnect<IExternalProps>(WidgetsComponent, [withTheme(stylesProvider)]);

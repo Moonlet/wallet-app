@@ -10,7 +10,6 @@ import { IReduxState } from '../../../../../../../redux/state';
 import { getAccount, getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { bind } from 'bind-decorator';
-import { StatsComponent } from '../../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { Button } from '../../../../../../../library';
@@ -27,11 +26,11 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 import moment from 'moment';
-import { AffiliateBanner } from '../../../../../../../components/affiliate-banner/affiliate-banner';
 import { fetchAccountDelegateStats } from '../../../../../../../redux/ui/stats/actions';
 import { getAccountStats } from '../../../../../../../redux/ui/stats/selectors';
 import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
 import { Dialog } from '../../../../../../../components/dialog/dialog';
+import { SmartScreen } from '../../../../../../smart-screen/smart-screen';
 
 interface IExternalProps {
     accountIndex: number;
@@ -219,7 +218,7 @@ export class AccountTabComponent extends React.Component<
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
-        const affiliateBanner = blockchainInstance.config.ui.affiliateBanners.account;
+        // const affiliateBanner = blockchainInstance.config.ui.affiliateBanners.account;
 
         return (
             <View style={styles.container}>
@@ -280,7 +279,13 @@ export class AccountTabComponent extends React.Component<
                             </Button>
                         </View>
 
-                        <AffiliateBanner type={affiliateBanner} style={styles.affiliateBanner} />
+                        <SmartScreen
+                            context={{
+                                screen: 'token',
+                                tab: 'account'
+                            }}
+                        />
+                        {/* <AffiliateBanner type={affiliateBanner} style={styles.affiliateBanner} />
 
                         {this.props.accountStats && this.renderWidgets()}
 
@@ -289,7 +294,7 @@ export class AccountTabComponent extends React.Component<
                             blockchain={this.props.blockchain}
                             token={this.props.token}
                             extraToken={this.props.account?.tokens[this.props.chainId].gZIL}
-                        />
+                        /> */}
                     </ScrollView>
                 </View>
                 <View style={styles.bottomContainer}>

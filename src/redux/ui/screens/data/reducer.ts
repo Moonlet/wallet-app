@@ -2,6 +2,7 @@ import { IScreenDataState } from './state';
 import { IAction } from '../../../types';
 import { FETCH_SCREEN_DATA } from './actions';
 import { IScreenRequest } from '../../../../components/widgets/types';
+import { Blockchain } from '../../../../core/blockchain/types';
 
 const intialState: IScreenDataState = {
     dashboard: undefined,
@@ -14,7 +15,13 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
             const request: IScreenRequest = action.data.request;
             // const response: IScreenResponse = action.data.response;
 
-            const key = getScreenDataKey(request);
+            const key = getScreenDataKey({
+                pubKey: request.user.wallet.pubKey,
+                blockchain: request.user.blockchain,
+                chainId: request.user.chainId,
+                address: request.user.address,
+                tab: request.context?.tab
+            });
 
             if (request.context.screen === 'dashboard') {
                 return {
@@ -46,19 +53,18 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
     return state;
 };
 
-export const getScreenDataKey = (request: IScreenRequest): string => {
+export const getScreenDataKey = (data: {
+    pubKey: string;
+    blockchain: Blockchain;
+    chainId: string;
+    address: string;
+    tab?: string;
+}): string => {
     // 'walletPubKey-blockchain-chainId-address-tab'
-    let key =
-        request.user.wallet.pubKey +
-        '-' +
-        request.user.blockchain +
-        '-' +
-        request.user.chainId +
-        '-' +
-        request.user.address;
+    let key = data.pubKey + '-' + data.blockchain + '-' + data.chainId + '-' + data.address;
 
-    if (request.context?.tab) {
-        key = key + '-' + request.context.tab;
+    if (data?.tab) {
+        key = key + '-' + data.tab;
     }
 
     return key;

@@ -1,6 +1,6 @@
 import { IScreenRequest, IScreenResponse } from '../../../../components/widgets/types';
 
-interface IScreenData {
+export interface IScreenData {
     // key: 'walletPubKey-blockchain-chainId-address-tab'
     [key: string]: {
         request: IScreenRequest;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-import { withNavigationParams } from '../../navigation/with-navigation-params';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
@@ -40,6 +39,5 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
 }
 
 export const SmartScreen = smartConnect<IExternalProps>(SmartScreenComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
-    withNavigationParams()
+    connect(mapStateToProps, mapDispatchToProps)
 ]);

@@ -3,22 +3,19 @@ import { View, FlatList, Text } from 'react-native';
 import widgets from './widget.json';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
-import { StaticTextColumn } from '../static-text-columns/static-text-columns';
-import { ThreeLinesCta } from '../three-lines-cta/three-lines-cta';
+import { StaticTextColumn } from './components/static-text-columns/static-text-columns';
+import { ThreeLinesCta } from './components/three-lines-cta/three-lines-cta';
 import Icon from '../icon/icon';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { withTheme } from '../../core/theme/with-theme';
-import { ImageBanner } from '../image-banner/image-banner';
-import { Summary } from '../summary/summary';
-import { SingleBalanceIcon } from '../single-balance-icon/single-balance-icon';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
+import { ImageBanner } from './components/image-banner/image-banner';
+import { Summary } from './components/summary/summary';
+import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { IModules, IStaticTextColHeaderData, I3LinesCtaData, ModuleTypes } from './types';
+import { Separator } from './components/separator/sepratator';
 
-interface Props {
-    styles: ReturnType<typeof stylesProvider>;
-}
-
-const WidgetsComponent: React.FC<Props> = ({ styles }) => {
+const WidgetsComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>>> = ({ styles }) => {
     const renderItemModule = (item: IModules) => {
         switch (item.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
@@ -30,7 +27,7 @@ const WidgetsComponent: React.FC<Props> = ({ styles }) => {
             case ModuleTypes.BALANCES_GRID_ICONS:
                 return <Summary data={item.data} />;
             case ModuleTypes.SEPARATOR:
-                return <View style={styles.separator} />;
+                return <Separator />;
             case ModuleTypes.SINGLE_BALANCE_ICON:
                 return <SingleBalanceIcon data={item.data} />;
             default:
@@ -50,7 +47,7 @@ const WidgetsComponent: React.FC<Props> = ({ styles }) => {
 
     const renderItem = ({ item }) => {
         switch (item.modules[0].type) {
-            case 'image-banner':
+            case ModuleTypes.IMAGE_BANNER:
                 return (
                     <ImageBanner
                         imageUrl={item.modules[0].data[0].imageUrl}

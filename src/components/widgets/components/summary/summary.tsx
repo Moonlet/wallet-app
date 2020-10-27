@@ -1,23 +1,20 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import stylesProvider from './styles';
-import { smartConnect } from '../../core/utils/smart-connect';
-import { withTheme } from '../../core/theme/with-theme';
-import { IconValues } from '../icon/values';
-import { normalize } from '../../styles/dimensions';
-import Icon from '../icon/icon';
-import { formatNumber } from '../../core/utils/format-number';
+import { smartConnect } from '../../../../core/utils/smart-connect';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
+import { IconValues } from '../../../icon/values';
+import { normalize } from '../../../../styles/dimensions';
+import Icon from '../../../icon/icon';
+import { formatNumber } from '../../../../core/utils/format-number';
 
 interface ExternalProps {
     data;
 }
 
-interface Props {
-    styles: ReturnType<typeof stylesProvider>;
-}
-
-const SummaryComponent: React.FC<Props & ExternalProps> = ({ styles, data }) => {
-    // To be fixed
+const SummaryComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>> &
+    ExternalProps> = ({ styles, data }) => {
+    // Might need a better imp
     const returnIconName = (iconName: string) => {
         switch (iconName) {
             case 'claim-reward':

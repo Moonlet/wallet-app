@@ -21,8 +21,6 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { NavigationService } from '../../navigation/navigation-service';
-import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
-import { AccountSummary } from '../account-summary/account-summary';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { IReduxState } from '../../redux/state';
 import { AccountStats } from '../../core/blockchain/types/stats';
@@ -162,26 +160,6 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    <AccountSummary
-                        isLoading={this.state.loadingAccountStats}
-                        style={styles.accountSummary}
-                        data={{
-                            accountStats: this.props.accountStats,
-                            blockchain: this.props.blockchain,
-                            token: this.state.token,
-                            extraToken: this.props.account?.tokens[this.props.chainId].gZIL
-                        }}
-                        enableExpand={true}
-                    />
-
-                    <QuickDelegateBanner
-                        blockchain={this.props.blockchain}
-                        account={this.props.account}
-                        chainId={this.props.chainId}
-                        style={styles.quickDelegateBannerContainer}
-                        accountStats={this.props.accountStats}
-                    />
-
                     <Widgets />
                     {this.props.account?.tokens &&
                         this.props.chainId &&

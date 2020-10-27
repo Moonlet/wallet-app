@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
-import { smartConnect } from '../../core/utils/smart-connect';
-import { withTheme } from '../../core/theme/with-theme';
+import { smartConnect } from '../../../../core/utils/smart-connect';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 
 export interface I3LinesCtaData {
     firstLine: string;
@@ -15,11 +15,8 @@ interface ExternalProps {
     data: I3LinesCtaData[];
 }
 
-interface Props {
-    styles: ReturnType<typeof stylesProvider>;
-}
-
-export const ThreeLinesCtaComponent: React.FC<Props & ExternalProps> = ({ data, cta, styles }) => {
+export const ThreeLinesCtaComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>> &
+    ExternalProps> = ({ data, cta, styles }) => {
     return (
         <View style={styles.container}>
             <View style={styles.generalFlex}>

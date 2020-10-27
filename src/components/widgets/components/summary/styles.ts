@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
+import { ITheme } from '../../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
     normalize,
     BORDER_RADIUS
-} from '../../styles/dimensions';
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({

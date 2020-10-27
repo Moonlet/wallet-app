@@ -43,11 +43,5 @@ export default (theme: ITheme) =>
         expandingArrow: {
             color: theme.colors.accent,
             alignSelf: 'center'
-        },
-        separator: {
-            height: 1,
-            flex: 1,
-            backgroundColor: theme.colors.inputBackground,
-            marginVertical: BASE_DIMENSION * 2
         }
     });

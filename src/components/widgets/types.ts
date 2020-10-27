@@ -1,10 +1,13 @@
+import { IconValues } from '../icon/values';
+
 export enum ModuleTypes {
     STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
     STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
     THREE_LINES_CTA = '3-lines-cta',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
-    SEPARATOR = 'separator'
+    SEPARATOR = 'separator',
+    IMAGE_BANNER = 'image-banner'
 }
 
 export interface IWidget {
@@ -72,7 +75,7 @@ export interface IBalancesGridIconsData {
     firstLine: string;
     secondLine: string;
     icon: {
-        value: string; // IconValues
+        value: IconValues; // IconValues
         color: string;
     };
 }
@@ -80,7 +83,7 @@ export interface IBalancesGridIconsData {
 export interface ISingleBalanceIconData {
     title: string;
     icon: {
-        value: string; // IconValues
+        value: IconValues; // IconValues
         color: string;
     };
 }
@@ -93,7 +96,7 @@ export interface IImageBannerData {
 export interface I2LinesTextBannerData {
     firstLine: string;
     secondLine: string;
-    icon?: string; // IconValues
+    icon?: IconValues; // IconValues
 }
 
 export interface ISeparatorData {

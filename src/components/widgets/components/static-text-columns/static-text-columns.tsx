@@ -1,25 +1,18 @@
 import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
-import { smartConnect } from '../../core/utils/smart-connect';
-import { withTheme } from '../../core/theme/with-theme';
-import { ThemeContext } from '../../core/theme/theme-contex';
+import { smartConnect } from '../../../../core/utils/smart-connect';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
+import { ThemeContext } from '../../../../core/theme/theme-contex';
 import stylesProvider from './styles';
-import { IStaticTextColHeaderData } from '../widgets/types';
+import { IStaticTextColHeaderData } from '../../types';
 
 interface ExternalProps {
     data: IStaticTextColHeaderData[];
     inverted?: boolean;
 }
 
-interface Props {
-    styles: ReturnType<typeof stylesProvider>;
-}
-
-const StaticTextColumnComponent: React.FC<Props & ExternalProps> = ({
-    data,
-    styles,
-    inverted = false
-}) => {
+const StaticTextColumnComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>> &
+    ExternalProps> = ({ data, styles, inverted = false }) => {
     const theme = useContext(ThemeContext);
     return (
         <View style={styles.container}>

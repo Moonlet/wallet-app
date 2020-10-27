@@ -4,10 +4,10 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { ThemeContext } from '../../../../core/theme/theme-contex';
 import stylesProvider from './styles';
-import { IStaticTextColHeaderData } from '../../types';
+import { IStaticTextColumnData } from '../../types';
 
 interface ExternalProps {
-    data: IStaticTextColHeaderData[];
+    data: IStaticTextColumnData[];
     inverted?: boolean;
 }
 

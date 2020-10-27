@@ -12,16 +12,16 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { Summary } from './components/summary/summary';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
-import { IModules, IStaticTextColHeaderData, I3LinesCtaData, ModuleTypes } from './types';
 import { Separator } from './components/separator/sepratator';
+import { I3LinesCtaData, IScreenModule, IStaticTextColumnData, ModuleTypes } from './types';
 
 const WidgetsComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>>> = ({ styles }) => {
-    const renderItemModule = (item: IModules) => {
+    const renderItemModule = (item: IScreenModule) => {
         switch (item.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                return <StaticTextColumn data={item.data as IStaticTextColHeaderData[]} />;
+                return <StaticTextColumn data={item.data as IStaticTextColumnData[]} />;
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return <StaticTextColumn data={item.data as IStaticTextColHeaderData[]} inverted />;
+                return <StaticTextColumn data={item.data as IStaticTextColumnData[]} inverted />;
             case ModuleTypes.THREE_LINES_CTA:
                 return <ThreeLinesCta data={item.data as I3LinesCtaData[]} cta={item.cta} />;
             case ModuleTypes.BALANCES_GRID_ICONS:

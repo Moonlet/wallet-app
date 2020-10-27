@@ -26,7 +26,7 @@ import { IReduxState } from '../../redux/state';
 import { AccountStats } from '../../core/blockchain/types/stats';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
-import { Widgets } from '../widgets/widgets';
+import { SmartScreen } from '../../screens/smart-screen/smart-screen';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -160,7 +160,8 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    <Widgets />
+                    <SmartScreen context={{ screen: 'dashboard' }} />
+
                     {this.props.account?.tokens &&
                         this.props.chainId &&
                         Object.values(this.props.account.tokens[this.props.chainId]).map(

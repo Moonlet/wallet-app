@@ -20,7 +20,7 @@ export interface IScreenUser {
     lang: 'en';
 
     wallet: {
-        pubKey: string;
+        // pubKey: string;
         type: 'HD' | 'HW';
         hwOptions?: {
             vendor?: string;

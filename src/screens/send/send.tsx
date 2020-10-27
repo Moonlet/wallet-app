@@ -99,6 +99,7 @@ interface IState {
     memo: string;
     headerSteps: IHeaderStep[];
     insufficientFundsFees: boolean;
+    availableAmount: string;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -133,8 +134,24 @@ export class SendScreenComponent extends React.Component<
                 { step: 2, title: translate('App.labels.enterAmount'), active: false },
                 { step: 3, title: translate('Send.confirmTransaction'), active: false }
             ],
-            insufficientFundsFees: false
+            insufficientFundsFees: false,
+            availableAmount: '0'
         };
+    }
+
+    public async componentDidMount() {
+        this.calculateAvailableAmount();
+    }
+
+    private async calculateAvailableAmount() {
+        const amount = await availableAmount(
+            this.props.account,
+            this.props.token,
+            this.props.chainId,
+            this.state.feeOptions
+        );
+
+        this.setState({ availableAmount: amount });
     }
 
     public async confirmPayment() {
@@ -259,6 +276,8 @@ export class SendScreenComponent extends React.Component<
 
     public onFeesChanged(feeOptions: IFeeOptions) {
         this.setState({ feeOptions }, () => {
+            this.calculateAvailableAmount();
+
             const { insufficientFunds, insufficientFundsFees } = availableFunds(
                 this.state.amount,
                 this.props.account,
@@ -395,11 +414,7 @@ export class SendScreenComponent extends React.Component<
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
-                    availableAmount={availableAmount(
-                        this.props.account,
-                        this.props.token,
-                        this.state.feeOptions
-                    )}
+                    availableAmount={this.state.availableAmount}
                     minimumAmount={'0'}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}

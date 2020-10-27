@@ -76,9 +76,9 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         gasPriceToken: 'NEAR',
         defaults: {
-            gasPrice: new BigNumber('10000'),
+            gasPrice: new BigNumber('100000000'),
             gasLimit: {
-                [TokenType.NATIVE]: new BigNumber('937144600000')
+                [TokenType.NATIVE]: new BigNumber('230000000000')
             }
         },
         ui: {
@@ -129,7 +129,7 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 2,
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(10).pow(24), // 1 NEAR
+        [AccountType.DEFAULT]: new BigNumber(0),
         [AccountType.LOCKUP_CONTRACT]: new BigNumber(10).pow(24).multipliedBy(40) // 40 NEAR
     }
 };

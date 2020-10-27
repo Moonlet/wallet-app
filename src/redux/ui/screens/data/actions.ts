@@ -57,32 +57,28 @@ export const fetchScreenData = (context: IScreenContext) => async (
         }
     };
 
-    const screenResponse = await apiClient.http.post('/walletUi/screen', body);
-    const data: IScreenResponse = screenResponse?.result?.data;
+    try {
+        const screenResponse = await apiClient.http.post('/walletUi/screen', body);
+        const data: IScreenResponse = screenResponse?.result?.data;
 
-    if (data) {
         dispatch({
             type: FETCH_SCREEN_DATA,
             data: {
                 request: body,
                 response: data,
-                isLoading: true,
-                error: undefined
+                isLoading: false,
+                error: !data && screenResponse?.message
             }
         });
-    } else {
-        // handle error
+    } catch (error) {
+        dispatch({
+            type: FETCH_SCREEN_DATA,
+            data: {
+                request: body,
+                response: undefined,
+                isLoading: false,
+                error
+            }
+        });
     }
 };
-
-// loading => true
-// response => true
-// afisez datele vechi
-
-// loading => true
-// response => false
-// skeleton
-
-// loading =>
-// error
-// widget de show error => buton de retry

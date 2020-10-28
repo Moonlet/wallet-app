@@ -1,23 +1,21 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Button } from '../../../../library';
-
-export interface I3LinesCtaData {
-    firstLine: string;
-    secondLine: string;
-    thirdLine: string;
-}
+import { Button, Text } from '../../../../library';
+import { I3LinesCtaData, ICta } from '../../types';
 
 interface ExternalProps {
-    cta: any;
     data: I3LinesCtaData[];
+    cta: ICta;
 }
 
-export const ThreeLinesCtaComponent: React.FC<IThemeProps<ReturnType<typeof stylesProvider>> &
-    ExternalProps> = ({ data, cta, styles }) => {
+const ThreeLinesCtaComponent = (
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+) => {
+    const { data, cta, styles } = props;
+
     return (
         <View style={styles.container}>
             <View style={styles.generalFlex}>
@@ -25,16 +23,21 @@ export const ThreeLinesCtaComponent: React.FC<IThemeProps<ReturnType<typeof styl
                 <Text style={styles.secondLine}>{data[0].secondLine}</Text>
                 <Text style={styles.thirdLine}>{data[0].thirdLine}</Text>
             </View>
+
             <View style={styles.actionButtonContainer}>
                 <Button
-                    style={[{ backgroundColor: cta.buttonProps.colors.bg }, styles.actionButton]}
-                    primary={cta.buttonProps.primary}
+                    primary={cta.buttonProps?.primary}
+                    secondary={cta.buttonProps?.secondary}
+                    disabled={cta.buttonProps?.disabled}
+                    style={[
+                        styles.actionButton,
+                        {
+                            backgroundColor: cta.buttonProps?.colors.bg,
+                            borderColor: cta.buttonProps?.colors.bg
+                        }
+                    ]}
                 >
-                    <Text
-                        style={[{ color: cta.buttonProps.colors.label }, styles.actionButtonText]}
-                    >
-                        {cta.label}
-                    </Text>
+                    <Text style={{ color: cta.buttonProps?.colors.label }}>{cta.label}</Text>
                 </Button>
             </View>
         </View>

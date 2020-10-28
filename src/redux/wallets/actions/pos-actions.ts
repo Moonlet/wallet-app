@@ -6,7 +6,7 @@ import {
     ITransactionExtraFields,
     TransactionMessageText
 } from '../../../core/blockchain/types';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationParams } from 'react-navigation';
 import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
@@ -48,7 +48,6 @@ export const redelegate = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -59,7 +58,6 @@ export const redelegate = (
         validators,
         token,
         feeOptions,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.REDELEGATE,
@@ -71,18 +69,17 @@ export const claimRewardNoInput = (
     account: IAccountState,
     validators: IValidator[],
     token: string,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    // validators
     posAction(
         account,
         undefined,
         validators,
         token,
         undefined,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.CLAIM_REWARD_NO_INPUT,
@@ -96,7 +93,6 @@ export const delegate = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -107,7 +103,6 @@ export const delegate = (
         validators,
         token,
         feeOptions,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.DELEGATE,
@@ -121,7 +116,6 @@ export const unstake = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -132,7 +126,6 @@ export const unstake = (
         validators,
         token,
         feeOptions,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.UNSTAKE,
@@ -145,7 +138,6 @@ export const unlock = (
     amount: string,
     token: string,
     feeOptions: IFeeOptions,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -156,7 +148,6 @@ export const unlock = (
         [],
         token,
         feeOptions,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.UNLOCK,
@@ -167,7 +158,6 @@ export const unlock = (
 export const activate = (
     account: IAccountState,
     token: string,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -178,7 +168,6 @@ export const activate = (
         undefined,
         token,
         undefined,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.ACTIVATE,
@@ -189,7 +178,6 @@ export const activate = (
 export const withdraw = (
     account: IAccountState,
     token: string,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -200,7 +188,6 @@ export const withdraw = (
         undefined,
         token,
         undefined,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.WITHDRAW,
@@ -214,7 +201,6 @@ export const unvote = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
@@ -225,7 +211,6 @@ export const unvote = (
         validators,
         token,
         feeOptions,
-        navigation,
         extraFields,
         goBack,
         PosBasicActionType.UNVOTE,
@@ -239,7 +224,6 @@ export const posAction = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     type: PosBasicActionType,
@@ -502,4 +486,22 @@ const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {
             );
         }).length > 0
     );
+};
+
+export const buildDummyValidator = (id: string, name?: string): IValidator => {
+    return {
+        id,
+        name: name || id,
+        icon: '',
+        rank: '',
+        totalVotes: '0',
+        amountDelegated: {
+            active: '0',
+            pending: '0'
+        },
+        website: '',
+        topStats: [],
+        secondaryStats: [],
+        chartStats: []
+    };
 };

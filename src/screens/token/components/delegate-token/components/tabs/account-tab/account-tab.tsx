@@ -22,7 +22,6 @@ import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
 import { withdraw, activate, claimRewardNoInput } from '../../../../../../../redux/wallets/actions';
-import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 import moment from 'moment';
@@ -36,7 +35,6 @@ interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 interface IReduxProps {
@@ -86,12 +84,7 @@ export class AccountTabComponent extends React.Component<
     public async onPress(widget: IPosWidget) {
         switch (widget.type) {
             case PosBasicActionType.ACTIVATE: {
-                this.props.activate(
-                    this.props.account,
-                    this.props.token.symbol,
-                    this.props.navigation,
-                    undefined
-                );
+                this.props.activate(this.props.account, this.props.token.symbol, undefined);
                 break;
             }
             case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
@@ -99,7 +92,6 @@ export class AccountTabComponent extends React.Component<
                     this.props.account,
                     [widget.validator],
                     this.props.token.symbol,
-                    this.props.navigation,
                     undefined
                 );
                 break;
@@ -109,7 +101,6 @@ export class AccountTabComponent extends React.Component<
                 this.props.withdraw(
                     this.props.account,
                     this.props.token.symbol,
-                    this.props.navigation,
                     {
                         witdrawIndex: widget?.index,
                         validatorId: widget?.validator?.id,

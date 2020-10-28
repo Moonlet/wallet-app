@@ -7,7 +7,7 @@ import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { IScreenContext } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
-import { withdraw, claimRewardNoInput, activate } from '../../redux/wallets/actions/pos-actions';
+import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
@@ -46,7 +46,6 @@ interface IReduxProps {
 
     fetchScreenData: typeof fetchScreenData;
 
-    activate: typeof activate;
     claimRewardNoInput: typeof claimRewardNoInput;
     withdraw: typeof withdraw;
 }
@@ -54,7 +53,6 @@ interface IReduxProps {
 const mapDispatchToProps = {
     fetchScreenData,
 
-    activate,
     claimRewardNoInput,
     withdraw
 };
@@ -150,11 +148,10 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                     <Widgets
                         data={screenData.response.widgets}
                         actions={{
-                            // TODO: add all acitons
-                            activate: this.props.activate,
                             claimRewardNoInput: this.props.claimRewardNoInput,
                             withdraw: this.props.withdraw
                         }}
+                        account={this.props.account}
                     />
                 </View>
             );

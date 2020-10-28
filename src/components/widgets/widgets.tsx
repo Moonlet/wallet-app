@@ -24,10 +24,12 @@ import { StaticTextColTopHeader } from './components/static-text-col-top-header/
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
 import { BalanceGridIcons } from './components/balance-grid-icons/balance-grid-icons';
 import { Text } from '../../library';
+import { IAccountState } from '../../redux/wallets/state';
 
 interface IExternalProps {
     data: IScreenWidget[];
     actions: any;
+    account: IAccountState;
 }
 
 interface IState {
@@ -76,7 +78,14 @@ class WidgetsComponent extends React.Component<
                 return <StaticTextColBottomHeader data={module.data as IStaticTextColumnData[]} />;
 
             case ModuleTypes.THREE_LINES_CTA:
-                return <ThreeLinesCta data={module.data as I3LinesCtaData[]} cta={module.cta} />;
+                return (
+                    <ThreeLinesCta
+                        data={module.data as I3LinesCtaData[]}
+                        cta={module.cta}
+                        actions={this.props.actions}
+                        account={this.props.account}
+                    />
+                );
 
             case ModuleTypes.BALANCES_GRID_ICONS:
                 return <BalanceGridIcons data={module.data as IBalanceGridData[]} />;

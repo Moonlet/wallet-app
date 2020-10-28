@@ -157,7 +157,6 @@ export class PosBasicActionComponent extends React.Component<
                     this.state.amount,
                     this.props.token.symbol,
                     undefined,
-                    this.props.navigation,
                     undefined
                 );
                 break;
@@ -169,7 +168,6 @@ export class PosBasicActionComponent extends React.Component<
                     this.props.validators,
                     this.props.token.symbol,
                     undefined,
-                    this.props.navigation,
                     undefined
                 );
                 break;
@@ -208,7 +206,6 @@ export class PosBasicActionComponent extends React.Component<
                         this.props.validators,
                         this.props.token.symbol,
                         undefined,
-                        this.props.navigation,
                         undefined
                     );
                 }
@@ -219,7 +216,6 @@ export class PosBasicActionComponent extends React.Component<
                     this.props.account,
                     this.props.validators,
                     this.props.token.symbol,
-                    this.props.navigation,
                     undefined
                 );
                 setTimeout(() => this.props.navigation.goBack(), 500);

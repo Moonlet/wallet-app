@@ -42,20 +42,34 @@ export class Zrc2Client {
         return info.decimals;
     }
 
-    public async getTokenInfo(contractAddress) {
-        const smartContractSubState = await this.client.getSmartContractSubState(
-            contractAddress,
-            'implementation'
-        );
+    public async getTokenInfo(proxyContractAddress) {
+        const proxyContractInit = await this.client.getSmartContractInit(proxyContractAddress);
 
-        const smartContractInit = await this.client.getSmartContractInit(
-            smartContractSubState?.implementation
-        );
+        let symbol = this.findSmartContractSubField(proxyContractInit, 'symbol')?.toUpperCase();
+        let name = this.findSmartContractSubField(proxyContractInit, 'name');
+        let decimals = this.findSmartContractSubField(proxyContractInit, 'decimals');
+
+        if (!symbol || !name || !decimals) {
+            const smartContractSubState = await this.client.getSmartContractSubState(
+                proxyContractAddress,
+                'implementation'
+            );
+
+            const contractInit = await this.client.getSmartContractInit(
+                smartContractSubState?.implementation
+            );
+
+            symbol =
+                symbol || this.findSmartContractSubField(contractInit, 'symbol')?.toUpperCase();
+            name = name || this.findSmartContractSubField(contractInit, 'name');
+            decimals = decimals || this.findSmartContractSubField(contractInit, 'decimals');
+        }
+        // console.log({contractAddress, smartContractSubState, smartContractInit})
 
         return {
-            symbol: this.findSmartContractSubField(smartContractInit, 'symbol').toUpperCase(),
-            name: this.findSmartContractSubField(smartContractInit, 'name'),
-            decimals: this.findSmartContractSubField(smartContractInit, 'decimals')
+            symbol,
+            name,
+            decimals
         };
     }
 

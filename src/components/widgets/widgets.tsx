@@ -10,6 +10,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { Separator } from './components/separator/separator';
 import {
+    I2LinesTextBannerData,
     I3LinesCtaData,
     IBalanceGridData,
     IImageBannerData,
@@ -25,11 +26,14 @@ import { StaticTextColBottomHeader } from './components/static-text-col-bottom-h
 import { BalanceGridIcons } from './components/balance-grid-icons/balance-grid-icons';
 import { Text } from '../../library';
 import { IAccountState } from '../../redux/wallets/state';
+import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
+import { ChainIdType } from '../../core/blockchain/types';
 
 interface IExternalProps {
     data: IScreenWidget[];
     actions: any;
     account: IAccountState;
+    chainId: ChainIdType;
 }
 
 interface IState {
@@ -104,16 +108,15 @@ class WidgetsComponent extends React.Component<
                 return <ImageBanner imageUrl={data.imageUrl} urlToOpen={module.cta.params.url} />;
             }
 
-            // case ModuleTypes.TWO_LINES_TEXT_BANNER:
-            //     return (
-            //         <QuickDelegateBanner
-            //             blockchain={this.props.blockchain}
-            //             account={props.account}
-            //             chainId={props.chainId}
-            //             style={styles.quickDelegateBannerContainer}
-            //             accountStats={props.accountStats}
-            //         />
-            //     );
+            case ModuleTypes.TWO_LINES_TEXT_BANNER:
+                return (
+                    <TwoLinesStakeBanner
+                        data={module.data[0] as I2LinesTextBannerData}
+                        cta={module.cta}
+                        account={this.props.account}
+                        chainId={this.props.chainId}
+                    />
+                );
 
             default:
                 return null;

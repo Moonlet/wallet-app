@@ -21,7 +21,7 @@ const ImageBannerComponent: React.FC<Props & IExternalProps> = ({
     styles
 }) => {
     return (
-        <TouchableOpacity onPress={() => openURL(urlToOpen)}>
+        <TouchableOpacity onPress={() => openURL(urlToOpen)} activeOpacity={0.9}>
             <SmartImage
                 style={styles.image}
                 source={{ uri: imageUrl }}

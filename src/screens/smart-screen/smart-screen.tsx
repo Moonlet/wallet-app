@@ -152,6 +152,7 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                             withdraw: this.props.withdraw
                         }}
                         account={this.props.account}
+                        chainId={this.props.chainId}
                     />
                 </View>
             );

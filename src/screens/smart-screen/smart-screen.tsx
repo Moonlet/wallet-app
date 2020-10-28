@@ -24,14 +24,14 @@ interface IExternalProps {
 
 const mapStateToProps = (state: IReduxState) => {
     const account = getSelectedAccount(state);
-    const chainId = getChainId(state, account.blockchain);
+    const chainId = account && getChainId(state, account.blockchain);
 
     return {
         dashboard: state.ui.screens.data.dashboard,
         token: state.ui.screens.data.token,
         accountStats:
             account && getAccountStats(state, account.blockchain, chainId, account.address),
-        walletPublicKey: getSelectedWallet(state).walletPublicKey,
+        walletPublicKey: getSelectedWallet(state)?.walletPublicKey,
         account,
         chainId
     };

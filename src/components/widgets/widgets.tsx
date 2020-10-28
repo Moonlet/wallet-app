@@ -70,7 +70,9 @@ class WidgetsComponent extends React.Component<
                 return <StaticTextColumn data={module.data as IStaticTextColumnData[]} />;
 
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return <StaticTextColumn data={module.data as IStaticTextColumnData[]} inverted />;
+                return (
+                    <StaticTextColumn data={module.data as IStaticTextColumnData[]} bottomHeader />
+                );
 
             case ModuleTypes.THREE_LINES_CTA:
                 return <ThreeLinesCta data={module.data as I3LinesCtaData[]} cta={module.cta} />;

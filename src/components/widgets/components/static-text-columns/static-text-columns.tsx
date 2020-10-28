@@ -8,13 +8,13 @@ import { Text } from '../../../../library';
 
 interface ExternalProps {
     data: IStaticTextColumnData[];
-    inverted?: boolean;
+    bottomHeader?: boolean;
 }
 
 const StaticTextColumnComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
 ) => {
-    const { data, inverted, styles, theme } = props;
+    const { data, bottomHeader, styles, theme } = props;
 
     const renderHeader = (item: IStaticTextColumnData) => {
         return (
@@ -49,7 +49,7 @@ const StaticTextColumnComponent = (
     return (
         <View style={styles.container}>
             {data.map(item => {
-                if (inverted)
+                if (bottomHeader)
                     return (
                         <View style={styles.itemContainer}>
                             {renderSecondaryValue(item)}

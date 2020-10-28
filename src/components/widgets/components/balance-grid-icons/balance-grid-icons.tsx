@@ -23,7 +23,7 @@ const BalanceGridIconsComponent = (
 
     return (
         <View style={styles.container}>
-            {data.map((item: IBalanceGridData) => {
+            {data.map((item: IBalanceGridData, index: number) => {
                 const tokenConfig = getTokenConfig(
                     item.balance.blockchain,
                     item.balance.tokenSymbol
@@ -35,7 +35,7 @@ const BalanceGridIconsComponent = (
                 );
 
                 return (
-                    <View style={styles.itemContainer}>
+                    <View key={`balance-grid-icons-${index}`} style={styles.itemContainer}>
                         <View style={styles.iconContainer}>
                             <Icon
                                 name={item.icon.value}

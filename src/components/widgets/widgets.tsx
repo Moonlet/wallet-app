@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, FlatList, Text } from 'react-native';
-import widgets from './widget.json';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
 import { StaticTextColumn } from './components/static-text-columns/static-text-columns';
@@ -13,14 +12,23 @@ import { ImageBanner } from './components/image-banner/image-banner';
 import { Summary } from './components/summary/summary';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { Separator } from './components/separator/sepratator';
-import { I3LinesCtaData, IScreenModule, IStaticTextColumnData, ModuleTypes } from './types';
+import {
+    I3LinesCtaData,
+    IScreenModule,
+    IScreenWidget,
+    IStaticTextColumnData,
+    ModuleTypes
+} from './types';
 
 interface IExternalProps {
+    data: IScreenWidget[];
     actions: any;
 }
 
-const WidgetsComponent = (props: IThemeProps<ReturnType<typeof stylesProvider>>) => {
-    const styles = props.styles;
+const WidgetsComponent = (
+    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
+    const { styles } = props;
 
     const renderItemModule = (item: IScreenModule) => {
         switch (item.type) {
@@ -80,11 +88,12 @@ const WidgetsComponent = (props: IThemeProps<ReturnType<typeof stylesProvider>>)
     const itemSeparator = () => {
         return <View style={styles.separatorContainer} />;
     };
+
     return (
         <View style={styles.generalFlex}>
             <FlatList
                 style={styles.generalFlex}
-                data={widgets.result.data.widgets}
+                data={props.data}
                 renderItem={item => renderItem(item)}
                 ItemSeparatorComponent={() => itemSeparator()}
             />

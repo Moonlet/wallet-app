@@ -6,12 +6,13 @@ import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { IScreenContext } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
-import { IScreenData } from '../../redux/ui/screens/data/state';
+import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput, activate } from '../../redux/wallets/actions/pos-actions';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -31,8 +32,8 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 interface IReduxProps {
-    dashboard: IScreenData;
-    token: IScreenData;
+    dashboard: IScreenDatas;
+    token: IScreenDatas;
 
     walletPublicKey: string;
     account: IAccountState;
@@ -53,13 +54,24 @@ const mapDispatchToProps = {
     withdraw
 };
 
-export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps> {
+interface IState {
+    screenData: IScreenData;
+    isLoading: boolean;
+    error: any;
+}
+
+export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
     constructor(props: IReduxProps & IExternalProps) {
         super(props);
+        this.state = {
+            screenData: undefined,
+            isLoading: true,
+            error: undefined
+        };
     }
 
     public componentDidMount() {
-        this.fetchScreenData();
+        this.props.fetchScreenData(this.props.context);
     }
 
     public componentDidUpdate(prevProps: IReduxProps & IExternalProps) {
@@ -69,12 +81,22 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
             this.props.chainId !== prevProps.chainId ||
             this.props.context?.tab !== prevProps.context?.tab
         ) {
-            this.fetchScreenData();
+            this.props.fetchScreenData(this.props.context);
+
+            this.setState({
+                screenData: undefined,
+                isLoading: true,
+                error: undefined
+            });
+        }
+
+        if (this.props.dashboard !== prevProps.dashboard || this.props.token !== prevProps.token) {
+            this.getScreenData();
         }
     }
 
-    private fetchScreenData() {
-        this.props.fetchScreenData(this.props.context);
+    private getScreenData() {
+        const { dashboard } = this.props;
 
         const screenKey = getScreenDataKey({
             pubKey: this.props.walletPublicKey,
@@ -84,24 +106,50 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
             tab: this.props.context?.tab
         });
 
-        if (screenKey) {
-            // console.log('screenKey', screenKey);
+        // console.log('screenKey: ', screenKey);
+
+        if (dashboard && dashboard[screenKey]) {
+            const screenData: IScreenData = dashboard[screenKey];
+
+            // console.log('screenData: ', screenData);
+
+            this.setState({
+                screenData,
+                isLoading: screenData.isLoading,
+                error: screenData.error
+            });
         }
     }
 
     public render() {
-        return (
-            <View>
-                <Widgets
-                    actions={{
-                        // TODO: add all acitons
-                        activate: this.props.activate,
-                        claimRewardNoInput: this.props.claimRewardNoInput,
-                        withdraw: this.props.withdraw
-                    }}
-                />
-            </View>
-        );
+        const { screenData } = this.state;
+
+        if (this.state.isLoading) {
+            // TODO: here we should render skeleton
+            return <LoadingIndicator />;
+        }
+
+        if (screenData.response?.widgets) {
+            return (
+                <View>
+                    <Widgets
+                        data={screenData.response.widgets}
+                        actions={{
+                            // TODO: add all acitons
+                            activate: this.props.activate,
+                            claimRewardNoInput: this.props.claimRewardNoInput,
+                            withdraw: this.props.withdraw
+                        }}
+                    />
+                </View>
+            );
+        }
+
+        // TODO: handle error
+        // if (this.state.error) {
+        //     //
+        // }
+        return null;
     }
 }
 

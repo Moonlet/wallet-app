@@ -6,7 +6,6 @@ import {
     IScreenResponse
 } from '../../../../components/widgets/types';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
-import { Blockchain } from '../../../../core/blockchain/types';
 import { AccountType } from '../../../wallets/state';
 import { IAction } from '../../../types';
 import { getSelectedAccount, getSelectedWallet } from '../../../wallets/selectors';
@@ -50,7 +49,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 type: wallet.type
             },
 
-            blockchain: Blockchain.ZILLIQA,
+            blockchain: account.blockchain,
             chainId: String(chainId),
             address: account.address,
             accountType: AccountType.DEFAULT

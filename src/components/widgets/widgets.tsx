@@ -171,6 +171,12 @@ class WidgetsComponent extends React.Component<
 
         return (
             <View key={`widget-${index}`} style={styles.widgetContainer}>
+                {widget.title && (
+                    <Text style={[styles.headerText, styles.headerTextNonExpandable]}>
+                        {widget.title}
+                    </Text>
+                )}
+
                 {widget.modules.map((module: IScreenModule, i: number) => (
                     <View key={`module-${i}`}>{this.renderModule(module)}</View>
                 ))}

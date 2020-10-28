@@ -102,7 +102,7 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
     }
 
     private getScreenData() {
-        const { dashboard } = this.props;
+        const { dashboard, token } = this.props;
 
         const screenKey = getScreenDataKey({
             pubKey: this.props.walletPublicKey,
@@ -121,6 +121,19 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                 error: screenData.error
             });
         }
+
+        if (token && token[screenKey]) {
+            const screenData: IScreenData = token[screenKey];
+
+            this.setState({
+                screenData,
+                isLoading: screenData.isLoading,
+                error: screenData.error
+            });
+        }
+
+        // no screen data, should handle this
+        // otherwise loading loop
     }
 
     public render() {

@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             justifyContent: 'space-around',
             paddingHorizontal: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION * 2
+            marginVertical: BASE_DIMENSION
         },
         headerValueText: {
             marginBottom: BASE_DIMENSION / 2,

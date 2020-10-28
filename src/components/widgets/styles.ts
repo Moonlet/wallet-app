@@ -26,6 +26,10 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.text
         },
+        headerTextNonExpandable: {
+            margin: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION * 2
+        },
         expandingArrow: {
             color: theme.colors.accent,
             alignSelf: 'center'

@@ -111,6 +111,7 @@ export interface I3LinesCtaData {
 // Used for `static-text-columns-top-header` and `static-text-columns-bottom-header`
 export interface IStaticTextColumnData {
     headerValue: string;
+    headerColor?: string;
     secondaryValue: string;
     secondaryColor?: string;
 }

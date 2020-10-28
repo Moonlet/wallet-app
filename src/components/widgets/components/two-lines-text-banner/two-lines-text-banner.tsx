@@ -54,7 +54,7 @@ const TwoLinesStakeBannerComponent = (
                     <Text style={styles.secondaryText}>{data.secondLine}</Text>
                 </View>
 
-                {data?.icon.value && (
+                {data?.icon?.value && (
                     <Icon name={data.icon.value} size={normalize(50)} style={styles.icon} />
                 )}
             </View>

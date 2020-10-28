@@ -141,10 +141,6 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                             claimRewardNoInput: this.props.claimRewardNoInput,
                             withdraw: this.props.withdraw
                         }}
-                        blockchain={this.props.account.blockchain}
-                        accountStats={this.props.accountStats}
-                        account={this.props.account}
-                        chainId={this.props.chainId}
                     />
                 </View>
             );

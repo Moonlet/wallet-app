@@ -148,16 +148,26 @@ export class SmartScreenComponent extends React.Component<
         const { screenData } = this.state;
 
         if (this.state.isLoading) {
-            return new Array(3).fill('').map((_, index: number) => (
-                <SkeletonPlaceholder
-                    key={`skelet-${index}`}
-                    backgroundColor={theme.colors.cardBackground}
-                    highlightColor={theme.colors.accentSecondary}
-                    speed={Math.floor(Math.random() * 700) + 900}
-                >
-                    <View style={styles.detailsSkeletonRow} />
-                </SkeletonPlaceholder>
-            ));
+            return (
+                <View style={styles.skeletonWrapper}>
+                    {new Array(4).fill('').map((_, index: number) => (
+                        <SkeletonPlaceholder
+                            key={`skelet-${index}`}
+                            backgroundColor={theme.colors.textTertiary}
+                            highlightColor={theme.colors.accent}
+                            speed={Math.floor(Math.random() * 700) + 1000}
+                        >
+                            <View style={styles.detailsSkeletonComp}>
+                                <View style={styles.detailsSkeletonIcon} />
+                                <View style={{ justifyContent: 'space-between' }}>
+                                    <View style={styles.detailsSkeletonPrimaryValue} />
+                                    <View style={styles.detailsSkeletonSecondaryValue} />
+                                </View>
+                            </View>
+                        </SkeletonPlaceholder>
+                    ))}
+                </View>
+            );
         }
 
         if (screenData?.response?.widgets) {

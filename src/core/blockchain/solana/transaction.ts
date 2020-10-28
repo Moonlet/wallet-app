@@ -10,19 +10,38 @@ import { TokenType } from '../types/token';
 import { Solana } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 // import SystemProgram from '@solana/web3.js/src/system-program';
+import { SystemProgram } from '@solana/web3.js/src/index';
+// import { Account } from '@solana/web3.js/src/account';
+import { Transaction } from '@solana/web3.js/src/transaction';
+// import { sendAndConfirmTransaction } from '@solana/web3.js/src/util/send-and-confirm-transaction';
 
 // import solanaWeb3 from '@solana/web3.js';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
-        // console.log('herrrrr', solanaWeb3.SystemProgram);
-        // const ttt = SystemProgram.transfer({
-        //     fromPubkey: tx.address,
-        //     toPubkey: tx.toAddress,
-        //     lamports: '1'
-        // });
+        // console.log('herrrrr', SystemProgram);
+        const trx: Transaction = SystemProgram.transfer({
+            fromPubkey: tx.address,
+            toPubkey: tx.toAddress,
+            lamports: '1'
+        });
 
-        // console.log('transaction', ttt);
+        trx.sign();
+        // trx.recentBlockhash = await this._recentBlockhash(false;);
+
+        // console.log('transaction', JSON.stringify(trx));
+
+        // let signature = '';
+        // try {
+        //     signature = await sendAndConfirmTransaction(
+        //         this.web3sol,
+        //         transaction,
+        //         [this.state.account],
+        //         { confirmations: 1 }
+        //     );
+        // } catch (err) {
+        //     throw err;
+        // }
 
         return;
 

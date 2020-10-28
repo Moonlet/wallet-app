@@ -134,7 +134,11 @@ class WidgetsComponent extends React.Component<
                         <View style={styles.itemHeader}>
                             <Text style={styles.headerText}>{widget.title}</Text>
                             <Icon
-                                name={IconValues.CHEVRON_DOWN}
+                                name={
+                                    isWidgetExpanded
+                                        ? IconValues.CHEVRON_UP
+                                        : IconValues.CHEVRON_DOWN
+                                }
                                 size={normalize(16)}
                                 style={styles.expandingArrow}
                             />

@@ -69,14 +69,14 @@ export interface IScreenWidget {
 export interface IScreenModule {
     displayWhen?: 'collapsed' | 'expanded'; // if undefined, it will be displayed always
     type:
-        | '3-lines-cta'
-        | 'static-text-columns-top-header'
-        | 'static-text-columns-bottom-header'
-        | 'balances-grid-icons'
-        | 'single-balance-icon'
-        | 'image-banner'
-        | '2-lines-text-banner'
-        | 'separator';
+        | ModuleTypes.THREE_LINES_CTA
+        | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
+        | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
+        | ModuleTypes.BALANCES_GRID_ICONS
+        | ModuleTypes.SINGLE_BALANCE_ICON
+        | ModuleTypes.IMAGE_BANNER
+        | ModuleTypes.TWO_LINES_TEXT_BANNER
+        | ModuleTypes.SEPARATOR;
     cta?: ICta;
     data: (
         | I3LinesCtaData

@@ -21,8 +21,6 @@ const ThreeLinesCtaComponent = (
 ) => {
     const { actions, data, cta, styles } = props;
 
-    // console.log(JSON.stringify(cta.params, null, 4));
-
     const handleOnPress = () => {
         switch (cta.params.action) {
             case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
@@ -39,21 +37,15 @@ const ThreeLinesCtaComponent = (
                 );
                 break;
 
-            // case PosBasicActionType.WITHDRAW: {
-            //     this.props.withdraw(
-            //         this.props.account,
-            //         this.props.token.symbol,
-            //         this.props.navigation,
-            //         {
-            //             witdrawIndex: widget?.index,
-            //             validatorId: widget?.validator?.id,
-            //             validatorName: widget?.validator?.name,
-            //             amount: widget?.value
-            //         },
-            //         undefined
-            //     );
-            //     break;
-            // }
+            case PosBasicActionType.WITHDRAW: {
+                actions.withdraw(
+                    props.account,
+                    cta.params.params.tokenSymbol,
+                    { amount: cta.params.params.amount },
+                    undefined
+                );
+                break;
+            }
 
             default:
                 break;

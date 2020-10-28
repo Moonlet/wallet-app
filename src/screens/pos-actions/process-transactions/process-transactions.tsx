@@ -229,13 +229,15 @@ export class ProcessTransactionsComponent extends React.Component<
             }
             case PosBasicActionType.WITHDRAW: {
                 topText = translate('App.labels.withdraw') + ' ' + amount;
-                middleText =
-                    translate('App.labels.from').toLowerCase() +
-                        ' ' +
-                        tx.additionalInfo?.validatorName ||
+                const validatorName =
+                    tx.additionalInfo?.validatorName ||
                     tx.additionalInfo?.validator?.name ||
                     tx.additionalInfo?.validatorId ||
                     tx.additionalInfo?.validator?.id;
+
+                if (validatorName) {
+                    translate('App.labels.from').toLowerCase() + ' ' + validatorName;
+                }
                 break;
             }
             case PosBasicActionType.SEND: {

@@ -73,7 +73,6 @@ export const claimRewardNoInput = (
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    // validators
     posAction(
         account,
         undefined,

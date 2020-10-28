@@ -9,16 +9,29 @@ import { TransactionStatus } from '../../wallet/types';
 import { TokenType } from '../types/token';
 import { Solana } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+// import SystemProgram from '@solana/web3.js/src/system-program';
+
+// import solanaWeb3 from '@solana/web3.js';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
-        const pubKey = Solana.account.privateToPublic(privateKey);
+        // console.log('herrrrr', solanaWeb3.SystemProgram);
+        // const ttt = SystemProgram.transfer({
+        //     fromPubkey: tx.address,
+        //     toPubkey: tx.toAddress,
+        //     lamports: '1'
+        // });
+
+        // console.log('transaction', ttt);
+
+        return;
+
         const transaction: any = {
             // tslint:disable-next-line: no-bitwise
             version: (Number(tx.chainId) << 16) + 1, // add replay protection
             toAddr: tx.toAddress,
             nonce: tx.nonce,
-            pubKey,
+            // pubKey,
             amount: tx.amount,
             gasPrice: tx.feeOptions.gasPrice.toString(),
             gasLimit: tx.feeOptions.gasLimit.toString(),

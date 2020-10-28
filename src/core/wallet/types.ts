@@ -22,7 +22,12 @@ export interface IWallet {
         index: number,
         indexTo?: number
     ): Promise<IAccountState[]>;
-    sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
-    getPrivateKey(blockchain: Blockchain, accountIndex: number): string;
+    sign(
+        blockchain: Blockchain,
+        accountIndex: number,
+        tx: IBlockchainTransaction,
+        accountType: AccountType
+    ): Promise<string>;
+    getPrivateKey(blockchain: Blockchain, accountIndex: number, accountType: AccountType): string;
     getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }>;
 }

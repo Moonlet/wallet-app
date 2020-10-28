@@ -11,6 +11,7 @@ import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
 
 export class SolanaAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex): string {
+        if (accountIndex === -1) return '';
         return `${accountIndex}'`;
     }
 

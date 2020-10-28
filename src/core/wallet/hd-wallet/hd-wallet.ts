@@ -98,11 +98,20 @@ export class HDWallet implements IWallet {
         }
     }
 
-    public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {
+    public getPrivateKey(
+        blockchain: Blockchain,
+        accountIndex: number,
+        accountType: AccountType
+    ): string {
         const blockchainInstance = getBlockchain(blockchain);
         const key = HDKeyFactory.get(blockchainInstance.config.derivationType, this.seed).derive(
             blockchainInstance.config.derivationPath
         );
+
+        if (accountType === AccountType.ROOT) {
+            return blockchainInstance.account.getPrivateKeyFromDerived(key);
+        }
+
         const derivation = key.derive(
             `m/${blockchainInstance.account.getAccountDerivationPath(accountIndex)}`
         );
@@ -112,11 +121,12 @@ export class HDWallet implements IWallet {
     public async sign(
         blockchain: Blockchain,
         accountIndex: number,
-        tx: IBlockchainTransaction
+        tx: IBlockchainTransaction,
+        accountType: AccountType
     ): Promise<any> {
         return getBlockchain(blockchain).transaction.sign(
             tx,
-            this.getPrivateKey(blockchain, accountIndex)
+            this.getPrivateKey(blockchain, accountIndex, accountType)
         );
     }
 

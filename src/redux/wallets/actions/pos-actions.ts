@@ -317,7 +317,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             sign: (
                 blockchain: Blockchain,
                 accountIndex: number,
-                transaction: IBlockchainTransaction
+                transaction: IBlockchainTransaction,
+                accountType: AccountType
             ) => Promise<any>;
         } =
             appWallet.type === WalletType.HW
@@ -354,7 +355,12 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     nonce: currentBlockchainNonce + nrPendingTransactions
                 };
 
-                signed = await wallet.sign(transaction.blockchain, account.index, transaction);
+                signed = await wallet.sign(
+                    transaction.blockchain,
+                    account.index,
+                    transaction,
+                    account.type
+                );
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
             } catch (e) {
                 if (e === 'LEDGER_SIGN_CANCELLED') {

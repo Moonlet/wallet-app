@@ -277,7 +277,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 4),
             wallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, 0),
             wallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 0),
-            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
             wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
             wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 2),
             wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 3),
@@ -563,7 +563,8 @@ export const sendTransferTransaction = (
             sign: (
                 blockchain: Blockchain,
                 accountIndex: number,
-                transaction: IBlockchainTransaction
+                transaction: IBlockchainTransaction,
+                accountType: AccountType
             ) => Promise<any>;
         } =
             appWallet.type === WalletType.HW
@@ -599,7 +600,8 @@ export const sendTransferTransaction = (
             ...tx,
             nonce: currentBlockchainNonce + nrPendingTransactions
         };
-        const transaction = await wallet.sign(account.blockchain, account.index, tx);
+
+        const transaction = await wallet.sign(account.blockchain, account.index, tx, account.type);
 
         // if (appWallet.type === WalletType.HD) {
         await LoadingModal.showMessage({
@@ -768,6 +770,7 @@ export const deleteAccount = (
     blockchain: Blockchain,
     accountId: string,
     accountIndex: number,
+    accountType: AccountType,
     password: string
 ) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const state = getState();
@@ -777,7 +780,7 @@ export const deleteAccount = (
         pass: password
     });
 
-    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex);
+    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex, accountType);
 
     const chainId = getChainId(state, blockchain);
     const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
@@ -862,7 +865,12 @@ export const createNearAccount = (name: string, extension: string, password: str
 
     for (let index = 0; index < txs.length; index++) {
         try {
-            const transaction = await hdWallet.sign(blockchain, account.index, txs[index]);
+            const transaction = await hdWallet.sign(
+                blockchain,
+                account.index,
+                txs[index],
+                account.type
+            );
 
             const txHash = await client.sendTransaction(transaction);
 

@@ -88,6 +88,7 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         ) {
             this.props.fetchScreenData(this.props.context);
 
+            // TODO: handle this
             this.setState({
                 screenData: undefined,
                 isLoading: true,

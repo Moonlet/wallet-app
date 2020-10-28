@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
-import { StaticTextColumn } from './components/static-text-columns/static-text-columns';
 import { ThreeLinesCta } from './components/three-lines-cta/three-lines-cta';
 import Icon from '../icon/icon';
 import stylesProvider from './styles';
@@ -21,6 +20,8 @@ import {
     ModuleTypes
 } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
+import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
+import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -67,12 +68,10 @@ class WidgetsComponent extends React.Component<
     private renderModule(module: IScreenModule) {
         switch (module.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                return <StaticTextColumn data={module.data as IStaticTextColumnData[]} />;
+                return <StaticTextColTopHeader data={module.data as IStaticTextColumnData[]} />;
 
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return (
-                    <StaticTextColumn data={module.data as IStaticTextColumnData[]} bottomHeader />
-                );
+                return <StaticTextColBottomHeader data={module.data as IStaticTextColumnData[]} />;
 
             case ModuleTypes.THREE_LINES_CTA:
                 return <ThreeLinesCta data={module.data as I3LinesCtaData[]} cta={module.cta} />;

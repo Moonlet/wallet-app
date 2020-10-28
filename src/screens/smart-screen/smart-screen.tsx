@@ -12,9 +12,11 @@ import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
-import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
 import { AccountStats } from '../../core/blockchain/types/stats';
+import { SkeletonPlaceholder } from '../../components/skeleton-placeholder/skeleton-placeholder';
+import stylesProvider from './styles';
+import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -63,8 +65,13 @@ interface IState {
     error: any;
 }
 
-export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
-    constructor(props: IReduxProps & IExternalProps) {
+export class SmartScreenComponent extends React.Component<
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
         this.state = {
             screenData: undefined,
@@ -137,11 +144,20 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
     }
 
     public render() {
+        const { styles, theme } = this.props;
         const { screenData } = this.state;
 
         if (this.state.isLoading) {
-            // TODO: here we should render skeleton
-            return <LoadingIndicator />;
+            return new Array(3).fill('').map((_, index: number) => (
+                <SkeletonPlaceholder
+                    key={`skelet-${index}`}
+                    backgroundColor={theme.colors.cardBackground}
+                    highlightColor={theme.colors.accentSecondary}
+                    speed={Math.floor(Math.random() * 700) + 900}
+                >
+                    <View style={styles.detailsSkeletonRow} />
+                </SkeletonPlaceholder>
+            ));
         }
 
         if (screenData?.response?.widgets) {
@@ -161,13 +177,13 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         }
 
         // TODO: handle error
-        // if (this.state.error) {
-        //     //
-        // }
+        // this.state.error
+        // Show error widget with retry button
         return null;
     }
 }
 
 export const SmartScreen = smartConnect<IExternalProps>(SmartScreenComponent, [
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withTheme(stylesProvider)
 ]);

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalizeFontAndLineHeight, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,22 +8,8 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             justifyContent: 'space-between'
         },
-        itemContainer: {
-            backgroundColor: theme.colors.cardBackground,
-            borderRadius: BORDER_RADIUS
-        },
-        generalFlex: {
-            flex: 1,
-            marginBottom: BASE_DIMENSION + 2
-        },
-        modulesContainer: {
-            flex: 1,
-            marginTop: BASE_DIMENSION,
-            marginHorizontal: BASE_DIMENSION
-        },
-        separatorContainer: {
-            height: BASE_DIMENSION,
-            backgroundColor: theme.colors.appBackground
+        widgetContainer: {
+            marginBottom: BASE_DIMENSION
         },
         itemHeader: {
             flexDirection: 'row',
@@ -35,9 +21,8 @@ export default (theme: ITheme) =>
         },
         headerText: {
             fontSize: normalizeFontAndLineHeight(18),
-            fontWeight: '400',
             lineHeight: normalizeFontAndLineHeight(22),
-            letterSpacing: -0.4,
+            fontWeight: '400',
             color: theme.colors.text
         },
         expandingArrow: {

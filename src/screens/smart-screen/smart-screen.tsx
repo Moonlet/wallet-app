@@ -106,12 +106,8 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
             tab: this.props.context?.tab
         });
 
-        // console.log('screenKey: ', screenKey);
-
         if (dashboard && dashboard[screenKey]) {
             const screenData: IScreenData = dashboard[screenKey];
-
-            // console.log('screenData: ', screenData);
 
             this.setState({
                 screenData,

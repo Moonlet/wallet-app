@@ -7,7 +7,6 @@ export default (theme: ITheme) =>
         separator: {
             height: 1,
             flex: 1,
-            backgroundColor: theme.colors.inputBackground,
             marginVertical: BASE_DIMENSION * 2
         }
     });

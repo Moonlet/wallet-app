@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
 import { StaticTextColumn } from './components/static-text-columns/static-text-columns';
@@ -8,17 +8,19 @@ import Icon from '../icon/icon';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { ImageBanner } from './components/image-banner/image-banner';
 import { Summary } from './components/summary/summary';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
-import { Separator } from './components/separator/sepratator';
+import { Separator } from './components/separator/separator';
 import {
     I3LinesCtaData,
+    IImageBannerData,
     IScreenModule,
     IScreenWidget,
+    ISeparatorData,
     IStaticTextColumnData,
     ModuleTypes
 } from './types';
+import { ImageBanner } from './components/image-banner/image-banner';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -30,73 +32,104 @@ const WidgetsComponent = (
 ) => {
     const { styles } = props;
 
-    const renderItemModule = (item: IScreenModule) => {
-        switch (item.type) {
+    const renderModule = (module: IScreenModule) => {
+        switch (module.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                return <StaticTextColumn data={item.data as IStaticTextColumnData[]} />;
+                return <StaticTextColumn data={module.data as IStaticTextColumnData[]} />;
+
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return <StaticTextColumn data={item.data as IStaticTextColumnData[]} inverted />;
+                return <StaticTextColumn data={module.data as IStaticTextColumnData[]} inverted />;
+
             case ModuleTypes.THREE_LINES_CTA:
-                return <ThreeLinesCta data={item.data as I3LinesCtaData[]} cta={item.cta} />;
+                return <ThreeLinesCta data={module.data as I3LinesCtaData[]} cta={module.cta} />;
+
             case ModuleTypes.BALANCES_GRID_ICONS:
-                return <Summary data={item.data} />;
-            case ModuleTypes.SEPARATOR:
-                return <Separator />;
+                return <Summary data={module.data} />;
+
+            case ModuleTypes.SEPARATOR: {
+                const data: ISeparatorData = module.data[0] as ISeparatorData;
+                return <Separator color={data?.color} />;
+            }
+
             case ModuleTypes.SINGLE_BALANCE_ICON:
-                return <SingleBalanceIcon data={item.data} />;
+                return <SingleBalanceIcon data={module.data} />;
+
+            case ModuleTypes.IMAGE_BANNER: {
+                const data: IImageBannerData = module.data[0] as IImageBannerData;
+
+                return <ImageBanner imageUrl={data.imageUrl} urlToOpen={module.cta.params.url} />;
+            }
+
             default:
                 return null;
         }
     };
 
-    const renderModules = modules => {
+    const renderWidget = (widget: IScreenWidget, index: number) => {
+        // widget.title
+
+        if (widget?.expandable) {
+            return (
+                <View key={`widget-${index}`} style={styles.widgetContainer}>
+                    <View style={styles.itemHeader}>
+                        <Text style={styles.headerText}>{widget.title}</Text>
+                        <Icon
+                            name={IconValues.CHEVRON_DOWN}
+                            size={normalize(16)}
+                            style={styles.expandingArrow}
+                        />
+                    </View>
+                    {widget.modules.map((module: IScreenModule, i: number) => (
+                        <View key={`module-${i}`}>{renderModule(module)}</View>
+                    ))}
+                </View>
+            );
+        }
+
         return (
-            <View style={styles.modulesContainer}>
-                {modules.map(item => {
-                    return renderItemModule(item);
-                })}
+            <View key={`widget-${index}`} style={styles.widgetContainer}>
+                {widget.modules.map((module: IScreenModule, i: number) => (
+                    <View key={`module-${i}`}>{renderModule(module)}</View>
+                ))}
             </View>
         );
-    };
 
-    const renderItem = ({ item }) => {
-        switch (item.modules[0].type) {
-            case ModuleTypes.IMAGE_BANNER:
-                return (
-                    <ImageBanner
-                        imageUrl={item.modules[0].data[0].imageUrl}
-                        urlToOpen={item.modules[0].cta.params.url}
-                    />
-                );
-            default:
-                return (
-                    <View style={styles.itemContainer}>
-                        <View style={styles.itemHeader}>
-                            <Text style={styles.headerText}>{item.title}</Text>
-                            <Icon
-                                name={IconValues.CHEVRON_DOWN}
-                                size={normalize(16)}
-                                style={styles.expandingArrow}
-                            />
-                        </View>
-                        {renderModules(item.modules)}
-                    </View>
-                );
-        }
-    };
+        // return (
+        //     <View key={`widget-${index}`} style={styles.widgetContainer}>
+        //         <View style={styles.itemHeader}>
+        //             <Text style={styles.headerText}>{widget.title}</Text>
+        //             <Icon
+        //                 name={IconValues.CHEVRON_DOWN}
+        //                 size={normalize(16)}
+        //                 style={styles.expandingArrow}
+        //             />
+        //         </View>
+        //         {renderModules(widget.modules)}
+        //     </View>
+        // );
 
-    const itemSeparator = () => {
-        return <View style={styles.separatorContainer} />;
+        // switch (item.modules[0].type) {
+
+        //     default:
+        //         return (
+        //             <View style={styles.itemContainer}>
+        //                 <View style={styles.itemHeader}>
+        //                     <Text style={styles.headerText}>{item.title}</Text>
+        //                     <Icon
+        //                         name={IconValues.CHEVRON_DOWN}
+        //                         size={normalize(16)}
+        //                         style={styles.expandingArrow}
+        //                     />
+        //                 </View>
+        //                 {renderModules(item.modules)}
+        //             </View>
+        //         );
+        // }
     };
 
     return (
-        <View style={styles.generalFlex}>
-            <FlatList
-                style={styles.generalFlex}
-                data={props.data}
-                renderItem={item => renderItem(item)}
-                ItemSeparatorComponent={() => itemSeparator()}
-            />
+        <View>
+            {props.data.map((widget: IScreenWidget, index: number) => renderWidget(widget, index))}
         </View>
     );
 };

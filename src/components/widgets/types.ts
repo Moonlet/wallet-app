@@ -95,7 +95,8 @@ export enum ModuleTypes {
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
     SEPARATOR = 'separator',
-    IMAGE_BANNER = 'image-banner'
+    IMAGE_BANNER = 'image-banner',
+    TWO_LINES_TEXT_BANNER = '2-lines-text-banner'
 }
 
 /// IModulesData \\\

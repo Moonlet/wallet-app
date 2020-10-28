@@ -28,5 +28,8 @@ export default (theme: ITheme) =>
         expandingArrow: {
             color: theme.colors.accent,
             alignSelf: 'center'
+        },
+        quickDelegateBannerContainer: {
+            marginBottom: BASE_DIMENSION
         }
     });

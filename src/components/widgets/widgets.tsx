@@ -21,10 +21,18 @@ import {
     ModuleTypes
 } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
+import { Blockchain } from '../../core/blockchain/types';
+import { AccountStats } from '../../core/blockchain/types/stats';
+import { IAccountState } from '../../redux/wallets/state';
+import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
 
 interface IExternalProps {
     data: IScreenWidget[];
     actions: any;
+    blockchain: Blockchain;
+    accountStats: AccountStats;
+    account: IAccountState;
+    chainId: string;
 }
 
 const WidgetsComponent = (
@@ -50,6 +58,17 @@ const WidgetsComponent = (
                 const data: ISeparatorData = module.data[0] as ISeparatorData;
                 return <Separator color={data?.color} />;
             }
+
+            case ModuleTypes.TWO_LINES_TEXT_BANNER:
+                return (
+                    <QuickDelegateBanner
+                        blockchain={props.blockchain}
+                        account={props.account}
+                        chainId={props.chainId}
+                        style={styles.quickDelegateBannerContainer}
+                        accountStats={props.accountStats}
+                    />
+                );
 
             case ModuleTypes.SINGLE_BALANCE_ICON:
                 return <SingleBalanceIcon data={module.data} />;

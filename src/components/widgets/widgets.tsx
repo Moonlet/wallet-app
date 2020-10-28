@@ -28,6 +28,7 @@ import { Text } from '../../library';
 import { IAccountState } from '../../redux/wallets/state';
 import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
 import { ChainIdType } from '../../core/blockchain/types';
+import { ExpandableContainer } from '../expandable-container/expandable-container';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -161,18 +162,20 @@ class WidgetsComponent extends React.Component<
                         </View>
 
                         {widget.modules.map((module: IScreenModule, i: number) => {
-                            let showModule = false;
+                            if (!module?.displayWhen) {
+                                return <View key={`module-${i}`}>{this.renderModule(module)}</View>;
+                            }
 
+                            let showModule = false;
                             if (!module?.displayWhen || isWidgetExpanded) {
                                 showModule = true;
                             }
 
                             return (
                                 <View key={`module-${i}`}>
-                                    {showModule && this.renderModule(module)}
-                                    {/* <ExpandableContainer isExpanded={showModule}>
+                                    <ExpandableContainer isExpanded={showModule}>
                                         {this.renderModule(module)}
-                                    </ExpandableContainer> */}
+                                    </ExpandableContainer>
                                 </View>
                             );
                         })}

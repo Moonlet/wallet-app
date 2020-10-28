@@ -79,22 +79,22 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
 
     public componentDidUpdate(prevProps: IReduxProps & IExternalProps) {
         if (
-            this.props.account !== prevProps.account ||
-            this.props.walletPublicKey !== prevProps.walletPublicKey ||
-            this.props.chainId !== prevProps.chainId ||
+            (this.props.account && this.props.account !== prevProps.account) ||
+            (this.props.walletPublicKey &&
+                this.props.walletPublicKey !== prevProps.walletPublicKey) ||
+            (this.props.chainId && this.props.chainId !== prevProps.chainId) ||
             this.props.context?.tab !== prevProps.context?.tab
         ) {
             this.props.fetchScreenData(this.props.context);
-
-            // TODO: handle this
-            this.setState({
-                screenData: undefined,
-                isLoading: true,
-                error: undefined
-            });
+            this.getScreenData();
         }
 
-        if (this.props.dashboard !== prevProps.dashboard || this.props.token !== prevProps.token) {
+        // TODO: needs to be fixed for tab account
+
+        if (
+            (this.props.dashboard && this.props.dashboard !== prevProps.dashboard) ||
+            (this.props.token && this.props.token !== prevProps.token)
+        ) {
             this.getScreenData();
         }
     }
@@ -113,21 +113,23 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         if (dashboard && dashboard[screenKey]) {
             const screenData: IScreenData = dashboard[screenKey];
 
-            this.setState({
-                screenData,
-                isLoading: screenData.isLoading,
-                error: screenData.error
-            });
+            screenData &&
+                this.setState({
+                    screenData,
+                    isLoading: screenData.isLoading,
+                    error: screenData.error
+                });
         }
 
         if (token && token[screenKey]) {
             const screenData: IScreenData = token[screenKey];
 
-            this.setState({
-                screenData,
-                isLoading: screenData.isLoading,
-                error: screenData.error
-            });
+            screenData &&
+                this.setState({
+                    screenData,
+                    isLoading: screenData.isLoading,
+                    error: screenData.error
+                });
         }
 
         // no screen data, should handle this
@@ -142,7 +144,7 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
             return <LoadingIndicator />;
         }
 
-        if (screenData.response?.widgets) {
+        if (screenData?.response?.widgets) {
             return (
                 <View>
                     <Widgets

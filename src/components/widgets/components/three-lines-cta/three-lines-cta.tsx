@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
+import { Button } from '../../../../library';
 
 export interface I3LinesCtaData {
     firstLine: string;
@@ -25,15 +26,16 @@ export const ThreeLinesCtaComponent: React.FC<IThemeProps<ReturnType<typeof styl
                 <Text style={styles.thirdLine}>{data[0].thirdLine}</Text>
             </View>
             <View style={styles.actionButtonContainer}>
-                <TouchableOpacity
-                    style={[styles.actionButton, { backgroundColor: cta.buttonProps.colors.bg }]}
+                <Button
+                    style={[{ backgroundColor: cta.buttonProps.colors.bg }, styles.actionButton]}
+                    primary={cta.buttonProps.primary}
                 >
                     <Text
                         style={[{ color: cta.buttonProps.colors.label }, styles.actionButtonText]}
                     >
                         {cta.label}
                     </Text>
-                </TouchableOpacity>
+                </Button>
             </View>
         </View>
     );

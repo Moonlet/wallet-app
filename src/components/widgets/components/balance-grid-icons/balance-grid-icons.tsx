@@ -9,7 +9,6 @@ import { formatNumber } from '../../../../core/utils/format-number';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
-import { Blockchain } from '../../../../core/blockchain/types';
 import { IBalanceGridData } from '../../types';
 
 interface IExternalProps {
@@ -24,10 +23,12 @@ const BalanceGridIconsComponent = (
     return (
         <View style={styles.container}>
             {data.map((item: IBalanceGridData) => {
-                // TODO: send blockchain
-                const tokenConfig = getTokenConfig(Blockchain.ZILLIQA, item.balance.symbol);
+                const tokenConfig = getTokenConfig(
+                    item.balance.blockchain,
+                    item.balance.tokenSymbol
+                );
 
-                const balance = getBlockchain(Blockchain.ZILLIQA).account.amountFromStd(
+                const balance = getBlockchain(item.balance.blockchain).account.amountFromStd(
                     new BigNumber(item.balance.value),
                     tokenConfig.decimals
                 );
@@ -44,7 +45,7 @@ const BalanceGridIconsComponent = (
                         <View style={styles.labelValuesContainer}>
                             <Text style={styles.valueLabel}>
                                 {formatNumber(balance, {
-                                    currency: item.balance.symbol,
+                                    currency: item.balance.tokenSymbol,
                                     maximumFractionDigits: 2
                                 })}
                             </Text>

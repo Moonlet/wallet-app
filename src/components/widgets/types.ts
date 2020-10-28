@@ -121,7 +121,8 @@ export interface IBalanceGridData {
     label?: string;
     balance: {
         value: string; // BigNumber.toFixed()
-        symbol: string; // Token Symbol
+        tokenSymbol: string;
+        blockchain: Blockchain;
     };
     icon: {
         value: IconValues | string;

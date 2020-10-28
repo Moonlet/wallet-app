@@ -24,7 +24,6 @@ export default (theme: ITheme) =>
         headerText: {
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(22),
-            fontWeight: '400',
             color: theme.colors.text
         },
         expandingArrow: {

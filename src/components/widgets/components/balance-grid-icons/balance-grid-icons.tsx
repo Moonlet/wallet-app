@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -10,6 +10,7 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { IBalanceGridData } from '../../types';
+import { Text } from '../../../../library';
 
 interface IExternalProps {
     data: IBalanceGridData[];
@@ -38,7 +39,7 @@ const BalanceGridIconsComponent = (
                         <View style={styles.iconContainer}>
                             <Icon
                                 name={item.icon.value}
-                                size={normalize(28)}
+                                size={normalize(24)}
                                 style={{ color: item.icon.color, alignSelf: 'center' }}
                             />
                         </View>

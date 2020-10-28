@@ -37,12 +37,11 @@ export default (theme: ITheme) =>
             fontWeight: '400',
             fontSize: normalizeFontAndLineHeight(16),
             lineHeight: normalizeFontAndLineHeight(21),
-            color: theme.colors.text
+            color: theme.colors.white
         },
         labelText: {
             fontSize: normalizeFontAndLineHeight(15),
-            fontWeight: '400',
             lineHeight: normalizeFontAndLineHeight(20),
-            color: theme.colors.textTertiary
+            color: theme.colors.textSecondary
         }
     });

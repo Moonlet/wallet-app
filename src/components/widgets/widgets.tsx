@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
 import { ThreeLinesCta } from './components/three-lines-cta/three-lines-cta';
@@ -23,6 +23,7 @@ import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
 import { BalanceGridIcons } from './components/balance-grid-icons/balance-grid-icons';
+import { Text } from '../../library';
 
 interface IExternalProps {
     data: IScreenWidget[];

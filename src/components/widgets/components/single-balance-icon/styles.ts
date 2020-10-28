@@ -4,17 +4,17 @@ import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
     normalize,
-    BORDER_RADIUS
+    BORDER_RADIUS,
+    LETTER_SPACING
 } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
             paddingHorizontal: BASE_DIMENSION
         },
         imageContainer: {
@@ -27,9 +27,9 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         labelText: {
-            fontWeight: '400',
             fontSize: normalizeFontAndLineHeight(23),
             lineHeight: normalizeFontAndLineHeight(34),
-            color: theme.colors.white
+            color: theme.colors.white,
+            letterSpacing: LETTER_SPACING
         }
     });

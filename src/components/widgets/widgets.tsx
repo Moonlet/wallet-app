@@ -7,11 +7,11 @@ import Icon from '../icon/icon';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Summary } from './components/summary/summary';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { Separator } from './components/separator/separator';
 import {
     I3LinesCtaData,
+    IBalanceGridData,
     IImageBannerData,
     IScreenModule,
     IScreenWidget,
@@ -22,6 +22,7 @@ import {
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
+import { BalanceGridIcons } from './components/balance-grid-icons/balance-grid-icons';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -77,7 +78,7 @@ class WidgetsComponent extends React.Component<
                 return <ThreeLinesCta data={module.data as I3LinesCtaData[]} cta={module.cta} />;
 
             case ModuleTypes.BALANCES_GRID_ICONS:
-                return <Summary data={module.data} />;
+                return <BalanceGridIcons data={module.data as IBalanceGridData[]} />;
 
             case ModuleTypes.SEPARATOR: {
                 const data: ISeparatorData = module.data[0] as ISeparatorData;
@@ -85,7 +86,7 @@ class WidgetsComponent extends React.Component<
             }
 
             case ModuleTypes.SINGLE_BALANCE_ICON:
-                return <SingleBalanceIcon data={module.data} />;
+                return <SingleBalanceIcon data={module.data[0] as IBalanceGridData} />;
 
             case ModuleTypes.IMAGE_BANNER: {
                 const data: IImageBannerData = module.data[0] as IImageBannerData;

@@ -6,8 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         separator: {
             height: 1,
-            flex: 1,
-            marginVertical: BASE_DIMENSION * 2,
-            paddingHorizontal: BASE_DIMENSION
+            width: '100%',
+            marginVertical: BASE_DIMENSION + BASE_DIMENSION / 2
         }
     });

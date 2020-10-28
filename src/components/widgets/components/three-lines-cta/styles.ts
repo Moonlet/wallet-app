@@ -11,7 +11,8 @@ export default (theme: ITheme) =>
         container: {
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: BASE_DIMENSION + 2
+            marginBottom: BASE_DIMENSION + 2,
+            paddingHorizontal: BASE_DIMENSION
         },
         generalFlex: {
             flex: 1

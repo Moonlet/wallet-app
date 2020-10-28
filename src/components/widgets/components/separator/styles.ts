@@ -7,6 +7,7 @@ export default (theme: ITheme) =>
         separator: {
             height: 1,
             flex: 1,
-            marginVertical: BASE_DIMENSION * 2
+            marginVertical: BASE_DIMENSION * 2,
+            paddingHorizontal: BASE_DIMENSION
         }
     });

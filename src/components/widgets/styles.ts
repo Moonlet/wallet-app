@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,7 +9,9 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         widgetContainer: {
-            marginBottom: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION,
+            backgroundColor: theme.colors.cardBackground,
+            borderRadius: BORDER_RADIUS
         },
         itemHeader: {
             flexDirection: 'row',

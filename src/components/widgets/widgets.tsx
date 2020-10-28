@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
 import { StaticTextColumn } from './components/static-text-columns/static-text-columns';
@@ -109,8 +109,7 @@ class WidgetsComponent extends React.Component<
     }
 
     private renderWidget(widget: IScreenWidget, index: number) {
-        // widget.title
-        const { styles, theme } = this.props;
+        const { styles } = this.props;
         const { widgetsExpandedState } = this.state;
 
         if (widget?.expandable) {
@@ -122,15 +121,17 @@ class WidgetsComponent extends React.Component<
             }
 
             return (
-                <TouchableHighlight
+                <TouchableOpacity
+                    key={`widget-${index}`}
+                    style={styles.widgetContainer}
+                    activeOpacity={0.9}
                     onPress={() => {
                         const wigetsState = widgetsExpandedState;
                         wigetsState[widgetKey] = !wigetsState[widgetKey];
                         this.setState({ widgetsExpandedState: wigetsState });
                     }}
-                    underlayColor={theme.colors.cardBackground}
                 >
-                    <View key={`widget-${index}`} style={styles.widgetContainer}>
+                    <View>
                         <View style={styles.itemHeader}>
                             <Text style={styles.headerText}>{widget.title}</Text>
                             <Icon
@@ -161,7 +162,7 @@ class WidgetsComponent extends React.Component<
                             );
                         })}
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             );
         }
 
@@ -172,38 +173,6 @@ class WidgetsComponent extends React.Component<
                 ))}
             </View>
         );
-
-        // return (
-        //     <View key={`widget-${index}`} style={styles.widgetContainer}>
-        //         <View style={styles.itemHeader}>
-        //             <Text style={styles.headerText}>{widget.title}</Text>
-        //             <Icon
-        //                 name={IconValues.CHEVRON_DOWN}
-        //                 size={normalize(16)}
-        //                 style={styles.expandingArrow}
-        //             />
-        //         </View>
-        //         {renderModules(widget.modules)}
-        //     </View>
-        // );
-
-        // switch (item.modules[0].type) {
-
-        //     default:
-        //         return (
-        //             <View style={styles.itemContainer}>
-        //                 <View style={styles.itemHeader}>
-        //                     <Text style={styles.headerText}>{item.title}</Text>
-        //                     <Icon
-        //                         name={IconValues.CHEVRON_DOWN}
-        //                         size={normalize(16)}
-        //                         style={styles.expandingArrow}
-        //                     />
-        //                 </View>
-        //                 {renderModules(item.modules)}
-        //             </View>
-        //         );
-        // }
     }
 
     public render() {

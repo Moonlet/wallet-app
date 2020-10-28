@@ -11,7 +11,8 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flexDirection: 'row',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            paddingHorizontal: BASE_DIMENSION
         },
         itemContainer: {
             flex: 1,

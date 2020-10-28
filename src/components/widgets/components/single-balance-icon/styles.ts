@@ -14,7 +14,8 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION
         },
         imageContainer: {
             width: normalize(38),

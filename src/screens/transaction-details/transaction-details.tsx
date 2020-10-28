@@ -112,7 +112,7 @@ export class TransactionDetailsComponent extends React.Component<
                         15
                     );
                     const formatAmountGzil = formatNumber(amountGzil, {
-                        currency: blockchainConfig.config.coin,
+                        currency: 'gZIL',
                         maximumFractionDigits: 8
                     });
 

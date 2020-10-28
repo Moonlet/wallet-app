@@ -33,17 +33,11 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         actionButtonContainer: {
-            flex: 0.7,
-            justifyContent: 'center',
-            alignItems: 'flex-end'
+            flex: 0.5,
+            justifyContent: 'center'
         },
         actionButton: {
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: normalize(50),
-            marginRight: BASE_DIMENSION,
-            minWidth: normalize(100), // might need a different imp
-            borderRadius: BASE_DIMENSION + 2
+            height: normalize(60)
         },
         actionButtonText: {
             fontSize: normalizeFontAndLineHeight(17),

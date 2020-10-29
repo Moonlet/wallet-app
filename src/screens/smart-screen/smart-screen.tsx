@@ -17,6 +17,8 @@ import { AccountStats } from '../../core/blockchain/types/stats';
 import { SkeletonPlaceholder } from '../../components/skeleton-placeholder/skeleton-placeholder';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
+import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
+import { translate } from '../../core/i18n';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -187,9 +189,23 @@ export class SmartScreenComponent extends React.Component<
             );
         }
 
-        // TODO: handle error
-        // this.state.error
-        // Show error widget with retry button
+        if (this.state.error) {
+            return (
+                <ErrorWidget
+                    header={translate('Widgets.wentWrong')}
+                    body={translate('Widgets.didNotLoad')}
+                    cta={{
+                        label: translate('App.labels.retry'),
+                        onPress: () => {
+                            this.props.fetchScreenData(this.props.context);
+                            this.getScreenData();
+                            this.setState({ isLoading: true });
+                        }
+                    }}
+                />
+            );
+        }
+
         return null;
     }
 }

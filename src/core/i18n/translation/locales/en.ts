@@ -666,6 +666,10 @@ export const translation: ITranslations = {
             alertCancelTitle: 'Transactions pending',
             alertCancelMessage:
                 'There are transaction pending signing. Are you sure you want to cancel?'
+        },
+        Widgets: {
+            wentWrong: 'Oops, something went wrong...',
+            didNotLoad: 'Widgets didn’t load. Please try again.'
         }
     },
     plural: (n: number, ord?: boolean) => {

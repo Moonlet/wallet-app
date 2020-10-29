@@ -126,9 +126,7 @@ export class SmartScreenComponent extends React.Component<
                     isLoading: screenData.isLoading,
                     error: screenData.error
                 });
-        }
-
-        if (token && token[screenKey]) {
+        } else if (token && token[screenKey]) {
             const screenData: IScreenData = token[screenKey];
 
             screenData &&
@@ -137,10 +135,13 @@ export class SmartScreenComponent extends React.Component<
                     isLoading: screenData.isLoading,
                     error: screenData.error
                 });
+        } else {
+            this.setState({
+                screenData: undefined,
+                isLoading: true,
+                error: undefined
+            });
         }
-
-        // no screen data, should handle this
-        // otherwise loading loop
     }
 
     public render() {

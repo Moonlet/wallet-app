@@ -10,12 +10,15 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION,
             marginVertical: BASE_DIMENSION
         },
-        headerValueText: {
+        row: {
+            flexDirection: 'row'
+        },
+        headerText: {
             marginBottom: BASE_DIMENSION / 2,
             textAlign: 'center',
             fontSize: normalizeFontAndLineHeight(13)
         },
-        secondaryValueText: {
+        bodyText: {
             textAlign: 'center',
             fontWeight: '500'
         }

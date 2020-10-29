@@ -152,10 +152,8 @@ export interface I3LinesCtaData {
 
 // Used for `static-text-columns-top-header` and `static-text-columns-bottom-header`
 export interface IStaticTextColumnData {
-    headerValue: string;
-    headerColor?: string;
-    secondaryValue: string;
-    secondaryColor?: string;
+    header: IData[];
+    body: IData[];
 }
 
 // Used for`balances-grid-icons` and `single-balance-icon`
@@ -179,8 +177,8 @@ export interface IImageBannerData {
 
 // Used for `2-lines-text-banner`
 export interface I2LinesTextBannerData {
-    firstLine: string;
-    secondLine: string;
+    firstLine: IData[];
+    secondLine: IData[];
     icon?: {
         value: IconValues;
         color?: string;

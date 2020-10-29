@@ -15,6 +15,9 @@ export default (theme: ITheme) =>
             paddingVertical: BASE_DIMENSION + BASE_DIMENSION / 2,
             paddingLeft: BASE_DIMENSION * 2
         },
+        row: {
+            flexDirection: 'row'
+        },
         textContainer: {
             flex: 1,
             flexDirection: 'column',

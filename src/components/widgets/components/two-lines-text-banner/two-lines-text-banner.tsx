@@ -3,7 +3,6 @@ import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Text } from '../../../../library';
 import { I2LinesTextBannerData, ICta } from '../../types';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { normalize } from '../../../../styles/dimensions';
@@ -11,6 +10,7 @@ import Icon from '../../../icon/icon';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
+import { formatDataJSXElements } from '../../utils';
 
 interface ExternalProps {
     data: I2LinesTextBannerData;
@@ -50,8 +50,12 @@ const TwoLinesStakeBannerComponent = (
                 ]}
             >
                 <View style={styles.textContainer}>
-                    <Text style={styles.mainText}>{data.firstLine}</Text>
-                    <Text style={styles.secondaryText}>{data.secondLine}</Text>
+                    <View style={styles.row}>
+                        {formatDataJSXElements(data.firstLine, styles.mainText)}
+                    </View>
+                    <View style={styles.row}>
+                        {formatDataJSXElements(data.secondLine, styles.secondaryText)}
+                    </View>
                 </View>
 
                 {data?.icon?.value && (

@@ -12,10 +12,13 @@ export default (theme: ITheme) =>
         itemContainer: {
             flex: 1
         },
-        headerValueText: {
+        row: {
+            flexDirection: 'row'
+        },
+        headerText: {
             fontSize: normalizeFontAndLineHeight(15)
         },
-        secondaryValueText: {
+        bodyText: {
             fontWeight: '500',
             fontSize: normalizeFontAndLineHeight(16),
             marginBottom: BASE_DIMENSION / 2

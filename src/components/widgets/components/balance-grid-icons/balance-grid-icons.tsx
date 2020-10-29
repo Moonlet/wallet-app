@@ -5,12 +5,8 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
-import { formatNumber } from '../../../../core/utils/format-number';
-import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import BigNumber from 'bignumber.js';
 import { IBalanceGridData } from '../../types';
-import { Text } from '../../../../library';
+import { formatDataJSXElements } from '../../utils';
 
 interface IExternalProps {
     data: IBalanceGridData[];
@@ -24,16 +20,6 @@ const BalanceGridIconsComponent = (
     return (
         <View style={styles.container}>
             {data.map((item: IBalanceGridData, index: number) => {
-                const tokenConfig = getTokenConfig(
-                    item.balance.blockchain,
-                    item.balance.tokenSymbol
-                );
-
-                const balance = getBlockchain(item.balance.blockchain).account.amountFromStd(
-                    new BigNumber(item.balance.value),
-                    tokenConfig.decimals
-                );
-
                 return (
                     <View key={`balance-grid-icons-${index}`} style={styles.itemContainer}>
                         <View style={styles.iconContainer}>
@@ -44,13 +30,12 @@ const BalanceGridIconsComponent = (
                             />
                         </View>
                         <View style={styles.labelValuesContainer}>
-                            <Text style={styles.valueLabel}>
-                                {formatNumber(balance, {
-                                    currency: item.balance.tokenSymbol,
-                                    maximumFractionDigits: 2
-                                })}
-                            </Text>
-                            <Text style={styles.labelText}>{item.label}</Text>
+                            <View style={styles.row}>
+                                {formatDataJSXElements(item.balance, styles.valueLabel)}
+                            </View>
+                            <View style={styles.row}>
+                                {formatDataJSXElements(item.label, styles.labelText)}
+                            </View>
                         </View>
                     </View>
                 );

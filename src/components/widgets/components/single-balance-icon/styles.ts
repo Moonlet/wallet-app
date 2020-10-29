@@ -26,7 +26,10 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center'
         },
-        labelText: {
+        row: {
+            flexDirection: 'row'
+        },
+        text: {
             fontSize: normalizeFontAndLineHeight(23),
             lineHeight: normalizeFontAndLineHeight(34),
             color: theme.colors.white,

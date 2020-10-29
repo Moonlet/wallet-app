@@ -21,6 +21,9 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION,
             marginRight: BASE_DIMENSION
         },
+        row: {
+            flexDirection: 'row'
+        },
         iconContainer: {
             width: normalize(36),
             height: normalize(36),

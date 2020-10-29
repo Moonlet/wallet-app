@@ -158,12 +158,8 @@ export interface IStaticTextColumnData {
 
 // Used for`balances-grid-icons` and `single-balance-icon`
 export interface IBalanceGridData {
-    label?: string;
-    balance: {
-        value: string; // BigNumber.toFixed()
-        tokenSymbol: string;
-        blockchain: Blockchain;
-    };
+    balance: IData[];
+    label?: IData[];
     icon: {
         value: IconValues | string;
         color: string;

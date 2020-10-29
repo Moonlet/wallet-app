@@ -121,11 +121,14 @@ export const formatDataJSXElements = (data: IData | IData[], baseStyle: any): JS
 
     const finalData: JSX.Element[] = [];
 
-    for (const d of data) {
+    for (const [index, d] of data.entries()) {
         switch (d.type) {
             case DataType.TEXT:
                 finalData.push(
-                    <Text style={[baseStyle, d?.style && formatStyles(d.style)]}>
+                    <Text
+                        key={`data-text-${index}`}
+                        style={[baseStyle, d?.style && formatStyles(d.style)]}
+                    >
                         {formatTextData(d.data as ITextData)}
                     </Text>
                 );
@@ -133,7 +136,10 @@ export const formatDataJSXElements = (data: IData | IData[], baseStyle: any): JS
 
             case DataType.CURRENCY:
                 finalData.push(
-                    <Text style={[baseStyle, d?.style && formatStyles(d.style)]}>
+                    <Text
+                        key={`data-currency-${index}`}
+                        style={[baseStyle, d?.style && formatStyles(d.style)]}
+                    >
                         {formatCurrencyData(d.data as ICurrencyData)}
                     </Text>
                 );

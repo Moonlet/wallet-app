@@ -85,7 +85,7 @@ class WidgetsComponent extends React.Component<
             case ModuleTypes.THREE_LINES_CTA:
                 return (
                     <ThreeLinesCta
-                        data={module.data as I3LinesCtaData[]}
+                        data={module.data[0] as I3LinesCtaData}
                         cta={module.cta}
                         actions={this.props.actions}
                         account={this.props.account}

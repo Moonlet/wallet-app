@@ -11,7 +11,7 @@ import { IAccountState } from '../../../../redux/wallets/state';
 import { formatDataJSXElements } from '../../utils';
 
 interface ExternalProps {
-    data: I3LinesCtaData[];
+    data: I3LinesCtaData;
     cta: ICta;
     actions: any;
     account: IAccountState;
@@ -57,13 +57,13 @@ const ThreeLinesCtaComponent = (
         <View style={styles.container}>
             <View style={styles.generalFlex}>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data[0].firstLine, styles.firstLineText)}
+                    {formatDataJSXElements(data.firstLine, styles.firstLineText)}
                 </View>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data[0].secondLine, styles.secondLine)}
+                    {formatDataJSXElements(data.secondLine, styles.secondLine)}
                 </View>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data[0].thirdLine, styles.thirdLine)}
+                    {formatDataJSXElements(data.thirdLine, styles.thirdLine)}
                 </View>
             </View>
 

@@ -2,6 +2,7 @@ import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
 import BigNumber from 'bignumber.js';
 import klona from 'klona';
+import { Platform } from 'react-native';
 
 export const CELO_GOLD_NATIVE: ITokenConfigState = {
     name: 'Celo Gold',
@@ -14,7 +15,10 @@ export const CELO_GOLD_NATIVE: ITokenConfigState = {
     decimals: 18,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: Platform.select({
+            default: TokenScreenComponentType.DELEGATE,
+            web: TokenScreenComponentType.DEFAULT
+        })
     },
     type: TokenType.NATIVE,
     units: {
@@ -36,7 +40,10 @@ export const CELO_GOLD_TESTNET_ALFAJORES: ITokenConfigState = {
     decimals: 18,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: Platform.select({
+            default: TokenScreenComponentType.DELEGATE,
+            web: TokenScreenComponentType.DEFAULT
+        })
     },
     type: TokenType.ERC20,
     units: {

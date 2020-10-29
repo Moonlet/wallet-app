@@ -8,6 +8,7 @@ import { IconValues } from '../../../components/icon/values';
 import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
+import { Platform } from 'react-native';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -20,7 +21,10 @@ export const ZIL_NATIVE: ITokenConfigState = {
     decimals: 12,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: Platform.select({
+            default: TokenScreenComponentType.DELEGATE,
+            web: TokenScreenComponentType.DEFAULT
+        })
     },
     type: TokenType.NATIVE,
     units: {

@@ -101,11 +101,53 @@ export enum ModuleTypes {
 
 /// IModulesData \\\
 
+export enum DataType {
+    TEXT = 'TEXT',
+    CURRENCY = 'CURRENCY'
+}
+
+export interface ITextData {
+    value: string | number;
+    params?: {
+        [param: string]: ITextData | ICurrencyData;
+    };
+}
+
+export interface ICurrencyData {
+    value: string | number;
+    symbol: string;
+    decimals?: number;
+    round?: {
+        decimals: number;
+        type?: 'UP' | 'DOWN';
+    };
+    beautify?: {
+        fromValue?: number;
+        decimals: number;
+    };
+}
+
+export interface IDataStyle {
+    [key: string]:
+        | string
+        | number
+        | {
+              value: string | number;
+              fn: 'normalize' | 'normalizeFontAndLineHeight';
+          };
+}
+
+export interface IData {
+    type: DataType;
+    style?: IDataStyle;
+    data: ITextData | ICurrencyData;
+}
+
 // Used for `3-lines-cta`
 export interface I3LinesCtaData {
-    firstLine: string;
-    secondLine: string;
-    thirdLine: string;
+    firstLine: IData[];
+    secondLine: IData[];
+    thirdLine: IData[];
 }
 
 // Used for `static-text-columns-top-header` and `static-text-columns-bottom-header`

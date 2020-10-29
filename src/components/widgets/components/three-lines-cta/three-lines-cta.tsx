@@ -8,6 +8,7 @@ import { I3LinesCtaData, ICta } from '../../types';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { buildDummyValidator } from '../../../../redux/wallets/actions';
 import { IAccountState } from '../../../../redux/wallets/state';
+import { formatDataJSXElements } from '../../utils';
 
 interface ExternalProps {
     data: I3LinesCtaData[];
@@ -55,9 +56,15 @@ const ThreeLinesCtaComponent = (
     return (
         <View style={styles.container}>
             <View style={styles.generalFlex}>
-                <Text style={styles.firstLineText}>{data[0].firstLine}</Text>
-                <Text style={styles.secondLine}>{data[0].secondLine}</Text>
-                <Text style={styles.thirdLine}>{data[0].thirdLine}</Text>
+                <View style={styles.row}>
+                    {formatDataJSXElements(data[0].firstLine, styles.firstLineText)}
+                </View>
+                <View style={styles.row}>
+                    {formatDataJSXElements(data[0].secondLine, styles.secondLine)}
+                </View>
+                <View style={styles.row}>
+                    {formatDataJSXElements(data[0].thirdLine, styles.thirdLine)}
+                </View>
             </View>
 
             <View style={styles.actionButtonContainer}>

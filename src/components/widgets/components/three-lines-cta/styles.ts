@@ -13,6 +13,10 @@ export default (theme: ITheme) =>
         generalFlex: {
             flex: 1
         },
+        row: {
+            flexDirection: 'row',
+            alignItems: 'baseline'
+        },
         firstLineText: {
             fontWeight: '500',
             marginBottom: BASE_DIMENSION

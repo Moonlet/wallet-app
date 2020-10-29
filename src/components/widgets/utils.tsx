@@ -4,18 +4,33 @@ import { Text } from '../../library';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import { formatTranslate } from '../../core/i18n';
+
+const instanceOfICurrencyData = (object: any): object is ICurrencyData => {
+    return 'symbol' in object;
+};
 
 const formatTextData = (data: ITextData): string => {
     let text = '';
-    // Static text
-    text = String(data.value);
 
     if (data?.params) {
-        // TODO
-    }
+        // Translated text
 
-    // Translated text
-    // TODO
+        const translateKeys = {};
+
+        for (const param of Object.keys(data.params)) {
+            const val = data.params[param];
+
+            translateKeys[param] = instanceOfICurrencyData(val)
+                ? formatCurrencyData(val as ICurrencyData)
+                : formatTextData(val as ITextData);
+        }
+
+        text = formatTranslate(String(data.value), translateKeys);
+    } else {
+        // Static text
+        text = String(data.value);
+    }
 
     return text;
 };

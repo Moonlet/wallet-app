@@ -6,6 +6,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
+import { Platform } from 'react-native';
 
 export const NEAR_NATIVE: ITokenConfigState = {
     name: 'Near',
@@ -18,7 +19,10 @@ export const NEAR_NATIVE: ITokenConfigState = {
     decimals: 24,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: Platform.select({
+            default: TokenScreenComponentType.DELEGATE,
+            web: TokenScreenComponentType.DEFAULT
+        })
     },
     type: TokenType.NATIVE,
     units: {

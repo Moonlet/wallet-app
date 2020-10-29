@@ -184,6 +184,7 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
+                            {Platform.OS !== 'web' && <PasswordModal.Component />}
                             <AppContainer
                                 ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
                                 theme="dark"
@@ -219,7 +220,6 @@ export default class App extends React.Component<{}, IState> {
                             {Platform.OS !== 'android' && !this.state.displayApplication && (
                                 <ImageCanvas />
                             )}
-                            {Platform.OS !== 'web' && <PasswordModal.Component />}
                             <ProcessTransactions />
                             <TransactionRequestScreen />
                             <BottomSheet />

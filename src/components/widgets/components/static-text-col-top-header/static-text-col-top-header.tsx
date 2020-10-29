@@ -18,7 +18,7 @@ const StaticTextColTopHeaderComponent = (
     return (
         <View style={styles.container}>
             {data.map((item: IStaticTextColumnData, index: number) => (
-                <View key={`static-text-col-top-header-${index}`} style={styles.itemRow}>
+                <View key={`static-text-col-top-header-${index}`}>
                     <View style={styles.row}>
                         {formatDataJSXElements(item.header, styles.headerText)}
                     </View>

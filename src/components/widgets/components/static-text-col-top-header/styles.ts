@@ -6,22 +6,22 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flexDirection: 'row',
-            marginVertical: BASE_DIMENSION
-        },
-        itemRow: {
-            flex: 1
+            marginVertical: BASE_DIMENSION,
+            flexWrap: 'wrap',
+            justifyContent: 'space-evenly'
         },
         row: {
-            flexDirection: 'row',
-            justifyContent: 'center'
+            //
         },
         headerText: {
             marginBottom: BASE_DIMENSION / 2,
             fontSize: normalizeFontAndLineHeight(13),
-            color: theme.colors.textSecondary
+            color: theme.colors.textSecondary,
+            textAlign: 'center'
         },
         bodyText: {
             fontWeight: '600',
-            color: theme.colors.text
+            color: theme.colors.text,
+            textAlign: 'center'
         }
     });

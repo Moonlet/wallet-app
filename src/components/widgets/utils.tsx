@@ -6,24 +6,23 @@ import { formatNumber } from '../../core/utils/format-number';
 import { normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
 import { formatTranslate } from '../../core/i18n';
 
-const instanceOfICurrencyData = (object: any): object is ICurrencyData => {
-    return 'symbol' in object;
-};
-
 const formatTextData = (data: ITextData): string => {
     let text = '';
 
     if (data?.params) {
         // Translated text
-
         const translateKeys = {};
 
         for (const param of Object.keys(data.params)) {
             const val = data.params[param];
 
-            translateKeys[param] = instanceOfICurrencyData(val)
-                ? formatCurrencyData(val as ICurrencyData)
-                : formatTextData(val as ITextData);
+            if (val.type === DataType.TEXT) {
+                translateKeys[param] = formatTextData(val.data as ITextData);
+            }
+
+            if (val.type === DataType.CURRENCY) {
+                translateKeys[param] = formatCurrencyData(val.data as ICurrencyData);
+            }
         }
 
         text = formatTranslate(String(data.value), translateKeys);

@@ -109,12 +109,12 @@ export enum DataType {
 export interface ITextData {
     value: string | number;
     params?: {
-        [param: string]: ITextData | ICurrencyData;
+        [param: string]: IData;
     };
 }
 
 export interface ICurrencyData {
-    value: string | number;
+    value: string;
     symbol: string;
     decimals?: number;
     round?: {

@@ -1,7 +1,7 @@
 import { IScreenDataState } from './state';
 import { IAction } from '../../../types';
 import { FETCH_SCREEN_DATA, START_LOADING } from './actions';
-import { ContextScreen, IScreenRequest } from '../../../../components/widgets/types';
+import { IScreenRequest } from '../../../../components/widgets/types';
 import { Blockchain } from '../../../../core/blockchain/types';
 
 const intialState: IScreenDataState = {
@@ -49,28 +49,12 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 tab: request.context?.tab
             });
 
-            if (request.context.screen === ContextScreen.DASHBOARD) {
-                return {
-                    ...state,
-                    dashboard: {
-                        ...state.dashboard,
-                        [key]: action.data
-                    }
-                };
-            }
-
-            if (request.context.screen === ContextScreen.TOKEN) {
-                return {
-                    ...state,
-                    token: {
-                        ...state.token,
-                        [key]: action.data
-                    }
-                };
-            }
-
             return {
-                ...state
+                ...state,
+                [request.context.screen]: {
+                    ...state[request.context.screen],
+                    [key]: action.data
+                }
             };
         }
 

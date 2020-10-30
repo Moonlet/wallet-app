@@ -80,6 +80,17 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 error: !data && screenResponse?.message
             }
         });
+
+        if (!screenResponse?.result?.data) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    request: body,
+                    screenResponse
+                })
+            });
+
+            SentryCaptureException(new Error('Fetch /walletUi/screen'));
+        }
     } catch (error) {
         // handle error
         dispatch({
@@ -88,14 +99,17 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 request: body,
                 response: undefined,
                 isLoading: false,
-                error
+                error: error || 'ERROR FETCH_SCREEN_DATA'
             }
         });
 
         SentryAddBreadcrumb({
-            message: JSON.stringify({ request: body, error })
+            message: JSON.stringify({
+                request: body,
+                error
+            })
         });
 
-        SentryCaptureException(new Error(JSON.stringify(error)));
+        SentryCaptureException(new Error('Fetch /walletUi/screen'));
     }
 };

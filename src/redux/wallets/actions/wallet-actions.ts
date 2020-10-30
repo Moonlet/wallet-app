@@ -433,7 +433,7 @@ export const updateTransactionFromBlockchain = (
 
     try {
         transaction = await client.utils.getTransaction(transactionHash, {
-            address: selectedAccount.address
+            address: selectedAccount?.address
         });
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
@@ -493,24 +493,30 @@ export const updateTransactionFromBlockchain = (
                   )
                 : wallets[0];
 
-        const transactionAccount =
-            wallet.accounts.find(account => account.address.toLowerCase() === receivingAddress) ||
-            wallet.accounts.find(account => account.address.toLowerCase() === transaction.address);
+        let transactionAccount;
+        if (wallet) {
+            transactionAccount =
+                wallet.accounts.find(
+                    account => account.address.toLowerCase() === receivingAddress
+                ) ||
+                wallet.accounts.find(
+                    account => account.address.toLowerCase() === transaction.address
+                );
 
-        // update balance
-        getBalance(
-            blockchain,
-            transactionAccount.address,
-            transaction.token.symbol,
-            true
-        )(dispatch, getState);
+            // update balance
+            getBalance(
+                blockchain,
+                transactionAccount.address,
+                transaction.token.symbol,
+                true
+            )(dispatch, getState);
+        }
 
         // const currentChainId = getChainId(state, blockchain);
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
 
-        const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
-
         if (navigateToTransaction) {
+            const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
             const navigationParams: NavigationParams = {
                 blockchain,
                 accountIndex: transactionAccount.index,

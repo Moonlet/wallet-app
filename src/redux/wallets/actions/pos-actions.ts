@@ -73,17 +73,31 @@ export const claimRewardNoInput = (
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    posAction(
-        account,
-        undefined,
-        validators,
-        token,
-        undefined,
-        extraFields,
-        goBack,
-        PosBasicActionType.CLAIM_REWARD_NO_INPUT,
-        sendResponse
-    )(dispatch, getState);
+    if (getNrPendingTransactions(getState())) {
+        const nvServiceFn =
+            NavigationService.getCurrentRoute() === 'Dashboard' ? 'navigate' : 'replace';
+        Dialog.alert(
+            translate('Validator.cannotInitiateTxTitle'),
+            translate('Validator.cannotInitiateTxMessage'),
+            undefined,
+            {
+                text: translate('App.labels.ok'),
+                onPress: () => NavigationService[nvServiceFn]('TransactonsHistory', {})
+            }
+        );
+    } else {
+        posAction(
+            account,
+            undefined,
+            validators,
+            token,
+            undefined,
+            extraFields,
+            goBack,
+            PosBasicActionType.CLAIM_REWARD_NO_INPUT,
+            sendResponse
+        )(dispatch, getState);
+    }
 };
 
 export const delegate = (
@@ -181,17 +195,31 @@ export const withdraw = (
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    posAction(
-        account,
-        undefined,
-        undefined,
-        token,
-        undefined,
-        extraFields,
-        goBack,
-        PosBasicActionType.WITHDRAW,
-        sendResponse
-    )(dispatch, getState);
+    if (getNrPendingTransactions(getState())) {
+        const nvServiceFn =
+            NavigationService.getCurrentRoute() === 'Dashboard' ? 'navigate' : 'replace';
+        Dialog.alert(
+            translate('Validator.cannotInitiateTxTitle'),
+            translate('Validator.cannotInitiateTxMessage'),
+            undefined,
+            {
+                text: translate('App.labels.ok'),
+                onPress: () => NavigationService[nvServiceFn]('TransactonsHistory', {})
+            }
+        );
+    } else {
+        posAction(
+            account,
+            undefined,
+            undefined,
+            token,
+            undefined,
+            extraFields,
+            goBack,
+            PosBasicActionType.WITHDRAW,
+            sendResponse
+        )(dispatch, getState);
+    }
 };
 
 export const unvote = (

@@ -104,9 +104,9 @@ export class SmartScreenComponent extends React.Component<
 
         const screenKey = getScreenDataKey({
             pubKey: this.props.walletPublicKey,
-            blockchain: this.props.account.blockchain,
+            blockchain: this.props.account?.blockchain,
             chainId: this.props.chainId,
-            address: this.props.account.address,
+            address: this.props.account?.address,
             tab: this.props.context?.tab
         });
 

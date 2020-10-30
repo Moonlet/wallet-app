@@ -13,12 +13,12 @@ export interface IScreenContext {
 }
 
 export enum ContextScreen {
-    DASHBOARD = 'DASHBOARD',
-    TOKEN = 'TOKEN'
+    DASHBOARD = 'dashboard',
+    TOKEN = 'token'
 }
 
 export enum ContextTab {
-    ACCOUNT = 'ACCOUNT'
+    ACCOUNT = 'account'
 }
 
 export interface IScreenUser {

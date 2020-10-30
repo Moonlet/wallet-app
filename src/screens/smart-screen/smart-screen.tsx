@@ -58,11 +58,26 @@ const mapDispatchToProps = {
     withdraw
 };
 
+interface IState {
+    loadingAnimationDone: boolean;
+}
+
 export class SmartScreenComponent extends React.Component<
-    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+        this.state = {
+            loadingAnimationDone: false
+        };
+    }
+
     public componentDidMount() {
         this.props.fetchScreenData(this.props.context);
+        this.resetLoadingAnimation();
     }
 
     public componentDidUpdate(prevProps: IReduxProps & IExternalProps) {
@@ -74,7 +89,14 @@ export class SmartScreenComponent extends React.Component<
             this.props.context?.tab !== prevProps.context?.tab
         ) {
             this.props.fetchScreenData(this.props.context);
+            this.resetLoadingAnimation();
         }
+    }
+
+    private resetLoadingAnimation() {
+        this.setState({ loadingAnimationDone: false }, () =>
+            setTimeout(() => this.setState({ loadingAnimationDone: true }), 300)
+        );
     }
 
     public render() {
@@ -91,7 +113,10 @@ export class SmartScreenComponent extends React.Component<
         if (screenData && screenKey && screenData[screenKey]) {
             const data = screenData[screenKey];
 
-            if (data.isLoading && !data.response) {
+            if (
+                (data.isLoading && !data.response) ||
+                (!this.state.loadingAnimationDone && data.response?.widgets.length === 0) // maybe find a better way to handle this
+            ) {
                 return (
                     <View style={styles.skeletonWrapper}>
                         {new Array(4).fill('').map((_, index: number) => (

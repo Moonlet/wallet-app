@@ -11,6 +11,10 @@ import { IAction } from '../../../types';
 import { getSelectedAccount, getSelectedWallet } from '../../../wallets/selectors';
 import { Platform } from 'react-native';
 import { getChainId } from '../../../preferences/selectors';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const START_LOADING = 'START_LOADING';
@@ -87,5 +91,11 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 error
             }
         });
+
+        SentryAddBreadcrumb({
+            message: JSON.stringify({ request: body, error })
+        });
+
+        SentryCaptureException(new Error(JSON.stringify(error)));
     }
 };

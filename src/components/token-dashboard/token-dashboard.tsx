@@ -21,6 +21,7 @@ import { AccountStats } from '../../core/blockchain/types/stats';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
 import { SmartScreen } from '../../screens/smart-screen/smart-screen';
+import { ContextScreen } from '../widgets/types';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -101,7 +102,11 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    <SmartScreen context={{ screen: 'dashboard' }} />
+                    <SmartScreen
+                        context={{
+                            screen: ContextScreen.DASHBOARD
+                        }}
+                    />
 
                     {this.props.account?.tokens &&
                         this.props.chainId &&

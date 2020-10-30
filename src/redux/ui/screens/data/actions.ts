@@ -13,15 +13,19 @@ import { Platform } from 'react-native';
 import { getChainId } from '../../../preferences/selectors';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
+export const START_LOADING = 'START_LOADING';
 
 export const fetchScreenData = (context: IScreenContext) => async (
     dispatch: Dispatch<
-        IAction<{
-            request: IScreenRequest;
-            response: IScreenResponse;
-            isLoading: boolean;
-            error: any;
-        }>
+        IAction<
+            | { request: IScreenRequest }
+            | {
+                  request: IScreenRequest;
+                  response: IScreenResponse;
+                  isLoading: boolean;
+                  error: any;
+              }
+        >
     >,
     getState: () => IReduxState
 ) => {
@@ -38,10 +42,9 @@ export const fetchScreenData = (context: IScreenContext) => async (
             tab: context?.tab
         },
         user: {
-            os: Platform.OS as 'ios' | 'android',
+            os: Platform.OS as 'ios' | 'android' | 'web',
             deviceId: state.preferences.deviceId,
             theme: 'dark',
-            country: 'Moon',
             lang: 'en',
 
             wallet: {
@@ -55,6 +58,8 @@ export const fetchScreenData = (context: IScreenContext) => async (
             accountType: AccountType.DEFAULT
         }
     };
+
+    dispatch({ type: START_LOADING, data: { request: body } });
 
     try {
         const screenResponse = await apiClient.http.post('/walletUi/screen', body);

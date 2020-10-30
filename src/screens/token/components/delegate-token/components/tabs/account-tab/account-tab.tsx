@@ -20,6 +20,7 @@ import { fetchValidators } from '../../../../../../../redux/ui/validators/action
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 import { Dialog } from '../../../../../../../components/dialog/dialog';
 import { SmartScreen } from '../../../../../../smart-screen/smart-screen';
+import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 
 interface IExternalProps {
     accountIndex: number;
@@ -126,8 +127,8 @@ export class AccountTabComponent extends React.Component<
 
                         <SmartScreen
                             context={{
-                                screen: 'token',
-                                tab: 'account'
+                                screen: ContextScreen.TOKEN,
+                                tab: ContextTab.ACCOUNT
                             }}
                         />
                     </ScrollView>

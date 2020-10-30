@@ -1,7 +1,7 @@
 import { IScreenDataState } from './state';
 import { IAction } from '../../../types';
-import { FETCH_SCREEN_DATA } from './actions';
-import { IScreenRequest } from '../../../../components/widgets/types';
+import { FETCH_SCREEN_DATA, START_LOADING } from './actions';
+import { ContextScreen, IScreenRequest } from '../../../../components/widgets/types';
 import { Blockchain } from '../../../../core/blockchain/types';
 
 const intialState: IScreenDataState = {
@@ -11,9 +11,8 @@ const intialState: IScreenDataState = {
 
 export default (state: IScreenDataState = intialState, action: IAction): IScreenDataState => {
     switch (action.type) {
-        case FETCH_SCREEN_DATA:
+        case START_LOADING: {
             const request: IScreenRequest = action.data.request;
-            // const response: IScreenResponse = action.data.response;
 
             const key = getScreenDataKey({
                 pubKey: request.user.wallet.pubKey,
@@ -23,7 +22,53 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 tab: request.context?.tab
             });
 
-            if (request.context.screen === 'dashboard') {
+            if (request.context.screen === ContextScreen.DASHBOARD) {
+                return {
+                    ...state,
+                    dashboard: {
+                        ...state.dashboard,
+                        [key]: {
+                            request,
+                            response: state.dashboard && state.dashboard[key]?.response,
+                            isLoading: true,
+                            error: undefined
+                        }
+                    }
+                };
+            }
+
+            if (request.context.screen === ContextScreen.TOKEN) {
+                return {
+                    ...state,
+                    token: {
+                        ...state.token,
+                        [key]: {
+                            request,
+                            response: state.token && state.token[key]?.response,
+                            isLoading: true,
+                            error: undefined
+                        }
+                    }
+                };
+            }
+
+            return {
+                ...state
+            };
+        }
+
+        case FETCH_SCREEN_DATA: {
+            const request: IScreenRequest = action.data.request;
+
+            const key = getScreenDataKey({
+                pubKey: request.user.wallet.pubKey,
+                blockchain: request.user.blockchain,
+                chainId: request.user.chainId,
+                address: request.user.address,
+                tab: request.context?.tab
+            });
+
+            if (request.context.screen === ContextScreen.DASHBOARD) {
                 return {
                     ...state,
                     dashboard: {
@@ -33,7 +78,7 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 };
             }
 
-            if (request.context.screen === 'token') {
+            if (request.context.screen === ContextScreen.TOKEN) {
                 return {
                     ...state,
                     token: {
@@ -46,6 +91,7 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
             return {
                 ...state
             };
+        }
 
         default:
             break;

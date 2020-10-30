@@ -8,15 +8,24 @@ export interface IScreenRequest {
 }
 
 export interface IScreenContext {
-    screen: 'dashboard' | 'token';
-    tab?: 'account';
+    screen: ContextScreen;
+    tab?: ContextTab;
+}
+
+export enum ContextScreen {
+    DASHBOARD = 'DASHBOARD',
+    TOKEN = 'TOKEN'
+}
+
+export enum ContextTab {
+    ACCOUNT = 'ACCOUNT'
 }
 
 export interface IScreenUser {
-    os: 'android' | 'ios';
+    os: 'android' | 'ios' | 'web';
     deviceId: string;
     theme: 'dark' | 'light';
-    country: string;
+    country?: string;
     lang: 'en';
 
     wallet: {

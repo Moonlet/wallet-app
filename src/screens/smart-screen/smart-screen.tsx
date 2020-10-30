@@ -95,7 +95,7 @@ export class SmartScreenComponent extends React.Component<
 
     private resetLoadingAnimation() {
         this.setState({ loadingAnimationDone: false }, () =>
-            setTimeout(() => this.setState({ loadingAnimationDone: true }), 300)
+            setTimeout(() => this.setState({ loadingAnimationDone: true }), 500)
         );
     }
 

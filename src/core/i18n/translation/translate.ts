@@ -49,7 +49,7 @@ const getKeyConfig = (key: string): ITranslation | string => {
     return config;
 };
 
-const format = (text: string, params?: ITranslationParams): string => {
+export const formatTranslate = (text: string, params?: ITranslationParams): string => {
     if (params) {
         for (const key in params) {
             if (params.hasOwnProperty(key)) {
@@ -66,15 +66,15 @@ export const translate = (key: string, params?: ITranslationParams, count: numbe
 
     if (translationConfig) {
         if (typeof translationConfig === 'string') {
-            return format(translationConfig, params);
+            return formatTranslate(translationConfig, params);
         }
 
         const plural = store.translations.plural(count, translationConfig.ordinal);
         const forms: any = translationConfig.forms;
         if (translationConfig.forms && forms[plural]) {
-            return format(forms[plural], params);
+            return formatTranslate(forms[plural], params);
         } else {
-            return format(translationConfig.text, params);
+            return formatTranslate(translationConfig.text, params);
         }
     } else {
         return '';

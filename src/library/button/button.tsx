@@ -44,11 +44,11 @@ export const ButtonComponent = (props: IButtonProps) => (
             onPressOut={props.onPressOut}
             style={[
                 props.styles.button,
+                props.style,
                 props.primary && props.styles.buttonPrimary,
                 props.secondary && props.styles.buttonSecondary,
                 props.disabled && props.styles.buttonDisabled,
                 props.disabledSecondary && props.styles.buttonDisabledSecondary,
-                props.style,
                 {
                     paddingVertical: props?.leftIcon
                         ? BASE_DIMENSION

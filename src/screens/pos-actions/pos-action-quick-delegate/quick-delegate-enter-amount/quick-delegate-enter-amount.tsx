@@ -170,7 +170,6 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
             this.props.validators,
             this.props.token.symbol,
             feeOptions,
-            this.props.navigation,
             undefined
         );
     }

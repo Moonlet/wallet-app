@@ -669,7 +669,7 @@ export const translation: ITranslations = {
         },
         Widgets: {
             wentWrong: 'Oops, something went wrong...',
-            didNotLoad: 'Widgets didn’t load. Please try again.'
+            didNotLoad: 'Widgets didn’t load. Please retry to connect.'
         }
     },
     plural: (n: number, ord?: boolean) => {

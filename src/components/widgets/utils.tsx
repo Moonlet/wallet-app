@@ -40,16 +40,39 @@ const amountFromStd = (value: BigNumber | number | string, decimals: number): Bi
 
 const formatCurrencyData = (data: ICurrencyData): string => {
     let text = '';
-    let value = data.value;
+    let value: BigNumber = new BigNumber(data.value);
 
     if (data?.decimals) {
-        value = amountFromStd(value, data.decimals).toFixed();
+        value = amountFromStd(value, data.decimals);
     }
 
-    text = formatNumber(Number(value), {
-        currency: data.symbol,
-        maximumFractionDigits: data?.round?.decimals
-    });
+    if (data?.round?.type) {
+        let rounded: string;
+
+        switch (data.round.type) {
+            case 'UP':
+                rounded = value.toFixed(data.round.decimals, BigNumber.ROUND_UP);
+                break;
+
+            case 'DOWN':
+                rounded = value.toFixed(data.round.decimals, BigNumber.ROUND_DOWN);
+                break;
+
+            default:
+                rounded = value.toFixed(data.round.decimals);
+                break;
+        }
+
+        text = formatNumber(new BigNumber(rounded), {
+            currency: data.symbol,
+            maximumFractionDigits: data?.round?.decimals
+        });
+    } else {
+        text = formatNumber(Number(value), {
+            currency: data.symbol,
+            maximumFractionDigits: data?.round?.decimals
+        });
+    }
 
     if (data?.beautify) {
         const out = beautify(value);

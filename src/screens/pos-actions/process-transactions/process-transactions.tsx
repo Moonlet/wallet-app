@@ -236,7 +236,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     tx.additionalInfo?.validator?.id;
 
                 if (validatorName) {
-                    translate('App.labels.from').toLowerCase() + ' ' + validatorName;
+                    middleText = translate('App.labels.from').toLowerCase() + ' ' + validatorName;
                 }
                 break;
             }

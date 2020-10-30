@@ -59,9 +59,11 @@ export const fetchScreenData = (context: IScreenContext) => async (
         }
     };
 
+    // start loading
     dispatch({ type: START_LOADING, data: { request: body } });
 
     try {
+        // fetch screen data
         const screenResponse = await apiClient.http.post('/walletUi/screen', body);
         const data: IScreenResponse = screenResponse?.result?.data;
 
@@ -75,6 +77,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
             }
         });
     } catch (error) {
+        // handle error
         dispatch({
             type: FETCH_SCREEN_DATA,
             data: {

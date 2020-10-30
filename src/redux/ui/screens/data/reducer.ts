@@ -22,38 +22,19 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 tab: request.context?.tab
             });
 
-            if (request.context.screen === ContextScreen.DASHBOARD) {
-                return {
-                    ...state,
-                    dashboard: {
-                        ...state.dashboard,
-                        [key]: {
-                            request,
-                            response: state.dashboard && state.dashboard[key]?.response,
-                            isLoading: true,
-                            error: undefined
-                        }
-                    }
-                };
-            }
-
-            if (request.context.screen === ContextScreen.TOKEN) {
-                return {
-                    ...state,
-                    token: {
-                        ...state.token,
-                        [key]: {
-                            request,
-                            response: state.token && state.token[key]?.response,
-                            isLoading: true,
-                            error: undefined
-                        }
-                    }
-                };
-            }
-
             return {
-                ...state
+                ...state,
+                [request.context.screen]: {
+                    ...state[request.context.screen],
+                    [key]: {
+                        request,
+                        response:
+                            state[request.context.screen] &&
+                            state[request.context.screen][key]?.response,
+                        isLoading: true,
+                        error: undefined
+                    }
+                }
             };
         }
 

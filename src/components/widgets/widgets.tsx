@@ -14,6 +14,7 @@ import {
     I3LinesCtaData,
     IBalanceGridData,
     IImageBannerData,
+    IOneLineTextBannerData,
     IScreenModule,
     IScreenWidget,
     ISeparatorData,
@@ -29,6 +30,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
 import { ChainIdType } from '../../core/blockchain/types';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
+import { OneLineTextBanner } from './components/one-line-text-banner/one-line-text-banner';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -118,6 +120,9 @@ class WidgetsComponent extends React.Component<
                         chainId={this.props.chainId}
                     />
                 );
+
+            case ModuleTypes.ONE_LINE_TEXT_BANNER:
+                return <OneLineTextBanner data={module.data[0] as IOneLineTextBannerData} />;
 
             default:
                 return null;

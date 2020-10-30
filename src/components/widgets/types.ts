@@ -69,33 +69,36 @@ export interface IScreenWidget {
 export interface IScreenModule {
     displayWhen?: 'collapsed' | 'expanded'; // if undefined, it will be displayed always
     type:
-        | ModuleTypes.THREE_LINES_CTA
-        | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
-        | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
         | ModuleTypes.BALANCES_GRID_ICONS
-        | ModuleTypes.SINGLE_BALANCE_ICON
         | ModuleTypes.IMAGE_BANNER
-        | ModuleTypes.TWO_LINES_TEXT_BANNER
-        | ModuleTypes.SEPARATOR;
+        | ModuleTypes.ONE_LINE_TEXT_BANNER
+        | ModuleTypes.SEPARATOR
+        | ModuleTypes.SINGLE_BALANCE_ICON
+        | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
+        | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
+        | ModuleTypes.THREE_LINES_CTA
+        | ModuleTypes.TWO_LINES_TEXT_BANNER;
     cta?: ICta;
     data: (
+        | I2LinesTextBannerData
         | I3LinesCtaData
-        | IStaticTextColumnData
         | IBalanceGridData
         | IImageBannerData
-        | I2LinesTextBannerData
+        | IOneLineTextBannerData
         | ISeparatorData
+        | IStaticTextColumnData
     )[];
 }
 
 export enum ModuleTypes {
-    STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
-    STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
-    THREE_LINES_CTA = '3-lines-cta',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
-    SINGLE_BALANCE_ICON = 'single-balance-icon',
-    SEPARATOR = 'separator',
     IMAGE_BANNER = 'image-banner',
+    ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
+    SEPARATOR = 'separator',
+    SINGLE_BALANCE_ICON = 'single-balance-icon',
+    STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
+    STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
+    THREE_LINES_CTA = '3-lines-cta',
     TWO_LINES_TEXT_BANNER = '2-lines-text-banner'
 }
 
@@ -166,12 +169,14 @@ export interface IBalanceGridData {
     };
 }
 
-// Used for `image-banner`
 export interface IImageBannerData {
     imageUrl: string;
 }
 
-// Used for `2-lines-text-banner`
+export interface IOneLineTextBannerData {
+    line: IData[];
+}
+
 export interface I2LinesTextBannerData {
     firstLine: IData[];
     secondLine: IData[];

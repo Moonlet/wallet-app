@@ -34,7 +34,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 const ModuleWrapperComponent = (props: IExternalProps & IReduxProps) => {
-    return props.renderModule(props.finalModule);
+    return props.renderModule(props.module);
 };
 
 export const ModuleWrapper = smartConnect<IExternalProps>(ModuleWrapperComponent, [

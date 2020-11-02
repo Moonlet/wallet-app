@@ -93,6 +93,7 @@ export interface IScreenModule {
     data:
         | I2LinesTextBannerData
         | I3LinesCtaData
+        | IBalanceGridData
         | IBalanceGridData[]
         | IImageBannerData
         | IOneLineTextBannerData

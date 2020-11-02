@@ -9,6 +9,7 @@ import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { buildDummyValidator } from '../../../../redux/wallets/actions';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatDataJSXElements } from '../../utils';
+import { NavigationService } from '../../../../navigation/navigation-service';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -24,33 +25,41 @@ const ThreeLinesCtaComponent = (
     const cta = module.cta as ICta;
 
     const handleOnPress = () => {
-        switch (cta.params.action) {
-            case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
-                const validator = buildDummyValidator(
-                    cta.params.params.validatorId,
-                    cta.params.params.validatorName
-                );
+        if (cta.type === 'navigateTo') {
+            NavigationService.navigate(cta.params.params.screen, {
+                ...cta.params.params
+            });
+        } else if (cta.type === 'callAction') {
+            switch (cta.params.action) {
+                case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
+                    const validator = buildDummyValidator(
+                        cta.params.params.validatorId,
+                        cta.params.params.validatorName
+                    );
 
-                actions.claimRewardNoInput(
-                    props.account,
-                    [validator],
-                    cta.params.params.tokenSymbol,
-                    undefined
-                );
-                break;
+                    actions.claimRewardNoInput(
+                        props.account,
+                        [validator],
+                        cta.params.params.tokenSymbol,
+                        undefined
+                    );
+                    break;
 
-            case PosBasicActionType.WITHDRAW: {
-                actions.withdraw(
-                    props.account,
-                    cta.params.params.tokenSymbol,
-                    { amount: cta.params.params.amount },
-                    undefined
-                );
-                break;
+                case PosBasicActionType.WITHDRAW: {
+                    actions.withdraw(
+                        props.account,
+                        cta.params.params.tokenSymbol,
+                        { amount: cta.params.params.amount },
+                        undefined
+                    );
+                    break;
+                }
+
+                default:
+                    break;
             }
-
-            default:
-                break;
+        } else {
+            //
         }
     };
 

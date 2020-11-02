@@ -115,7 +115,7 @@ export class SmartScreenComponent extends React.Component<
 
             if (!this.state.loadingAnimationDone || (data.isLoading && !data.response)) {
                 return (
-                    <View style={styles.skeletonWrapper}>
+                    <View key={'skeleton-placeholder'} style={styles.skeletonWrapper}>
                         {new Array(4).fill('').map((_, index: number) => (
                             <SkeletonPlaceholder
                                 key={`skelet-${index}`}

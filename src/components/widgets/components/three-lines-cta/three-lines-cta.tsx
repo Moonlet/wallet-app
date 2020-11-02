@@ -10,7 +10,7 @@ import { buildDummyValidator } from '../../../../redux/wallets/actions';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatDataJSXElements } from '../../utils';
 
-interface ExternalProps {
+interface IExternalProps {
     data: I3LinesCtaData;
     cta: ICta;
     actions: any;
@@ -18,7 +18,7 @@ interface ExternalProps {
 }
 
 const ThreeLinesCtaComponent = (
-    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
     const { actions, data, cta, styles } = props;
 
@@ -88,6 +88,6 @@ const ThreeLinesCtaComponent = (
     );
 };
 
-export const ThreeLinesCta = smartConnect<ExternalProps>(ThreeLinesCtaComponent, [
+export const ThreeLinesCta = smartConnect<IExternalProps>(ThreeLinesCtaComponent, [
     withTheme(stylesProvider)
 ]);

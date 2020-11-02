@@ -12,7 +12,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { formatDataJSXElements } from '../../utils';
 
-interface ExternalProps {
+interface IExternalProps {
     data: I2LinesTextBannerData;
     cta: ICta;
     account: IAccountState;
@@ -20,7 +20,7 @@ interface ExternalProps {
 }
 
 const TwoLinesStakeBannerComponent = (
-    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
     const { cta, data, styles, theme } = props;
 
@@ -66,6 +66,6 @@ const TwoLinesStakeBannerComponent = (
     );
 };
 
-export const TwoLinesStakeBanner = smartConnect<ExternalProps>(TwoLinesStakeBannerComponent, [
+export const TwoLinesStakeBanner = smartConnect<IExternalProps>(TwoLinesStakeBannerComponent, [
     withTheme(stylesProvider)
 ]);

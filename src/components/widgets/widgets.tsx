@@ -87,7 +87,7 @@ class WidgetsComponent extends React.Component<
             case ModuleTypes.THREE_LINES_CTA:
                 return (
                     <ThreeLinesCta
-                        data={module.data[0] as I3LinesCtaData}
+                        data={module.data as I3LinesCtaData}
                         cta={module.cta}
                         actions={this.props.actions}
                         account={this.props.account}
@@ -98,15 +98,15 @@ class WidgetsComponent extends React.Component<
                 return <BalanceGridIcons data={module.data as IBalanceGridData[]} />;
 
             case ModuleTypes.SEPARATOR: {
-                const data: ISeparatorData = module.data[0] as ISeparatorData;
+                const data: ISeparatorData = module.data as ISeparatorData;
                 return <Separator color={data?.color} />;
             }
 
             case ModuleTypes.SINGLE_BALANCE_ICON:
-                return <SingleBalanceIcon data={module.data[0] as IBalanceGridData} />;
+                return <SingleBalanceIcon data={module.data as IBalanceGridData} />;
 
             case ModuleTypes.IMAGE_BANNER: {
-                const data: IImageBannerData = module.data[0] as IImageBannerData;
+                const data: IImageBannerData = module.data as IImageBannerData;
 
                 return <ImageBanner imageUrl={data.imageUrl} urlToOpen={module.cta.params.url} />;
             }
@@ -114,7 +114,7 @@ class WidgetsComponent extends React.Component<
             case ModuleTypes.TWO_LINES_TEXT_BANNER:
                 return (
                     <TwoLinesStakeBanner
-                        data={module.data[0] as I2LinesTextBannerData}
+                        data={module.data as I2LinesTextBannerData}
                         cta={module.cta}
                         account={this.props.account}
                         chainId={this.props.chainId}
@@ -122,7 +122,7 @@ class WidgetsComponent extends React.Component<
                 );
 
             case ModuleTypes.ONE_LINE_TEXT_BANNER:
-                return <OneLineTextBanner data={module.data[0] as IOneLineTextBannerData} />;
+                return <OneLineTextBanner data={module.data as IOneLineTextBannerData} />;
 
             default:
                 return null;

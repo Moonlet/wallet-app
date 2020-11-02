@@ -77,9 +77,11 @@ export interface IScreenWidget {
 
 export interface IScreenModule {
     displayWhen?: 'collapsed' | 'expanded'; // if undefined, it will be displayed always
+    hidden?: boolean;
     type:
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.IMAGE_BANNER
+        | ModuleTypes.MODULE_WRAPPER
         | ModuleTypes.ONE_LINE_TEXT_BANNER
         | ModuleTypes.SEPARATOR
         | ModuleTypes.SINGLE_BALANCE_ICON
@@ -88,15 +90,24 @@ export interface IScreenModule {
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.TWO_LINES_TEXT_BANNER;
     cta?: ICta;
-    data: (
+    data:
         | I2LinesTextBannerData
         | I3LinesCtaData
-        | IBalanceGridData
+        | IBalanceGridData[]
         | IImageBannerData
         | IOneLineTextBannerData
+        | IScreenModuleWrapperData
         | ISeparatorData
-        | IStaticTextColumnData
-    )[];
+        | IStaticTextColumnData[];
+    details?: any; // ex. amount, validatorId, ...
+}
+
+export interface IScreenModuleWrapperData {
+    state: string; // DEFAULT | PENDING | HIDDEN
+    stateModifierFn: string; // param state
+    data: {
+        [state: string]: IScreenModule;
+    };
 }
 
 export enum ModuleTypes {
@@ -108,7 +119,8 @@ export enum ModuleTypes {
     STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
     STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
     THREE_LINES_CTA = '3-lines-cta',
-    TWO_LINES_TEXT_BANNER = '2-lines-text-banner'
+    TWO_LINES_TEXT_BANNER = '2-lines-text-banner',
+    MODULE_WRAPPER = 'module-wrapper'
 }
 
 /// IModulesData \\\

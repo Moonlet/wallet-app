@@ -6,12 +6,12 @@ import stylesProvider from './styles';
 import { IStaticTextColumnData } from '../../types';
 import { formatDataJSXElements } from '../../utils';
 
-interface ExternalProps {
+interface IExternalProps {
     data: IStaticTextColumnData[];
 }
 
 const StaticTextColBottomHeaderComponent = (
-    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
     const { data, styles } = props;
 
@@ -31,7 +31,7 @@ const StaticTextColBottomHeaderComponent = (
     );
 };
 
-export const StaticTextColBottomHeader = smartConnect<ExternalProps>(
+export const StaticTextColBottomHeader = smartConnect<IExternalProps>(
     StaticTextColBottomHeaderComponent,
     [withTheme(stylesProvider)]
 );

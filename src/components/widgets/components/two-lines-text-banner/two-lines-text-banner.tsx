@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { I2LinesTextBannerData, ICta } from '../../types';
+import { I2LinesTextBannerData, ICta, IScreenModule } from '../../types';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
@@ -12,17 +12,18 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { formatDataJSXElements } from '../../utils';
 
-interface ExternalProps {
-    data: I2LinesTextBannerData;
-    cta: ICta;
+interface IExternalProps {
+    module: IScreenModule;
     account: IAccountState;
     chainId: ChainIdType;
 }
 
 const TwoLinesStakeBannerComponent = (
-    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { cta, data, styles, theme } = props;
+    const { module, styles, theme } = props;
+    const data = module.data as I2LinesTextBannerData;
+    const cta = module.cta as ICta;
 
     return (
         <TouchableOpacity
@@ -66,6 +67,6 @@ const TwoLinesStakeBannerComponent = (
     );
 };
 
-export const TwoLinesStakeBanner = smartConnect<ExternalProps>(TwoLinesStakeBannerComponent, [
+export const TwoLinesStakeBanner = smartConnect<IExternalProps>(TwoLinesStakeBannerComponent, [
     withTheme(stylesProvider)
 ]);

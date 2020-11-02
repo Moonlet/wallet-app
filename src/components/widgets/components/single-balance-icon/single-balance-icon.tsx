@@ -3,18 +3,19 @@ import { View } from 'react-native';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { IBalanceGridData } from '../../types';
+import { IBalanceGridData, IScreenModule } from '../../types';
 import { SmartImage } from '../../../../library/image/smart-image';
 import { formatDataJSXElements } from '../../utils';
 
 interface IExternalProps {
-    data: IBalanceGridData;
+    module: IScreenModule;
 }
 
 const SingleBalanceIconComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { data, styles } = props;
+    const { module, styles } = props;
+    const data = module.data as IBalanceGridData;
 
     return (
         <View style={styles.container}>

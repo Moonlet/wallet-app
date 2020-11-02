@@ -7,12 +7,12 @@ export default (theme: ITheme) =>
         container: {
             flexDirection: 'row',
             backgroundColor: theme.colors.appBackground,
-            paddingBottom: BASE_DIMENSION,
+            paddingVertical: BASE_DIMENSION,
             paddingHorizontal: BASE_DIMENSION
         },
         text: {
             flex: 1,
-            fontSize: normalizeFontAndLineHeight(15),
+            fontSize: normalizeFontAndLineHeight(14),
             fontWeight: 'bold',
             color: theme.colors.accent
         }

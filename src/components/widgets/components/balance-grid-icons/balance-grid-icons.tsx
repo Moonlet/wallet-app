@@ -5,17 +5,18 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
-import { IBalanceGridData } from '../../types';
+import { IBalanceGridData, IScreenModule } from '../../types';
 import { formatDataJSXElements } from '../../utils';
 
 interface IExternalProps {
-    data: IBalanceGridData[];
+    module: IScreenModule;
 }
 
 const BalanceGridIconsComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { data, styles } = props;
+    const { module, styles } = props;
+    const data = module.data as IBalanceGridData[];
 
     return (
         <View style={styles.container}>

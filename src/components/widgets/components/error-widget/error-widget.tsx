@@ -5,7 +5,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
 
-interface ExternalProps {
+interface IExternalProps {
     header: string;
     body: string;
     cta?: {
@@ -15,7 +15,7 @@ interface ExternalProps {
 }
 
 const ErrorWidgetComponent = (
-    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
     const { header, body, cta, styles } = props;
 
@@ -32,6 +32,6 @@ const ErrorWidgetComponent = (
     );
 };
 
-export const ErrorWidget = smartConnect<ExternalProps>(ErrorWidgetComponent, [
+export const ErrorWidget = smartConnect<IExternalProps>(ErrorWidgetComponent, [
     withTheme(stylesProvider)
 ]);

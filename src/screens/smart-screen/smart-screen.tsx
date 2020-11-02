@@ -95,7 +95,7 @@ export class SmartScreenComponent extends React.Component<
 
     private resetLoadingAnimation() {
         this.setState({ loadingAnimationDone: false }, () =>
-            setTimeout(() => this.setState({ loadingAnimationDone: true }), 500)
+            setTimeout(() => this.setState({ loadingAnimationDone: true }), 1200)
         );
     }
 
@@ -113,12 +113,9 @@ export class SmartScreenComponent extends React.Component<
         if (screenData && screenKey && screenData[screenKey]) {
             const data = screenData[screenKey];
 
-            if (
-                (data.isLoading && !data.response) ||
-                (!this.state.loadingAnimationDone && data.response?.widgets.length === 0) // maybe find a better way to handle this
-            ) {
+            if (!this.state.loadingAnimationDone || (data.isLoading && !data.response)) {
                 return (
-                    <View style={styles.skeletonWrapper}>
+                    <View key={'skeleton-placeholder'} style={styles.skeletonWrapper}>
                         {new Array(4).fill('').map((_, index: number) => (
                             <SkeletonPlaceholder
                                 key={`skelet-${index}`}

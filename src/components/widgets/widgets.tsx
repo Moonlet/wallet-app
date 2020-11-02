@@ -9,18 +9,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { Separator } from './components/separator/separator';
-import {
-    I2LinesTextBannerData,
-    I3LinesCtaData,
-    IBalanceGridData,
-    IImageBannerData,
-    IOneLineTextBannerData,
-    IScreenModule,
-    IScreenWidget,
-    ISeparatorData,
-    IStaticTextColumnData,
-    ModuleTypes
-} from './types';
+import { IScreenModule, IScreenWidget, ModuleTypes } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
@@ -31,6 +20,7 @@ import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-line
 import { ChainIdType } from '../../core/blockchain/types';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
 import { OneLineTextBanner } from './components/one-line-text-banner/one-line-text-banner';
+import { ModuleWrapper } from './components/module-wrapper/module-wrapper';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -76,56 +66,88 @@ class WidgetsComponent extends React.Component<
         );
     }
 
-    private renderModule(module: IScreenModule) {
+    public renderModule(module: IScreenModule, isWidgetExpanded: boolean) {
+        let moduleJSX = null;
+
         switch (module.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                return <StaticTextColTopHeader data={module.data as IStaticTextColumnData[]} />;
+                moduleJSX = <StaticTextColTopHeader module={module} />;
+                break;
 
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return <StaticTextColBottomHeader data={module.data as IStaticTextColumnData[]} />;
+                moduleJSX = <StaticTextColBottomHeader module={module} />;
+                break;
 
             case ModuleTypes.THREE_LINES_CTA:
-                return (
+                moduleJSX = (
                     <ThreeLinesCta
-                        data={module.data[0] as I3LinesCtaData}
-                        cta={module.cta}
+                        module={module}
                         actions={this.props.actions}
                         account={this.props.account}
                     />
                 );
+                break;
 
             case ModuleTypes.BALANCES_GRID_ICONS:
-                return <BalanceGridIcons data={module.data as IBalanceGridData[]} />;
+                moduleJSX = <BalanceGridIcons module={module} />;
+                break;
 
-            case ModuleTypes.SEPARATOR: {
-                const data: ISeparatorData = module.data[0] as ISeparatorData;
-                return <Separator color={data?.color} />;
-            }
+            case ModuleTypes.SEPARATOR:
+                moduleJSX = <Separator module={module} />;
+                break;
 
             case ModuleTypes.SINGLE_BALANCE_ICON:
-                return <SingleBalanceIcon data={module.data[0] as IBalanceGridData} />;
+                moduleJSX = <SingleBalanceIcon module={module} />;
+                break;
 
-            case ModuleTypes.IMAGE_BANNER: {
-                const data: IImageBannerData = module.data[0] as IImageBannerData;
-
-                return <ImageBanner imageUrl={data.imageUrl} urlToOpen={module.cta.params.url} />;
-            }
+            case ModuleTypes.IMAGE_BANNER:
+                moduleJSX = <ImageBanner module={module} />;
+                break;
 
             case ModuleTypes.TWO_LINES_TEXT_BANNER:
-                return (
+                moduleJSX = (
                     <TwoLinesStakeBanner
-                        data={module.data[0] as I2LinesTextBannerData}
-                        cta={module.cta}
+                        module={module}
                         account={this.props.account}
                         chainId={this.props.chainId}
                     />
                 );
+                break;
 
             case ModuleTypes.ONE_LINE_TEXT_BANNER:
-                return <OneLineTextBanner data={module.data[0] as IOneLineTextBannerData} />;
+                moduleJSX = <OneLineTextBanner module={module} />;
+                break;
+
+            case ModuleTypes.MODULE_WRAPPER:
+                moduleJSX = (
+                    <ModuleWrapper
+                        module={module}
+                        renderModule={m => this.renderModule(m, isWidgetExpanded)}
+                    />
+                );
+                break;
 
             default:
                 return null;
+        }
+
+        if (isWidgetExpanded === undefined) {
+            return moduleJSX;
+        } else {
+            if (!module?.displayWhen) {
+                return moduleJSX;
+            }
+
+            let showModule = false;
+            if (!module?.displayWhen || isWidgetExpanded) {
+                showModule = true;
+            }
+
+            return (
+                <View>
+                    <ExpandableContainer isExpanded={showModule}>{moduleJSX}</ExpandableContainer>
+                </View>
+            );
         }
     }
 
@@ -166,24 +188,11 @@ class WidgetsComponent extends React.Component<
                             />
                         </View>
 
-                        {widget.modules.map((module: IScreenModule, i: number) => {
-                            if (!module?.displayWhen) {
-                                return <View key={`module-${i}`}>{this.renderModule(module)}</View>;
-                            }
-
-                            let showModule = false;
-                            if (!module?.displayWhen || isWidgetExpanded) {
-                                showModule = true;
-                            }
-
-                            return (
-                                <View key={`module-${i}`}>
-                                    <ExpandableContainer isExpanded={showModule}>
-                                        {this.renderModule(module)}
-                                    </ExpandableContainer>
-                                </View>
-                            );
-                        })}
+                        {widget.modules.map((module: IScreenModule, i: number) => (
+                            <View key={`module-${i}`}>
+                                {this.renderModule(module, isWidgetExpanded)}
+                            </View>
+                        ))}
                     </View>
                 </TouchableOpacity>
             );
@@ -198,7 +207,7 @@ class WidgetsComponent extends React.Component<
                 )}
 
                 {widget.modules.map((module: IScreenModule, i: number) => (
-                    <View key={`module-${i}`}>{this.renderModule(module)}</View>
+                    <View key={`module-${i}`}>{this.renderModule(module, undefined)}</View>
                 ))}
             </View>
         );

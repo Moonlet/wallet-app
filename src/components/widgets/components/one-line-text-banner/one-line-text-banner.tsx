@@ -3,21 +3,22 @@ import { View } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IOneLineTextBannerData } from '../../types';
+import { IOneLineTextBannerData, IScreenModule } from '../../types';
 import { formatDataJSXElements } from '../../utils';
 
-interface ExternalProps {
-    data: IOneLineTextBannerData;
+interface IExternalProps {
+    module: IScreenModule;
 }
 
 const OneLineTextBannerComponent = (
-    props: IThemeProps<ReturnType<typeof stylesProvider>> & ExternalProps
+    props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { data, styles } = props;
+    const { module, styles } = props;
+    const data = module.data as IOneLineTextBannerData;
 
     return <View style={styles.container}>{formatDataJSXElements(data.line, styles.text)}</View>;
 };
 
-export const OneLineTextBanner = smartConnect<ExternalProps>(OneLineTextBannerComponent, [
+export const OneLineTextBanner = smartConnect<IExternalProps>(OneLineTextBannerComponent, [
     withTheme(stylesProvider)
 ]);

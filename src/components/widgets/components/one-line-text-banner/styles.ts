@@ -12,7 +12,7 @@ export default (theme: ITheme) =>
         },
         text: {
             flex: 1,
-            fontSize: normalizeFontAndLineHeight(15),
+            fontSize: normalizeFontAndLineHeight(14),
             fontWeight: 'bold',
             color: theme.colors.accent
         }

@@ -7,7 +7,7 @@ export default (theme: ITheme) =>
         container: {
             flexDirection: 'row',
             backgroundColor: theme.colors.appBackground,
-            paddingBottom: BASE_DIMENSION,
+            paddingVertical: BASE_DIMENSION,
             paddingHorizontal: BASE_DIMENSION
         },
         text: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View, TouchableHighlight, Platform } from 'react-native';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import stylesProvider from './styles';
@@ -102,11 +102,13 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    <SmartScreen
-                        context={{
-                            screen: ContextScreen.DASHBOARD
-                        }}
-                    />
+                    {Platform.OS !== 'web' && (
+                        <SmartScreen
+                            context={{
+                                screen: ContextScreen.DASHBOARD
+                            }}
+                        />
+                    )}
 
                     {this.props.account?.tokens &&
                         this.props.chainId &&

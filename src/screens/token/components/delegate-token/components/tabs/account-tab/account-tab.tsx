@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
@@ -125,12 +125,14 @@ export class AccountTabComponent extends React.Component<
                             </Button>
                         </View>
 
-                        <SmartScreen
-                            context={{
-                                screen: ContextScreen.TOKEN,
-                                tab: ContextTab.ACCOUNT
-                            }}
-                        />
+                        {Platform.OS !== 'web' && (
+                            <SmartScreen
+                                context={{
+                                    screen: ContextScreen.TOKEN,
+                                    tab: ContextTab.ACCOUNT
+                                }}
+                            />
+                        )}
                     </ScrollView>
                 </View>
                 <View style={styles.bottomContainer}>

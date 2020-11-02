@@ -20,6 +20,7 @@ import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-line
 import { ChainIdType } from '../../core/blockchain/types';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
 import { OneLineTextBanner } from './components/one-line-text-banner/one-line-text-banner';
+import { ModuleWrapper } from './components/module-wrapper/module-wrapper';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -65,49 +66,88 @@ class WidgetsComponent extends React.Component<
         );
     }
 
-    private renderModule(module: IScreenModule) {
+    public renderModule(module: IScreenModule, isWidgetExpanded: boolean) {
+        let moduleJSX = null;
+
         switch (module.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                return <StaticTextColTopHeader module={module} />;
+                moduleJSX = <StaticTextColTopHeader module={module} />;
+                break;
 
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return <StaticTextColBottomHeader module={module} />;
+                moduleJSX = <StaticTextColBottomHeader module={module} />;
+                break;
 
             case ModuleTypes.THREE_LINES_CTA:
-                return (
+                moduleJSX = (
                     <ThreeLinesCta
                         module={module}
                         actions={this.props.actions}
                         account={this.props.account}
                     />
                 );
+                break;
 
             case ModuleTypes.BALANCES_GRID_ICONS:
-                return <BalanceGridIcons module={module} />;
+                moduleJSX = <BalanceGridIcons module={module} />;
+                break;
 
             case ModuleTypes.SEPARATOR:
-                return <Separator module={module} />;
+                moduleJSX = <Separator module={module} />;
+                break;
 
             case ModuleTypes.SINGLE_BALANCE_ICON:
-                return <SingleBalanceIcon module={module} />;
+                moduleJSX = <SingleBalanceIcon module={module} />;
+                break;
 
             case ModuleTypes.IMAGE_BANNER:
-                return <ImageBanner module={module} />;
+                moduleJSX = <ImageBanner module={module} />;
+                break;
 
             case ModuleTypes.TWO_LINES_TEXT_BANNER:
-                return (
+                moduleJSX = (
                     <TwoLinesStakeBanner
                         module={module}
                         account={this.props.account}
                         chainId={this.props.chainId}
                     />
                 );
+                break;
 
             case ModuleTypes.ONE_LINE_TEXT_BANNER:
-                return <OneLineTextBanner module={module} />;
+                moduleJSX = <OneLineTextBanner module={module} />;
+                break;
+
+            case ModuleTypes.MODULE_WRAPPER:
+                moduleJSX = (
+                    <ModuleWrapper
+                        module={module}
+                        renderModule={m => this.renderModule(m, isWidgetExpanded)}
+                    />
+                );
+                break;
 
             default:
                 return null;
+        }
+
+        if (isWidgetExpanded === undefined) {
+            return moduleJSX;
+        } else {
+            if (!module?.displayWhen) {
+                return moduleJSX;
+            }
+
+            let showModule = false;
+            if (!module?.displayWhen || isWidgetExpanded) {
+                showModule = true;
+            }
+
+            return (
+                <View>
+                    <ExpandableContainer isExpanded={showModule}>{moduleJSX}</ExpandableContainer>
+                </View>
+            );
         }
     }
 
@@ -148,24 +188,11 @@ class WidgetsComponent extends React.Component<
                             />
                         </View>
 
-                        {widget.modules.map((module: IScreenModule, i: number) => {
-                            if (!module?.displayWhen) {
-                                return <View key={`module-${i}`}>{this.renderModule(module)}</View>;
-                            }
-
-                            let showModule = false;
-                            if (!module?.displayWhen || isWidgetExpanded) {
-                                showModule = true;
-                            }
-
-                            return (
-                                <View key={`module-${i}`}>
-                                    <ExpandableContainer isExpanded={showModule}>
-                                        {this.renderModule(module)}
-                                    </ExpandableContainer>
-                                </View>
-                            );
-                        })}
+                        {widget.modules.map((module: IScreenModule, i: number) => (
+                            <View key={`module-${i}`}>
+                                {this.renderModule(module, isWidgetExpanded)}
+                            </View>
+                        ))}
                     </View>
                 </TouchableOpacity>
             );
@@ -180,7 +207,7 @@ class WidgetsComponent extends React.Component<
                 )}
 
                 {widget.modules.map((module: IScreenModule, i: number) => (
-                    <View key={`module-${i}`}>{this.renderModule(module)}</View>
+                    <View key={`module-${i}`}>{this.renderModule(module, undefined)}</View>
                 ))}
             </View>
         );

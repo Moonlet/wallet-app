@@ -9,18 +9,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { Separator } from './components/separator/separator';
-import {
-    I2LinesTextBannerData,
-    I3LinesCtaData,
-    IBalanceGridData,
-    IImageBannerData,
-    IOneLineTextBannerData,
-    IScreenModule,
-    IScreenWidget,
-    ISeparatorData,
-    IStaticTextColumnData,
-    ModuleTypes
-} from './types';
+import { IScreenModule, IScreenWidget, ModuleTypes } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
@@ -79,50 +68,43 @@ class WidgetsComponent extends React.Component<
     private renderModule(module: IScreenModule) {
         switch (module.type) {
             case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                return <StaticTextColTopHeader data={module.data as IStaticTextColumnData[]} />;
+                return <StaticTextColTopHeader module={module} />;
 
             case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                return <StaticTextColBottomHeader data={module.data as IStaticTextColumnData[]} />;
+                return <StaticTextColBottomHeader module={module} />;
 
             case ModuleTypes.THREE_LINES_CTA:
                 return (
                     <ThreeLinesCta
-                        data={module.data as I3LinesCtaData}
-                        cta={module.cta}
+                        module={module}
                         actions={this.props.actions}
                         account={this.props.account}
                     />
                 );
 
             case ModuleTypes.BALANCES_GRID_ICONS:
-                return <BalanceGridIcons data={module.data as IBalanceGridData[]} />;
+                return <BalanceGridIcons module={module} />;
 
-            case ModuleTypes.SEPARATOR: {
-                const data: ISeparatorData = module.data as ISeparatorData;
-                return <Separator color={data?.color} />;
-            }
+            case ModuleTypes.SEPARATOR:
+                return <Separator module={module} />;
 
             case ModuleTypes.SINGLE_BALANCE_ICON:
-                return <SingleBalanceIcon data={module.data as IBalanceGridData} />;
+                return <SingleBalanceIcon module={module} />;
 
-            case ModuleTypes.IMAGE_BANNER: {
-                const data: IImageBannerData = module.data as IImageBannerData;
-
-                return <ImageBanner imageUrl={data.imageUrl} urlToOpen={module.cta.params.url} />;
-            }
+            case ModuleTypes.IMAGE_BANNER:
+                return <ImageBanner module={module} />;
 
             case ModuleTypes.TWO_LINES_TEXT_BANNER:
                 return (
                     <TwoLinesStakeBanner
-                        data={module.data as I2LinesTextBannerData}
-                        cta={module.cta}
+                        module={module}
                         account={this.props.account}
                         chainId={this.props.chainId}
                     />
                 );
 
             case ModuleTypes.ONE_LINE_TEXT_BANNER:
-                return <OneLineTextBanner data={module.data as IOneLineTextBannerData} />;
+                return <OneLineTextBanner module={module} />;
 
             default:
                 return null;

@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { I2LinesTextBannerData, ICta } from '../../types';
+import { I2LinesTextBannerData, ICta, IScreenModule } from '../../types';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
@@ -13,8 +13,7 @@ import { ChainIdType } from '../../../../core/blockchain/types';
 import { formatDataJSXElements } from '../../utils';
 
 interface IExternalProps {
-    data: I2LinesTextBannerData;
-    cta: ICta;
+    module: IScreenModule;
     account: IAccountState;
     chainId: ChainIdType;
 }
@@ -22,7 +21,9 @@ interface IExternalProps {
 const TwoLinesStakeBannerComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { cta, data, styles, theme } = props;
+    const { module, styles, theme } = props;
+    const data = module.data as I2LinesTextBannerData;
+    const cta = module.cta as ICta;
 
     return (
         <TouchableOpacity

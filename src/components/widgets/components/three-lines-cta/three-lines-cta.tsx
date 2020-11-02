@@ -4,15 +4,14 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
-import { I3LinesCtaData, ICta } from '../../types';
+import { I3LinesCtaData, ICta, IScreenModule } from '../../types';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { buildDummyValidator } from '../../../../redux/wallets/actions';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatDataJSXElements } from '../../utils';
 
 interface IExternalProps {
-    data: I3LinesCtaData;
-    cta: ICta;
+    module: IScreenModule;
     actions: any;
     account: IAccountState;
 }
@@ -20,7 +19,9 @@ interface IExternalProps {
 const ThreeLinesCtaComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { actions, data, cta, styles } = props;
+    const { actions, module, styles } = props;
+    const data = module.data as I3LinesCtaData;
+    const cta = module.cta as ICta;
 
     const handleOnPress = () => {
         switch (cta.params.action) {

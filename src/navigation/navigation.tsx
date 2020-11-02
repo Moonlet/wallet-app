@@ -56,6 +56,7 @@ import { CreateNearAccountScreen } from '../screens/blockchain/near/create-accou
 import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-account/recover-account';
 import { AddTokenScreen } from '../screens/token/components/add-token/add-token';
 import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
+import { Platform } from 'react-native';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -330,6 +331,10 @@ export const navigationConfig = {
         })
     }
 };
+
+if (Platform.OS === 'web') {
+    delete navigationConfig.Scan;
+}
 
 // wallet creation flow stack
 export const OnboardingNavigation = createStackNavigator(

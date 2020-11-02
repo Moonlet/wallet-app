@@ -1,8 +1,9 @@
+import { IScreenModuleWrapperData } from './../../types';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
-import { IScreenModule, IScreenModuleWrapperData } from '../../types';
-import { updateClaimPending } from './utils/update-claim-pending';
+import { IScreenModule } from '../../types';
+import { getState } from './state-modifiers';
 
 export interface IExternalProps {
     module: IScreenModule;
@@ -14,18 +15,22 @@ interface IReduxProps {
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
-    const stateModifierFn = (ownProps.module.data as IScreenModuleWrapperData).stateModifierFn;
+    const wrapperState = getState(state, ownProps.module);
+    const wrapperData = (ownProps?.module?.data as IScreenModuleWrapperData)?.data;
 
-    switch (stateModifierFn) {
-        case 'updateClaimPending':
-            return {
-                ...state,
-                finalModule: updateClaimPending(state, ownProps.module)
-            };
-
-        default:
-            return state;
+    let module = wrapperData?.DEFAULT;
+    if (wrapperData[wrapperState]) {
+        // TODO: in future we might need to do a deep merge here.
+        module = {
+            ...module,
+            ...wrapperData[wrapperState]
+        };
     }
+
+    return {
+        ...ownProps,
+        module
+    };
 };
 
 const ModuleWrapperComponent = (props: IExternalProps & IReduxProps) => {

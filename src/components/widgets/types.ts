@@ -107,7 +107,7 @@ export interface IScreenModuleWrapperData {
     state: string; // DEFAULT | PENDING | HIDDEN
     stateModifierFn: string; // param state
     data: {
-        [state: string]: IScreenModule;
+        [state: string]: Partial<IScreenModule>;
     };
 }
 

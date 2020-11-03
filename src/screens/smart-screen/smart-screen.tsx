@@ -1,10 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
-import { IScreenContext, IScreenRequest, IScreenResponse } from '../../components/widgets/types';
+import { IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
@@ -14,11 +13,9 @@ import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
 import { AccountStats } from '../../core/blockchain/types/stats';
-import { SkeletonPlaceholder } from '../../components/skeleton-placeholder/skeleton-placeholder';
-import stylesProvider from './styles';
-import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
+import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -60,20 +57,17 @@ const mapDispatchToProps = {
 
 interface IState {
     loadingTimeoutInProgress: boolean;
+    loadingScreenData: boolean;
 }
 
-export class SmartScreenComponent extends React.Component<
-    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
-> {
-    private loadingTimeout;
+export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
+    private loadingTimeout: any;
 
-    constructor(
-        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
+    constructor(props: IReduxProps & IExternalProps) {
         super(props);
         this.state = {
-            loadingTimeoutInProgress: false
+            loadingTimeoutInProgress: false,
+            loadingScreenData: false
         };
     }
 
@@ -92,7 +86,7 @@ export class SmartScreenComponent extends React.Component<
             this.props.fetchScreenData(this.props.context);
         }
 
-        this.updateLoading(prevProps);
+        this.updateLoading();
     }
 
     private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
@@ -107,54 +101,34 @@ export class SmartScreenComponent extends React.Component<
         return props.screenData && screenKey && props.screenData[screenKey];
     }
 
-    private updateLoading(prevProps: IReduxProps & IExternalProps) {
+    private updateLoading() {
         const screenData = this.getScreenData(this.props);
-        const prevScreenData = this.getScreenData(prevProps);
 
-        if (screenData?.isLoading !== prevScreenData?.isLoading && screenData?.isLoading === true) {
-            this.setState({ loadingTimeoutInProgress: true });
+        if (!screenData?.response) {
+            if (!this.state.loadingScreenData) {
+                this.setState({
+                    loadingScreenData: true,
+                    loadingTimeoutInProgress: true
+                });
 
-            clearTimeout(this.loadingTimeout);
-            this.loadingTimeout = setTimeout(() => {
-                this.setState({ loadingTimeoutInProgress: false });
-            }, 1200);
+                clearTimeout(this.loadingTimeout);
+                this.loadingTimeout = setTimeout(() => {
+                    this.setState({ loadingTimeoutInProgress: false });
+                }, 1500);
+            }
+        } else {
+            if (this.state.loadingTimeoutInProgress === false) {
+                if (this.state.loadingScreenData === true) {
+                    this.setState({ loadingScreenData: false });
+                }
+            }
         }
     }
 
-    private renderLoadingSkeleton() {
-        const { styles, theme } = this.props;
-
-        return (
-            <View key={'skeleton-placeholder'} style={styles.skeletonWrapper}>
-                {new Array(4).fill('').map((_, index: number) => (
-                    <SkeletonPlaceholder
-                        key={`skelet-${index}`}
-                        backgroundColor={theme.colors.textTertiary}
-                        highlightColor={theme.colors.accent}
-                        speed={Math.floor(Math.random() * 700) + 1000}
-                    >
-                        <View style={styles.detailsSkeletonComp}>
-                            <View style={styles.detailsSkeletonIcon} />
-                            <View style={{ justifyContent: 'space-between' }}>
-                                <View style={styles.detailsSkeletonPrimaryValue} />
-                                <View style={styles.detailsSkeletonSecondaryValue} />
-                            </View>
-                        </View>
-                    </SkeletonPlaceholder>
-                ))}
-            </View>
-        );
-    }
-
-    private renderWidgets(data: {
-        request: IScreenRequest;
-        response: IScreenResponse;
-        isLoading: boolean;
-        error: any;
-    }) {
+    private renderWidgets(widgets: IScreenWidget[]) {
         return (
             <Widgets
-                data={data.response.widgets}
+                data={widgets}
                 actions={{
                     claimRewardNoInput: this.props.claimRewardNoInput,
                     withdraw: this.props.withdraw
@@ -182,15 +156,12 @@ export class SmartScreenComponent extends React.Component<
         const screenData = this.getScreenData(this.props);
 
         if (screenData) {
-            if (
-                !screenData.response &&
-                (screenData.isLoading || this.state.loadingTimeoutInProgress)
-            ) {
-                return this.renderLoadingSkeleton();
+            if (this.state.loadingScreenData) {
+                return <LoadingSkeleton />;
             }
 
             if (screenData.response?.widgets) {
-                return this.renderWidgets(screenData);
+                return this.renderWidgets(screenData.response.widgets);
             }
 
             if (screenData.error) {
@@ -203,6 +174,5 @@ export class SmartScreenComponent extends React.Component<
 }
 
 export const SmartScreen = smartConnect<IExternalProps>(SmartScreenComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
-    withTheme(stylesProvider)
+    connect(mapStateToProps, mapDispatchToProps)
 ]);

@@ -11,14 +11,20 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
 
     for (const tx of Object.values(wallet?.transactions || [])) {
         if (
-            tx.status === TransactionStatus.PENDING &&
             tx?.data?.params &&
             tx?.data?.params[0] === wrapper?.data?.DEFAULT?.details?.validatorId &&
+            tx?.broadcastedOnBlock > wrapper?.data?.DEFAULT?.details?.cycleStart &&
             (tx?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD ||
-                tx?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT ||
-                tx?.additionalInfo?.posAction === PosBasicActionType.WITHDRAW)
+                tx?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT)
         ) {
-            return 'PENDING';
+            switch (tx.status) {
+                case TransactionStatus.PENDING:
+                    return 'PENDING';
+                case TransactionStatus.SUCCESS:
+                    return 'CLAIMED';
+                default:
+                    return 'DEFAULT';
+            }
         }
     }
 

@@ -4,7 +4,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
-import { IScreenContext } from '../../components/widgets/types';
+import { IScreenContext, IScreenRequest, IScreenResponse } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenDatas } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
@@ -99,8 +99,65 @@ export class SmartScreenComponent extends React.Component<
         );
     }
 
+    private renderLoadingSkeleton() {
+        const { styles, theme } = this.props;
+
+        return (
+            <View key={'skeleton-placeholder'} style={styles.skeletonWrapper}>
+                {new Array(4).fill('').map((_, index: number) => (
+                    <SkeletonPlaceholder
+                        key={`skelet-${index}`}
+                        backgroundColor={theme.colors.textTertiary}
+                        highlightColor={theme.colors.accent}
+                        speed={Math.floor(Math.random() * 700) + 1000}
+                    >
+                        <View style={styles.detailsSkeletonComp}>
+                            <View style={styles.detailsSkeletonIcon} />
+                            <View style={{ justifyContent: 'space-between' }}>
+                                <View style={styles.detailsSkeletonPrimaryValue} />
+                                <View style={styles.detailsSkeletonSecondaryValue} />
+                            </View>
+                        </View>
+                    </SkeletonPlaceholder>
+                ))}
+            </View>
+        );
+    }
+
+    private renderWidgets(data: {
+        request: IScreenRequest;
+        response: IScreenResponse;
+        isLoading: boolean;
+        error: any;
+    }) {
+        return (
+            <Widgets
+                data={data.response.widgets}
+                actions={{
+                    claimRewardNoInput: this.props.claimRewardNoInput,
+                    withdraw: this.props.withdraw
+                }}
+                account={this.props.account}
+                chainId={this.props.chainId}
+            />
+        );
+    }
+
+    private renderErrorWidget() {
+        return (
+            <ErrorWidget
+                header={translate('Widgets.wentWrong')}
+                body={translate('Widgets.didNotLoad')}
+                cta={{
+                    label: translate('App.labels.retry'),
+                    onPress: () => this.props.fetchScreenData(this.props.context)
+                }}
+            />
+        );
+    }
+
     public render() {
-        const { screenData, styles, theme } = this.props;
+        const { screenData } = this.props;
 
         const screenKey = getScreenDataKey({
             pubKey: this.props.walletPublicKey,
@@ -114,55 +171,15 @@ export class SmartScreenComponent extends React.Component<
             const data = screenData[screenKey];
 
             if (!this.state.loadingAnimationDone || (data.isLoading && !data.response)) {
-                return (
-                    <View key={'skeleton-placeholder'} style={styles.skeletonWrapper}>
-                        {new Array(4).fill('').map((_, index: number) => (
-                            <SkeletonPlaceholder
-                                key={`skelet-${index}`}
-                                backgroundColor={theme.colors.textTertiary}
-                                highlightColor={theme.colors.accent}
-                                speed={Math.floor(Math.random() * 700) + 1000}
-                            >
-                                <View style={styles.detailsSkeletonComp}>
-                                    <View style={styles.detailsSkeletonIcon} />
-                                    <View style={{ justifyContent: 'space-between' }}>
-                                        <View style={styles.detailsSkeletonPrimaryValue} />
-                                        <View style={styles.detailsSkeletonSecondaryValue} />
-                                    </View>
-                                </View>
-                            </SkeletonPlaceholder>
-                        ))}
-                    </View>
-                );
+                return this.renderLoadingSkeleton();
             }
 
             if (data.response?.widgets) {
-                return (
-                    <View>
-                        <Widgets
-                            data={data.response.widgets}
-                            actions={{
-                                claimRewardNoInput: this.props.claimRewardNoInput,
-                                withdraw: this.props.withdraw
-                            }}
-                            account={this.props.account}
-                            chainId={this.props.chainId}
-                        />
-                    </View>
-                );
+                return this.renderWidgets(data);
             }
 
             if (data.error) {
-                return (
-                    <ErrorWidget
-                        header={translate('Widgets.wentWrong')}
-                        body={translate('Widgets.didNotLoad')}
-                        cta={{
-                            label: translate('App.labels.retry'),
-                            onPress: () => this.props.fetchScreenData(this.props.context)
-                        }}
-                    />
-                );
+                return this.renderErrorWidget();
             }
         }
 

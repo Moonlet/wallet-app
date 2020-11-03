@@ -37,6 +37,8 @@ import { ProcessTransactions } from './screens/pos-actions/process-transactions/
 import { LedgerConnect } from './screens/ledger/ledger-connect';
 import { updateTokenContracts } from './redux/tokens/actions';
 import { ZilliqaTransactionUpdate } from './components/zilliqa-transaction-update/zilliqa-transaction-update';
+import { ContextScreen } from './components/widgets/types';
+import { fetchScreenData } from './redux/ui/screens/data/actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -174,6 +176,8 @@ export default class App extends React.Component<{}, IState> {
             this.setState({ displayApplication: false });
         } else {
             this.setState({ displayApplication: true });
+            // Fetch screen data when return from background
+            fetchScreenData({ screen: ContextScreen.DASHBOARD })(store.dispatch, store.getState);
         }
         this.setState({ appState: nextAppState });
     };

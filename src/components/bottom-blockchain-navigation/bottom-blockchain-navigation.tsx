@@ -20,11 +20,12 @@ import { getBlockchains } from '../../redux/preferences/selectors';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { setSelectedBlockchain } from '../../redux/wallets/actions';
 
-export interface IExternalProps {
+interface IExternalProps {
     style?: any;
+    onPress: () => void;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     blockchains: Blockchain[];
     selectedBlockchain: Blockchain;
     wallet: IWalletState;
@@ -84,7 +85,10 @@ export class BottomBlockchainNavigationComponent extends React.Component<
                     this.props.selectedBlockchain === blockchain && styles.blockchainButtonActive,
                     { width: this.props.blockchains.length > 4 ? SCREEN_WIDTH / 4 : 0 }
                 ]}
-                onPress={() => this.props.setSelectedBlockchain(blockchain)}
+                onPress={() => {
+                    this.props.setSelectedBlockchain(blockchain);
+                    this.props.onPress();
+                }}
             >
                 <Text
                     style={

@@ -435,7 +435,7 @@ export const updateTransactionFromBlockchain = (
 
     try {
         transaction = await client.utils.getTransaction(transactionHash, {
-            address: selectedAccount.address
+            address: selectedAccount?.address
         });
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
@@ -496,28 +496,30 @@ export const updateTransactionFromBlockchain = (
                   )
                 : wallets[0];
 
-        const transactionAccount =
-            wallet.accounts.find(
-                account => account.address.toLowerCase() === receivingAddress.toLowerCase()
-            ) ||
-            wallet.accounts.find(
-                account => account.address.toLowerCase() === transaction.address.toLowerCase()
-            );
+        let transactionAccount;
+        if (wallet) {
+            transactionAccount =
+                wallet.accounts.find(
+                    account => account.address.toLowerCase() === receivingAddress.toLowerCase()
+                ) ||
+                wallet.accounts.find(
+                    account => account.address.toLowerCase() === transaction.address.toLowerCase()
+                );
 
-        // update balance
-        getBalance(
-            blockchain,
-            transactionAccount.address,
-            transaction.token.symbol,
-            true
-        )(dispatch, getState);
+            // update balance
+            getBalance(
+                blockchain,
+                transactionAccount.address,
+                transaction.token.symbol,
+                true
+            )(dispatch, getState);
+        }
 
         // const currentChainId = getChainId(state, blockchain);
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
 
-        const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
-
         if (navigateToTransaction) {
+            const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
             const navigationParams: NavigationParams = {
                 blockchain,
                 accountIndex: transactionAccount.index,
@@ -646,9 +648,11 @@ export const sendTransferTransaction = (
             //     await LedgerConnect.close();
             // }
             dispatch(closeTransactionRequest());
-            NavigationService.navigate('Token', {
-                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
-            });
+            if (!sendResponse) {
+                NavigationService.navigate('Token', {
+                    activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+                });
+            }
             return;
         } else {
             throw new Error('GENERIC_ERROR');

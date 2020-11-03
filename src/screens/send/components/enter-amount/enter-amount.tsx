@@ -132,7 +132,9 @@ export const EnterAmountComponent = (
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => props.onChange((Number(availableAmount) / 2).toString())}
+                    onPress={() =>
+                        props.onChange(new BigNumber(availableAmount).dividedBy(2).toFixed())
+                    }
                     style={styles.addValueBox}
                 >
                     <Text style={styles.addValueText}>{translate('App.labels.half')}</Text>

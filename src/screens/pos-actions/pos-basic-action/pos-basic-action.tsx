@@ -70,6 +70,7 @@ interface IState {
     amount: string;
     insufficientFunds: boolean;
     insufficientFundsFees: boolean;
+    availableAmount: string;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -93,7 +94,8 @@ export class PosBasicActionComponent extends React.Component<
         this.state = {
             amount: '',
             insufficientFunds: false,
-            insufficientFundsFees: false
+            insufficientFundsFees: false,
+            availableAmount: '0'
         };
 
         if (props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT) {
@@ -102,9 +104,12 @@ export class PosBasicActionComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        const performAction: { value: boolean; message: string } = await getBlockchain(
-            this.props.blockchain
-        )
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        const performAction: {
+            value: boolean;
+            message: string;
+        } = await blockchainInstance
             .getClient(this.props.chainId)
             .canPerformAction(this.props.basicAction, {
                 account: this.props.account,
@@ -123,6 +128,25 @@ export class PosBasicActionComponent extends React.Component<
                 }
             );
         }
+
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        const activeBalance = blockchainInstance.account
+            .amountFromStd(
+                new BigNumber(this.props.validators[0].amountDelegated.active),
+                tokenConfig.decimals
+            )
+            .toFixed();
+
+        const amount = await availableAmount(
+            this.props.account,
+            this.props.token,
+            this.props.chainId,
+            undefined,
+            activeBalance
+        );
+
+        this.setState({ availableAmount: amount });
     }
 
     private async onPressConfirm() {
@@ -133,7 +157,6 @@ export class PosBasicActionComponent extends React.Component<
                     this.state.amount,
                     this.props.token.symbol,
                     undefined,
-                    this.props.navigation,
                     undefined
                 );
                 break;
@@ -145,7 +168,6 @@ export class PosBasicActionComponent extends React.Component<
                     this.props.validators,
                     this.props.token.symbol,
                     undefined,
-                    this.props.navigation,
                     undefined
                 );
                 break;
@@ -184,7 +206,6 @@ export class PosBasicActionComponent extends React.Component<
                         this.props.validators,
                         this.props.token.symbol,
                         undefined,
-                        this.props.navigation,
                         undefined
                     );
                 }
@@ -195,7 +216,6 @@ export class PosBasicActionComponent extends React.Component<
                     this.props.account,
                     this.props.validators,
                     this.props.token.symbol,
-                    this.props.navigation,
                     undefined
                 );
                 setTimeout(() => this.props.navigation.goBack(), 500);
@@ -300,26 +320,10 @@ export class PosBasicActionComponent extends React.Component<
     }
 
     private renderEnterAmount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-
-        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
-
-        const activeBalance = blockchainInstance.account
-            .amountFromStd(
-                new BigNumber(this.props.validators[0].amountDelegated.active),
-                tokenConfig.decimals
-            )
-            .toFixed();
-
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
-                    availableAmount={availableAmount(
-                        this.props.account,
-                        this.props.token,
-                        undefined,
-                        activeBalance
-                    )}
+                    availableAmount={this.state.availableAmount}
                     value={this.state.amount}
                     insufficientMinimumAmount={false}
                     insufficientFunds={this.state.insufficientFunds}

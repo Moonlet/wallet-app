@@ -6,6 +6,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
+import { Platform } from 'react-native';
 
 export const ATOM_NATIVE: ITokenConfigState = {
     name: 'Atom',
@@ -18,7 +19,10 @@ export const ATOM_NATIVE: ITokenConfigState = {
     decimals: 6,
     ui: {
         decimals: 3,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: Platform.select({
+            default: TokenScreenComponentType.DELEGATE,
+            web: TokenScreenComponentType.DEFAULT
+        })
     },
     type: TokenType.NATIVE,
     units: {

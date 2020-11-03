@@ -1,7 +1,5 @@
-Team's log. Stardate 2010.22:
+Team's log. Stardate 2010.28:
 
-This release comes with some fixes and improvements. We changed the "Restake" label, which was a bit confusing. Now it's called "Switch Node". The alert for claiming rewards with low balance it's in place now. And many other small changes.
-
-As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our website moonlet.io
+This release comes with many bug fixes. Hopefully all the main flows are bug free now. As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our website moonlet.io
 
 Moonlet Team

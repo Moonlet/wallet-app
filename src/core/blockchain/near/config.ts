@@ -6,6 +6,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
+import { Platform } from 'react-native';
 
 export const NEAR_NATIVE: ITokenConfigState = {
     name: 'Near',
@@ -18,7 +19,10 @@ export const NEAR_NATIVE: ITokenConfigState = {
     decimals: 24,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: Platform.select({
+            default: TokenScreenComponentType.DELEGATE,
+            web: TokenScreenComponentType.DEFAULT
+        })
     },
     type: TokenType.NATIVE,
     units: {
@@ -76,9 +80,9 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         gasPriceToken: 'NEAR',
         defaults: {
-            gasPrice: new BigNumber('10000'),
+            gasPrice: new BigNumber('100000000'),
             gasLimit: {
-                [TokenType.NATIVE]: new BigNumber('937144600000')
+                [TokenType.NATIVE]: new BigNumber('230000000000')
             }
         },
         ui: {
@@ -129,7 +133,7 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 2,
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(10).pow(24), // 1 NEAR
+        [AccountType.DEFAULT]: new BigNumber(0),
         [AccountType.LOCKUP_CONTRACT]: new BigNumber(10).pow(24).multipliedBy(40) // 40 NEAR
     }
 };

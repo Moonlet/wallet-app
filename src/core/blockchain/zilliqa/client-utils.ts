@@ -93,17 +93,17 @@ export class ClientUtils implements IClientUtils {
             return null;
         });
 
-        if (!token) {
-            return config.tokens.ZIL;
+        if (token && token.symbol && token.name && token.decimals) {
+            token.type = TokenType.ZRC2;
+            token.ui = {
+                decimals: token.decimals,
+                tokenScreenComponent: TokenScreenComponentType.DEFAULT
+            };
+
+            return token;
         }
 
-        token.type = TokenType.ZRC2;
-        token.ui = {
-            decimals: token.decimals,
-            tokenScreenComponent: TokenScreenComponentType.DEFAULT
-        };
-
-        return token;
+        return config.tokens.ZIL;
     }
 
     getTransactionStatus(txData, token: ITokenConfigState): TransactionStatus {

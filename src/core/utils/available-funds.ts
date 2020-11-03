@@ -2,8 +2,8 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../blockchain/types/token';
 import { getBlockchain } from '../blockchain/blockchain-factory';
-import { IAccountState, ITokenState } from '../../redux/wallets/state';
-import { ChainIdType, IFeeOptions } from '../blockchain/types';
+import { AccountType, IAccountState, ITokenState } from '../../redux/wallets/state';
+import { Blockchain, ChainIdType, IFeeOptions } from '../blockchain/types';
 
 export const getInputAmountToStd = (
     account: IAccountState,
@@ -40,7 +40,7 @@ export const availableFunds = (
     // Amount > available amount
     result.insufficientFunds =
         inputAmount.isGreaterThan(availableBalanceValue) ||
-        availableBalanceValue.eq(new BigNumber(0));
+        availableBalanceValue.isEqualTo(new BigNumber(0));
 
     if (result.insufficientFunds === true) {
         return result;
@@ -67,26 +67,50 @@ export const availableFunds = (
     return result;
 };
 
-export const availableAmount = (
+export const availableAmount = async (
     account: IAccountState,
     token: ITokenState,
+    chainId: ChainIdType,
     feeOptions?: IFeeOptions,
     balanceAvailable?: string
-): string => {
+): Promise<string> => {
     const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
     let balance: BigNumber = balanceAvailable
         ? getInputAmountToStd(account, token, balanceAvailable)
         : new BigNumber(token.balance?.value);
 
-    if (feeOptions) {
-        balance = balance.minus(feeOptions?.feeTotal);
+    const blockchainInstance = getBlockchain(account.blockchain);
+
+    // TODO: find a better place to handle this
+    if (account.blockchain === Blockchain.NEAR && account.type === AccountType.DEFAULT) {
+        const client = blockchainInstance.getClient(chainId);
+
+        const viewAccountRes = await client.http.jsonRpc('query', {
+            request_type: 'view_account',
+            finality: 'final',
+            account_id: account.address
+        });
+
+        const minBalance = new BigNumber(viewAccountRes?.result?.storage_usage || 500)
+            .dividedBy(new BigNumber('10000')) // min balance = storage_used / 10^4
+            .plus(new BigNumber(2)); // keep 2 NEAR in account
+
+        const amountToStd = blockchainInstance.account.amountToStd(
+            minBalance,
+            tokenConfig.decimals
+        );
+
+        balance = balance.minus(amountToStd);
+    } else {
+        if (feeOptions && tokenConfig.type === TokenType.NATIVE) {
+            balance = balance.minus(feeOptions?.feeTotal);
+        }
     }
 
     if (balance.isGreaterThanOrEqualTo(0)) {
-        const blockchainInstance = getBlockchain(account.blockchain);
         const amountFromStd = blockchainInstance.account.amountFromStd(
-            new BigNumber(balance),
+            balance,
             tokenConfig.decimals
         );
         return amountFromStd.toFixed();

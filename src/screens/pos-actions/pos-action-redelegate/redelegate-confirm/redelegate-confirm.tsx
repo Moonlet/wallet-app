@@ -89,7 +89,6 @@ export class RedelegateConfirmComponent extends React.Component<
             this.props.validators,
             this.props.token.symbol,
             feeOptions,
-            this.props.navigation,
             { fromValidator: this.props.fromValidator }
         );
     }

@@ -1,15 +1,10 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View, TouchableHighlight, Platform } from 'react-native';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import {
-    NavigationScreenProp,
-    NavigationState,
-    NavigationParams,
-    NavigationEvents
-} from 'react-navigation';
+import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { TokenCard } from '../token-card/token-card';
 import { normalize } from '../../styles/dimensions';
 import { Text } from '../../library';
@@ -21,15 +16,12 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { NavigationService } from '../../navigation/navigation-service';
-import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
-import { AccountSummary } from '../account-summary/account-summary';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { AffiliateBanner } from '../affiliate-banner/affiliate-banner';
-import { AffiliateBannerType } from '../affiliate-banner/types';
 import { IReduxState } from '../../redux/state';
 import { AccountStats } from '../../core/blockchain/types/stats';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
+import { SmartScreen } from '../../screens/smart-screen/smart-screen';
+import { ContextScreen } from '../widgets/types';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -42,7 +34,6 @@ interface IExternalProps {
 interface IReduxProps {
     accountStats: AccountStats;
     openBottomSheet: typeof openBottomSheet;
-    fetchAccountDelegateStats: typeof fetchAccountDelegateStats;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -58,61 +49,9 @@ const mapDispatchToProps = {
     fetchAccountDelegateStats
 };
 
-interface IState {
-    token: ITokenState;
-    loadingAccountStats: boolean;
-}
-
 export class TokenDashboardComponent extends React.Component<
-    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    constructor(
-        props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
-        super(props);
-
-        this.state = {
-            token: undefined,
-            loadingAccountStats: props.accountStats === undefined
-        };
-    }
-
-    public componentDidMount() {
-        this.fetchAccountStats();
-    }
-
-    public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
-        if (
-            this.props.blockchain !== prevProps.blockchain ||
-            this.props.account !== prevProps.account
-        ) {
-            this.fetchAccountStats();
-        }
-
-        if (this.props.accountStats && this.props.accountStats !== prevProps.accountStats) {
-            this.setState({
-                loadingAccountStats: false
-            });
-        }
-    }
-
-    private fetchAccountStats() {
-        const { account, blockchain, chainId } = this.props;
-
-        if (!account) {
-            return;
-        }
-
-        if (!this.props.accountStats) {
-            this.setState({ loadingAccountStats: true });
-        }
-
-        const token: ITokenState = account.tokens[chainId][getBlockchain(blockchain).config.coin];
-        this.setState({ token });
-        this.props.fetchAccountDelegateStats(this.props.account, token);
-    }
-
     private renderCard(options: { title?: string; icon: IconValues; onPress: () => void }) {
         const { styles, theme } = this.props;
 
@@ -163,30 +102,13 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    <AffiliateBanner
-                        type={AffiliateBannerType.LEDGER_NANO_X}
-                        style={styles.affiliateBanner}
-                    />
-
-                    <AccountSummary
-                        isLoading={this.state.loadingAccountStats}
-                        style={styles.accountSummary}
-                        data={{
-                            accountStats: this.props.accountStats,
-                            blockchain: this.props.blockchain,
-                            token: this.state.token,
-                            extraToken: this.props.account?.tokens[this.props.chainId].gZIL
-                        }}
-                        enableExpand={true}
-                    />
-
-                    <QuickDelegateBanner
-                        blockchain={this.props.blockchain}
-                        account={this.props.account}
-                        chainId={this.props.chainId}
-                        style={styles.quickDelegateBannerContainer}
-                        accountStats={this.props.accountStats}
-                    />
+                    {Platform.OS !== 'web' && (
+                        <SmartScreen
+                            context={{
+                                screen: ContextScreen.DASHBOARD
+                            }}
+                        />
+                    )}
 
                     {this.props.account?.tokens &&
                         this.props.chainId &&
@@ -204,8 +126,6 @@ export class TokenDashboardComponent extends React.Component<
                                 )
                         )}
                 </View>
-
-                <NavigationEvents onWillFocus={() => this.fetchAccountStats()} />
             </View>
         );
     }

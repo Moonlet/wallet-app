@@ -275,7 +275,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 2),
             wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 3),
             wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 4),
-            wallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, 0),
+            wallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, -1),
             wallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 0),
             wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
             wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
@@ -469,7 +469,7 @@ export const updateTransactionFromBlockchain = (
 
     const wallets = getWalletWithAddress(
         state,
-        [transaction.address, receivingAddress],
+        [transaction.address.toLowerCase(), receivingAddress.toLowerCase()],
         blockchain
     );
 
@@ -490,14 +490,19 @@ export const updateTransactionFromBlockchain = (
             wallets.length > 1
                 ? wallets.find(loopWallet =>
                       loopWallet.accounts.some(
-                          account => account.address.toLowerCase() === receivingAddress
+                          account =>
+                              account.address.toLowerCase() === receivingAddress.toLowerCase()
                       )
                   )
                 : wallets[0];
 
         const transactionAccount =
-            wallet.accounts.find(account => account.address.toLowerCase() === receivingAddress) ||
-            wallet.accounts.find(account => account.address.toLowerCase() === transaction.address);
+            wallet.accounts.find(
+                account => account.address.toLowerCase() === receivingAddress.toLowerCase()
+            ) ||
+            wallet.accounts.find(
+                account => account.address.toLowerCase() === transaction.address.toLowerCase()
+            );
 
         // update balance
         getBalance(

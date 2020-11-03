@@ -8,79 +8,34 @@ import {
 import { TransactionStatus } from '../../wallet/types';
 import { TokenType } from '../types/token';
 import { Solana } from '.';
+import { Client as SolanaClient } from './client';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-// import SystemProgram from '@solana/web3.js/src/system-program';
-import { SystemProgram } from '@solana/web3.js/src/index';
-// import { Account } from '@solana/web3.js/src/account';
+import { SystemProgram } from '@solana/web3.js/src/system-program';
+import { PublicKey } from '@solana/web3.js/src/publickey';
+import { Account } from '@solana/web3.js/src/account';
 import { Transaction } from '@solana/web3.js/src/transaction';
-// import { sendAndConfirmTransaction } from '@solana/web3.js/src/util/send-and-confirm-transaction';
-
+import { SolanaTransactionActionType } from './types';
+import { decode as bs58Decode } from 'bs58';
 // import solanaWeb3 from '@solana/web3.js';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
-        // console.log('herrrrr', SystemProgram);
-        const trx: Transaction = SystemProgram.transfer({
-            fromPubkey: tx.address,
-            toPubkey: tx.toAddress,
-            lamports: '1'
-        });
-
-        trx.sign();
-        // trx.recentBlockhash = await this._recentBlockhash(false;);
-
-        // console.log('transaction', JSON.stringify(trx));
-
-        // let signature = '';
-        // try {
-        //     signature = await sendAndConfirmTransaction(
-        //         this.web3sol,
-        //         transaction,
-        //         [this.state.account],
-        //         { confirmations: 1 }
-        //     );
-        // } catch (err) {
-        //     throw err;
-        // }
-
-        return;
-
-        const transaction: any = {
-            // tslint:disable-next-line: no-bitwise
-            version: (Number(tx.chainId) << 16) + 1, // add replay protection
-            toAddr: tx.toAddress,
-            nonce: tx.nonce,
-            // pubKey,
-            amount: tx.amount,
-            gasPrice: tx.feeOptions.gasPrice.toString(),
-            gasLimit: tx.feeOptions.gasLimit.toString(),
-            code: '',
-            data: tx.data?.raw || '',
-            signature: '',
-            priority: true
-        };
-
-        // encode transaction for signing
-        // sign transaction
-        const signature = '';
-
-        // update transaction
-        transaction.signature = signature;
-        transaction.amount = transaction.amount.toString();
-        transaction.gasLimit = transaction.gasLimit.toString();
-        transaction.gasPrice = transaction.gasPrice.toString();
-        transaction.toAddr = transaction.toAddr;
-
-        return transaction;
+        const account = new Account(bs58Decode(privateKey));
+        const transaction = new Transaction();
+        const transactionInstruction = tx.additionalInfo.actions[0].instruction;
+        transaction.add(transactionInstruction); // TO DO - change this when integrating staking
+        transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+        transaction.sign(...[account]);
+        return transaction.serialize();
     }
 
     public async buildTransferTransaction(
         tx: ITransferTransaction
     ): Promise<IBlockchainTransaction> {
-        const client = Solana.getClient(tx.chainId);
-        const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
+        const client = Solana.getClient(tx.chainId) as SolanaClient;
 
         const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
+        const blockHash = await client.getCurrentBlockHash();
         const blockInfo = await client.getCurrentBlock();
 
         return {
@@ -102,8 +57,21 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             amount: tx.amount,
             feeOptions: tx.feeOptions,
             broadcastedOnBlock: blockInfo?.number,
-            nonce,
-            status: TransactionStatus.PENDING
+            nonce: 0, // not used
+            status: TransactionStatus.PENDING,
+            additionalInfo: {
+                currentBlockHash: blockHash,
+                actions: [
+                    {
+                        type: SolanaTransactionActionType.TRANSFER,
+                        instruction: SystemProgram.transfer({
+                            fromPubkey: new PublicKey(tx.account.address),
+                            toPubkey: new PublicKey(tx.toAddress),
+                            lamports: tx.amount
+                        })
+                    }
+                ]
+            }
         };
     }
 

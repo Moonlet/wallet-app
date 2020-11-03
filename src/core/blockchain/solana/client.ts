@@ -3,7 +3,6 @@ import {
     ChainIdType,
     IBalance,
     IBlockInfo,
-    TransactionMessageText,
     TransactionType
 } from '../types';
 import { BigNumber } from 'bignumber.js';
@@ -12,13 +11,16 @@ import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
+import { Connection } from '@solana/web3.js/src/connection';
 
 export class Client extends BlockchainGenericClient {
+    private connection;
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
+        this.connection = new Connection(this.network.url);
     }
 
     public async getBalance(address: string): Promise<IBalance> {
@@ -31,36 +33,25 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getNonce(address: string): Promise<number> {
-        try {
-            return 1; // TODO to see what happens when there are multiple transactions in a limited time
-        } catch (result) {
-            return Promise.reject(result);
-        }
+        return 1;
     }
 
     public async getCurrentBlock(): Promise<IBlockInfo> {
-        try {
-            return {
-                hash: '',
-                number: 1
-            };
-        } catch (result) {
-            return Promise.reject(result);
-        }
+        return this.http.jsonRpc('getSlot', []).then(res => {
+            return res.result;
+        });
+    }
+
+    public async getCurrentBlockHash(): Promise<string> {
+        return this.http.jsonRpc('getRecentBlockhash', []).then(res => {
+            return res.result.value.blockhash;
+        });
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.http.jsonRpc('CreateTransaction', [transaction]).then(res => {
-            if (res.result) {
-                return res.result.TranID;
-            }
-
-            const errorMessage: string = res.error.message;
-            if (errorMessage.includes('transaction underpriced')) {
-                return Promise.reject(TransactionMessageText.TR_UNDERPRICED);
-            }
-            if (errorMessage.includes("Contract account won't accept normal txn")) {
-                return Promise.reject(TransactionMessageText.CONTRACT_TX_NORMAL_NOT_ALLOWED);
+        return this.connection.sendRawTransaction(transaction).then(res => {
+            if (res) {
+                return res;
             }
         });
     }

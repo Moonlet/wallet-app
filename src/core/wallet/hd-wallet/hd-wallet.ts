@@ -41,15 +41,15 @@ export class HDWallet implements IWallet {
     ): Promise<IAccountState[]> {
         indexTo = indexTo || index;
 
-        if (isNaN(Number(index))) {
-            return Promise.reject(
-                `${this.constructor.name}.getAccounts(): index must be a positive number.`
-            );
-        } else if (index < 0) {
-            return Promise.reject(
-                `${this.constructor.name}.getAccounts(): index must be a positive number.`
-            );
-        }
+        // if (isNaN(Number(index))) {
+        //     return Promise.reject(
+        //         `${this.constructor.name}.getAccounts(): index must be a positive number.`
+        //     );
+        // } else if (index < 0) {
+        //     return Promise.reject(
+        //         `${this.constructor.name}.getAccounts(): index must be a positive number.`
+        //     );
+        // }
 
         if (isNaN(Number(indexTo))) {
             return Promise.reject(
@@ -72,13 +72,15 @@ export class HDWallet implements IWallet {
                 blockchainInstance.config.derivationType,
                 this.seed
             ).derive(blockchainInstance.config.derivationPath);
+            let fromIndex = index;
 
             if (accountType === AccountType.ROOT) {
                 const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
                 accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, -1));
+                fromIndex++;
             }
 
-            for (let i = index; i <= indexTo; i++) {
+            for (let i = fromIndex; i <= indexTo; i++) {
                 const accountDerivationPath = blockchainInstance.account.getAccountDerivationPath(
                     i
                 );

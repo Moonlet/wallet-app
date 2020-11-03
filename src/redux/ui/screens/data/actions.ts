@@ -17,7 +17,7 @@ import {
 } from '@sentry/react-native';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
-export const START_LOADING = 'START_LOADING';
+export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
 
 export const fetchScreenData = (context: IScreenContext) => async (
     dispatch: Dispatch<
@@ -64,7 +64,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
     };
 
     // start loading
-    dispatch({ type: START_LOADING, data: { request: body } });
+    dispatch({ type: SCREEN_DATA_START_LOADING, data: { request: body } });
 
     try {
         // fetch screen data

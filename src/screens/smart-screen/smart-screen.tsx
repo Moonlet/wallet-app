@@ -86,7 +86,7 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
             this.props.fetchScreenData(this.props.context);
         }
 
-        this.updateLoading();
+        this.updateLoading(prevProps);
     }
 
     private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
@@ -101,25 +101,36 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         return props.screenData && screenKey && props.screenData[screenKey];
     }
 
-    private updateLoading() {
+    private updateLoading(prevProps: IReduxProps & IExternalProps) {
         const screenData = this.getScreenData(this.props);
+        const prevScreenData = this.getScreenData(prevProps);
 
-        if (!screenData?.response) {
-            if (!this.state.loadingScreenData) {
-                this.setState({
-                    loadingScreenData: true,
-                    loadingTimeoutInProgress: true
-                });
+        if (screenData?.isLoading !== prevScreenData?.isLoading) {
+            if (screenData?.isLoading) {
+                if (!screenData?.response) {
+                    this.setState({
+                        loadingScreenData: true,
+                        loadingTimeoutInProgress: true
+                    });
 
-                clearTimeout(this.loadingTimeout);
-                this.loadingTimeout = setTimeout(() => {
-                    this.setState({ loadingTimeoutInProgress: false });
-                }, 1500);
-            }
-        } else {
-            if (this.state.loadingTimeoutInProgress === false) {
-                if (this.state.loadingScreenData === true) {
-                    this.setState({ loadingScreenData: false });
+                    clearTimeout(this.loadingTimeout);
+                    this.loadingTimeout = setTimeout(() => {
+                        const localScreenData = this.getScreenData(this.props);
+                        if (!localScreenData?.isLoading) {
+                            this.setState({
+                                loadingTimeoutInProgress: false,
+                                loadingScreenData: false
+                            });
+                        } else {
+                            this.setState({ loadingTimeoutInProgress: false });
+                        }
+                    }, 1500);
+                }
+            } else {
+                if (!this.state.loadingTimeoutInProgress) {
+                    this.setState({
+                        loadingScreenData: false
+                    });
                 }
             }
         }

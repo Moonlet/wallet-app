@@ -170,6 +170,7 @@ export class SmartScreenComponent extends React.Component<
         if (screenData && screenKey && screenData[screenKey]) {
             const data = screenData[screenKey];
 
+            // TODO: improve this, on switch blockchain should not show the loading
             if (!this.state.loadingAnimationDone || (data.isLoading && !data.response)) {
                 return this.renderLoadingSkeleton();
             }

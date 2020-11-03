@@ -215,7 +215,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                                 {
                                     vname: 'amount',
                                     type: 'Uint128',
-                                    value: tx.amount
+                                    value: new BigNumber(tx.amount).toFixed(0, BigNumber.ROUND_DOWN)
                                 }
                             ]
                         })
@@ -240,7 +240,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                     publicKey: tx.account.publicKey,
 
                     toAddress: tx.toAddress,
-                    amount: tx.amount,
+                    amount: new BigNumber(tx.amount).toFixed(0, BigNumber.ROUND_DOWN),
                     feeOptions: tx.feeOptions,
                     broadcastedOnBlock: blockInfo?.number,
                     nonce,

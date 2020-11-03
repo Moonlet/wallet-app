@@ -4,7 +4,7 @@ import { firebaseConfig } from './firebase-web-beta';
 const extSyncBaseUrl = 'https://fire.moonlet.dev/functions/extensionSync';
 
 export const CONFIG_BETA: IAppConfig = {
-    walletApiBaseUrl: 'http://localhost:8080',
+    walletApiBaseUrl: 'https://api.moonlet.dev',
     supportUrl: 'https://fire.moonlet.dev/static/support/webview.html',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',

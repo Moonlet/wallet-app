@@ -5,13 +5,9 @@ import { IReduxState } from '../../../../redux/state';
 import { IScreenModule } from '../../types';
 import { getState } from './state-modifiers';
 
-export interface IExternalProps {
+interface IExternalProps {
     module: IScreenModule;
     renderModule: (m: IScreenModule) => void;
-}
-
-interface IReduxProps {
-    finalModule: IScreenModule;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -33,7 +29,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     };
 };
 
-const ModuleWrapperComponent = (props: IExternalProps & IReduxProps) => {
+const ModuleWrapperComponent = (props: IExternalProps) => {
     return props.renderModule(props.module);
 };
 

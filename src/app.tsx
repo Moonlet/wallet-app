@@ -176,8 +176,13 @@ export default class App extends React.Component<{}, IState> {
             this.setState({ displayApplication: false });
         } else {
             this.setState({ displayApplication: true });
-            // Fetch screen data when return from background
-            fetchScreenData({ screen: ContextScreen.DASHBOARD })(store.dispatch, store.getState);
+            if (this.state.appReady) {
+                // Fetch screen data when return from background
+                fetchScreenData({ screen: ContextScreen.DASHBOARD })(
+                    store.dispatch,
+                    store.getState
+                );
+            }
         }
         this.setState({ appState: nextAppState });
     };

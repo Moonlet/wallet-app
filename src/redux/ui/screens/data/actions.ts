@@ -36,7 +36,6 @@ export const fetchScreenData = (context: IScreenContext) => async (
     const state = getState();
     const wallet = getSelectedWallet(state);
     const account = getSelectedAccount(state);
-    if (!account) return;
     const chainId = getChainId(state, account.blockchain);
 
     const apiClient = new ApiClient();

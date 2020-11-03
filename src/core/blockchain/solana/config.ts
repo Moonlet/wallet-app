@@ -21,8 +21,8 @@ export const SOL_NATIVE: ITokenConfigState = {
     },
     type: TokenType.NATIVE,
     units: {
-        QA: new BigNumber(1),
-        LI: new BigNumber(Math.pow(10, 9)),
+        NA: new BigNumber(1),
+        LA: new BigNumber(Math.pow(10, 9)),
         SOL: new BigNumber(Math.pow(10, 9))
     }
 };
@@ -31,7 +31,7 @@ export const config: IBlockchainConfig = {
     derivationPath: `m/44'/501'`,
     derivationType: DerivationType.HD_KEY_ED25519,
     coin: 'SOL',
-    defaultUnit: 'QA',
+    defaultUnit: 'NA',
     droppedTxBlocksThreshold: 10,
     iconComponent: SolIcon,
     autoAddedTokensSymbols: {},
@@ -50,7 +50,7 @@ export const config: IBlockchainConfig = {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
             feeComponentAdvanced: 'GasFeeAdvanced',
-            gasPriceUnit: 'LI'
+            gasPriceUnit: 'LA'
         }
     },
     ui: {

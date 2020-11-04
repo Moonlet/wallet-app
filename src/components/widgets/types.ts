@@ -247,7 +247,7 @@ export interface ISeparatorData {
     color?: string;
 }
 
-interface IIconTwoLinesData {
+export interface IIconTwoLinesData {
     firstLine: IData[];
     secondLine: IData[];
     icon: {
@@ -266,7 +266,7 @@ interface IIconTwoLinesData {
 //     // };
 // }
 
-interface IThreeLinesIconData {
+export interface IThreeLinesIconData {
     firstLine: IData[];
     secondLine: IData[];
     thirdLine: IData[];

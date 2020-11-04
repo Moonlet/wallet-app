@@ -27,6 +27,7 @@ import { ExpandableContainer } from '../expandable-container/expandable-containe
 import { OneLineTextBanner } from './components/one-line-text-banner/one-line-text-banner';
 import { ModuleWrapper } from './components/module-wrapper/module-wrapper';
 import { ModuleSelectableWrapper } from './components/module-wrapper/module-selectable-wrapper';
+import { ThreeLinesIcon } from './components/three-lines-icon/three-lines-icon';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -135,6 +136,10 @@ class WidgetsComponent extends React.Component<
 
             case ModuleTypes.ONE_LINE_TEXT_BANNER:
                 moduleJSX = <OneLineTextBanner module={module} />;
+                break;
+
+            case ModuleTypes.THREE_LINES_ICON:
+                moduleJSX = <ThreeLinesIcon module={module} />;
                 break;
 
             case ModuleTypes.MODULE_WRAPPER:

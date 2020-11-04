@@ -9,7 +9,12 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
 import { Separator } from './components/separator/separator';
-import { IScreenModule, IScreenWidget, ModuleTypes } from './types';
+import {
+    IScreenModule,
+    IScreenModuleColumnsWrapperData,
+    IScreenWidget,
+    ModuleTypes
+} from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
@@ -21,6 +26,7 @@ import { ChainIdType } from '../../core/blockchain/types';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
 import { OneLineTextBanner } from './components/one-line-text-banner/one-line-text-banner';
 import { ModuleWrapper } from './components/module-wrapper/module-wrapper';
+import { ModuleSelectableWrapper } from './components/module-wrapper/module-selectable-wrapper';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -75,7 +81,11 @@ class WidgetsComponent extends React.Component<
         );
     }
 
-    public renderModule(module: IScreenModule, isWidgetExpanded: boolean) {
+    private renderModules(modules: IScreenModule[]) {
+        return <View>{modules.map(m => this.renderModule(m, undefined))}</View>;
+    }
+
+    private renderModule(module: IScreenModule, isWidgetExpanded: boolean) {
         let moduleJSX = null;
 
         switch (module.type) {
@@ -136,6 +146,22 @@ class WidgetsComponent extends React.Component<
                 );
                 break;
 
+            case ModuleTypes.MODULE_SELECTABLE_WRAPPER:
+                moduleJSX = (
+                    <ModuleSelectableWrapper
+                        module={module}
+                        renderModules={(modules: IScreenModule[]) => this.renderModules(modules)}
+                    />
+                );
+                break;
+
+            case ModuleTypes.MODULE_COLUMNS_WRAPPER:
+                // TODO: handle module.style
+                moduleJSX = this.renderModules(
+                    (module.data as IScreenModuleColumnsWrapperData).submodules
+                );
+                break;
+
             default:
                 return null;
         }
@@ -171,6 +197,9 @@ class WidgetsComponent extends React.Component<
             if (widget?.initialState === 'expanded') {
                 isWidgetExpanded = true;
             }
+
+            // TODO: apply
+            // widget.style
 
             return (
                 <TouchableOpacity
@@ -224,7 +253,7 @@ class WidgetsComponent extends React.Component<
 
     public render() {
         return (
-            <View>
+            <View style={{ flex: 1 }}>
                 {this.props.data.map((widget: IScreenWidget, index: number) =>
                     this.renderWidget(widget, index)
                 )}

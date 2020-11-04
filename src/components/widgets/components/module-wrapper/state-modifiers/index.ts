@@ -2,9 +2,11 @@ import { IReduxState } from '../../../../../redux/state';
 import { IScreenModule, IScreenModuleWrapperData } from './../../../types';
 
 import { updateClaimPending } from './update-claim-pending';
+import { quickStakeSelectValidator } from './quick-stake-select-validator';
 
 const stateModifiers = {
-    updateClaimPending
+    updateClaimPending,
+    quickStakeSelectValidator
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {

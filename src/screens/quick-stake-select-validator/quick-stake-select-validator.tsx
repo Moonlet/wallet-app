@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -19,11 +19,16 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <SmartScreen
-                    context={{
-                        screen: ContextScreen.QUICK_STAKE_SELECT_VALIDATOR
-                    }}
-                />
+                <ScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <SmartScreen
+                        context={{
+                            screen: ContextScreen.QUICK_STAKE_SELECT_VALIDATOR
+                        }}
+                    />
+                </ScrollView>
             </View>
         );
     }

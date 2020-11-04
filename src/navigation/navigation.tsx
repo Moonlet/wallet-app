@@ -57,6 +57,7 @@ import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-acc
 import { AddTokenScreen } from '../screens/token/components/add-token/add-token';
 import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
 import { Platform } from 'react-native';
+import { QuickStakeSelectValidatorScreen } from '../screens/quick-stake-select-validator/quick-stake-select-validator';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -178,6 +179,9 @@ export const WalletNavigation = createStackNavigator(
             screen: RecoverNearAccountScreen
         },
 
+        QuickStakeSelectValidator: {
+            screen: QuickStakeSelectValidatorScreen
+        },
         PosQuickDelegate: {
             screen: QuickDelegateSelectValidator
         },

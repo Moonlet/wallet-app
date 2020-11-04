@@ -51,6 +51,8 @@ import {
 import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { StakingBetaBadge } from '../../components/staking-beta-badge/staking-beta-badge';
+import { fetchScreenData } from '../../redux/ui/screens/data/actions';
+import { ContextScreen } from '../../components/widgets/types';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -71,6 +73,7 @@ interface IReduxProps {
     startNotificationsHandlers: typeof startNotificationsHandlers;
     unseenNotifications: number;
     getUnseenNotifications: typeof getUnseenNotifications;
+    fetchScreenData: typeof fetchScreenData;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -95,7 +98,8 @@ const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     startNotificationsHandlers,
-    getUnseenNotifications
+    getUnseenNotifications,
+    fetchScreenData
 };
 
 interface IState {
@@ -184,6 +188,7 @@ export class DashboardScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     private animationValue: any = new Animated.Value(0);
+    private scrollViewRef: any;
 
     constructor(
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -192,6 +197,7 @@ export class DashboardScreenComponent extends React.Component<
         this.state = {
             isLoading: false
         };
+        this.scrollViewRef = React.createRef();
     }
 
     public async componentDidMount() {
@@ -254,6 +260,10 @@ export class DashboardScreenComponent extends React.Component<
                 true
             );
         }
+
+        this.props.fetchScreenData({
+            screen: ContextScreen.DASHBOARD
+        });
     }
 
     private renderCoinBalanceCard() {
@@ -404,6 +414,7 @@ export class DashboardScreenComponent extends React.Component<
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView
+                    ref={ref => (this.scrollViewRef = ref)}
                     contentContainerStyle={[
                         styles.dashboardContainer,
                         {
@@ -458,7 +469,9 @@ export class DashboardScreenComponent extends React.Component<
 
                 {this.renderTokenDashboard()}
 
-                <BottomBlockchainNavigation />
+                <BottomBlockchainNavigation
+                    onPress={() => this.scrollViewRef.scrollTo({ y: 0, animated: true })}
+                />
             </View>
         );
     }

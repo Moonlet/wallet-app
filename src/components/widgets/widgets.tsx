@@ -56,6 +56,15 @@ class WidgetsComponent extends React.Component<
         this.setState({ widgetsExpandedState });
     }
 
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.account.blockchain !== prevProps.account.blockchain) {
+            // Widgets Expande States set on false
+            const widgetsExpandedState = this.state.widgetsExpandedState;
+            Object.keys(widgetsExpandedState).map(widget => (widgetsExpandedState[widget] = false));
+            this.setState({ widgetsExpandedState });
+        }
+    }
+
     private getWidgetKey(title: string) {
         return (
             'widget-' +

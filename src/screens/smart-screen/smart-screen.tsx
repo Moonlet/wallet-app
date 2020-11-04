@@ -1,12 +1,11 @@
 import React from 'react';
-import { View } from 'react-native';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
-import { IScreenContext } from '../../components/widgets/types';
+import { IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
-import { IScreenDatas } from '../../redux/ui/screens/data/state';
+import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
@@ -14,11 +13,9 @@ import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
 import { AccountStats } from '../../core/blockchain/types/stats';
-import { SkeletonPlaceholder } from '../../components/skeleton-placeholder/skeleton-placeholder';
-import stylesProvider from './styles';
-import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
+import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -59,25 +56,23 @@ const mapDispatchToProps = {
 };
 
 interface IState {
-    loadingAnimationDone: boolean;
+    loadingTimeoutInProgress: boolean;
+    loadingScreenData: boolean;
 }
 
-export class SmartScreenComponent extends React.Component<
-    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
-> {
-    constructor(
-        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
+export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
+    private loadingTimeout: any;
+
+    constructor(props: IReduxProps & IExternalProps) {
         super(props);
         this.state = {
-            loadingAnimationDone: false
+            loadingTimeoutInProgress: false,
+            loadingScreenData: false
         };
     }
 
     public componentDidMount() {
         this.props.fetchScreenData(this.props.context);
-        this.resetLoadingAnimation();
     }
 
     public componentDidUpdate(prevProps: IReduxProps & IExternalProps) {
@@ -89,80 +84,99 @@ export class SmartScreenComponent extends React.Component<
             this.props.context?.tab !== prevProps.context?.tab
         ) {
             this.props.fetchScreenData(this.props.context);
-            this.resetLoadingAnimation();
+        }
+
+        this.updateLoading(prevProps);
+    }
+
+    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
+        const screenKey = getScreenDataKey({
+            pubKey: props.walletPublicKey,
+            blockchain: props.account?.blockchain,
+            chainId: props.chainId,
+            address: props.account?.address,
+            tab: props.context?.tab
+        });
+
+        return props.screenData && screenKey && props.screenData[screenKey];
+    }
+
+    private updateLoading(prevProps: IReduxProps & IExternalProps) {
+        const screenData = this.getScreenData(this.props);
+        const prevScreenData = this.getScreenData(prevProps);
+
+        if (screenData?.isLoading !== prevScreenData?.isLoading) {
+            if (screenData?.isLoading) {
+                if (!screenData?.response) {
+                    this.setState({
+                        loadingScreenData: true,
+                        loadingTimeoutInProgress: true
+                    });
+
+                    clearTimeout(this.loadingTimeout);
+                    this.loadingTimeout = setTimeout(() => {
+                        const localScreenData = this.getScreenData(this.props);
+                        if (!localScreenData?.isLoading) {
+                            this.setState({
+                                loadingTimeoutInProgress: false,
+                                loadingScreenData: false
+                            });
+                        } else {
+                            this.setState({ loadingTimeoutInProgress: false });
+                        }
+                    }, 1500);
+                }
+            } else {
+                if (!this.state.loadingTimeoutInProgress) {
+                    this.setState({
+                        loadingScreenData: false
+                    });
+                }
+            }
         }
     }
 
-    private resetLoadingAnimation() {
-        this.setState({ loadingAnimationDone: false }, () =>
-            setTimeout(() => this.setState({ loadingAnimationDone: true }), 1200)
+    private renderWidgets(widgets: IScreenWidget[]) {
+        return (
+            <Widgets
+                data={widgets}
+                actions={{
+                    claimRewardNoInput: this.props.claimRewardNoInput,
+                    withdraw: this.props.withdraw
+                }}
+                account={this.props.account}
+                chainId={this.props.chainId}
+            />
+        );
+    }
+
+    private renderErrorWidget() {
+        return (
+            <ErrorWidget
+                header={translate('Widgets.wentWrong')}
+                body={translate('Widgets.didNotLoad')}
+                cta={{
+                    label: translate('App.labels.retry'),
+                    onPress: () => this.props.fetchScreenData(this.props.context)
+                }}
+            />
         );
     }
 
     public render() {
-        const { screenData, styles, theme } = this.props;
+        const screenData = this.getScreenData(this.props);
 
-        const screenKey = getScreenDataKey({
-            pubKey: this.props.walletPublicKey,
-            blockchain: this.props.account?.blockchain,
-            chainId: this.props.chainId,
-            address: this.props.account?.address,
-            tab: this.props.context?.tab
-        });
-
-        if (screenData && screenKey && screenData[screenKey]) {
-            const data = screenData[screenKey];
-
-            if (!this.state.loadingAnimationDone || (data.isLoading && !data.response)) {
-                return (
-                    <View key={'skeleton-placeholder'} style={styles.skeletonWrapper}>
-                        {new Array(4).fill('').map((_, index: number) => (
-                            <SkeletonPlaceholder
-                                key={`skelet-${index}`}
-                                backgroundColor={theme.colors.textTertiary}
-                                highlightColor={theme.colors.accent}
-                                speed={Math.floor(Math.random() * 700) + 1000}
-                            >
-                                <View style={styles.detailsSkeletonComp}>
-                                    <View style={styles.detailsSkeletonIcon} />
-                                    <View style={{ justifyContent: 'space-between' }}>
-                                        <View style={styles.detailsSkeletonPrimaryValue} />
-                                        <View style={styles.detailsSkeletonSecondaryValue} />
-                                    </View>
-                                </View>
-                            </SkeletonPlaceholder>
-                        ))}
-                    </View>
-                );
+        if (screenData) {
+            if (this.state.loadingScreenData) {
+                return <LoadingSkeleton />;
             }
 
-            if (data.response?.widgets) {
-                return (
-                    <View>
-                        <Widgets
-                            data={data.response.widgets}
-                            actions={{
-                                claimRewardNoInput: this.props.claimRewardNoInput,
-                                withdraw: this.props.withdraw
-                            }}
-                            account={this.props.account}
-                            chainId={this.props.chainId}
-                        />
-                    </View>
-                );
+            if (screenData.response?.widgets) {
+                return this.renderWidgets(screenData.response.widgets);
             }
 
-            if (data.error) {
-                return (
-                    <ErrorWidget
-                        header={translate('Widgets.wentWrong')}
-                        body={translate('Widgets.didNotLoad')}
-                        cta={{
-                            label: translate('App.labels.retry'),
-                            onPress: () => this.props.fetchScreenData(this.props.context)
-                        }}
-                    />
-                );
+            if (screenData.error) {
+                return this.renderErrorWidget();
             }
         }
 
@@ -171,6 +185,5 @@ export class SmartScreenComponent extends React.Component<
 }
 
 export const SmartScreen = smartConnect<IExternalProps>(SmartScreenComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
-    withTheme(stylesProvider)
+    connect(mapStateToProps, mapDispatchToProps)
 ]);

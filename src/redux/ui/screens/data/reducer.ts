@@ -1,6 +1,6 @@
 import { IScreenDataState } from './state';
 import { IAction } from '../../../types';
-import { FETCH_SCREEN_DATA, START_LOADING } from './actions';
+import { FETCH_SCREEN_DATA, SCREEN_DATA_START_LOADING } from './actions';
 import { IScreenRequest } from '../../../../components/widgets/types';
 import { Blockchain } from '../../../../core/blockchain/types';
 
@@ -11,7 +11,7 @@ const intialState: IScreenDataState = {
 
 export default (state: IScreenDataState = intialState, action: IAction): IScreenDataState => {
     switch (action.type) {
-        case START_LOADING: {
+        case SCREEN_DATA_START_LOADING: {
             const request: IScreenRequest = action.data.request;
 
             const key = getScreenDataKey({

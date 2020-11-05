@@ -1,5 +1,5 @@
-Team's log. Stardate 2011.04:
+Team's log. Stardate 2011.06:
 
-We heard your feedback. Our team make it a priority to fix bugs that are impeding you to get work done, and we’ve learned that your feedback is our biggest asset when it comes to improving the whole experience. Therefore this update comes with many improvements you asked for, like staking statistics, rewards distribution countdown, accessible claim widgets, and many others. As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
+This release comes with some fixes for Ethereum fees and Claim rewards. As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 
 Moonlet Team

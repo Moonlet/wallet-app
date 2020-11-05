@@ -28,6 +28,8 @@ import { OneLineTextBanner } from './components/one-line-text-banner/one-line-te
 import { ModuleWrapper } from './components/module-wrapper/module-wrapper';
 import { ModuleSelectableWrapper } from './components/module-wrapper/module-selectable-wrapper';
 import { ThreeLinesIcon } from './components/three-lines-icon/three-lines-icon';
+import LinearGradient from 'react-native-linear-gradient';
+import { formatStyles } from './utils';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -203,13 +205,10 @@ class WidgetsComponent extends React.Component<
                 isWidgetExpanded = true;
             }
 
-            // TODO: apply
-            // widget.style
-
             return (
                 <TouchableOpacity
                     key={`widget-${index}`}
-                    style={styles.widgetContainer}
+                    style={[styles.widgetContainer, widget?.style && formatStyles(widget.style)]}
                     activeOpacity={0.9}
                     onPress={() => {
                         const wigetsState = widgetsExpandedState;
@@ -241,8 +240,10 @@ class WidgetsComponent extends React.Component<
             );
         }
 
-        return (
-            <View key={`widget-${index}`} style={styles.widgetContainer}>
+        const widgetCustomStyle = widget?.style && formatStyles(widget.style);
+
+        const widgetJSX = (
+            <View key={`widget-${index}`} style={[styles.widgetContainer, widgetCustomStyle]}>
                 {widget.title && (
                     <Text style={[styles.headerText, styles.headerTextNonExpandable]}>
                         {widget.title}
@@ -254,11 +255,21 @@ class WidgetsComponent extends React.Component<
                 ))}
             </View>
         );
+
+        if (widgetCustomStyle?.gradient) {
+            return (
+                <LinearGradient colors={widgetCustomStyle.gradient as any}>
+                    {widgetJSX}
+                </LinearGradient>
+            );
+        } else {
+            return widgetJSX;
+        }
     }
 
     public render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View>
                 {this.props.data.map((widget: IScreenWidget, index: number) =>
                     this.renderWidget(widget, index)
                 )}

@@ -191,7 +191,7 @@ export interface IDataStyle {
         | number
         | {
               value: string | number;
-              fn: 'normalize' | 'normalizeFontAndLineHeight';
+              fn: 'normalize' | 'normalizeFontAndLineHeight' | 'gradient';
           };
 }
 

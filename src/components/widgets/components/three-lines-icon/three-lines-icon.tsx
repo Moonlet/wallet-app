@@ -19,6 +19,8 @@ const ThreeLinesIconComponent = (
 
     return (
         <View style={styles.container}>
+            <SmartImage source={{ uri: data.icon.url }} style={[styles.imageBaseStyle]} />
+
             <View>
                 <View style={styles.row}>
                     {formatDataJSXElements(data.firstLine, styles.lineText)}
@@ -30,8 +32,6 @@ const ThreeLinesIconComponent = (
                     {formatDataJSXElements(data.thirdLine, styles.lineText)}
                 </View>
             </View>
-
-            <SmartImage source={{ uri: data.icon.url }} style={[styles.imageBaseStyle]} />
         </View>
     );
 };

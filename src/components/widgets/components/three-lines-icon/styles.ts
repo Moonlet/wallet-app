@@ -1,14 +1,14 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { normalize } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flexDirection: 'row',
-            justifyContent: 'space-between'
-            // marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
-            // paddingHorizontal: BASE_DIMENSION
+            justifyContent: 'space-between',
+            paddingVertical: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         row: {
             flexDirection: 'row',
@@ -18,6 +18,8 @@ export default (theme: ITheme) =>
             color: theme.colors.text
         },
         imageBaseStyle: {
+            position: 'absolute',
+            right: BASE_DIMENSION,
             width: normalize(60),
             height: normalize(60),
             alignSelf: 'center'

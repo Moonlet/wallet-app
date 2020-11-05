@@ -141,24 +141,27 @@ export class Client extends BlockchainGenericClient {
             if (results[1]) {
                 const response = await results[1].json();
 
+                // Need to divide by 10 the response from ethgasAPI.json
+                // Note: To convert the provided values to gwei, divide by 10
+
                 presets = {
                     cheap: Ethereum.account.convertUnit(
-                        new BigNumber(response.safeLow),
+                        new BigNumber(response.safeLow).dividedBy(new BigNumber(10)),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     ),
                     standard: Ethereum.account.convertUnit(
-                        new BigNumber(response.average),
+                        new BigNumber(response.average).dividedBy(new BigNumber(10)),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     ),
                     fast: Ethereum.account.convertUnit(
-                        new BigNumber(response.fast),
+                        new BigNumber(response.fast).dividedBy(new BigNumber(10)),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     ),
                     fastest: Ethereum.account.convertUnit(
-                        new BigNumber(response.fastest),
+                        new BigNumber(response.fastest).dividedBy(new BigNumber(10)),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     )

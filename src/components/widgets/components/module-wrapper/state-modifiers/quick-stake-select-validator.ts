@@ -8,7 +8,9 @@ export const quickStakeSelectValidator = (state: IReduxState, module: IScreenMod
     if (wrapper) {
         //
     }
+
+    // DEFAULT
     // SELECTED
 
-    return 'DEFAULT';
+    return wrapper.state;
 };

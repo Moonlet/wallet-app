@@ -278,16 +278,20 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT
-                    withdrawTx = await client.stakingPool.withdraw(txWithdraw);
+                    withdrawTx = await client.stakingPool.withdraw(txWithdraw, tx.validators[0]);
 
-                    withdrawTx.additionalInfo.validatorId = tx?.extraFields?.validatorId;
-                    withdrawTx.additionalInfo.validatorName = tx?.extraFields?.validatorName;
+                    withdrawTx.additionalInfo.validatorId =
+                        tx?.extraFields?.validatorId || (tx?.validators && tx?.validators[0]?.id);
+                    withdrawTx.additionalInfo.validatorName =
+                        tx?.extraFields?.validatorName || (tx?.validators && tx.validators[0].name);
                 } else if (accountType === AccountType.LOCKUP_CONTRACT) {
                     // LOCKUP_CONTRACT
                     withdrawTx = await client.lockup.withdraw(txWithdraw);
 
-                    withdrawTx.additionalInfo.validatorId = tx?.extraFields?.validatorId;
-                    withdrawTx.additionalInfo.validatorName = tx?.extraFields?.validatorName;
+                    withdrawTx.additionalInfo.validatorId =
+                        tx?.extraFields?.validatorId || (tx?.validators && tx?.validators[0]?.id);
+                    withdrawTx.additionalInfo.validatorName =
+                        tx?.extraFields?.validatorName || (tx?.validators && tx.validators[0].name);
 
                     const nonce = await client.getNonce(withdrawTx.address, tx.account.publicKey);
                     withdrawTx.nonce = nonce;

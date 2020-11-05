@@ -93,11 +93,12 @@ export class StakingPool {
     }
 
     public async withdraw(
-        tx: IPosTransaction
+        tx: IPosTransaction,
+        validator: IValidator
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
-        transaction.toAddress = tx.extraFields.validatorId;
+        transaction.toAddress = validator.id;
         transaction.amount = tx.extraFields.amount;
 
         transaction.feeOptions = { feeTotal: NEAR_DEFAULT_FUNC_CALL_GAS.toString() };

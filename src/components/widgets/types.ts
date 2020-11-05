@@ -250,7 +250,7 @@ export interface ISeparatorData {
 export interface IIconTwoLinesData {
     firstLine: IData[];
     secondLine: IData[];
-    icon: {
+    icon?: {
         url: string;
         style?: IDataStyle;
     };

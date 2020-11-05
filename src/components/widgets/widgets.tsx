@@ -30,6 +30,7 @@ import { ModuleSelectableWrapper } from './components/module-wrapper/module-sele
 import { ThreeLinesIcon } from './components/three-lines-icon/three-lines-icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { formatStyles } from './utils';
+import { IconTwoLines } from './components/icon-two-lines/icon-two-lines';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -84,11 +85,53 @@ class WidgetsComponent extends React.Component<
         );
     }
 
-    private renderModules(modules: IScreenModule[]) {
-        return <View>{modules.map(m => this.renderModule(m, undefined))}</View>;
+    private renderModules(
+        modules: IScreenModule[],
+        options?: {
+            style?: any;
+            colWrapperStyle?: any;
+        }
+    ) {
+        const { styles } = this.props;
+
+        const wrapperStyle = options?.style && formatStyles(options.style);
+
+        const renderedModulesJSX = modules.map(m =>
+            this.renderModule(m, { style: options?.style })
+        );
+
+        let modulesJSX: any;
+        if (options?.colWrapperStyle) {
+            modulesJSX = (
+                <View style={[styles.moduleColWrapperContainer, options.colWrapperStyle]}>
+                    {renderedModulesJSX}
+                </View>
+            );
+        } else {
+            modulesJSX = <View>{renderedModulesJSX}</View>;
+        }
+
+        if (wrapperStyle?.gradient) {
+            return (
+                <LinearGradient
+                    colors={wrapperStyle.gradient as any}
+                    style={[styles.modulesContainer, wrapperStyle]}
+                >
+                    {modulesJSX}
+                </LinearGradient>
+            );
+        } else {
+            return <View style={[styles.modulesContainer, wrapperStyle]}>{modulesJSX}</View>;
+        }
     }
 
-    private renderModule(module: IScreenModule, isWidgetExpanded: boolean) {
+    private renderModule(
+        module: IScreenModule,
+        options?: {
+            isWidgetExpanded?: boolean;
+            style?: any;
+        }
+    ) {
         let moduleJSX = null;
 
         switch (module.type) {
@@ -144,11 +187,15 @@ class WidgetsComponent extends React.Component<
                 moduleJSX = <ThreeLinesIcon module={module} />;
                 break;
 
+            case ModuleTypes.ICON_TWO_LINES:
+                moduleJSX = <IconTwoLines module={module} />;
+                break;
+
             case ModuleTypes.MODULE_WRAPPER:
                 moduleJSX = (
                     <ModuleWrapper
                         module={module}
-                        renderModule={m => this.renderModule(m, isWidgetExpanded)}
+                        renderModule={m => this.renderModule(m, options)}
                     />
                 );
                 break;
@@ -157,23 +204,27 @@ class WidgetsComponent extends React.Component<
                 moduleJSX = (
                     <ModuleSelectableWrapper
                         module={module}
-                        renderModules={(modules: IScreenModule[]) => this.renderModules(modules)}
+                        renderModules={(modules: IScreenModule[], style: any) =>
+                            this.renderModules(modules, { style })
+                        }
                     />
                 );
                 break;
 
             case ModuleTypes.MODULE_COLUMNS_WRAPPER:
-                // TODO: handle module.style
-                moduleJSX = this.renderModules(
-                    (module.data as IScreenModuleColumnsWrapperData).submodules
-                );
+                const colWrapperData = module.data as IScreenModuleColumnsWrapperData;
+                moduleJSX = this.renderModules(colWrapperData.submodules, {
+                    style: options?.style,
+                    colWrapperStyle: colWrapperData?.style ? formatStyles(colWrapperData.style) : {}
+                });
+
                 break;
 
             default:
                 return null;
         }
 
-        if (isWidgetExpanded === undefined) {
+        if (options?.isWidgetExpanded === undefined) {
             return moduleJSX;
         } else {
             if (!module?.displayWhen) {
@@ -181,7 +232,7 @@ class WidgetsComponent extends React.Component<
             }
 
             let showModule = false;
-            if (!module?.displayWhen || isWidgetExpanded) {
+            if (!module?.displayWhen || options?.isWidgetExpanded) {
                 showModule = true;
             }
 
@@ -232,7 +283,9 @@ class WidgetsComponent extends React.Component<
 
                         {widget.modules.map((module: IScreenModule, i: number) => (
                             <View key={`module-${i}`}>
-                                {this.renderModule(module, isWidgetExpanded)}
+                                {this.renderModule(module, {
+                                    isWidgetExpanded
+                                })}
                             </View>
                         ))}
                     </View>
@@ -240,10 +293,11 @@ class WidgetsComponent extends React.Component<
             );
         }
 
-        const widgetCustomStyle = widget?.style && formatStyles(widget.style);
-
-        const widgetJSX = (
-            <View key={`widget-${index}`} style={[styles.widgetContainer, widgetCustomStyle]}>
+        return (
+            <View
+                key={`widget-${index}`}
+                style={[styles.widgetContainer, widget?.style && formatStyles(widget.style)]}
+            >
                 {widget.title && (
                     <Text style={[styles.headerText, styles.headerTextNonExpandable]}>
                         {widget.title}
@@ -255,16 +309,6 @@ class WidgetsComponent extends React.Component<
                 ))}
             </View>
         );
-
-        if (widgetCustomStyle?.gradient) {
-            return (
-                <LinearGradient colors={widgetCustomStyle.gradient as any}>
-                    {widgetJSX}
-                </LinearGradient>
-            );
-        } else {
-            return widgetJSX;
-        }
     }
 
     public render() {

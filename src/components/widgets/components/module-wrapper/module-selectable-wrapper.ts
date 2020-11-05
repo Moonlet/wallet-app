@@ -6,11 +6,12 @@ import { getState } from './state-modifiers';
 
 interface IExternalProps {
     module: IScreenModule;
-    renderModules: (m: IScreenModule[]) => void;
+    renderModules: (m: IScreenModule[], style: any) => void;
 }
 
 interface IReduxProps {
     modules: IScreenModule[];
+    style: any;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -19,10 +20,6 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
     // user wrapperState for style
     const style = wrapperData?.style[wrapperState];
-
-    if (style) {
-        //
-    }
 
     // let module = wrapperData?.DEFAULT;
     // if (wrapperData[wrapperState]) {
@@ -37,12 +34,13 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
     return {
         ...ownProps,
-        modules: wrapperData?.submodules || []
+        modules: wrapperData?.submodules || [],
+        style
     };
 };
 
 const ModuleSelectableWrapperComponent = (props: IExternalProps & IReduxProps) => {
-    return props.renderModules(props?.modules || []);
+    return props.renderModules(props?.modules || [], props?.style);
 };
 
 export const ModuleSelectableWrapper = smartConnect<IExternalProps>(

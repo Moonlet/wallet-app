@@ -1,5 +1,10 @@
 import { IReduxState } from '../../../../../redux/state';
-import { IScreenModule, IScreenModuleWrapperData } from './../../../types';
+import {
+    IScreenModule,
+    IScreenModuleSelectableWrapperData,
+    IScreenModuleWrapperData,
+    ModuleTypes
+} from './../../../types';
 
 import { updateClaimPending } from './update-claim-pending';
 import { quickStakeSelectValidator } from './quick-stake-select-validator';
@@ -10,7 +15,20 @@ const stateModifiers = {
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {
-    const wrapper: IScreenModuleWrapperData = module.data as IScreenModuleWrapperData;
+    let wrapper;
+
+    switch (module.type) {
+        case ModuleTypes.MODULE_WRAPPER:
+            wrapper = module.data as IScreenModuleWrapperData;
+            break;
+
+        case ModuleTypes.MODULE_SELECTABLE_WRAPPER:
+            wrapper = module.data as IScreenModuleSelectableWrapperData;
+            break;
+
+        default:
+            break;
+    }
 
     let wrapperState = wrapper.state;
     if (typeof stateModifiers[wrapper?.stateModifierFn] === 'function') {

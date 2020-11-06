@@ -17,6 +17,7 @@ import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-line
 import { IAccountState } from '../../redux/wallets/state';
 import { ChainIdType } from '../../core/blockchain/types';
 import { formatStyles } from './utils';
+import { IconModule } from './components/icon/icon';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -117,6 +118,10 @@ export const renderModule = (
 
         case ModuleTypes.ICON_TWO_LINES:
             moduleJSX = <IconTwoLines module={module} />;
+            break;
+
+        case ModuleTypes.ICON:
+            moduleJSX = <IconModule module={module} />;
             break;
 
         case ModuleTypes.MODULE_WRAPPER:

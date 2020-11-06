@@ -256,15 +256,9 @@ export interface IIconTwoLinesData {
     };
 }
 
-// interface IIconData {
-//     // state: string;
-//     // data: {
-//     //     [state: string]: {
-//     //         value: IconValues;
-//     //         style?: IDataStyle;
-//     //     };
-//     // };
-// }
+export interface IIconData {
+    icon: IconValues;
+}
 
 export interface IThreeLinesIconData {
     firstLine: IData[];

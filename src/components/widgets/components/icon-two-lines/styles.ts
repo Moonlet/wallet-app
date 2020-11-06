@@ -24,6 +24,6 @@ export default (theme: ITheme) =>
             width: normalize(44),
             height: normalize(44),
             alignSelf: 'center',
-            marginRight: BASE_DIMENSION
+            marginRight: BASE_DIMENSION / 2
         }
     });

@@ -15,6 +15,8 @@ export default (theme: ITheme) =>
         },
         modulesContainer: {
             backgroundColor: theme.colors.cardBackground,
+            borderColor: theme.colors.cardBackground,
+            borderWidth: 1,
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION
         },

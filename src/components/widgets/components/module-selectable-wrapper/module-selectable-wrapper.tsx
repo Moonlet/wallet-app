@@ -24,6 +24,7 @@ interface IExternalProps {
 interface IReduxProps {
     modules: IScreenModule[];
     style: any;
+    wrapperState: string;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -33,7 +34,8 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         ...ownProps,
         modules: wrapperData?.submodules || [],
-        style: wrapperData?.style[wrapperState]
+        style: wrapperData?.style[wrapperState],
+        wrapperState
     };
 };
 
@@ -98,7 +100,8 @@ class ModuleSelectableWrapperComponent extends React.Component<
                             account: this.props.account,
                             chainId: this.props.chainId,
                             actions,
-                            moduleColWrapperContainer: styles.moduleColWrapperContainer
+                            moduleColWrapperContainer: styles.moduleColWrapperContainer,
+                            moduleWrapperState: this.props.wrapperState
                         })}
                     </View>
                 ))}

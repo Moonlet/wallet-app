@@ -59,6 +59,7 @@ export const renderModule = (
         isWidgetExpanded?: boolean;
         style?: any;
         moduleColWrapperContainer?: any;
+        moduleWrapperState?: string;
     }
 ) => {
     let moduleJSX = null;
@@ -126,7 +127,11 @@ export const renderModule = (
 
         case ModuleTypes.MODULE_WRAPPER:
             moduleJSX = (
-                <ModuleWrapper module={module} renderModule={m => renderModule(m, options)} />
+                <ModuleWrapper
+                    module={module}
+                    renderModule={m => renderModule(m, options)}
+                    moduleWrapperState={options?.moduleWrapperState}
+                />
             );
             break;
 

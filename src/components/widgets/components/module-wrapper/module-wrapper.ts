@@ -8,6 +8,7 @@ import { getState } from './state-modifiers';
 interface IExternalProps {
     module: IScreenModule;
     renderModule: (m: IScreenModule) => void;
+    moduleWrapperState?: string;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -20,6 +21,13 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
         module = {
             ...module,
             ...wrapperData[wrapperState]
+        };
+    }
+
+    if (ownProps?.moduleWrapperState && wrapperData[ownProps.moduleWrapperState]) {
+        module = {
+            ...module,
+            ...wrapperData[ownProps.moduleWrapperState]
         };
     }
 

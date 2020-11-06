@@ -63,11 +63,31 @@ class ModuleSelectableWrapperComponent extends React.Component<
         const moduleJSX = (
             <TouchableOpacity
                 onPress={() => {
-                    if (this.props.module?.details?.validatorId) {
-                        actions.quickStakeValidatorMultipleSelection(
-                            this.props.screenKey,
-                            this.props.module?.details?.validatorId
-                        );
+                    if (this.props.module?.cta) {
+                        if (this.props.module.cta.type === 'callAction') {
+                            switch (this.props.module.cta.params.action) {
+                                case 'MULTIPLE_SELECTION':
+                                    if (this.props.module?.details?.validatorId) {
+                                        actions.quickStakeValidatorMultipleSelection(
+                                            this.props.screenKey,
+                                            this.props.module.details.validatorId
+                                        );
+                                    }
+                                    break;
+
+                                case 'SINGLE_SELECTION':
+                                    if (this.props.module?.details?.validatorId) {
+                                        actions.quickStakeValidatorSingleSelection(
+                                            this.props.screenKey,
+                                            this.props.module.details.validatorId
+                                        );
+                                    }
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
                     }
                 }}
                 activeOpacity={0.8}

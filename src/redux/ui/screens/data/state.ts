@@ -14,6 +14,5 @@ export interface IScreenDatas {
 }
 
 export interface IScreenDataState {
-    dashboard: IScreenDatas;
-    token: IScreenDatas;
+    [screen: string]: IScreenDatas;
 }

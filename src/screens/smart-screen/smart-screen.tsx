@@ -16,6 +16,7 @@ import { AccountStats } from '../../core/blockchain/types/stats';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
+import { quickStakeValidatorMultipleSelection } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -47,12 +48,14 @@ interface IReduxProps {
     fetchScreenData: typeof fetchScreenData;
     claimRewardNoInput: typeof claimRewardNoInput;
     withdraw: typeof withdraw;
+    quickStakeValidatorMultipleSelection: typeof quickStakeValidatorMultipleSelection;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     claimRewardNoInput,
-    withdraw
+    withdraw,
+    quickStakeValidatorMultipleSelection
 };
 
 interface IState {
@@ -89,14 +92,18 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         this.updateLoading(prevProps);
     }
 
-    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
-        const screenKey = getScreenDataKey({
+    private getScreenKey(props: IReduxProps & IExternalProps) {
+        return getScreenDataKey({
             pubKey: props.walletPublicKey,
             blockchain: props.account?.blockchain,
             chainId: props.chainId,
             address: props.account?.address,
             tab: props.context?.tab
         });
+    }
+
+    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
+        const screenKey = this.getScreenKey(props);
 
         return props.screenData && screenKey && props.screenData[screenKey];
     }
@@ -140,9 +147,12 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         return (
             <Widgets
                 data={widgets}
+                screenKey={this.getScreenKey(this.props)}
                 actions={{
                     claimRewardNoInput: this.props.claimRewardNoInput,
-                    withdraw: this.props.withdraw
+                    withdraw: this.props.withdraw,
+                    quickStakeValidatorMultipleSelection: this.props
+                        .quickStakeValidatorMultipleSelection
                 }}
                 account={this.props.account}
                 chainId={this.props.chainId}

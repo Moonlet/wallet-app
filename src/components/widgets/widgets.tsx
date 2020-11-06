@@ -16,6 +16,7 @@ import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/
 
 interface IExternalProps {
     data: IScreenWidget[];
+    screenKey: string;
     actions: any;
     account: IAccountState;
     chainId: ChainIdType;
@@ -137,6 +138,7 @@ class WidgetsComponent extends React.Component<
                         <ModuleSelectableWrapper
                             key={`module-${i}`}
                             module={module}
+                            screenKey={this.props.screenKey}
                             account={this.props.account}
                             chainId={this.props.chainId}
                             actions={this.props.actions}

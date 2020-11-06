@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 interface IExternalProps {
     module: IScreenModule;
+    screenKey: string;
     actions: any;
     account: IAccountState;
     chainId: ChainIdType;
@@ -36,46 +37,68 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     };
 };
 
-const ModuleSelectableWrapperComponent = (
-    props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
-) => {
-    const { styles } = props;
+class ModuleSelectableWrapperComponent extends React.Component<
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+> {
+    public componentDidMount() {
+        const { actions, module } = this.props;
 
-    const customStyle = props?.style && formatStyles(props.style);
-
-    const moduleJSX = (
-        <TouchableOpacity
-            onPress={() => {
-                //
-            }}
-            activeOpacity={0.8}
-        >
-            {props.modules.map((module: IScreenModule, index: number) => (
-                <View key={`module-${index}`}>
-                    {renderModule(module, {
-                        account: props.account,
-                        chainId: props.chainId,
-                        actions: props.actions,
-                        moduleColWrapperContainer: styles.moduleColWrapperContainer
-                    })}
-                </View>
-            ))}
-        </TouchableOpacity>
-    );
-
-    if (customStyle?.gradient) {
-        return (
-            <LinearGradient
-                colors={customStyle.gradient as any}
-                style={[styles.container, customStyle]}
-            >
-                {moduleJSX}
-            </LinearGradient>
-        );
-    } else {
-        return <View style={[styles.container, customStyle]}>{moduleJSX}</View>;
+        // Add auto selected modules
+        if (
+            module?.details?.validatorId &&
+            (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
+        ) {
+            actions.quickStakeValidatorMultipleSelection(
+                this.props.screenKey,
+                module.details.validatorId
+            );
+        }
     }
-};
+
+    public render() {
+        const { actions, styles } = this.props;
+
+        const customStyle = this.props?.style && formatStyles(this.props.style);
+
+        const moduleJSX = (
+            <TouchableOpacity
+                onPress={() => {
+                    if (this.props.module?.details?.validatorId) {
+                        actions.quickStakeValidatorMultipleSelection(
+                            this.props.screenKey,
+                            this.props.module?.details?.validatorId
+                        );
+                    }
+                }}
+                activeOpacity={0.8}
+            >
+                {this.props.modules.map((module: IScreenModule, index: number) => (
+                    <View key={`module-${index}`}>
+                        {renderModule(module, {
+                            account: this.props.account,
+                            chainId: this.props.chainId,
+                            actions,
+                            moduleColWrapperContainer: styles.moduleColWrapperContainer
+                        })}
+                    </View>
+                ))}
+            </TouchableOpacity>
+        );
+
+        if (customStyle?.gradient) {
+            return (
+                <LinearGradient
+                    colors={customStyle.gradient as any}
+                    style={[styles.container, customStyle]}
+                >
+                    {moduleJSX}
+                </LinearGradient>
+            );
+        } else {
+            return <View style={[styles.container, customStyle]}>{moduleJSX}</View>;
+        }
+    }
+}
 
 export const ModuleSelectableWrapper = smartConnect<IExternalProps>(
     ModuleSelectableWrapperComponent,

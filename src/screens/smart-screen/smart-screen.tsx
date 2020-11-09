@@ -3,7 +3,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
-import { IScreenContext, IScreenWidget } from '../../components/widgets/types';
+import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
@@ -189,7 +189,18 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
 
         if (screenData) {
             if (this.state.loadingScreenData) {
-                return <LoadingSkeleton />;
+                switch (this.props.context.screen) {
+                    case ContextScreen.TOKEN:
+                    case ContextScreen.QUICK_STAKE_SELECT_VALIDATOR:
+                        return new Array(4)
+                            .fill('')
+                            .map((_, index: number) => (
+                                <LoadingSkeleton key={`skeleton-${index}`} />
+                            ));
+
+                    default:
+                        return <LoadingSkeleton />;
+                }
             }
 
             if (screenData.response?.widgets) {

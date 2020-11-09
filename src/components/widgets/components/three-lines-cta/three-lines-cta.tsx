@@ -8,7 +8,7 @@ import { I3LinesCtaData, ICta, IScreenModule } from '../../types';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { buildDummyValidator } from '../../../../redux/wallets/actions';
 import { IAccountState } from '../../../../redux/wallets/state';
-import { formatDataJSXElements } from '../../utils';
+import { formatDataJSXElements, formatStyles } from '../../utils';
 import { NavigationService } from '../../../../navigation/navigation-service';
 
 interface IExternalProps {
@@ -64,7 +64,7 @@ const ThreeLinesCtaComponent = (
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
             <View style={styles.generalFlex}>
                 <View style={styles.row}>
                     {formatDataJSXElements(data.firstLine, styles.firstLineText)}

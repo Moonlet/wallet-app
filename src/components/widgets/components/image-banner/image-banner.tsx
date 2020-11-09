@@ -6,6 +6,7 @@ import stylesProvider from './styles';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { ResizeMode, SmartImage } from '../../../../library/image/smart-image';
 import { IImageBannerData, IScreenModule } from '../../types';
+import { formatStyles } from '../../utils';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -20,7 +21,11 @@ const ImageBannerComponent = (
     const urlToOpen = module.cta.params.url;
 
     return (
-        <TouchableOpacity onPress={() => openURL(urlToOpen)} activeOpacity={0.9}>
+        <TouchableOpacity
+            onPress={() => openURL(urlToOpen)}
+            activeOpacity={0.9}
+            style={module?.style && formatStyles(module.style)}
+        >
             <SmartImage
                 style={styles.image}
                 source={{ uri: imageUrl }}

@@ -18,7 +18,7 @@ const IconTwoLinesComponent = (
     const data = module.data as IIconTwoLinesData;
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
             {data?.icon && (
                 <SmartImage
                     source={{ uri: data.icon.url }}

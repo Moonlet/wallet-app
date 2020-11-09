@@ -10,7 +10,7 @@ import Icon from '../../../icon/icon';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
-import { formatDataJSXElements } from '../../utils';
+import { formatDataJSXElements, formatStyles } from '../../utils';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -47,7 +47,8 @@ const TwoLinesStakeBannerComponent = (
             <View
                 style={[
                     styles.container,
-                    { backgroundColor: data?.backgroundColor || theme.colors.cardBackground }
+                    { backgroundColor: data?.backgroundColor || theme.colors.cardBackground },
+                    module?.style && formatStyles(module.style)
                 ]}
             >
                 <View style={styles.textContainer}>

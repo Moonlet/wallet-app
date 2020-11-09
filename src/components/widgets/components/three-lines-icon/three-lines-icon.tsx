@@ -4,7 +4,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IScreenModule, IThreeLinesIconData } from '../../types';
-import { formatDataJSXElements } from '../../utils';
+import { formatDataJSXElements, formatStyles } from '../../utils';
 import { SmartImage } from '../../../../library/image/smart-image';
 
 interface IExternalProps {
@@ -18,7 +18,7 @@ const ThreeLinesIconComponent = (
     const data = module.data as IThreeLinesIconData;
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
             <SmartImage source={{ uri: data.icon.url }} style={[styles.imageBaseStyle]} />
 
             <View>

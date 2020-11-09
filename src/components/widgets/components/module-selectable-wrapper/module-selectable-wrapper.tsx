@@ -57,6 +57,11 @@ class ModuleSelectableWrapperComponent extends React.Component<
         }
     }
 
+    public componentWillUnmount() {
+        // Is this the best place to handle this?
+        this.props.actions.quickStakeValidatorClearSelection(this.props.screenKey);
+    }
+
     public render() {
         const { actions, styles } = this.props;
 

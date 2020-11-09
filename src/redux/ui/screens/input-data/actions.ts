@@ -33,7 +33,7 @@ export const quickStakeValidatorSingleSelection = (
 };
 
 // TODO: decide when to call this
-export const quickStakeValidatorClear = (screenKey: string) => async (
+export const quickStakeValidatorClearSelection = (screenKey: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {

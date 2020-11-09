@@ -18,7 +18,8 @@ import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
 import {
     quickStakeValidatorMultipleSelection,
-    quickStakeValidatorSingleSelection
+    quickStakeValidatorSingleSelection,
+    quickStakeValidatorClearSelection
 } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
@@ -53,6 +54,7 @@ interface IReduxProps {
     withdraw: typeof withdraw;
     quickStakeValidatorMultipleSelection: typeof quickStakeValidatorMultipleSelection;
     quickStakeValidatorSingleSelection: typeof quickStakeValidatorSingleSelection;
+    quickStakeValidatorClearSelection: typeof quickStakeValidatorClearSelection;
 }
 
 const mapDispatchToProps = {
@@ -60,7 +62,8 @@ const mapDispatchToProps = {
     claimRewardNoInput,
     withdraw,
     quickStakeValidatorMultipleSelection,
-    quickStakeValidatorSingleSelection
+    quickStakeValidatorSingleSelection,
+    quickStakeValidatorClearSelection
 };
 
 interface IState {
@@ -159,7 +162,8 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                     quickStakeValidatorMultipleSelection: this.props
                         .quickStakeValidatorMultipleSelection,
                     quickStakeValidatorSingleSelection: this.props
-                        .quickStakeValidatorSingleSelection
+                        .quickStakeValidatorSingleSelection,
+                    quickStakeValidatorClearSelection: this.props.quickStakeValidatorClearSelection
                 }}
                 account={this.props.account}
                 chainId={this.props.chainId}

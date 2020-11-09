@@ -190,6 +190,7 @@ export const activate = (
 
 export const withdraw = (
     account: IAccountState,
+    validators: IValidator[],
     token: string,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -211,7 +212,7 @@ export const withdraw = (
         posAction(
             account,
             undefined,
-            undefined,
+            validators,
             token,
             undefined,
             extraFields,

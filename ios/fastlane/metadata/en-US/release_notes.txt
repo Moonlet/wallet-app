@@ -1,5 +1,5 @@
-Team's log. Stardate 2011.06:
+Team's log. Stardate 2011.08:
 
-This release comes with some fixes for Ethereum fees and Claim rewards. As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
+This release comes with some fixes for Near. As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 
 Moonlet Team

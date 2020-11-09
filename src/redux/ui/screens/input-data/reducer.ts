@@ -12,7 +12,8 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
     switch (action.type) {
         case QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION:
             const validator = action.data.validator;
-            const validators: any = state[action.data.screenKey]?.validators || [];
+            const validators = [];
+            Object.assign(validators, state[action.data.screenKey]?.validators);
             const validatorIndex = validators.findIndex(v => v.id === validator.id);
 
             if (validatorIndex === -1) {

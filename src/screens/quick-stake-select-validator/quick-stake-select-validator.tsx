@@ -19,6 +19,9 @@ import {
 } from '../../redux/ui/screens/posActions/actions';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
+import { valuePrimaryCtaField } from '../../core/utils/format-string';
+import { IValidator } from '../../core/blockchain/types/stats';
 
 interface IReduxProps {
     validators: {
@@ -55,13 +58,31 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({ title: translate('App.labels.quickStake') });
 
+interface IState {
+    selectedValidators: IValidator[];
+}
+
 class QuickStakeSelectValidatorScreenComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+        this.state = {
+            selectedValidators: []
+        };
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.validators && this.props.validators !== prevProps.validators) {
+            const selectedValidators = [];
+            for (const v of this.props.validators) {
+                selectedValidators.push(buildDummyValidator(v.id, v.name, true));
+            }
+            this.setState({ selectedValidators });
+        }
     }
 
     private renderBottomConfirm() {
@@ -70,31 +91,25 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
         return (
             <BottomCta
                 label={translate('App.labels.next')}
-                disabled={false} // this.props.validators.length === 0}
+                disabled={validators.length === 0}
                 onPress={() => {
-                    const selectedValidators = [];
-                    for (const v of validators) {
-                        selectedValidators.push(buildDummyValidator(v.id, v.name));
-                    }
                     // Navigate to enter amount step
                     this.props.navigateToEnterAmountStep(
                         this.props.account.index,
                         this.props.account.blockchain,
                         this.props.token,
-                        selectedValidators,
+                        this.state.selectedValidators,
                         'App.labels.quickStake',
                         'QuickDelegateEnterAmount',
                         QUICK_DELEGATE_ENTER_AMOUNT
                     );
                 }}
             >
-                {/* TODO: this.props.validators not working */}
-                {/* <PrimaryCtaField
+                <PrimaryCtaField
                     label={translate('App.labels.quickStake')}
                     action={translate('App.labels.for').toLowerCase()}
-                    value={undefined}
-                    // value={valuePrimaryCtaField(this.state.validatorsList)}
-                /> */}
+                    value={valuePrimaryCtaField(this.state.selectedValidators)}
+                />
             </BottomCta>
         );
     }

@@ -515,7 +515,11 @@ const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {
     );
 };
 
-export const buildDummyValidator = (id: string, name?: string): IValidator => {
+export const buildDummyValidator = (
+    id: string,
+    name?: string,
+    actionTypeSelected?: boolean
+): IValidator => {
     return {
         id,
         name: name || id,
@@ -529,6 +533,7 @@ export const buildDummyValidator = (id: string, name?: string): IValidator => {
         website: '',
         topStats: [],
         secondaryStats: [],
-        chartStats: []
+        chartStats: [],
+        actionTypeSelected
     };
 };

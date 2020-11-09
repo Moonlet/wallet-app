@@ -12,6 +12,7 @@ export default (theme: ITheme) =>
         scrollContainer: {
             flexGrow: 1,
             marginHorizontal: BASE_DIMENSION * 2,
-            paddingVertical: BASE_DIMENSION * 2
+            paddingTop: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION * 12
         }
     });

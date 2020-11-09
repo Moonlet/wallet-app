@@ -19,7 +19,7 @@ export const quickStakeSelectValidator = (state: IReduxState, module: IScreenMod
     const validators: any = state.ui.screens.inputData[screenKey]?.validators;
     const validatorId = module?.details?.validatorId;
 
-    if (validators && validatorId && validators.indexOf(validatorId) !== -1) {
+    if (validators && validatorId && validators.findIndex(v => v.id === validatorId) !== -1) {
         return 'SELECTED';
     }
 

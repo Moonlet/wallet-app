@@ -51,10 +51,10 @@ class ModuleSelectableWrapperComponent extends React.Component<
             module?.details?.validatorId &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {
-            actions.quickStakeValidatorMultipleSelection(
-                this.props.screenKey,
-                module.details.validatorId
-            );
+            actions.quickStakeValidatorMultipleSelection(this.props.screenKey, {
+                id: module.details.validatorId,
+                name: module.details.validatorName
+            });
         }
     }
 
@@ -86,7 +86,10 @@ class ModuleSelectableWrapperComponent extends React.Component<
                                     if (this.props.module?.details?.validatorId) {
                                         actions.quickStakeValidatorMultipleSelection(
                                             this.props.screenKey,
-                                            this.props.module.details.validatorId
+                                            {
+                                                id: this.props.module.details.validatorId,
+                                                name: this.props.module.details.validatorName
+                                            }
                                         );
                                     }
                                     break;
@@ -95,7 +98,10 @@ class ModuleSelectableWrapperComponent extends React.Component<
                                     if (this.props.module?.details?.validatorId) {
                                         actions.quickStakeValidatorSingleSelection(
                                             this.props.screenKey,
-                                            this.props.module.details.validatorId
+                                            {
+                                                id: this.props.module.details.validatorId,
+                                                name: this.props.module.details.validatorName
+                                            }
                                         );
                                     }
                                     break;

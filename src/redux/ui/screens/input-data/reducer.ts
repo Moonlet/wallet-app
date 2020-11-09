@@ -11,13 +11,13 @@ const intialState: IScreenInputState = {};
 export default (state: IScreenInputState = intialState, action: IAction): IScreenInputState => {
     switch (action.type) {
         case QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION:
-            const validatorId = action.data.validatorId;
+            const validator = action.data.validator;
             const validators: any = state[action.data.screenKey]?.validators || [];
-            const validatorIndex = validators.indexOf(validatorId);
+            const validatorIndex = validators.findIndex(v => v.id === validator.id);
 
             if (validatorIndex === -1) {
                 // select validator
-                validators.push(validatorId);
+                validators.push(validator);
             } else {
                 // unselect validator
                 validators.splice(validatorIndex, 1);
@@ -36,7 +36,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    validators: [action.data.validatorId]
+                    validators: [action.data.validator]
                 }
             };
 

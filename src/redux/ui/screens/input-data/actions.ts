@@ -8,26 +8,32 @@ export const QUICK_STAKE_VALIDATOR_CLEAR = 'QUICK_STAKE_VALIDATOR_CLEAR';
 
 export const quickStakeValidatorMultipleSelection = (
     screenKey: string,
-    validatorId: string
+    validator: {
+        id: string;
+        name: string;
+    }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     dispatch({
         type: QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION,
         data: {
             screenKey,
-            validatorId
+            validator
         }
     });
 };
 
 export const quickStakeValidatorSingleSelection = (
     screenKey: string,
-    validatorId: string
+    validator: {
+        id: string;
+        name: string;
+    }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     dispatch({
         type: QUICK_STAKE_VALIDATOR_SINGLE_SELECTION,
         data: {
             screenKey,
-            validatorId
+            validator
         }
     });
 };

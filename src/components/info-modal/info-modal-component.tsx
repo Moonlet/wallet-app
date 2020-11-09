@@ -9,7 +9,7 @@ import { setInstance, waitForInstance } from '../../core/utils/class-registry';
 import { IScreenModule } from '../widgets/types';
 import { renderModule } from '../widgets/render-module';
 
-export interface IState {
+interface IState {
     isVisible: boolean;
     message: string | IScreenModule;
 }
@@ -72,7 +72,7 @@ export class InfoModalComponent extends React.Component<
                 <View style={styles.wrapper}>
                     <View style={styles.container}>
                         <View style={styles.messageContainer}>{msgJSX}</View>
-                        <Button primary onPress={() => this.close()}>
+                        <Button onPress={() => this.close()}>
                             {translate('App.labels.close')}
                         </Button>
                     </View>

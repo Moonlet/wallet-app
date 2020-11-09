@@ -46,8 +46,17 @@ const ThreeLinesCtaComponent = (
                     break;
 
                 case PosBasicActionType.WITHDRAW: {
+                    const withdrawValidator =
+                        cta?.params?.params?.validatorId &&
+                        cta?.params?.params?.validatorName &&
+                        buildDummyValidator(
+                            cta.params.params.validatorId,
+                            cta.params.params.validatorName
+                        );
+
                     actions.withdraw(
                         props.account,
+                        withdrawValidator && [withdrawValidator],
                         cta.params.params.tokenSymbol,
                         { amount: cta.params.params.amount },
                         undefined

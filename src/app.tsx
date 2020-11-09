@@ -39,6 +39,7 @@ import { updateTokenContracts } from './redux/tokens/actions';
 import { ZilliqaTransactionUpdate } from './components/zilliqa-transaction-update/zilliqa-transaction-update';
 import { ContextScreen } from './components/widgets/types';
 import { fetchScreenData } from './redux/ui/screens/data/actions';
+import { InfoModal } from './components/info-modal/info-modal';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -234,6 +235,7 @@ export default class App extends React.Component<{}, IState> {
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}
                             <LoadingModal.Component />
+                            <InfoModal.Component />
                             <LegalModal navigationState={this.state.navigationState} />
                             <LedgerConnect.Component />
                             <ZilliqaTransactionUpdate />

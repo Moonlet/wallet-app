@@ -51,7 +51,7 @@ export interface IScreenResponse {
 }
 
 export interface ICta {
-    type: 'callAction' | 'openUrl' | 'navigateTo' | 'openInfoModal';
+    type: 'callAction' | 'openUrl' | 'navigateTo';
     params: {
         action?: string;
         url?: string;

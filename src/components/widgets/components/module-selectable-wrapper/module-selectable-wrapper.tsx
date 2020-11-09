@@ -12,6 +12,7 @@ import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
+import { InfoModal } from '../../../info-modal/info-modal';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -107,8 +108,11 @@ class ModuleSelectableWrapperComponent extends React.Component<
                 }}
                 activeOpacity={0.8}
             >
+                {this.props.modules.map((m: IScreenModule, index: number) => (
+                    <View key={`module-${index}`}>{renderModule(m, moduleOptions)}</View>
+                ))}
                 {module?.info && (
-                    <View
+                    <TouchableOpacity
                         style={[
                             styles.infoWrapper,
                             {
@@ -120,13 +124,11 @@ class ModuleSelectableWrapperComponent extends React.Component<
                             },
                             module?.info?.style && formatStyles(module.info.style)
                         ]}
+                        onPress={() => InfoModal.open(module.info.data?.cta?.params?.params)}
                     >
                         {renderModule(module.info.data, moduleOptions)}
-                    </View>
+                    </TouchableOpacity>
                 )}
-                {this.props.modules.map((m: IScreenModule, index: number) => (
-                    <View key={`module-${index}`}>{renderModule(m, moduleOptions)}</View>
-                ))}
             </TouchableOpacity>
         );
 

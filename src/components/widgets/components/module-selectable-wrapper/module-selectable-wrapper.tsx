@@ -63,9 +63,17 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public render() {
-        const { actions, styles } = this.props;
+        const { actions, module, styles } = this.props;
 
         const customStyle = this.props?.style && formatStyles(this.props.style);
+
+        const moduleOptions = {
+            account: this.props.account,
+            chainId: this.props.chainId,
+            actions,
+            moduleColWrapperContainer: styles.moduleColWrapperContainer,
+            moduleWrapperState: this.props.wrapperState
+        };
 
         const moduleJSX = (
             <TouchableOpacity
@@ -99,16 +107,25 @@ class ModuleSelectableWrapperComponent extends React.Component<
                 }}
                 activeOpacity={0.8}
             >
-                {this.props.modules.map((module: IScreenModule, index: number) => (
-                    <View key={`module-${index}`}>
-                        {renderModule(module, {
-                            account: this.props.account,
-                            chainId: this.props.chainId,
-                            actions,
-                            moduleColWrapperContainer: styles.moduleColWrapperContainer,
-                            moduleWrapperState: this.props.wrapperState
-                        })}
+                {module?.info && (
+                    <View
+                        style={[
+                            styles.infoWrapper,
+                            {
+                                right:
+                                    !module.info?.position || module.info?.position === 'top-right'
+                                        ? 0
+                                        : undefined,
+                                left: module.info?.position === 'top-left' ? 0 : undefined
+                            },
+                            module?.info?.style && formatStyles(module.info.style)
+                        ]}
+                    >
+                        {renderModule(module.info.data, moduleOptions)}
                     </View>
+                )}
+                {this.props.modules.map((m: IScreenModule, index: number) => (
+                    <View key={`module-${index}`}>{renderModule(m, moduleOptions)}</View>
                 ))}
             </TouchableOpacity>
         );

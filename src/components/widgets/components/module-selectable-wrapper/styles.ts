@@ -14,5 +14,9 @@ export default (theme: ITheme) =>
         moduleColWrapperContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between'
+        },
+        infoWrapper: {
+            top: 0,
+            position: 'absolute'
         }
     });

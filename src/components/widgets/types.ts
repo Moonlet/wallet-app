@@ -51,7 +51,7 @@ export interface IScreenResponse {
 }
 
 export interface ICta {
-    type: 'callAction' | 'openUrl' | 'navigateTo';
+    type: 'callAction' | 'openUrl' | 'navigateTo' | 'openInfoModal';
     params: {
         action?: string;
         url?: string;
@@ -115,6 +115,11 @@ export interface IScreenModule {
         | IStaticTextColumnData[]
         | IThreeLinesIconData;
     details?: any; // ex. amount, validatorId, ...
+    info?: {
+        position?: string; // 'top-right' is default
+        style?: IDataStyle;
+        data: IScreenModule;
+    };
 }
 
 export enum ModuleTypes {

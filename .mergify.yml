@@ -7,7 +7,7 @@ pull_request_rules:
       - status-success=codecov/project
       - status-success=security/snyk - android/app/build.gradle (Moonlet)
       - status-success=security/snyk - android/build.gradle (Moonlet)
-      # - status-success=security/snyk - package.json (Moonlet)
+      - status-success=security/snyk - package.json (Moonlet)
       - status-success=Run checks
     actions:
       merge:

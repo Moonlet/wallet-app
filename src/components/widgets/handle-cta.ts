@@ -2,7 +2,7 @@ import { PosBasicActionType } from '../../core/blockchain/types/token';
 import { openURL } from '../../core/utils/linking-handler';
 import { NavigationService } from '../../navigation/navigation-service';
 import { buildDummyValidator } from '../../redux/wallets/actions';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { ICta } from './types';
 
 export const handleCta = async (
@@ -13,6 +13,7 @@ export const handleCta = async (
         screenKey?: string;
         validatorId?: string;
         validatorName?: string;
+        token?: ITokenState;
     }
 ) => {
     if (!cta) {
@@ -81,21 +82,17 @@ export const handleCta = async (
             break;
 
         case 'navigateTo':
-            NavigationService.navigate(cta.params.params.screen, {
-                ...cta.params.params
-            });
+            // TODO: not working
+            const navigationParams = options?.token
+                ? {
+                      ...cta.params.params,
+                      blockchain: options.account.blockchain,
+                      accountIndex: options.account.index,
+                      token: options.token
+                  }
+                : { ...cta.params.params };
 
-            // const blockchainConfig = getBlockchain(props.account.blockchain);
-
-            // const token: ITokenState =
-            //     props.account.tokens[props.chainId][blockchainConfig.config.coin];
-
-            // NavigationService.navigate(cta.params.screen, {
-            //     ...cta.params.params,
-            //     blockchain: props.account.blockchain,
-            //     accountIndex: props.account.index,
-            //     token
-            // });
+            NavigationService.navigate(cta.params.params.screen, navigationParams);
             break;
 
         case 'openUrl':

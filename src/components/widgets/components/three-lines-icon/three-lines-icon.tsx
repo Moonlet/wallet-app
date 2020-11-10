@@ -19,7 +19,10 @@ const ThreeLinesIconComponent = (
 
     return (
         <View style={[styles.container, module?.style && formatStyles(module.style)]}>
-            <SmartImage source={{ uri: data.icon.url }} style={[styles.imageBaseStyle]} />
+            <SmartImage
+                source={{ uri: data.icon.url }}
+                style={[styles.imageBaseStyle, data.icon?.style && formatStyles(data.icon.style)]}
+            />
 
             <View>
                 <View style={styles.row}>

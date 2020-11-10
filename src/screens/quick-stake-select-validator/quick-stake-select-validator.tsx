@@ -55,7 +55,7 @@ const mapDispatchToProps = {
     navigateToEnterAmountStep
 };
 
-const navigationOptions = () => ({ title: translate('App.labels.quickStake') });
+const navigationOptions = () => ({ title: translate('App.labels.stakeNow') });
 
 class QuickStakeSelectValidatorScreenComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -90,14 +90,14 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
                         this.props.account.blockchain,
                         this.props.token,
                         selectedValidators,
-                        'App.labels.quickStake',
+                        'App.labels.stakeNow',
                         'QuickDelegateEnterAmount',
                         QUICK_DELEGATE_ENTER_AMOUNT
                     );
                 }}
             >
                 <PrimaryCtaField
-                    label={translate('App.labels.quickStake')}
+                    label={translate('App.labels.stakeNow')}
                     action={translate('App.labels.for').toLowerCase()}
                     value={this.valuePrimaryCtaField(validators)}
                 />

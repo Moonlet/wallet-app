@@ -36,7 +36,7 @@ export const selectInput = (screenKey: string, inputData: any, inputKey: string)
     });
 };
 
-export const clearInput = (screenKey: string, inputKey: string) => async (
+export const clearInput = (screenKey: string, inputData: { [input: string]: any }) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -44,7 +44,7 @@ export const clearInput = (screenKey: string, inputKey: string) => async (
         type: CLEAR_INPUT,
         data: {
             screenKey,
-            inputKey
+            inputData
         }
     });
 };

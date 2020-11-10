@@ -5,11 +5,9 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
 import { I3LinesCtaData, ICta, IScreenModule } from '../../types';
-import { PosBasicActionType } from '../../../../core/blockchain/types/token';
-import { buildDummyValidator } from '../../../../redux/wallets/actions';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { NavigationService } from '../../../../navigation/navigation-service';
+import { handleCta } from '../../handle-cta';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -20,57 +18,11 @@ interface IExternalProps {
 const ThreeLinesCtaComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { actions, module, styles } = props;
+    const { actions, account, module, styles } = props;
     const data = module.data as I3LinesCtaData;
     const cta = module.cta as ICta;
 
-    const handleOnPress = () => {
-        if (cta.type === 'navigateTo') {
-            NavigationService.navigate(cta.params.params.screen, {
-                ...cta.params.params
-            });
-        } else if (cta.type === 'callAction') {
-            switch (cta.params.action) {
-                case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
-                    const validator = buildDummyValidator(
-                        cta.params.params.validatorId,
-                        cta.params.params.validatorName
-                    );
-
-                    actions.claimRewardNoInput(
-                        props.account,
-                        [validator],
-                        cta.params.params.tokenSymbol,
-                        undefined
-                    );
-                    break;
-
-                case PosBasicActionType.WITHDRAW: {
-                    const withdrawValidator =
-                        cta?.params?.params?.validatorId &&
-                        cta?.params?.params?.validatorName &&
-                        buildDummyValidator(
-                            cta.params.params.validatorId,
-                            cta.params.params.validatorName
-                        );
-
-                    actions.withdraw(
-                        props.account,
-                        withdrawValidator && [withdrawValidator],
-                        cta.params.params.tokenSymbol,
-                        { amount: cta.params.params.amount },
-                        undefined
-                    );
-                    break;
-                }
-
-                default:
-                    break;
-            }
-        } else {
-            //
-        }
-    };
+    const handleOnPress = () => handleCta(cta, { actions, account });
 
     return (
         <View style={[styles.container, module?.style && formatStyles(module.style)]}>

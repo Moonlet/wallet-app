@@ -21,7 +21,6 @@ export default (theme: ITheme) =>
             position: 'absolute',
             right: BASE_DIMENSION,
             width: normalize(60),
-            height: normalize(60),
-            alignSelf: 'center'
+            height: normalize(60)
         }
     });

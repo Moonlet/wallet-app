@@ -187,6 +187,9 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
 
         if (screenData) {
             if (this.state.loadingScreenData) {
+                // TODO: refactor this
+                // getLoadingSkeleton
+                // param of function type getLoadingSkeleton so we can customize the skeleton where we include smart screen component
                 switch (this.props.context.screen) {
                     case ContextScreen.TOKEN:
                     case ContextScreen.QUICK_STAKE_SELECT_VALIDATOR:

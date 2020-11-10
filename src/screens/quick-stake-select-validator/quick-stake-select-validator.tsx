@@ -21,12 +21,10 @@ import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { formatValidatorName } from '../../core/utils/format-string';
+import { InputDataValidator } from '../../redux/ui/screens/input-data/state';
 
 interface IReduxProps {
-    validators: {
-        id: string;
-        name: string;
-    }[];
+    validators: InputDataValidator[];
     account: IAccountState;
     token: ITokenState;
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
@@ -55,7 +53,7 @@ const mapDispatchToProps = {
     navigateToEnterAmountStep
 };
 
-const navigationOptions = () => ({ title: translate('App.labels.quickStake') });
+const navigationOptions = () => ({ title: translate('App.labels.stakeNow') });
 
 class QuickStakeSelectValidatorScreenComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -81,7 +79,9 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
                 onPress={() => {
                     const selectedValidators = [];
                     for (const v of this.props.validators) {
-                        selectedValidators.push(buildDummyValidator(v.id, v.name));
+                        selectedValidators.push(
+                            buildDummyValidator(v.id, v.name, v?.icon, v?.website)
+                        );
                     }
 
                     // Navigate to enter amount step
@@ -90,14 +90,14 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
                         this.props.account.blockchain,
                         this.props.token,
                         selectedValidators,
-                        'App.labels.quickStake',
+                        'App.labels.stakeNow',
                         'QuickDelegateEnterAmount',
                         QUICK_DELEGATE_ENTER_AMOUNT
                     );
                 }}
             >
                 <PrimaryCtaField
-                    label={translate('App.labels.quickStake')}
+                    label={translate('App.labels.stakeNow')}
                     action={translate('App.labels.for').toLowerCase()}
                     value={this.valuePrimaryCtaField(validators)}
                 />

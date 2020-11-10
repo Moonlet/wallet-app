@@ -5,7 +5,7 @@ import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
-import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
+import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
@@ -17,9 +17,9 @@ import { ErrorWidget } from '../../components/widgets/components/error-widget/er
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
 import {
-    quickStakeValidatorMultipleSelection,
-    quickStakeValidatorSingleSelection,
-    quickStakeValidatorClearSelection
+    toggleValidatorMultiple,
+    selectValidator,
+    clearInput
 } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
@@ -42,7 +42,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 interface IReduxProps {
-    screenData: IScreenDatas;
+    screenData: IScreensData;
 
     walletPublicKey: string;
     account: IAccountState;
@@ -52,18 +52,18 @@ interface IReduxProps {
     fetchScreenData: typeof fetchScreenData;
     claimRewardNoInput: typeof claimRewardNoInput;
     withdraw: typeof withdraw;
-    quickStakeValidatorMultipleSelection: typeof quickStakeValidatorMultipleSelection;
-    quickStakeValidatorSingleSelection: typeof quickStakeValidatorSingleSelection;
-    quickStakeValidatorClearSelection: typeof quickStakeValidatorClearSelection;
+    toggleValidatorMultiple: typeof toggleValidatorMultiple;
+    selectValidator: typeof selectValidator;
+    clearInput: typeof clearInput;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     claimRewardNoInput,
     withdraw,
-    quickStakeValidatorMultipleSelection,
-    quickStakeValidatorSingleSelection,
-    quickStakeValidatorClearSelection
+    toggleValidatorMultiple,
+    selectValidator,
+    clearInput
 };
 
 interface IState {
@@ -159,11 +159,9 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                 actions={{
                     claimRewardNoInput: this.props.claimRewardNoInput,
                     withdraw: this.props.withdraw,
-                    quickStakeValidatorMultipleSelection: this.props
-                        .quickStakeValidatorMultipleSelection,
-                    quickStakeValidatorSingleSelection: this.props
-                        .quickStakeValidatorSingleSelection,
-                    quickStakeValidatorClearSelection: this.props.quickStakeValidatorClearSelection
+                    toggleValidatorMultiple: this.props.toggleValidatorMultiple,
+                    selectValidator: this.props.selectValidator,
+                    clearInput: this.props.clearInput
                 }}
                 account={this.props.account}
                 chainId={this.props.chainId}

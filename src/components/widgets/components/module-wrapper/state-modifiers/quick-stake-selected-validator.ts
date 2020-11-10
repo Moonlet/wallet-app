@@ -4,7 +4,7 @@ import { getScreenDataKey } from '../../../../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../../../../redux/wallets/selectors';
 import { IScreenModule } from '../../../types';
 
-export const quickStakeSelectValidator = (state: IReduxState, module: IScreenModule): string => {
+export const quickStakeSelectedValidator = (state: IReduxState, module: IScreenModule): string => {
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 

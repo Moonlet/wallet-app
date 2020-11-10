@@ -1,16 +1,12 @@
 import { IScreenInputState } from './state';
 import { IAction } from '../../../types';
-import {
-    QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION,
-    QUICK_STAKE_VALIDATOR_SINGLE_SELECTION,
-    QUICK_STAKE_VALIDATOR_CLEAR
-} from './actions';
+import { TOGGLE_VALIDATOR_MULTIPLE, SELECT_VALIDATOR, CLEAR_INPUT } from './actions';
 
 const intialState: IScreenInputState = {};
 
 export default (state: IScreenInputState = intialState, action: IAction): IScreenInputState => {
     switch (action.type) {
-        case QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION:
+        case TOGGLE_VALIDATOR_MULTIPLE:
             const validator = action.data.validator;
             const validators = [];
             Object.assign(validators, state[action.data.screenKey]?.validators);
@@ -32,7 +28,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 }
             };
 
-        case QUICK_STAKE_VALIDATOR_SINGLE_SELECTION:
+        case SELECT_VALIDATOR:
             return {
                 ...state,
                 [action.data.screenKey]: {
@@ -41,7 +37,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 }
             };
 
-        case QUICK_STAKE_VALIDATOR_CLEAR:
+        case CLEAR_INPUT:
             return {
                 ...state,
                 [action.data.screenKey]: {

@@ -2,11 +2,11 @@ import { Dispatch } from 'react';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
 
-export const QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION = 'QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION';
-export const QUICK_STAKE_VALIDATOR_SINGLE_SELECTION = 'QUICK_STAKE_VALIDATOR_SINGLE_SELECTION';
-export const QUICK_STAKE_VALIDATOR_CLEAR = 'QUICK_STAKE_VALIDATOR_CLEAR';
+export const TOGGLE_VALIDATOR_MULTIPLE = 'TOGGLE_VALIDATOR_MULTIPLE';
+export const SELECT_VALIDATOR = 'SELECT_VALIDATOR';
+export const CLEAR_INPUT = 'CLEAR_INPUT';
 
-export const quickStakeValidatorMultipleSelection = (
+export const toggleValidatorMultiple = (
     screenKey: string,
     validator: {
         id: string;
@@ -14,7 +14,7 @@ export const quickStakeValidatorMultipleSelection = (
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     dispatch({
-        type: QUICK_STAKE_VALIDATOR_MULTIPLE_SELECTION,
+        type: TOGGLE_VALIDATOR_MULTIPLE,
         data: {
             screenKey,
             validator
@@ -22,7 +22,7 @@ export const quickStakeValidatorMultipleSelection = (
     });
 };
 
-export const quickStakeValidatorSingleSelection = (
+export const selectValidator = (
     screenKey: string,
     validator: {
         id: string;
@@ -30,7 +30,7 @@ export const quickStakeValidatorSingleSelection = (
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     dispatch({
-        type: QUICK_STAKE_VALIDATOR_SINGLE_SELECTION,
+        type: SELECT_VALIDATOR,
         data: {
             screenKey,
             validator
@@ -38,13 +38,12 @@ export const quickStakeValidatorSingleSelection = (
     });
 };
 
-// TODO: decide when to call this
-export const quickStakeValidatorClearSelection = (screenKey: string) => async (
+export const clearInput = (screenKey: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
     dispatch({
-        type: QUICK_STAKE_VALIDATOR_CLEAR,
+        type: CLEAR_INPUT,
         data: {
             screenKey
         }

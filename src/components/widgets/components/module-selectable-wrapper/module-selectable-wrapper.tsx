@@ -51,7 +51,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
             module?.details?.validatorId &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {
-            actions.quickStakeValidatorMultipleSelection(this.props.screenKey, {
+            actions.toggleValidatorMultiple(this.props.screenKey, {
                 id: module.details.validatorId,
                 name: module.details.validatorName
             });
@@ -60,7 +60,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
 
     public componentWillUnmount() {
         // Is this the best place to handle this?
-        this.props.actions.quickStakeValidatorClearSelection(this.props.screenKey);
+        this.props.actions.clearInput(this.props.screenKey);
     }
 
     public render() {
@@ -84,25 +84,19 @@ class ModuleSelectableWrapperComponent extends React.Component<
                             switch (this.props.module.cta.params.action) {
                                 case 'MULTIPLE_SELECTION':
                                     if (this.props.module?.details?.validatorId) {
-                                        actions.quickStakeValidatorMultipleSelection(
-                                            this.props.screenKey,
-                                            {
-                                                id: this.props.module.details.validatorId,
-                                                name: this.props.module.details.validatorName
-                                            }
-                                        );
+                                        actions.toggleValidatorMultiple(this.props.screenKey, {
+                                            id: this.props.module.details.validatorId,
+                                            name: this.props.module.details.validatorName
+                                        });
                                     }
                                     break;
 
                                 case 'SINGLE_SELECTION':
                                     if (this.props.module?.details?.validatorId) {
-                                        actions.quickStakeValidatorSingleSelection(
-                                            this.props.screenKey,
-                                            {
-                                                id: this.props.module.details.validatorId,
-                                                name: this.props.module.details.validatorName
-                                            }
-                                        );
+                                        actions.selectValidator(this.props.screenKey, {
+                                            id: this.props.module.details.validatorId,
+                                            name: this.props.module.details.validatorName
+                                        });
                                     }
                                     break;
 

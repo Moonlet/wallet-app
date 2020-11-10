@@ -7,11 +7,11 @@ import {
 } from './../../../types';
 
 import { updateClaimPending } from './update-claim-pending';
-import { quickStakeSelectValidator } from './quick-stake-select-validator';
+import { quickStakeSelectedValidator } from './quick-stake-selected-validator';
 
 const stateModifiers = {
     updateClaimPending,
-    quickStakeSelectValidator
+    quickStakeSelectedValidator
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {

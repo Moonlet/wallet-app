@@ -8,11 +8,11 @@ export interface IScreenData {
     error: any;
 }
 
-export interface IScreenDatas {
+export interface IScreensData {
     // key: 'walletPubKey-blockchain-chainId-address-tab'
     [key: string]: IScreenData;
 }
 
 export interface IScreenDataState {
-    [screen: string]: IScreenDatas;
+    [screen: string]: IScreensData;
 }

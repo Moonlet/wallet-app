@@ -24,6 +24,7 @@ import {
 
 interface IExternalProps {
     context: IScreenContext;
+    // getLoadingSkeleton
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {

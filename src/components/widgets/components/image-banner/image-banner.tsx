@@ -3,10 +3,10 @@ import { TouchableOpacity } from 'react-native';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { openURL } from '../../../../core/utils/linking-handler';
 import { ResizeMode, SmartImage } from '../../../../library/image/smart-image';
 import { IImageBannerData, IScreenModule } from '../../types';
 import { formatStyles } from '../../utils';
+import { handleCta } from '../../handle-cta';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -17,18 +17,16 @@ const ImageBannerComponent = (
 ) => {
     const { module, styles } = props;
     const data = module.data as IImageBannerData;
-    const imageUrl = data.imageUrl;
-    const urlToOpen = module.cta.params.url;
 
     return (
         <TouchableOpacity
-            onPress={() => openURL(urlToOpen)}
+            onPress={() => handleCta(module.cta)}
             activeOpacity={0.9}
             style={module?.style && formatStyles(module.style)}
         >
             <SmartImage
                 style={styles.image}
-                source={{ uri: imageUrl }}
+                source={{ uri: data.imageUrl }}
                 resizeMode={ResizeMode.contain}
             />
         </TouchableOpacity>

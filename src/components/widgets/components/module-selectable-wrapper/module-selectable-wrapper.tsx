@@ -13,6 +13,7 @@ import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
 import { InfoModal } from '../../../info-modal/info-modal';
+import { handleCta } from '../../handle-cta';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -77,40 +78,14 @@ class ModuleSelectableWrapperComponent extends React.Component<
 
         const moduleJSX = (
             <TouchableOpacity
-                onPress={() => {
-                    if (this.props.module?.cta) {
-                        if (this.props.module.cta.type === 'callAction') {
-                            switch (this.props.module.cta.params.action) {
-                                case 'MULTIPLE_SELECTION':
-                                    if (this.props.module?.details?.validatorId) {
-                                        actions.toggleValidatorMultiple(this.props.screenKey, {
-                                            id: this.props.module.details.validatorId,
-                                            name: this.props.module.details.validatorName
-                                        });
-                                    }
-                                    break;
-
-                                case 'SINGLE_SELECTION':
-                                    if (this.props.module?.details?.validatorId) {
-                                        actions.selectInput(
-                                            this.props.screenKey,
-                                            [
-                                                {
-                                                    id: this.props.module.details.validatorId,
-                                                    name: this.props.module.details.validatorName
-                                                }
-                                            ],
-                                            'validators'
-                                        );
-                                    }
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                }}
+                onPress={() =>
+                    handleCta(module.cta, {
+                        actions,
+                        screenKey: this.props.screenKey,
+                        validatorId: module.details.validatorId,
+                        validatorName: module.details.validatorName
+                    })
+                }
                 activeOpacity={0.8}
             >
                 {this.props.modules.map((m: IScreenModule, index: number) => (

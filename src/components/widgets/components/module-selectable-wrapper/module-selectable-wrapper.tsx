@@ -85,8 +85,8 @@ class ModuleSelectableWrapperComponent extends React.Component<
                     handleCta(module.cta, {
                         actions,
                         screenKey: this.props.screenKey,
-                        validatorId: module.details.validatorId,
-                        validatorName: module.details.validatorName
+                        validatorId: module?.details?.validatorId,
+                        validatorName: module?.details?.validatorName
                     })
                 }
                 activeOpacity={0.8}

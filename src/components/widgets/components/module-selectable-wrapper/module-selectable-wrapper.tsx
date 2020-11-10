@@ -50,11 +50,14 @@ class ModuleSelectableWrapperComponent extends React.Component<
         // Add auto selected modules
         if (
             module?.details?.validatorId &&
+            module?.details?.validatorName &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {
-            actions.toggleValidatorMultiple(this.props.screenKey, {
-                id: module.details.validatorId,
-                name: module.details.validatorName
+            handleCta(module.cta, {
+                actions,
+                screenKey: this.props.screenKey,
+                validatorId: module.details.validatorId,
+                validatorName: module.details.validatorName
             });
         }
     }

@@ -20,8 +20,7 @@ import {
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
-import { valuePrimaryCtaField } from '../../core/utils/format-string';
-import { IValidator } from '../../core/blockchain/types/stats';
+import { formatValidatorName } from '../../core/utils/format-string';
 
 interface IReduxProps {
     validators: {
@@ -58,31 +57,18 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({ title: translate('App.labels.quickStake') });
 
-interface IState {
-    selectedValidators: IValidator[];
-}
-
 class QuickStakeSelectValidatorScreenComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
-        super(props);
-        this.state = {
-            selectedValidators: []
-        };
-    }
-
-    public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.validators && this.props.validators !== prevProps.validators) {
-            const selectedValidators = [];
-            for (const v of this.props.validators) {
-                selectedValidators.push(buildDummyValidator(v.id, v.name, true));
-            }
-            this.setState({ selectedValidators });
+    private valuePrimaryCtaField(validators: { id: string; name: string }[]): string {
+        if (validators.length > 1) {
+            return validators.length + ' ' + translate('App.labels.validators').toLowerCase();
+        } else if (validators.length === 1) {
+            return formatValidatorName(validators[0].name, 15);
         }
+        return '';
     }
 
     private renderBottomConfirm() {
@@ -93,12 +79,17 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
                 label={translate('App.labels.next')}
                 disabled={validators.length === 0}
                 onPress={() => {
+                    const selectedValidators = [];
+                    for (const v of this.props.validators) {
+                        selectedValidators.push(buildDummyValidator(v.id, v.name));
+                    }
+
                     // Navigate to enter amount step
                     this.props.navigateToEnterAmountStep(
                         this.props.account.index,
                         this.props.account.blockchain,
                         this.props.token,
-                        this.state.selectedValidators,
+                        selectedValidators,
                         'App.labels.quickStake',
                         'QuickDelegateEnterAmount',
                         QUICK_DELEGATE_ENTER_AMOUNT
@@ -108,7 +99,7 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
                 <PrimaryCtaField
                     label={translate('App.labels.quickStake')}
                     action={translate('App.labels.for').toLowerCase()}
-                    value={valuePrimaryCtaField(this.state.selectedValidators)}
+                    value={this.valuePrimaryCtaField(validators)}
                 />
             </BottomCta>
         );

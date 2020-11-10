@@ -18,7 +18,7 @@ import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
 import {
     toggleValidatorMultiple,
-    selectValidator,
+    selectInput,
     clearInput
 } from '../../redux/ui/screens/input-data/actions';
 
@@ -53,7 +53,7 @@ interface IReduxProps {
     claimRewardNoInput: typeof claimRewardNoInput;
     withdraw: typeof withdraw;
     toggleValidatorMultiple: typeof toggleValidatorMultiple;
-    selectValidator: typeof selectValidator;
+    selectInput: typeof selectInput;
     clearInput: typeof clearInput;
 }
 
@@ -62,7 +62,7 @@ const mapDispatchToProps = {
     claimRewardNoInput,
     withdraw,
     toggleValidatorMultiple,
-    selectValidator,
+    selectInput,
     clearInput
 };
 
@@ -160,7 +160,7 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                     claimRewardNoInput: this.props.claimRewardNoInput,
                     withdraw: this.props.withdraw,
                     toggleValidatorMultiple: this.props.toggleValidatorMultiple,
-                    selectValidator: this.props.selectValidator,
+                    selectInput: this.props.selectInput,
                     clearInput: this.props.clearInput
                 }}
                 account={this.props.account}

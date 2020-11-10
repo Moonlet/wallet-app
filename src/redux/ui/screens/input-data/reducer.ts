@@ -1,6 +1,6 @@
 import { IScreenInputState } from './state';
 import { IAction } from '../../../types';
-import { TOGGLE_VALIDATOR_MULTIPLE, SELECT_VALIDATOR, CLEAR_INPUT } from './actions';
+import { TOGGLE_VALIDATOR_MULTIPLE, SELECT_INPUT, CLEAR_INPUT } from './actions';
 
 const intialState: IScreenInputState = {};
 
@@ -28,12 +28,12 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 }
             };
 
-        case SELECT_VALIDATOR:
+        case SELECT_INPUT:
             return {
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    validators: [action.data.validator]
+                    [action.data.inputKey]: action.data.inputData
                 }
             };
 
@@ -42,7 +42,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    validators: []
+                    [action.data.inputKey]: []
                 }
             };
 

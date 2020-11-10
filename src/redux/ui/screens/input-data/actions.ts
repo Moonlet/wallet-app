@@ -3,7 +3,7 @@ import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
 
 export const TOGGLE_VALIDATOR_MULTIPLE = 'TOGGLE_VALIDATOR_MULTIPLE';
-export const SELECT_VALIDATOR = 'SELECT_VALIDATOR';
+export const SELECT_INPUT = 'SELECT_INPUT';
 export const CLEAR_INPUT = 'CLEAR_INPUT';
 
 export const toggleValidatorMultiple = (
@@ -22,30 +22,29 @@ export const toggleValidatorMultiple = (
     });
 };
 
-export const selectValidator = (
-    screenKey: string,
-    validator: {
-        id: string;
-        name: string;
-    }
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+export const selectInput = (screenKey: string, inputData: any, inputKey: string) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
     dispatch({
-        type: SELECT_VALIDATOR,
+        type: SELECT_INPUT,
         data: {
             screenKey,
-            validator
+            inputData,
+            inputKey
         }
     });
 };
 
-export const clearInput = (screenKey: string) => async (
+export const clearInput = (screenKey: string, inputKey: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
     dispatch({
         type: CLEAR_INPUT,
         data: {
-            screenKey
+            screenKey,
+            inputKey
         }
     });
 };

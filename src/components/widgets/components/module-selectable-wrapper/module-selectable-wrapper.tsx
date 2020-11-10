@@ -59,8 +59,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public componentWillUnmount() {
-        // Is this the best place to handle this?
-        this.props.actions.clearInput(this.props.screenKey);
+        this.props.actions.clearInput(this.props.screenKey, 'validators');
     }
 
     public render() {
@@ -93,10 +92,16 @@ class ModuleSelectableWrapperComponent extends React.Component<
 
                                 case 'SINGLE_SELECTION':
                                     if (this.props.module?.details?.validatorId) {
-                                        actions.selectValidator(this.props.screenKey, {
-                                            id: this.props.module.details.validatorId,
-                                            name: this.props.module.details.validatorName
-                                        });
+                                        actions.selectInput(
+                                            this.props.screenKey,
+                                            [
+                                                {
+                                                    id: this.props.module.details.validatorId,
+                                                    name: this.props.module.details.validatorName
+                                                }
+                                            ],
+                                            'validators'
+                                        );
                                     }
                                     break;
 

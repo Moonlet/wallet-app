@@ -4,6 +4,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { IScreenModule, ISeparatorData } from '../../types';
+import { formatStyles } from '../../utils';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -17,9 +18,14 @@ const SeparatorComponent = (
     const color = data?.color;
 
     return (
-        <View
-            style={[styles.separator, { backgroundColor: color || theme.colors.inputBackground }]}
-        />
+        <View style={module?.style && formatStyles(module.style)}>
+            <View
+                style={[
+                    styles.separator,
+                    { backgroundColor: color || theme.colors.inputBackground }
+                ]}
+            />
+        </View>
     );
 };
 

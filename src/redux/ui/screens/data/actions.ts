@@ -1,4 +1,5 @@
 import { Dispatch } from 'react';
+import DeviceInfo from 'react-native-device-info';
 import { IReduxState } from '../../../state';
 import {
     IScreenContext,
@@ -35,8 +36,11 @@ export const fetchScreenData = (context: IScreenContext) => async (
 ) => {
     const state = getState();
     const wallet = getSelectedWallet(state);
+    if (!wallet) return;
     const account = getSelectedAccount(state);
+    if (!account) return;
     const chainId = getChainId(state, account.blockchain);
+    if (!chainId || chainId === '') return;
 
     const apiClient = new ApiClient();
 
@@ -48,6 +52,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',
             deviceId: state.preferences.deviceId,
+            appVersion: DeviceInfo.getReadableVersion(),
             theme: 'dark',
             lang: 'en',
 

@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { IBalanceGridData, IScreenModule } from '../../types';
 import { SmartImage } from '../../../../library/image/smart-image';
-import { formatDataJSXElements } from '../../utils';
+import { formatDataJSXElements, formatStyles } from '../../utils';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -18,7 +18,7 @@ const SingleBalanceIconComponent = (
     const data = module.data as IBalanceGridData;
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
             <View style={styles.imageContainer}>
                 <SmartImage source={{ uri: data.icon.value }} />
             </View>

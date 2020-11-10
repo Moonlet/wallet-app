@@ -82,7 +82,7 @@ const formatCurrencyData = (data: ICurrencyData): string => {
     return text;
 };
 
-const formatStyles = (style: IDataStyle): { [key: string]: string | number } => {
+export const formatStyles = (style: IDataStyle): { [key: string]: string | number } => {
     const finalStyle = {};
 
     for (const s of Object.keys(style)) {
@@ -94,6 +94,13 @@ const formatStyles = (style: IDataStyle): { [key: string]: string | number } => 
             }
             if (sVal.fn === 'normalizeFontAndLineHeight') {
                 finalStyle[s] = normalizeFontAndLineHeight(sVal.value);
+            }
+            if (sVal.fn === 'gradient') {
+                try {
+                    finalStyle[s] = JSON.parse(sVal.value);
+                } catch {
+                    // maybe return a default gradient theme
+                }
             }
         } else {
             finalStyle[s] = style[s];

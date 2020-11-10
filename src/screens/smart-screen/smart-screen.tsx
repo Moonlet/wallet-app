@@ -3,9 +3,9 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
-import { IScreenContext, IScreenWidget } from '../../components/widgets/types';
+import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
-import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
+import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
@@ -16,6 +16,11 @@ import { AccountStats } from '../../core/blockchain/types/stats';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
+import {
+    toggleValidatorMultiple,
+    selectInput,
+    clearInput
+} from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -37,7 +42,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 interface IReduxProps {
-    screenData: IScreenDatas;
+    screenData: IScreensData;
 
     walletPublicKey: string;
     account: IAccountState;
@@ -47,12 +52,18 @@ interface IReduxProps {
     fetchScreenData: typeof fetchScreenData;
     claimRewardNoInput: typeof claimRewardNoInput;
     withdraw: typeof withdraw;
+    toggleValidatorMultiple: typeof toggleValidatorMultiple;
+    selectInput: typeof selectInput;
+    clearInput: typeof clearInput;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     claimRewardNoInput,
-    withdraw
+    withdraw,
+    toggleValidatorMultiple,
+    selectInput,
+    clearInput
 };
 
 interface IState {
@@ -89,14 +100,18 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         this.updateLoading(prevProps);
     }
 
-    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
-        const screenKey = getScreenDataKey({
+    private getScreenKey(props: IReduxProps & IExternalProps) {
+        return getScreenDataKey({
             pubKey: props.walletPublicKey,
             blockchain: props.account?.blockchain,
             chainId: props.chainId,
             address: props.account?.address,
             tab: props.context?.tab
         });
+    }
+
+    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
+        const screenKey = this.getScreenKey(props);
 
         return props.screenData && screenKey && props.screenData[screenKey];
     }
@@ -140,9 +155,13 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         return (
             <Widgets
                 data={widgets}
+                screenKey={this.getScreenKey(this.props)}
                 actions={{
                     claimRewardNoInput: this.props.claimRewardNoInput,
-                    withdraw: this.props.withdraw
+                    withdraw: this.props.withdraw,
+                    toggleValidatorMultiple: this.props.toggleValidatorMultiple,
+                    selectInput: this.props.selectInput,
+                    clearInput: this.props.clearInput
                 }}
                 account={this.props.account}
                 chainId={this.props.chainId}
@@ -168,7 +187,18 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
 
         if (screenData) {
             if (this.state.loadingScreenData) {
-                return <LoadingSkeleton />;
+                switch (this.props.context.screen) {
+                    case ContextScreen.TOKEN:
+                    case ContextScreen.QUICK_STAKE_SELECT_VALIDATOR:
+                        return new Array(4)
+                            .fill('')
+                            .map((_, index: number) => (
+                                <LoadingSkeleton key={`skeleton-${index}`} />
+                            ));
+
+                    default:
+                        return <LoadingSkeleton />;
+                }
             }
 
             if (screenData.response?.widgets) {

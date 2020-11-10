@@ -4,10 +4,7 @@ import { FETCH_SCREEN_DATA, SCREEN_DATA_START_LOADING } from './actions';
 import { IScreenRequest } from '../../../../components/widgets/types';
 import { Blockchain } from '../../../../core/blockchain/types';
 
-const intialState: IScreenDataState = {
-    dashboard: undefined,
-    token: undefined
-};
+const intialState: IScreenDataState = {};
 
 export default (state: IScreenDataState = intialState, action: IAction): IScreenDataState => {
     switch (action.type) {

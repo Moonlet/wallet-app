@@ -82,17 +82,14 @@ export const handleCta = async (
             break;
 
         case 'navigateTo':
-            // TODO: not working
-            const navigationParams = options?.token
-                ? {
-                      ...cta.params.params,
-                      blockchain: options.account.blockchain,
-                      accountIndex: options.account.index,
-                      token: options.token
-                  }
-                : { ...cta.params.params };
+            const screen = cta.params?.params?.screen || cta.params?.screen;
 
-            NavigationService.navigate(cta.params.params.screen, navigationParams);
+            NavigationService.navigate(screen, {
+                ...cta.params.params,
+                blockchain: options?.account?.blockchain,
+                accountIndex: options?.account?.index,
+                token: options?.token
+            });
             break;
 
         case 'openUrl':

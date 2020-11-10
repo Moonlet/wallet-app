@@ -60,7 +60,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public componentWillUnmount() {
-        this.props.actions.clearInput(this.props.screenKey, 'validators');
+        this.props.actions.clearInput(this.props.screenKey, { validators: [] });
     }
 
     public render() {

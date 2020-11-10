@@ -11,7 +11,6 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { handleCta } from '../../handle-cta';
-import { NavigationService } from '../../../../navigation/navigation-service';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -53,23 +52,11 @@ const TwoLinesStakeBannerComponent = (
         return (
             <TouchableOpacity
                 onPress={() => {
-                    if (cta.type === 'navigateTo') {
-                        const blockchainConfig = getBlockchain(account.blockchain);
+                    const blockchainConfig = getBlockchain(account.blockchain);
+                    const token: ITokenState =
+                        account.tokens[props.chainId][blockchainConfig.config.coin];
 
-                        const token: ITokenState =
-                            account.tokens[props.chainId][blockchainConfig.config.coin];
-
-                        // TODO
-                        // handleCta(cta, { account, token });
-                        NavigationService.navigate(cta.params.screen, {
-                            ...cta.params.params,
-                            blockchain: account.blockchain,
-                            accountIndex: account.index,
-                            token
-                        });
-                    } else {
-                        handleCta(cta);
-                    }
+                    handleCta(cta, { account, token });
                 }}
                 activeOpacity={0.9}
             >

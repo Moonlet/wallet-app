@@ -516,18 +516,23 @@ const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {
     );
 };
 
-export const buildDummyValidator = (id: string, name?: string): IValidator => {
+export const buildDummyValidator = (
+    id: string,
+    name?: string,
+    icon?: string,
+    website?: string
+): IValidator => {
     return {
         id,
         name: name || id,
-        icon: '',
+        icon: icon || '',
         rank: '',
         totalVotes: '0',
         amountDelegated: {
             active: '0',
             pending: '0'
         },
-        website: '',
+        website: website || '',
         topStats: [],
         secondaryStats: [],
         chartStats: []

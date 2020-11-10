@@ -11,8 +11,12 @@ export const handleCta = async (
         actions?: any;
         account?: IAccountState;
         screenKey?: string;
-        validatorId?: string;
-        validatorName?: string;
+        validator?: {
+            id: string;
+            name?: string;
+            icon?: string;
+            website?: string;
+        };
         token?: ITokenState;
     }
 ) => {
@@ -58,8 +62,10 @@ export const handleCta = async (
 
                 case 'MULTIPLE_SELECTION':
                     options.actions.toggleValidatorMultiple(options.screenKey, {
-                        id: options.validatorId,
-                        name: options.validatorName
+                        id: options.validator.id,
+                        name: options.validator.name,
+                        icon: options.validator?.icon,
+                        website: options.validator?.website
                     });
 
                     break;
@@ -68,8 +74,10 @@ export const handleCta = async (
                         options.screenKey,
                         [
                             {
-                                id: options.validatorId,
-                                name: options.validatorName
+                                id: options.validator.id,
+                                name: options.validator.name,
+                                icon: options.validator?.icon,
+                                website: options.validator?.website
                             }
                         ],
                         'validators'

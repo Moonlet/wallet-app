@@ -49,15 +49,18 @@ class ModuleSelectableWrapperComponent extends React.Component<
 
         // Add auto selected modules
         if (
-            module?.details?.validatorId &&
-            module?.details?.validatorName &&
+            module?.details?.validator &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {
             handleCta(module.cta, {
                 actions,
                 screenKey: this.props.screenKey,
-                validatorId: module.details.validatorId,
-                validatorName: module.details.validatorName
+                validator: {
+                    id: module.details.validator.id,
+                    name: module.details.validator.name,
+                    icon: module.details.validator?.icon,
+                    website: module.details.validator?.website
+                }
             });
         }
     }
@@ -85,8 +88,12 @@ class ModuleSelectableWrapperComponent extends React.Component<
                     handleCta(module.cta, {
                         actions,
                         screenKey: this.props.screenKey,
-                        validatorId: module?.details?.validatorId,
-                        validatorName: module?.details?.validatorName
+                        validator: module?.details?.validator && {
+                            id: module.details.validator.id,
+                            name: module.details.validator.name,
+                            icon: module.details.validator?.icon,
+                            website: module.details.validator?.website
+                        }
                     })
                 }
                 activeOpacity={0.8}

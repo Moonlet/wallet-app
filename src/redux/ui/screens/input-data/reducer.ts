@@ -37,6 +37,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 }
             };
 
+        // TODO: refactor this
         case CLEAR_INPUT:
             return {
                 ...state,

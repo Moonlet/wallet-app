@@ -21,7 +21,7 @@
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
-        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh",
+        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh && ./scripts/fix_images_ios_14.sh",
         "detox:build:ios": "detox build -c ios.beta",
         "detox:test:ios": "detox test -c ios.beta",
         "detox:build:android": "detox build -c android.emu.beta",

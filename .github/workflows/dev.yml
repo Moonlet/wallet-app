@@ -142,14 +142,14 @@ jobs:
         run: cd ios && pod install
       - name: Generate fonts and icons
         run: npm run generate-icons
-      - name: Intall Xcode 11.1
-        uses: sinoru/actions-setup-xcode@v1.1.2
-        with:
-          xcode-version: '11.1'
-          apple-id: 'publishers@moonlet.xyz'
-          apple-id-password: ${{ secrets.FASTLANE_PASSWORD }}
+      # - name: Intall Xcode 11.1
+      #   uses: sinoru/actions-setup-xcode@v1.1.2
+      #   with:
+      #     xcode-version: '11.1'
+      #     apple-id: 'publishers@moonlet.xyz'
+      #     apple-id-password: ${{ secrets.FASTLANE_PASSWORD }}
       - name: Run fastlane beta
-        run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
+        run: xcversion select 12 && cd ios/fastlane && bundle exec fastlane beta
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

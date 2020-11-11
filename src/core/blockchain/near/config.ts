@@ -33,11 +33,11 @@ export const NEAR_NATIVE: ITokenConfigState = {
 
 const accountCTA = {
     mainCta: {
-        title: 'App.labels.quickStake',
+        title: 'App.labels.stakeNow',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'PosQuickDelegate',
-            params: { actionText: 'App.labels.quickStake' }
+            screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
+            params: { actionText: 'App.labels.stakeNow' }
         }
     }
 };

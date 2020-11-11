@@ -33,7 +33,9 @@ const renderModules = (
         moduleColWrapperContainer?: any;
     }
 ) => {
-    const renderedModulesJSX = modules.map(m => renderModule(m, options));
+    const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
+        <View key={`screen-module-${i}`}>{renderModule(m, options)}</View>
+    ));
 
     let modulesJSX: any;
     if (options?.colWrapperStyle) {

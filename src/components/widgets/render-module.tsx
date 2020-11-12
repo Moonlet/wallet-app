@@ -24,6 +24,7 @@ const renderModules = (
         handleCta: typeof handleCta;
     },
     options?: {
+        screenKey?: string;
         isWidgetExpanded?: boolean;
         style?: any;
         colWrapperStyle?: any;
@@ -54,6 +55,7 @@ export const renderModule = (
         handleCta: typeof handleCta;
     },
     options?: {
+        screenKey?: string;
         isWidgetExpanded?: boolean;
         style?: any;
         moduleColWrapperContainer?: any;
@@ -101,7 +103,7 @@ export const renderModule = (
             break;
 
         case ModuleTypes.ONE_LINE_TEXT_BANNER:
-            moduleJSX = <OneLineTextBanner module={module} actions={actions} />;
+            moduleJSX = <OneLineTextBanner module={module} actions={actions} options={options} />;
             break;
 
         case ModuleTypes.THREE_LINES_ICON:

@@ -72,7 +72,7 @@ class WidgetsComponent extends React.Component<
     }
 
     private renderWidget(widget: IScreenWidget, index: number) {
-        const { actions, styles } = this.props;
+        const { actions, screenKey, styles } = this.props;
         const { widgetsExpandedState } = this.state;
 
         if (widget?.expandable) {
@@ -137,12 +137,13 @@ class WidgetsComponent extends React.Component<
                         <ModuleSelectableWrapper
                             key={`module-${i}`}
                             module={module}
-                            screenKey={this.props.screenKey}
+                            screenKey={screenKey}
                             actions={this.props.actions}
                         />
                     ) : (
                         <View key={`module-${i}`}>
                             {renderModule(module, actions, {
+                                screenKey,
                                 moduleColWrapperContainer: styles.moduleColWrapperContainer
                             })}
                         </View>

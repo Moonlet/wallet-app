@@ -69,7 +69,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public render() {
-        const { actions, module, styles } = this.props;
+        const { actions, module, screenKey, styles } = this.props;
 
         if (module?.hidden === true) {
             // Hide module
@@ -79,6 +79,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
         const customStyle = this.props?.style && formatStyles(this.props.style);
 
         const moduleOptions = {
+            screenKey,
             moduleColWrapperContainer: styles.moduleColWrapperContainer,
             moduleWrapperState: this.props.wrapperState
         };
@@ -87,7 +88,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
             <TouchableOpacity
                 onPress={() =>
                     actions.handleCta(module.cta, {
-                        screenKey: this.props.screenKey,
+                        screenKey,
                         validator: module?.details?.validator && {
                             id: module.details.validator.id,
                             name: module.details.validator.name,

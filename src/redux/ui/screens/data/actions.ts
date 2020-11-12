@@ -26,6 +26,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
+export const LOAD_MORE_VALIDATORS = 'LOAD_MORE_VALIDATORS';
 
 export const fetchScreenData = (context: IScreenContext) => async (
     dispatch: Dispatch<
@@ -187,8 +188,8 @@ export const handleCta = (
                         icon: options?.validator?.icon,
                         website: options.validator?.website
                     })(dispatch, getState);
-
                     break;
+
                 case 'SINGLE_SELECTION':
                     selectInput(
                         options.screenKey,
@@ -204,8 +205,11 @@ export const handleCta = (
                     )(dispatch, getState);
                     break;
 
-                case 'LOAD_MORE':
-                    // TODO
+                case 'LOAD_MORE_VALIDATORS':
+                    dispatch({
+                        type: LOAD_MORE_VALIDATORS,
+                        data: { screenKey: options.screenKey }
+                    });
                     break;
 
                 default:

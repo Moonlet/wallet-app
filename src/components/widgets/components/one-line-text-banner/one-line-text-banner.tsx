@@ -12,6 +12,9 @@ interface IExternalProps {
     actions: {
         handleCta: typeof handleCta;
     };
+    options?: {
+        screenKey?: string;
+    };
 }
 
 const OneLineTextBannerComponent = (
@@ -28,7 +31,10 @@ const OneLineTextBannerComponent = (
 
     if (module?.cta) {
         return (
-            <TouchableOpacity onPress={() => actions.handleCta(module.cta)} activeOpacity={0.9}>
+            <TouchableOpacity
+                onPress={() => actions.handleCta(module.cta, props?.options)}
+                activeOpacity={0.9}
+            >
                 {moduleJSX}
             </TouchableOpacity>
         );

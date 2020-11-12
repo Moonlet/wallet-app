@@ -60,7 +60,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',
             deviceId: state.preferences.deviceId,
-            appVersion: DeviceInfo.getReadableVersion(),
+            appVersion: DeviceInfo.getVersion(),
             theme: 'dark',
             lang: 'en',
 

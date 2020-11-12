@@ -32,7 +32,9 @@ const renderModules = (
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
-        <View key={`screen-module-${i}`}>{renderModule(m, actions, options)}</View>
+        <React.Fragment key={`screen-module-${i}`}>
+            {renderModule(m, actions, options)}
+        </React.Fragment>
     ));
 
     let modulesJSX: any;
@@ -132,7 +134,10 @@ export const renderModule = (
             const colWrapperData = module.data as IScreenModuleColumnsWrapperData;
             moduleJSX = renderModules(colWrapperData.submodules, actions, {
                 ...options,
-                colWrapperStyle: colWrapperData?.style ? formatStyles(colWrapperData.style) : {}
+                colWrapperStyle:
+                    (module?.style && formatStyles(module?.style)) ||
+                    (colWrapperData?.style && formatStyles(colWrapperData.style)) ||
+                    {}
             });
             break;
 

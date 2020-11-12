@@ -1,7 +1,12 @@
-import { IScreenDataState } from './state';
+import { IScreenData, IScreenDataState } from './state';
 import { IAction } from '../../../types';
-import { FETCH_SCREEN_DATA, SCREEN_DATA_START_LOADING } from './actions';
-import { IScreenRequest } from '../../../../components/widgets/types';
+import { FETCH_SCREEN_DATA, LOAD_MORE_VALIDATORS, SCREEN_DATA_START_LOADING } from './actions';
+import {
+    ContextScreen,
+    IScreenModule,
+    IScreenRequest,
+    IScreenWidget
+} from '../../../../components/widgets/types';
 import { Blockchain } from '../../../../core/blockchain/types';
 
 const intialState: IScreenDataState = {};
@@ -51,6 +56,34 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 [request.context.screen]: {
                     ...state[request.context.screen],
                     [key]: action.data
+                }
+            };
+        }
+
+        case LOAD_MORE_VALIDATORS: {
+            const screenData: IScreenData = {
+                ...state[ContextScreen.QUICK_STAKE_SELECT_VALIDATOR][action.data.screenKey]
+            };
+
+            screenData.response.widgets.map((widget: IScreenWidget) =>
+                widget.modules.map((module: IScreenModule) => {
+                    // Show all the modules
+                    if (module?.hidden === true) {
+                        module.hidden = false;
+                    }
+
+                    // Hide Load More module
+                    if (module?.hidden === undefined) {
+                        module.hidden = true;
+                    }
+                })
+            );
+
+            return {
+                ...state,
+                [ContextScreen.QUICK_STAKE_SELECT_VALIDATOR]: {
+                    ...state[ContextScreen.QUICK_STAKE_SELECT_VALIDATOR],
+                    screenData
                 }
             };
         }

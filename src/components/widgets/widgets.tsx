@@ -8,8 +8,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { IScreenModule, IScreenWidget, ModuleTypes } from './types';
 import { Text } from '../../library';
-import { IAccountState } from '../../redux/wallets/state';
-import { ChainIdType } from '../../core/blockchain/types';
+import { Blockchain } from '../../core/blockchain/types';
 import { formatStyles } from './utils';
 import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
@@ -18,8 +17,7 @@ interface IExternalProps {
     data: IScreenWidget[];
     screenKey: string;
     actions: any;
-    account: IAccountState;
-    chainId: ChainIdType;
+    blockchain: Blockchain;
 }
 
 interface IState {
@@ -50,8 +48,8 @@ class WidgetsComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
-        if (this.props.account.blockchain !== prevProps.account.blockchain) {
-            // Widgets Expande States set on false
+        if (this.props.blockchain !== prevProps.blockchain) {
+            // Widgets Expanded States set on false
             const widgetsExpandedState = this.state.widgetsExpandedState;
             Object.keys(widgetsExpandedState).map(widget => (widgetsExpandedState[widget] = false));
             this.setState({ widgetsExpandedState });
@@ -69,7 +67,7 @@ class WidgetsComponent extends React.Component<
     }
 
     private renderWidget(widget: IScreenWidget, index: number) {
-        const { styles } = this.props;
+        const { actions, styles } = this.props;
         const { widgetsExpandedState } = this.state;
 
         if (widget?.expandable) {
@@ -107,11 +105,7 @@ class WidgetsComponent extends React.Component<
 
                         {widget.modules.map((module: IScreenModule, i: number) => (
                             <View key={`module-${i}`}>
-                                {renderModule(module, {
-                                    account: this.props.account,
-                                    chainId: this.props.chainId,
-                                    actions: this.props.actions,
-
+                                {renderModule(module, actions, {
                                     isWidgetExpanded,
                                     moduleColWrapperContainer: styles.moduleColWrapperContainer
                                 })}
@@ -139,17 +133,11 @@ class WidgetsComponent extends React.Component<
                             key={`module-${i}`}
                             module={module}
                             screenKey={this.props.screenKey}
-                            account={this.props.account}
-                            chainId={this.props.chainId}
                             actions={this.props.actions}
                         />
                     ) : (
                         <View key={`module-${i}`}>
-                            {renderModule(module, {
-                                account: this.props.account,
-                                chainId: this.props.chainId,
-                                actions: this.props.actions,
-
+                            {renderModule(module, actions, {
                                 moduleColWrapperContainer: styles.moduleColWrapperContainer
                             })}
                         </View>

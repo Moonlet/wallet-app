@@ -3,27 +3,21 @@ import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { I2LinesTextBannerData, ICta, IScreenModule } from '../../types';
+import { I2LinesTextBannerData, IScreenModule } from '../../types';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
-import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { ChainIdType } from '../../../../core/blockchain/types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { handleCta } from '../../handle-cta';
 
 interface IExternalProps {
     module: IScreenModule;
-    account: IAccountState;
-    chainId: ChainIdType;
+    actions: any;
 }
 
 const TwoLinesStakeBannerComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { account, module, styles, theme } = props;
+    const { module, styles, theme } = props;
     const data = module.data as I2LinesTextBannerData;
-    const cta = module.cta as ICta;
 
     const moduleJSX = (
         <View
@@ -51,13 +45,7 @@ const TwoLinesStakeBannerComponent = (
     if (module?.cta) {
         return (
             <TouchableOpacity
-                onPress={() => {
-                    const blockchainConfig = getBlockchain(account.blockchain);
-                    const token: ITokenState =
-                        account.tokens[props.chainId][blockchainConfig.config.coin];
-
-                    handleCta(cta, { account, token });
-                }}
+                onPress={() => props.actions.handleCta(module.cta)}
                 activeOpacity={0.9}
             >
                 {moduleJSX}

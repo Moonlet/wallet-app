@@ -5,24 +5,21 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
 import { I3LinesCtaData, ICta, IScreenModule } from '../../types';
-import { IAccountState } from '../../../../redux/wallets/state';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { handleCta } from '../../handle-cta';
 
 interface IExternalProps {
     module: IScreenModule;
     actions: any;
-    account: IAccountState;
 }
 
 const ThreeLinesCtaComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { actions, account, module, styles } = props;
+    const { actions, module, styles } = props;
     const data = module.data as I3LinesCtaData;
     const cta = module.cta as ICta;
 
-    const handleOnPress = () => handleCta(cta, { actions, account });
+    const handleOnPress = () => actions.handleCta(cta);
 
     return (
         <View style={[styles.container, module?.style && formatStyles(module.style)]}>

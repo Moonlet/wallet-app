@@ -6,21 +6,21 @@ import stylesProvider from './styles';
 import { ResizeMode, SmartImage } from '../../../../library/image/smart-image';
 import { IImageBannerData, IScreenModule } from '../../types';
 import { formatStyles } from '../../utils';
-import { handleCta } from '../../handle-cta';
 
 interface IExternalProps {
     module: IScreenModule;
+    actions: any;
 }
 
 const ImageBannerComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 ) => {
-    const { module, styles } = props;
+    const { actions, module, styles } = props;
     const data = module.data as IImageBannerData;
 
     return (
         <TouchableOpacity
-            onPress={() => handleCta(module.cta)}
+            onPress={() => actions.handleCta(module.cta)}
             activeOpacity={0.9}
             style={module?.style && formatStyles(module.style)}
         >

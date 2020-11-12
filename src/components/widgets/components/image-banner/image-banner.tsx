@@ -6,10 +6,13 @@ import stylesProvider from './styles';
 import { ResizeMode, SmartImage } from '../../../../library/image/smart-image';
 import { IImageBannerData, IScreenModule } from '../../types';
 import { formatStyles } from '../../utils';
+import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: any;
+    actions: {
+        handleCta: typeof handleCta;
+    };
 }
 
 const ImageBannerComponent = (

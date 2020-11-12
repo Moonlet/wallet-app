@@ -5,10 +5,13 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IOneLineTextBannerData, IScreenModule } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
+import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: any;
+    actions: {
+        handleCta: typeof handleCta;
+    };
 }
 
 const OneLineTextBannerComponent = (

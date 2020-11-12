@@ -12,11 +12,16 @@ import { Blockchain } from '../../core/blockchain/types';
 import { formatStyles } from './utils';
 import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
+import { handleCta } from '../../redux/ui/screens/data/actions';
+import { clearInput } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     data: IScreenWidget[];
     screenKey: string;
-    actions: any;
+    actions: {
+        handleCta: typeof handleCta;
+        clearInput: typeof clearInput;
+    };
     blockchain: Blockchain;
 }
 

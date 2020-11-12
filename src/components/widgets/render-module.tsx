@@ -16,10 +16,13 @@ import { ThreeLinesIcon } from './components/three-lines-icon/three-lines-icon';
 import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
 import { formatStyles } from './utils';
 import { IconModule } from './components/icon/icon';
+import { handleCta } from '../../redux/ui/screens/data/actions';
 
 const renderModules = (
     modules: IScreenModule[],
-    actions: any,
+    actions: {
+        handleCta: typeof handleCta;
+    },
     options?: {
         isWidgetExpanded?: boolean;
         style?: any;
@@ -47,7 +50,9 @@ const renderModules = (
 
 export const renderModule = (
     module: IScreenModule,
-    actions: any,
+    actions: {
+        handleCta: typeof handleCta;
+    },
     options?: {
         isWidgetExpanded?: boolean;
         style?: any;

@@ -6,10 +6,13 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
 import { I3LinesCtaData, ICta, IScreenModule } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
+import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: any;
+    actions: {
+        handleCta: typeof handleCta;
+    };
 }
 
 const ThreeLinesCtaComponent = (

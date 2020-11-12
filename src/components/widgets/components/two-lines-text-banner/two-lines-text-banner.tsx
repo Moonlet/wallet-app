@@ -7,10 +7,13 @@ import { I2LinesTextBannerData, IScreenModule } from '../../types';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
 import { formatDataJSXElements, formatStyles } from '../../utils';
+import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: any;
+    actions: {
+        handleCta: typeof handleCta;
+    };
 }
 
 const TwoLinesStakeBannerComponent = (

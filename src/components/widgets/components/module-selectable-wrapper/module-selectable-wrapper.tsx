@@ -11,11 +11,16 @@ import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
 import { InfoModal } from '../../../info-modal/info-modal';
+import { handleCta } from '../../../../redux/ui/screens/data/actions';
+import { clearInput } from '../../../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
     screenKey: string;
-    actions: any;
+    actions: {
+        handleCta: typeof handleCta;
+        clearInput: typeof clearInput;
+    };
 }
 
 interface IReduxProps {

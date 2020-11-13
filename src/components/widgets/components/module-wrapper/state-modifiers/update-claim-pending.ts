@@ -28,6 +28,21 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
                     return 'DEFAULT';
             }
         }
+
+        // Claim all module
+        if (
+            // at least one claim tx in pending
+            tx.status === TransactionStatus.PENDING &&
+            (tx?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD ||
+                tx?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT) &&
+            // claim all module is identified by validators
+            wrapper?.data?.DEFAULT?.details?.validators &&
+            // additional checks
+            tx?.broadcastedOnBlock > wrapper?.data?.DEFAULT?.details?.cycleStart &&
+            tx?.address === selectedAccount.address
+        ) {
+            return 'PENDING';
+        }
     }
 
     return 'DEFAULT';

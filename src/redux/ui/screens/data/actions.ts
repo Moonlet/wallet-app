@@ -60,7 +60,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',
             deviceId: state.preferences.deviceId,
-            appVersion: DeviceInfo.getVersion(),
+            appVersion: __DEV__ ? '1.4.17' : DeviceInfo.getVersion(), // needs 1.4.17 or above for modules with promotion
             theme: 'dark',
             lang: 'en',
 
@@ -149,14 +149,25 @@ export const handleCta = (
         case 'callAction':
             switch (cta.params.action) {
                 case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
-                    const validator = buildDummyValidator(
-                        cta.params.params.validatorId,
-                        cta.params.params.validatorName
-                    );
+                    let validators = [];
+
+                    if (cta.params?.params?.validators) {
+                        for (const v of cta.params.params.validators) {
+                            const validator = buildDummyValidator(v.validatorId, v.validatorName);
+                            validators.push(validator);
+                        }
+                    } else {
+                        validators = [
+                            buildDummyValidator(
+                                cta.params.params.validatorId,
+                                cta.params.params.validatorName
+                            )
+                        ];
+                    }
 
                     claimRewardNoInput(
                         getSelectedAccount(state),
-                        [validator],
+                        validators,
                         cta.params.params.tokenSymbol,
                         undefined
                     )(dispatch, getState);

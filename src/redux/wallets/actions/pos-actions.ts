@@ -329,7 +329,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             sign: (
                 blockchain: Blockchain,
                 accountIndex: number,
-                transaction: IBlockchainTransaction
+                transaction: IBlockchainTransaction,
+                accountType: AccountType
             ) => Promise<any>;
         } =
             appWallet.type === WalletType.HW
@@ -366,10 +367,12 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     nonce: currentBlockchainNonce + nrPendingTransactions
                 };
 
-                // console.log('updated', updatedTransaction);
-                // return;
-
-                signed = await wallet.sign(transaction.blockchain, account.index, transaction);
+                signed = await wallet.sign(
+                    transaction.blockchain,
+                    account.index,
+                    transaction,
+                    account.type
+                );
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SIGNED));
             } catch (e) {
                 if (e === 'LEDGER_SIGN_CANCELLED') {
@@ -379,8 +382,6 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             }
 
             try {
-                // const txHash = signed;
-                // console.log(client);
                 const txHash = await client.sendTransaction(signed);
 
                 // SELECT_STAKING_POOL: delay 2 seconds
@@ -441,7 +442,6 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             }
         }
 
-        // console.log({ specificIndex, transactionLength: transactions.length });
         if (
             specificIndex === undefined ||
             (specificIndex !== undefined && specificIndex + 1 >= transactions.length)
@@ -470,7 +470,6 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             };
         }
 
-        // console.log('PosActions:sign()', errorMessage);
         if (errorMessage !== 'LEDGER_SIGN_CANCELLED') {
             if (TransactionMessageText[errorMessage]) {
                 Dialog.alert(

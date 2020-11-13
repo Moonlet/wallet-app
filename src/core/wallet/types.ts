@@ -1,5 +1,5 @@
 import { Blockchain, IBlockchainTransaction } from '../blockchain/types';
-import { IAccountState } from '../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../redux/wallets/state';
 
 export enum WalletType {
     HD = 'HD',
@@ -16,8 +16,18 @@ export enum TransactionStatus {
 }
 
 export interface IWallet {
-    getAccounts(blockchain: Blockchain, index: number, indexTo?: number): Promise<IAccountState[]>;
-    sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
-    getPrivateKey(blockchain: Blockchain, accountIndex: number): string;
+    getAccounts(
+        blockchain: Blockchain,
+        accountType: AccountType,
+        index: number,
+        indexTo?: number
+    ): Promise<IAccountState[]>;
+    sign(
+        blockchain: Blockchain,
+        accountIndex: number,
+        tx: IBlockchainTransaction,
+        accountType: AccountType
+    ): Promise<string>;
+    getPrivateKey(blockchain: Blockchain, accountIndex: number, accountType: AccountType): string;
     getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }>;
 }

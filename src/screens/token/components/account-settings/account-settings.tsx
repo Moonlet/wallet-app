@@ -72,7 +72,8 @@ export class AccountSettingsModalComponent extends React.Component<
 
                 const privateKey = hdWallet.getPrivateKey(
                     this.props.account.blockchain,
-                    this.props.account.index
+                    this.props.account.index,
+                    this.props.account.type
                 );
 
                 this.setState({

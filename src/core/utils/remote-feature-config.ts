@@ -6,6 +6,7 @@ import CONFIG from '../../config';
 export enum RemoteFeature {
     BETA_BADGE = 'beta_badge',
     ZIL = 'feature_zil',
+    SOLANA = 'feature_solana',
     NEAR = 'feature_near',
     NEAR_LEDGER_BLE = 'near_ledger_ble',
     COSMOS = 'feature_cosmos',
@@ -34,7 +35,8 @@ export const getRemoteConfigFeatures = async () => {
                 RemoteFeature.COSMOS,
                 RemoteFeature.CELO,
                 RemoteFeature.DEV_TOOLS,
-                RemoteFeature.TC_VERSION
+                RemoteFeature.TC_VERSION,
+                RemoteFeature.SOLANA
             ]);
 
         // Retrieve values
@@ -49,6 +51,7 @@ export const getRemoteConfigFeatures = async () => {
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
             [RemoteFeature.CELO]: JSON.stringify([]),
+            [RemoteFeature.SOLANA]: JSON.stringify([]),
             [RemoteFeature.TC_VERSION]: '0'
         };
     }

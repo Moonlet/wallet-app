@@ -9,7 +9,7 @@ import {
     IBlockchainTransaction
 } from '../../../core/blockchain/types';
 import { WalletType, IWallet, TransactionStatus } from '../../../core/wallet/types';
-import { IWalletState, IAccountState, ITokenState } from '../state';
+import { IWalletState, IAccountState, ITokenState, AccountType } from '../state';
 import { IAction } from '../../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../../state';
@@ -265,30 +265,33 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
         // generate initial accounts for each blockchain
         Promise.all([
-            wallet.getAccounts(Blockchain.ZILLIQA, 0),
-            wallet.getAccounts(Blockchain.ZILLIQA, 1),
-            wallet.getAccounts(Blockchain.ZILLIQA, 2),
-            wallet.getAccounts(Blockchain.ZILLIQA, 3),
-            wallet.getAccounts(Blockchain.ZILLIQA, 4),
-            wallet.getAccounts(Blockchain.ETHEREUM, 0),
-            wallet.getAccounts(Blockchain.ETHEREUM, 1),
-            wallet.getAccounts(Blockchain.ETHEREUM, 2),
-            wallet.getAccounts(Blockchain.ETHEREUM, 3),
-            wallet.getAccounts(Blockchain.ETHEREUM, 4),
-            wallet.getAccounts(Blockchain.CELO, 0),
-            wallet.getAccounts(Blockchain.CELO, 1),
-            wallet.getAccounts(Blockchain.CELO, 2),
-            wallet.getAccounts(Blockchain.CELO, 3),
-            wallet.getAccounts(Blockchain.CELO, 4),
-            wallet.getAccounts(Blockchain.COSMOS, 0),
-            wallet.getAccounts(Blockchain.COSMOS, 1),
-            wallet.getAccounts(Blockchain.COSMOS, 2),
-            wallet.getAccounts(Blockchain.COSMOS, 3),
-            wallet.getAccounts(Blockchain.COSMOS, 4),
-            wallet.getAccounts(Blockchain.NEAR, 1)
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.ZILLIQA, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.ETHEREUM, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, -1),
+            wallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.CELO, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 0),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 1),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 2),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 3),
+            wallet.getAccounts(Blockchain.COSMOS, AccountType.DEFAULT, 4),
+            wallet.getAccounts(Blockchain.NEAR, AccountType.DEFAULT, 1)
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
             //   data[5][0].selected = true; // first eth account
+
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 
@@ -411,7 +414,6 @@ export const getBalance = (
     } else {
         // call get balance for all tokens
         Object.keys(account.tokens[chainId] || {}).map(tokenSymbol => {
-            // console.log(`getBalance(${blockchain}, ${address}, ${tokenSymbol}, ${force})`);
             getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
         });
     }
@@ -467,7 +469,7 @@ export const updateTransactionFromBlockchain = (
 
     const wallets = getWalletWithAddress(
         state,
-        [transaction.address, receivingAddress],
+        [transaction.address.toLowerCase(), receivingAddress.toLowerCase()],
         blockchain
     );
 
@@ -488,7 +490,8 @@ export const updateTransactionFromBlockchain = (
             wallets.length > 1
                 ? wallets.find(loopWallet =>
                       loopWallet.accounts.some(
-                          account => account.address.toLowerCase() === receivingAddress
+                          account =>
+                              account.address.toLowerCase() === receivingAddress.toLowerCase()
                       )
                   )
                 : wallets[0];
@@ -497,10 +500,10 @@ export const updateTransactionFromBlockchain = (
         if (wallet) {
             transactionAccount =
                 wallet.accounts.find(
-                    account => account.address.toLowerCase() === receivingAddress
+                    account => account.address.toLowerCase() === receivingAddress.toLowerCase()
                 ) ||
                 wallet.accounts.find(
-                    account => account.address.toLowerCase() === transaction.address
+                    account => account.address.toLowerCase() === transaction.address.toLowerCase()
                 );
 
             // update balance
@@ -567,7 +570,8 @@ export const sendTransferTransaction = (
             sign: (
                 blockchain: Blockchain,
                 accountIndex: number,
-                transaction: IBlockchainTransaction
+                transaction: IBlockchainTransaction,
+                accountType: AccountType
             ) => Promise<any>;
         } =
             appWallet.type === WalletType.HW
@@ -603,7 +607,8 @@ export const sendTransferTransaction = (
             ...tx,
             nonce: currentBlockchainNonce + nrPendingTransactions
         };
-        const transaction = await wallet.sign(account.blockchain, account.index, tx);
+
+        const transaction = await wallet.sign(account.blockchain, account.index, tx, account.type);
 
         // if (appWallet.type === WalletType.HD) {
         await LoadingModal.showMessage({
@@ -774,6 +779,7 @@ export const deleteAccount = (
     blockchain: Blockchain,
     accountId: string,
     accountIndex: number,
+    accountType: AccountType,
     password: string
 ) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const state = getState();
@@ -783,7 +789,7 @@ export const deleteAccount = (
         pass: password
     });
 
-    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex);
+    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex, accountType);
 
     const chainId = getChainId(state, blockchain);
     const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
@@ -868,7 +874,12 @@ export const createNearAccount = (name: string, extension: string, password: str
 
     for (let index = 0; index < txs.length; index++) {
         try {
-            const transaction = await hdWallet.sign(blockchain, account.index, txs[index]);
+            const transaction = await hdWallet.sign(
+                blockchain,
+                account.index,
+                txs[index],
+                account.type
+            );
 
             const txHash = await client.sendTransaction(transaction);
 

@@ -4,6 +4,7 @@ import { Ethereum } from './ethereum';
 import { Near } from './near';
 import { Cosmos } from './cosmos';
 import { Celo } from './celo';
+import { Solana } from './solana';
 
 export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
     switch (blockchain) {
@@ -13,6 +14,8 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
             return Zilliqa;
         case Blockchain.NEAR:
             return Near;
+        case Blockchain.SOLANA:
+            return Solana;
         case Blockchain.COSMOS:
             return Cosmos;
         case Blockchain.CELO:
@@ -25,6 +28,7 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
 export const BLOCKCHAIN_LIST = [
     Blockchain.ZILLIQA,
     Blockchain.ETHEREUM,
+    Blockchain.SOLANA,
     Blockchain.CELO,
     Blockchain.NEAR,
     Blockchain.COSMOS

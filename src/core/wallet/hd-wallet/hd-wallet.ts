@@ -2,7 +2,7 @@ import { IWallet } from '../types';
 import { Mnemonic } from './mnemonic';
 import { Blockchain, IBlockchainTransaction, DerivationType } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
-import { IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { HDKeyFactory } from './hd-key/hdkey-factory';
 import { readEncrypted } from '../../secure/storage/storage';
 import { getEncryptionKey } from '../../secure/keychain/keychain';
@@ -35,20 +35,21 @@ export class HDWallet implements IWallet {
 
     public getAccounts(
         blockchain: Blockchain,
+        accountType: AccountType,
         index: number,
         indexTo?: number
     ): Promise<IAccountState[]> {
         indexTo = indexTo || index;
 
-        if (isNaN(Number(index))) {
-            return Promise.reject(
-                `${this.constructor.name}.getAccounts(): index must be a positive number.`
-            );
-        } else if (index < 0) {
-            return Promise.reject(
-                `${this.constructor.name}.getAccounts(): index must be a positive number.`
-            );
-        }
+        // if (isNaN(Number(index))) {
+        //     return Promise.reject(
+        //         `${this.constructor.name}.getAccounts(): index must be a positive number.`
+        //     );
+        // } else if (index < 0) {
+        //     return Promise.reject(
+        //         `${this.constructor.name}.getAccounts(): index must be a positive number.`
+        //     );
+        // }
 
         if (isNaN(Number(indexTo))) {
             return Promise.reject(
@@ -64,16 +65,28 @@ export class HDWallet implements IWallet {
 
         try {
             const accounts = [];
+
             const blockchainInstance = getBlockchain(blockchain);
+
             const key = HDKeyFactory.get(
                 blockchainInstance.config.derivationType,
                 this.seed
             ).derive(blockchainInstance.config.derivationPath);
-            for (let i = index; i <= indexTo; i++) {
+            let fromIndex = index;
+
+            if (accountType === AccountType.ROOT) {
+                const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
+                accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, -1));
+                fromIndex++;
+            }
+
+            for (let i = fromIndex; i <= indexTo; i++) {
                 const accountDerivationPath = blockchainInstance.account.getAccountDerivationPath(
                     i
                 );
+
                 const derivation = key.derive(`m/${accountDerivationPath}`);
+
                 const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(derivation);
                 accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, i));
             }
@@ -87,11 +100,20 @@ export class HDWallet implements IWallet {
         }
     }
 
-    public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {
+    public getPrivateKey(
+        blockchain: Blockchain,
+        accountIndex: number,
+        accountType: AccountType
+    ): string {
         const blockchainInstance = getBlockchain(blockchain);
         const key = HDKeyFactory.get(blockchainInstance.config.derivationType, this.seed).derive(
             blockchainInstance.config.derivationPath
         );
+
+        if (accountType === AccountType.ROOT) {
+            return blockchainInstance.account.getPrivateKeyFromDerived(key);
+        }
+
         const derivation = key.derive(
             `m/${blockchainInstance.account.getAccountDerivationPath(accountIndex)}`
         );
@@ -101,11 +123,12 @@ export class HDWallet implements IWallet {
     public async sign(
         blockchain: Blockchain,
         accountIndex: number,
-        tx: IBlockchainTransaction
+        tx: IBlockchainTransaction,
+        accountType: AccountType
     ): Promise<any> {
         return getBlockchain(blockchain).transaction.sign(
             tx,
-            this.getPrivateKey(blockchain, accountIndex)
+            this.getPrivateKey(blockchain, accountIndex, accountType)
         );
     }
 

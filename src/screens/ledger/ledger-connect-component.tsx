@@ -19,7 +19,7 @@ import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { LedgerWallet, LedgerSignEvent } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { IWallet } from '../../core/wallet/types';
 import { setInstance, waitForInstance } from '../../core/utils/class-registry';
-import { IAccountState, IWalletState } from '../../redux/wallets/state';
+import { AccountType, IAccountState, IWalletState } from '../../redux/wallets/state';
 import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
 import { LocationRequired } from './components/location-required/location-required';
@@ -103,7 +103,6 @@ export class LedgerConnectComponent extends React.Component<
         connectionType: HWConnection
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
-        // console.log('LedgerConnet', 'getAccountsAndDeviceId');
         this.setState({
             blockchain,
             deviceModel,
@@ -170,7 +169,6 @@ export class LedgerConnectComponent extends React.Component<
                 this.state.accountIndex,
                 this.state.transaction,
                 (event: LedgerSignEvent) => {
-                    // console.log('TrySign', event);
                     switch (event) {
                         case LedgerSignEvent.LOADING:
                         case LedgerSignEvent.CONNECT_DEVICE:
@@ -256,7 +254,6 @@ export class LedgerConnectComponent extends React.Component<
     }
     public componentWillUnmount() {
         //
-        // console.log('LedgerConnect:componentWillUnmount()');
     }
     @bind
     private async onConnectedDevice(item: any) {
@@ -293,6 +290,9 @@ export class LedgerConnectComponent extends React.Component<
             try {
                 const accounts: IAccountState[] = await wallet.getAccounts(
                     this.state.blockchain,
+                    this.state.blockchain === Blockchain.SOLANA
+                        ? AccountType.ROOT
+                        : AccountType.DEFAULT,
                     0
                 );
 
@@ -342,7 +342,6 @@ export class LedgerConnectComponent extends React.Component<
 
     private async selectStep(step: ScreenStep) {
         if (this.state.step !== step) {
-            // console.log('LedgerConnect:selectStep()', step);
             await this.stepContainerFadeOut();
             this.setState({ step, stepContainerTranslateAnimation: new Animated.Value(400) });
             await this.stepContainerFadeIn();
@@ -497,7 +496,6 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     public render() {
-        // console.log('LedgerConnect:render()', this.state.step);
         const { styles } = this.props;
 
         const displayTopHeader =

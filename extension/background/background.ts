@@ -1,2 +1,7 @@
 // tslint:disable-next-line:no-console
-export default console.log('Hello world!!!');
+import { store } from '../../src/redux/config';
+import { wrapStore } from 'webext-redux';
+
+wrapStore(store, {
+    portName: 'moonlet-extension-store-port'
+});

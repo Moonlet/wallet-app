@@ -3,12 +3,11 @@ import { Provider } from 'react-redux';
 import { StatusBar, Platform, AppState } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
-import { store } from './redux/config';
+import { store, persistor } from './redux/config';
 import { PersistGate } from 'redux-persist/integration/react';
 import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
-import { persistStore } from 'redux-persist';
 import { SplashScreen } from './components/splash-screen/splash-screen';
 import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
@@ -25,7 +24,6 @@ import { LegalModal } from './components/legal/legal-modal/legal-modal';
 import { IExchangeRates } from './redux/market/state';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
-// import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
@@ -43,8 +41,6 @@ import { InfoModal } from './components/info-modal/info-modal';
 
 const AppContainer = createAppContainer(RootNavigation);
 
-const persistor = persistStore(store);
-
 interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
@@ -52,6 +48,13 @@ interface IState {
     displayApplication: boolean;
     navigationState: any;
 }
+
+const PersistGateWrapper = props => {
+    if (props.persistor) {
+        return <PersistGate {...props}>{props.children}</PersistGate>;
+    }
+    return props.children;
+};
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
@@ -126,7 +129,7 @@ export default class App extends React.Component<{}, IState> {
         );
 
         this.unsub = takeOneAndSubscribeToStore(store, () => {
-            if (store.getState()._persist.rehydrated) {
+            if (store.getState()?._persist?.rehydrated) {
                 if (!this.reduxStateLoaded) {
                     this.reduxStateLoaded = true;
 
@@ -192,7 +195,7 @@ export default class App extends React.Component<{}, IState> {
         if (this.state.appReady) {
             return (
                 <Provider store={store}>
-                    <PersistGate loading={null} persistor={persistor}>
+                    <PersistGateWrapper loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             {Platform.OS !== 'web' && <PasswordModal.Component />}
                             <AppContainer
@@ -240,7 +243,7 @@ export default class App extends React.Component<{}, IState> {
                             <LedgerConnect.Component />
                             <ZilliqaTransactionUpdate />
                         </ThemeContext.Provider>
-                    </PersistGate>
+                    </PersistGateWrapper>
                 </Provider>
             );
         } else {

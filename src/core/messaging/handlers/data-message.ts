@@ -8,7 +8,7 @@ export const dataMessageHandler = async (message: ISilentMessage) => {
 
     // this is entry point for backgorund messaging
     takeOneAndSubscribeToStore(store, (state, unsub) => {
-        if (store.getState()._persist.rehydrated) {
+        if (store.getState()?._persist?.rehydrated) {
             unsub && unsub();
             handleMessages(message);
         }

@@ -231,7 +231,7 @@ export class DashboardScreenComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (
-            this.props.selectedAccount.address !== prevProps.selectedAccount.address &&
+            this.props.selectedAccount?.address !== prevProps.selectedAccount?.address &&
             Platform.OS === 'web'
         ) {
             // Used on web to get balances when selectedAccount is changed

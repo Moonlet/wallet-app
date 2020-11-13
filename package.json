@@ -1,6 +1,6 @@
 {
     "name": "moonlet",
-    "version": "1.4.17",
+    "version": "1.4.18",
     "private": true,
     "scripts": {
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
@@ -199,13 +199,7 @@
         }
     },
     "lint-staged": {
-        "*.{ts,tsx,scss,json,js}": [
-            "npm run prettier",
-            "git add"
-        ],
-        "*.{ts,tsx}": [
-            "npm run lint",
-            "git add"
-        ]
+        "*.{ts,tsx,scss,json,js}": ["npm run prettier", "git add"],
+        "*.{ts,tsx}": ["npm run lint", "git add"]
     }
 }

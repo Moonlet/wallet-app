@@ -15,7 +15,7 @@ export const notificationHandler = async (
     if (openedByNotification) {
         // used this in order to make sure that state is loaded
         takeOneAndSubscribeToStore(store, (state, unsub) => {
-            if (store.getState()._persist.rehydrated) {
+            if (store.getState()?._persist?.rehydrated) {
                 unsub && unsub();
                 handleNotification(notification, openedByNotification);
             }

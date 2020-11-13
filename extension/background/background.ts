@@ -1,6 +1,5 @@
 process.env.CONTEXT = 'extension-background';
 
-
 import { store } from '../../src/redux/config';
 import { wrapStore } from 'webext-redux';
 
@@ -8,9 +7,12 @@ import firebase from 'firebase/app';
 import CONFIG from '../../src/config';
 
 import { Controllers } from './controllers';
-import { ConnectionPort, IExtensionMessage, IExtensionResponse } from '../../src/core/communication/extension';
+import {
+    ConnectionPort,
+    IExtensionMessage,
+    IExtensionResponse
+} from '../../src/core/communication/extension';
 import { browser, Runtime } from 'webextension-polyfill-ts';
-
 
 // initialize store
 firebase.initializeApp(CONFIG.firebaseWebConfig);
@@ -87,4 +89,3 @@ browser.runtime.onConnect.addListener((port: Runtime.Port) => {
         });
     }
 });
-

@@ -14,27 +14,27 @@ import { SingleBalanceIcon } from './components/single-balance-icon/single-balan
 import { ThreeLinesCta } from './components/three-lines-cta/three-lines-cta';
 import { ThreeLinesIcon } from './components/three-lines-icon/three-lines-icon';
 import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
-import { IAccountState } from '../../redux/wallets/state';
-import { ChainIdType } from '../../core/blockchain/types';
 import { formatStyles } from './utils';
 import { IconModule } from './components/icon/icon';
+import { handleCta } from '../../redux/ui/screens/data/actions';
 
 const renderModules = (
     modules: IScreenModule[],
+    actions: {
+        handleCta: typeof handleCta;
+    },
     options?: {
-        account: IAccountState;
-        chainId: ChainIdType;
-        actions: any;
-
+        screenKey?: string;
         isWidgetExpanded?: boolean;
-
         style?: any;
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
-        <View key={`screen-module-${i}`}>{renderModule(m, options)}</View>
+        <React.Fragment key={`screen-module-${i}`}>
+            {renderModule(m, actions, options)}
+        </React.Fragment>
     ));
 
     let modulesJSX: any;
@@ -53,11 +53,11 @@ const renderModules = (
 
 export const renderModule = (
     module: IScreenModule,
-    options: {
-        account: IAccountState;
-        chainId: ChainIdType;
-        actions: any;
-
+    actions: {
+        handleCta: typeof handleCta;
+    },
+    options?: {
+        screenKey?: string;
         isWidgetExpanded?: boolean;
         style?: any;
         moduleColWrapperContainer?: any;
@@ -65,6 +65,11 @@ export const renderModule = (
     }
 ) => {
     let moduleJSX = null;
+
+    if (module?.hidden === true) {
+        // Hide module
+        return moduleJSX;
+    }
 
     switch (module.type) {
         case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
@@ -76,13 +81,7 @@ export const renderModule = (
             break;
 
         case ModuleTypes.THREE_LINES_CTA:
-            moduleJSX = (
-                <ThreeLinesCta
-                    module={module}
-                    actions={options.actions}
-                    account={options.account}
-                />
-            );
+            moduleJSX = <ThreeLinesCta module={module} actions={actions} />;
             break;
 
         case ModuleTypes.BALANCES_GRID_ICONS:
@@ -98,21 +97,15 @@ export const renderModule = (
             break;
 
         case ModuleTypes.IMAGE_BANNER:
-            moduleJSX = <ImageBanner module={module} />;
+            moduleJSX = <ImageBanner module={module} actions={actions} />;
             break;
 
         case ModuleTypes.TWO_LINES_TEXT_BANNER:
-            moduleJSX = (
-                <TwoLinesStakeBanner
-                    module={module}
-                    account={options.account}
-                    chainId={options.chainId}
-                />
-            );
+            moduleJSX = <TwoLinesStakeBanner module={module} actions={actions} />;
             break;
 
         case ModuleTypes.ONE_LINE_TEXT_BANNER:
-            moduleJSX = <OneLineTextBanner module={module} />;
+            moduleJSX = <OneLineTextBanner module={module} actions={actions} options={options} />;
             break;
 
         case ModuleTypes.THREE_LINES_ICON:
@@ -131,7 +124,7 @@ export const renderModule = (
             moduleJSX = (
                 <ModuleWrapper
                     module={module}
-                    renderModule={m => renderModule(m, options)}
+                    renderModule={m => renderModule(m, actions, options)}
                     moduleWrapperState={options?.moduleWrapperState}
                 />
             );
@@ -139,9 +132,12 @@ export const renderModule = (
 
         case ModuleTypes.MODULE_COLUMNS_WRAPPER:
             const colWrapperData = module.data as IScreenModuleColumnsWrapperData;
-            moduleJSX = renderModules(colWrapperData.submodules, {
+            moduleJSX = renderModules(colWrapperData.submodules, actions, {
                 ...options,
-                colWrapperStyle: colWrapperData?.style ? formatStyles(colWrapperData.style) : {}
+                colWrapperStyle:
+                    (module?.style && formatStyles(module?.style)) ||
+                    (colWrapperData?.style && formatStyles(colWrapperData.style)) ||
+                    {}
             });
             break;
 

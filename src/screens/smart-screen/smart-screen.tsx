@@ -2,25 +2,18 @@ import React from 'react';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
-import { fetchScreenData } from '../../redux/ui/screens/data/actions';
+import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
 import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
-import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
-import { getAccountStats } from '../../redux/ui/stats/selectors';
-import { AccountStats } from '../../core/blockchain/types/stats';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
-import {
-    toggleValidatorMultiple,
-    selectInput,
-    clearInput
-} from '../../redux/ui/screens/input-data/actions';
+import { clearInput } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -33,8 +26,6 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         screenData: state.ui.screens.data && state.ui.screens.data[ownProps.context.screen],
 
-        accountStats:
-            account && getAccountStats(state, account.blockchain, chainId, account.address),
         walletPublicKey: getSelectedWallet(state)?.walletPublicKey,
         account,
         chainId
@@ -46,23 +37,16 @@ interface IReduxProps {
 
     walletPublicKey: string;
     account: IAccountState;
-    accountStats: AccountStats;
     chainId: string;
 
     fetchScreenData: typeof fetchScreenData;
-    claimRewardNoInput: typeof claimRewardNoInput;
-    withdraw: typeof withdraw;
-    toggleValidatorMultiple: typeof toggleValidatorMultiple;
-    selectInput: typeof selectInput;
+    handleCta: typeof handleCta;
     clearInput: typeof clearInput;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
-    claimRewardNoInput,
-    withdraw,
-    toggleValidatorMultiple,
-    selectInput,
+    handleCta,
     clearInput
 };
 
@@ -71,7 +55,7 @@ interface IState {
     loadingScreenData: boolean;
 }
 
-export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
+class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
     private loadingTimeout: any;
 
     constructor(props: IReduxProps & IExternalProps) {
@@ -157,14 +141,10 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
                 data={widgets}
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
-                    claimRewardNoInput: this.props.claimRewardNoInput,
-                    withdraw: this.props.withdraw,
-                    toggleValidatorMultiple: this.props.toggleValidatorMultiple,
-                    selectInput: this.props.selectInput,
+                    handleCta: this.props.handleCta,
                     clearInput: this.props.clearInput
                 }}
-                account={this.props.account}
-                chainId={this.props.chainId}
+                blockchain={this.props.account.blockchain}
             />
         );
     }

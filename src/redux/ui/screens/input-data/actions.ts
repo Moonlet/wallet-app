@@ -11,6 +11,8 @@ export const toggleValidatorMultiple = (
     validator: {
         id: string;
         name: string;
+        icon?: string;
+        website?: string;
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     dispatch({

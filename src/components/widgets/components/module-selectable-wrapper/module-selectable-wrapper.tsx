@@ -6,21 +6,21 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
 import { getState } from '../module-wrapper/state-modifiers';
 import { renderModule } from '../../render-module';
-import { IAccountState } from '../../../../redux/wallets/state';
-import { ChainIdType } from '../../../../core/blockchain/types';
 import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
 import { InfoModal } from '../../../info-modal/info-modal';
-import { handleCta } from '../../handle-cta';
+import { handleCta } from '../../../../redux/ui/screens/data/actions';
+import { clearInput } from '../../../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
     screenKey: string;
-    actions: any;
-    account: IAccountState;
-    chainId: ChainIdType;
+    actions: {
+        handleCta: typeof handleCta;
+        clearInput: typeof clearInput;
+    };
 }
 
 interface IReduxProps {
@@ -52,8 +52,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
             module?.details?.validator &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {
-            handleCta(module.cta, {
-                actions,
+            actions.handleCta(module.cta, {
                 screenKey: this.props.screenKey,
                 validator: {
                     id: module.details.validator.id,
@@ -70,14 +69,17 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public render() {
-        const { actions, module, styles } = this.props;
+        const { actions, module, screenKey, styles } = this.props;
+
+        if (module?.hidden === true) {
+            // Hide module
+            return null;
+        }
 
         const customStyle = this.props?.style && formatStyles(this.props.style);
 
         const moduleOptions = {
-            account: this.props.account,
-            chainId: this.props.chainId,
-            actions,
+            screenKey,
             moduleColWrapperContainer: styles.moduleColWrapperContainer,
             moduleWrapperState: this.props.wrapperState
         };
@@ -85,9 +87,8 @@ class ModuleSelectableWrapperComponent extends React.Component<
         const moduleJSX = (
             <TouchableOpacity
                 onPress={() =>
-                    handleCta(module.cta, {
-                        actions,
-                        screenKey: this.props.screenKey,
+                    actions.handleCta(module.cta, {
+                        screenKey,
                         validator: module?.details?.validator && {
                             id: module.details.validator.id,
                             name: module.details.validator.name,
@@ -99,7 +100,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
                 activeOpacity={0.8}
             >
                 {this.props.modules.map((m: IScreenModule, index: number) => (
-                    <View key={`module-${index}`}>{renderModule(m, moduleOptions)}</View>
+                    <View key={`module-${index}`}>{renderModule(m, actions, moduleOptions)}</View>
                 ))}
                 {module?.info && (
                     <TouchableOpacity
@@ -116,7 +117,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
                         ]}
                         onPress={() => InfoModal.open(module.info.data?.cta?.params?.params)}
                     >
-                        {renderModule(module.info.data, moduleOptions)}
+                        {renderModule(module.info.data, actions, moduleOptions)}
                     </TouchableOpacity>
                 )}
             </TouchableOpacity>

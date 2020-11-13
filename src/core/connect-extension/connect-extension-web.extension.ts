@@ -159,7 +159,7 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const listenLastSync = async () => {
+    const listenLastSync = async (disableBuildTransactions = false) => {
         try {
             const connection = await getConnection();
 
@@ -183,7 +183,8 @@ export const ConnectExtensionWeb = (() => {
                                 storeState(decryptedState);
 
                                 // Build wallets transactions
-                                buildTransactions(decryptedState.state.wallets);
+                                !disableBuildTransactions &&
+                                    buildTransactions(decryptedState.state.wallets);
                             }
                         } catch (err) {
                             SentryCaptureException(new Error(JSON.stringify(err)));

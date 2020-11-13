@@ -13,6 +13,10 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS
         },
+        moduleColWrapperContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+        },
         itemHeader: {
             flexDirection: 'row',
             justifyContent: 'space-between',

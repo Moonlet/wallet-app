@@ -4,7 +4,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { IScreenModule, IStaticTextColumnData } from '../../types';
-import { formatDataJSXElements } from '../../utils';
+import { formatDataJSXElements, formatStyles } from '../../utils';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -17,7 +17,7 @@ const StaticTextColBottomHeaderComponent = (
     const data = module.data as IStaticTextColumnData[];
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
             {data.map((item: IStaticTextColumnData, index: number) => (
                 <View style={styles.itemContainer} key={`static-text-col-bottom-header-${index}`}>
                     <View style={styles.row}>

@@ -36,11 +36,11 @@ export const ZIL_NATIVE: ITokenConfigState = {
 
 export const accountCTA = {
     mainCta: {
-        title: 'App.labels.quickStake',
+        title: 'App.labels.stakeNow',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'PosQuickDelegate',
-            params: { actionText: 'App.labels.quickStake' }
+            screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
+            params: { actionText: 'App.labels.stakeNow' }
         }
     }
 };
@@ -180,7 +180,7 @@ export const config: IBlockchainConfig = {
         }
     ],
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(10).pow(14)
+        [AccountType.DEFAULT]: new BigNumber(10).pow(13) // 10 ZIL
     }
 };
 

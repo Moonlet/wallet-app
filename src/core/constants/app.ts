@@ -1,5 +1,6 @@
 export const AVAILABLE_CURRENCIES = [
     'AUD',
+    'CAD',
     'CNY',
     'DAI',
     'EUR',

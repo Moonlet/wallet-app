@@ -2,31 +2,27 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
-import { ThreeLinesCta } from './components/three-lines-cta/three-lines-cta';
 import Icon from '../icon/icon';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { SingleBalanceIcon } from './components/single-balance-icon/single-balance-icon';
-import { Separator } from './components/separator/separator';
 import { IScreenModule, IScreenWidget, ModuleTypes } from './types';
-import { ImageBanner } from './components/image-banner/image-banner';
-import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
-import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
-import { BalanceGridIcons } from './components/balance-grid-icons/balance-grid-icons';
 import { Text } from '../../library';
-import { IAccountState } from '../../redux/wallets/state';
-import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
-import { ChainIdType } from '../../core/blockchain/types';
-import { ExpandableContainer } from '../expandable-container/expandable-container';
-import { OneLineTextBanner } from './components/one-line-text-banner/one-line-text-banner';
-import { ModuleWrapper } from './components/module-wrapper/module-wrapper';
+import { Blockchain } from '../../core/blockchain/types';
+import { formatStyles } from './utils';
+import { renderModule } from './render-module';
+import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
+import { handleCta } from '../../redux/ui/screens/data/actions';
+import { clearInput } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     data: IScreenWidget[];
-    actions: any;
-    account: IAccountState;
-    chainId: ChainIdType;
+    screenKey: string;
+    actions: {
+        handleCta: typeof handleCta;
+        clearInput: typeof clearInput;
+    };
+    blockchain: Blockchain;
 }
 
 interface IState {
@@ -57,8 +53,8 @@ class WidgetsComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
-        if (this.props.account.blockchain !== prevProps.account.blockchain) {
-            // Widgets Expande States set on false
+        if (this.props.blockchain !== prevProps.blockchain) {
+            // Widgets Expanded States set on false
             const widgetsExpandedState = this.state.widgetsExpandedState;
             Object.keys(widgetsExpandedState).map(widget => (widgetsExpandedState[widget] = false));
             this.setState({ widgetsExpandedState });
@@ -75,93 +71,8 @@ class WidgetsComponent extends React.Component<
         );
     }
 
-    public renderModule(module: IScreenModule, isWidgetExpanded: boolean) {
-        let moduleJSX = null;
-
-        switch (module.type) {
-            case ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER:
-                moduleJSX = <StaticTextColTopHeader module={module} />;
-                break;
-
-            case ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER:
-                moduleJSX = <StaticTextColBottomHeader module={module} />;
-                break;
-
-            case ModuleTypes.THREE_LINES_CTA:
-                moduleJSX = (
-                    <ThreeLinesCta
-                        module={module}
-                        actions={this.props.actions}
-                        account={this.props.account}
-                    />
-                );
-                break;
-
-            case ModuleTypes.BALANCES_GRID_ICONS:
-                moduleJSX = <BalanceGridIcons module={module} />;
-                break;
-
-            case ModuleTypes.SEPARATOR:
-                moduleJSX = <Separator module={module} />;
-                break;
-
-            case ModuleTypes.SINGLE_BALANCE_ICON:
-                moduleJSX = <SingleBalanceIcon module={module} />;
-                break;
-
-            case ModuleTypes.IMAGE_BANNER:
-                moduleJSX = <ImageBanner module={module} />;
-                break;
-
-            case ModuleTypes.TWO_LINES_TEXT_BANNER:
-                moduleJSX = (
-                    <TwoLinesStakeBanner
-                        module={module}
-                        account={this.props.account}
-                        chainId={this.props.chainId}
-                    />
-                );
-                break;
-
-            case ModuleTypes.ONE_LINE_TEXT_BANNER:
-                moduleJSX = <OneLineTextBanner module={module} />;
-                break;
-
-            case ModuleTypes.MODULE_WRAPPER:
-                moduleJSX = (
-                    <ModuleWrapper
-                        module={module}
-                        renderModule={m => this.renderModule(m, isWidgetExpanded)}
-                    />
-                );
-                break;
-
-            default:
-                return null;
-        }
-
-        if (isWidgetExpanded === undefined) {
-            return moduleJSX;
-        } else {
-            if (!module?.displayWhen) {
-                return moduleJSX;
-            }
-
-            let showModule = false;
-            if (!module?.displayWhen || isWidgetExpanded) {
-                showModule = true;
-            }
-
-            return (
-                <View>
-                    <ExpandableContainer isExpanded={showModule}>{moduleJSX}</ExpandableContainer>
-                </View>
-            );
-        }
-    }
-
     private renderWidget(widget: IScreenWidget, index: number) {
-        const { styles } = this.props;
+        const { actions, screenKey, styles } = this.props;
         const { widgetsExpandedState } = this.state;
 
         if (widget?.expandable) {
@@ -175,7 +86,7 @@ class WidgetsComponent extends React.Component<
             return (
                 <TouchableOpacity
                     key={`widget-${index}`}
-                    style={styles.widgetContainer}
+                    style={[styles.widgetContainer, widget?.style && formatStyles(widget.style)]}
                     activeOpacity={0.9}
                     onPress={() => {
                         const wigetsState = widgetsExpandedState;
@@ -199,7 +110,10 @@ class WidgetsComponent extends React.Component<
 
                         {widget.modules.map((module: IScreenModule, i: number) => (
                             <View key={`module-${i}`}>
-                                {this.renderModule(module, isWidgetExpanded)}
+                                {renderModule(module, actions, {
+                                    isWidgetExpanded,
+                                    moduleColWrapperContainer: styles.moduleColWrapperContainer
+                                })}
                             </View>
                         ))}
                     </View>
@@ -208,16 +122,33 @@ class WidgetsComponent extends React.Component<
         }
 
         return (
-            <View key={`widget-${index}`} style={styles.widgetContainer}>
+            <View
+                key={`widget-${index}`}
+                style={[styles.widgetContainer, widget?.style && formatStyles(widget.style)]}
+            >
                 {widget.title && (
                     <Text style={[styles.headerText, styles.headerTextNonExpandable]}>
                         {widget.title}
                     </Text>
                 )}
 
-                {widget.modules.map((module: IScreenModule, i: number) => (
-                    <View key={`module-${i}`}>{this.renderModule(module, undefined)}</View>
-                ))}
+                {widget.modules.map((module: IScreenModule, i: number) =>
+                    module.type === ModuleTypes.MODULE_SELECTABLE_WRAPPER ? (
+                        <ModuleSelectableWrapper
+                            key={`module-${i}`}
+                            module={module}
+                            screenKey={screenKey}
+                            actions={this.props.actions}
+                        />
+                    ) : (
+                        <View key={`module-${i}`}>
+                            {renderModule(module, actions, {
+                                screenKey,
+                                moduleColWrapperContainer: styles.moduleColWrapperContainer
+                            })}
+                        </View>
+                    )
+                )}
             </View>
         );
     }

@@ -6,7 +6,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
 import { IBalanceGridData, IScreenModule } from '../../types';
-import { formatDataJSXElements } from '../../utils';
+import { formatDataJSXElements, formatStyles } from '../../utils';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -19,7 +19,7 @@ const BalanceGridIconsComponent = (
     const data = module.data as IBalanceGridData[];
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
             {data.map((item: IBalanceGridData, index: number) => {
                 return (
                     <View key={`balance-grid-icons-${index}`} style={styles.itemContainer}>

@@ -2,20 +2,18 @@ import React from 'react';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
-import { fetchScreenData } from '../../redux/ui/screens/data/actions';
-import { IScreenContext, IScreenWidget } from '../../components/widgets/types';
+import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
+import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
-import { IScreenData, IScreenDatas } from '../../redux/ui/screens/data/state';
-import { withdraw, claimRewardNoInput } from '../../redux/wallets/actions/pos-actions';
+import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
-import { getAccountStats } from '../../redux/ui/stats/selectors';
-import { AccountStats } from '../../core/blockchain/types/stats';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
+import { clearInput } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -28,8 +26,6 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         screenData: state.ui.screens.data && state.ui.screens.data[ownProps.context.screen],
 
-        accountStats:
-            account && getAccountStats(state, account.blockchain, chainId, account.address),
         walletPublicKey: getSelectedWallet(state)?.walletPublicKey,
         account,
         chainId
@@ -37,22 +33,21 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 interface IReduxProps {
-    screenData: IScreenDatas;
+    screenData: IScreensData;
 
     walletPublicKey: string;
     account: IAccountState;
-    accountStats: AccountStats;
     chainId: string;
 
     fetchScreenData: typeof fetchScreenData;
-    claimRewardNoInput: typeof claimRewardNoInput;
-    withdraw: typeof withdraw;
+    handleCta: typeof handleCta;
+    clearInput: typeof clearInput;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
-    claimRewardNoInput,
-    withdraw
+    handleCta,
+    clearInput
 };
 
 interface IState {
@@ -60,7 +55,7 @@ interface IState {
     loadingScreenData: boolean;
 }
 
-export class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
+class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
     private loadingTimeout: any;
 
     constructor(props: IReduxProps & IExternalProps) {
@@ -89,14 +84,18 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         this.updateLoading(prevProps);
     }
 
-    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
-        const screenKey = getScreenDataKey({
+    private getScreenKey(props: IReduxProps & IExternalProps) {
+        return getScreenDataKey({
             pubKey: props.walletPublicKey,
             blockchain: props.account?.blockchain,
             chainId: props.chainId,
             address: props.account?.address,
             tab: props.context?.tab
         });
+    }
+
+    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
+        const screenKey = this.getScreenKey(props);
 
         return props.screenData && screenKey && props.screenData[screenKey];
     }
@@ -140,12 +139,12 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
         return (
             <Widgets
                 data={widgets}
+                screenKey={this.getScreenKey(this.props)}
                 actions={{
-                    claimRewardNoInput: this.props.claimRewardNoInput,
-                    withdraw: this.props.withdraw
+                    handleCta: this.props.handleCta,
+                    clearInput: this.props.clearInput
                 }}
-                account={this.props.account}
-                chainId={this.props.chainId}
+                blockchain={this.props.account.blockchain}
             />
         );
     }
@@ -168,7 +167,21 @@ export class SmartScreenComponent extends React.Component<IReduxProps & IExterna
 
         if (screenData) {
             if (this.state.loadingScreenData) {
-                return <LoadingSkeleton />;
+                // TODO: refactor this
+                // getLoadingSkeleton
+                // param of function type getLoadingSkeleton so we can customize the skeleton where we include smart screen component
+                switch (this.props.context.screen) {
+                    case ContextScreen.TOKEN:
+                    case ContextScreen.QUICK_STAKE_SELECT_VALIDATOR:
+                        return new Array(4)
+                            .fill('')
+                            .map((_, index: number) => (
+                                <LoadingSkeleton key={`skeleton-${index}`} />
+                            ));
+
+                    default:
+                        return <LoadingSkeleton />;
+                }
             }
 
             if (screenData.response?.widgets) {

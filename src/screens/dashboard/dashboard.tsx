@@ -230,7 +230,10 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.selectedAccount !== prevProps.selectedAccount && Platform.OS === 'web') {
+        if (
+            this.props.selectedAccount.address !== prevProps.selectedAccount.address &&
+            Platform.OS === 'web'
+        ) {
             // Used on web to get balances when selectedAccount is changed
             // NavigationEvents is not enough for the web in order to get balances
             this.onFocus();

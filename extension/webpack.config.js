@@ -90,13 +90,31 @@ const imageLoaderConfiguration = {
     }
 };
 
-module.exports = (env, argv) => ({
+const configs = [
+    {
+        entry: {
+            'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js')
+        },
+        define: {
+            'process.env.CONTEXT': `"extension-popover"`
+        }
+    },
+    {
+        entry: {
+            'bundle.background': path.resolve(appDirectory, 'extension/background/background')
+        },
+        define: {
+            'process.env.CONTEXT': `"extension-background"`
+        }
+    }
+];
+
+module.exports = configs.map(config => (env, argv) => ({
     entry: {
         // load any web API polyfills
         // path.resolve(appDirectory, 'polyfills-web.js'),
         // your web-specific entry file
-        'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js'),
-        'bundle.background': path.resolve(appDirectory, 'extension/background/background')
+        ...config.entry
     },
 
     plugins: [
@@ -109,7 +127,8 @@ module.exports = (env, argv) => ({
             __DEV__: argv.mode === 'development',
             ...ENV_VARS,
             'process.env.TARGET': `"${TARGET}"`,
-            'process.env.VERSION': `"${VERSION}"`
+            'process.env.VERSION': `"${VERSION}"`,
+            ...config.define
         }),
         new CopyPlugin([
             { from: './resources', to: './resources' },
@@ -178,4 +197,4 @@ module.exports = (env, argv) => ({
     devServer: {
         hot: false
     }
-});
+}));

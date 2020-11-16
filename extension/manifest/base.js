@@ -13,7 +13,21 @@ module.exports = {
     background: {
         scripts: ['bundle.background.js']
     },
-    content_security_policy: "script-src 'self'; object-src 'self'",
+    content_scripts: [
+        {
+            matches: [
+                'https://fire.moonlet.io/*', 
+                'https://fire.moonlet.dev/*', 
+                'https://api.moonlet.app/*', 
+                'https://api.moonlet.io/*', 
+                'https://api.moonlet.dev/*'
+            ],
+            run_at: 'document_start',
+            js: ['bundle.providers.cs.js'],
+            all_frames: true
+        }
+    ],
+    content_security_policy: "script-src 'self'; object-src 'self';",
     icons: {
         16: 'icons/moonlet-16px.png',
         48: 'icons/moonlet-48px.png',

@@ -64,6 +64,7 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist'),
         path.resolve(appDirectory, 'node_modules/react-native-fast-image'),
         path.resolve(appDirectory, 'node_modules/react-native-fab-pie'),
+        path.resolve(appDirectory, 'node_modules/react-native-markdown-display'),
         path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
@@ -90,31 +91,14 @@ const imageLoaderConfiguration = {
     }
 };
 
-const configs = [
-    {
-        entry: {
-            'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js')
-        },
-        define: {
-            'process.env.CONTEXT': `"extension-popover"`
-        }
-    },
-    {
-        entry: {
-            'bundle.background': path.resolve(appDirectory, 'extension/background/background')
-        },
-        define: {
-            'process.env.CONTEXT': `"extension-background"`
-        }
-    }
-];
-
-module.exports = configs.map(config => (env, argv) => ({
+module.exports = (env, argv) => ({
     entry: {
         // load any web API polyfills
         // path.resolve(appDirectory, 'polyfills-web.js'),
         // your web-specific entry file
-        ...config.entry
+        'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js'),
+        'bundle.background': path.resolve(appDirectory, 'extension/background/background'),
+        'bundle.providers.cs': path.resolve(appDirectory, 'extension/content-scripts/providers')
     },
 
     plugins: [
@@ -127,8 +111,7 @@ module.exports = configs.map(config => (env, argv) => ({
             __DEV__: argv.mode === 'development',
             ...ENV_VARS,
             'process.env.TARGET': `"${TARGET}"`,
-            'process.env.VERSION': `"${VERSION}"`,
-            ...config.define
+            'process.env.VERSION': `"${VERSION}"`
         }),
         new CopyPlugin([
             { from: './resources', to: './resources' },
@@ -197,4 +180,4 @@ module.exports = configs.map(config => (env, argv) => ({
     devServer: {
         hot: false
     }
-}));
+});

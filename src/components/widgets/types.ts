@@ -280,10 +280,5 @@ export interface IThreeLinesIconData {
 
 export interface IMdTextData {
     text: string;
-    style?: IDataStyle;
-    options?: {
-        numberOfLines?: number;
-        customMarkdownFormatterRegex?: any;
-        // maybe add here custom regex formatter if needed
-    };
+    style?: any;
 }

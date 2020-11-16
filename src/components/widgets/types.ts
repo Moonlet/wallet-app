@@ -67,6 +67,8 @@ export interface ICta {
             label: string;
             bg: string;
         };
+        leftIcon?: IconValues;
+        wrapperStyle?: any;
     };
 }
 

@@ -80,6 +80,7 @@ export const translation: ITranslations = {
                 ok: 'OK',
                 paste: 'Paste',
                 processing: 'Processing',
+                promoDetails: 'Promo details',
                 privacyPolicy: 'Privacy Policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',

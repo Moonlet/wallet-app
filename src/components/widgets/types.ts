@@ -87,6 +87,7 @@ export interface IScreenModule {
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
+        | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
         | ModuleTypes.MODULE_WRAPPER
@@ -107,6 +108,7 @@ export interface IScreenModule {
         // | IIconData
         | IIconTwoLinesData
         | IImageBannerData
+        | IMdTextData
         | IOneLineTextBannerData
         | IScreenModuleColumnsWrapperData
         | IScreenModuleSelectableWrapperData
@@ -127,6 +129,7 @@ export enum ModuleTypes {
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
+    MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
     MODULE_WRAPPER = 'module-wrapper',
@@ -273,4 +276,9 @@ export interface IThreeLinesIconData {
         url: string;
         style?: IDataStyle;
     };
+}
+
+export interface IMdTextData {
+    text: string;
+    style?: any;
 }

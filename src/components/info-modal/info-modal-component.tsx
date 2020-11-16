@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Text, Button } from '../../library';
@@ -71,7 +71,12 @@ export class InfoModalComponent extends React.Component<
             return (
                 <View style={styles.wrapper}>
                     <View style={styles.container}>
-                        <View style={styles.messageContainer}>{msgJSX}</View>
+                        <ScrollView
+                            contentContainerStyle={styles.scrollView}
+                            showsVerticalScrollIndicator={false}
+                        >
+                            {msgJSX}
+                        </ScrollView>
                         <Button onPress={() => this.close()}>
                             {translate('App.labels.close')}
                         </Button>

@@ -17,6 +17,7 @@ import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-line
 import { formatStyles } from './utils';
 import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/actions';
+import { MdText } from './components/md-text/md-text';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -118,6 +119,10 @@ export const renderModule = (
 
         case ModuleTypes.ICON:
             moduleJSX = <IconModule module={module} />;
+            break;
+
+        case ModuleTypes.MD_TEXT:
+            moduleJSX = <MdText module={module} />;
             break;
 
         case ModuleTypes.MODULE_WRAPPER:

@@ -147,11 +147,14 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                 break;
             }
             case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
-                const txClaimReward: IPosTransaction = cloneDeep(tx);
-                const transaction: IBlockchainTransaction = await client.contracts[
-                    Contracts.STAKING
-                ].withdrawStakRewards(txClaimReward, tx.validators[0]);
-                transactions.push(transaction);
+                for (const validator of tx.validators) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
                 break;
             }
             case PosBasicActionType.WITHDRAW: {

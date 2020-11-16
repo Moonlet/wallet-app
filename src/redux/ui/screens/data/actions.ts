@@ -149,14 +149,25 @@ export const handleCta = (
         case 'callAction':
             switch (cta.params.action) {
                 case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
-                    const validator = buildDummyValidator(
-                        cta.params.params.validatorId,
-                        cta.params.params.validatorName
-                    );
+                    let validators = [];
+
+                    if (cta.params?.params?.validators) {
+                        for (const v of cta.params.params.validators) {
+                            const validator = buildDummyValidator(v.validatorId, v.validatorName);
+                            validators.push(validator);
+                        }
+                    } else {
+                        validators = [
+                            buildDummyValidator(
+                                cta.params.params.validatorId,
+                                cta.params.params.validatorName
+                            )
+                        ];
+                    }
 
                     claimRewardNoInput(
                         getSelectedAccount(state),
-                        [validator],
+                        validators,
                         cta.params.params.tokenSymbol,
                         undefined
                     )(dispatch, getState);

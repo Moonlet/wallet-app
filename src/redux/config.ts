@@ -43,7 +43,7 @@ const configureStore = () => {
 
 let _store;
 let _persistor;
-if (Platform.OS === 'web' && process.env.CONTEXT === 'extension-popover') {
+if (Platform.OS === 'web' && process.env.CONTEXT !== 'extension-background') {
     _store = applyMiddlewareWebExt(
         new Store({
             portName: 'moonlet-extension-store-port'

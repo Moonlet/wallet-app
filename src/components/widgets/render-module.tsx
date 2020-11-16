@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { IScreenModule, IScreenModuleColumnsWrapperData, ModuleTypes } from './types';
+import { Button } from '../../library';
+import { ICta, IScreenModule, IScreenModuleColumnsWrapperData, ModuleTypes } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
@@ -168,4 +169,25 @@ export const renderModule = (
             </View>
         );
     }
+};
+
+export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
+    return (
+        <Button
+            primary={cta?.buttonProps?.primary}
+            secondary={cta?.buttonProps?.secondary}
+            disabled={cta?.buttonProps?.disabled}
+            leftIcon={cta?.buttonProps?.leftIcon}
+            wrapperStyle={
+                cta?.buttonProps?.wrapperStyle && formatStyles(cta.buttonProps.wrapperStyle)
+            }
+            style={{
+                backgroundColor: cta?.buttonProps?.colors?.bg,
+                borderColor: cta?.buttonProps?.colors?.bg
+            }}
+            onPress={() => handleCTA(cta)}
+        >
+            {cta?.label || ''}
+        </Button>
+    );
 };

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
-import { SkeletonPlaceholder } from '../../../../components/skeleton-placeholder/skeleton-placeholder';
+import { SkeletonPlaceholder } from '../../../skeleton-placeholder/skeleton-placeholder';
 
 class LoadingSkeletonComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>

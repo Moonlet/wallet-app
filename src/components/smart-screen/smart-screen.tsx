@@ -1,16 +1,16 @@
 import React from 'react';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Widgets } from '../../components/widgets/widgets';
+import { Widgets } from '../widgets/widgets';
 import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
-import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
+import { ContextScreen, IScreenContext, IScreenWidget } from '../widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
-import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
+import { ErrorWidget } from '../widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
 import { clearInput } from '../../redux/ui/screens/input-data/actions';
@@ -55,7 +55,7 @@ interface IState {
     loadingScreenData: boolean;
 }
 
-class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
+class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, IState> {
     private loadingTimeout: any;
 
     constructor(props: IReduxProps & IExternalProps) {
@@ -197,6 +197,6 @@ class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps,
     }
 }
 
-export const SmartScreen = smartConnect<IExternalProps>(SmartScreenComponent, [
+export const SmartScreenComponent = smartConnect<IExternalProps>(SmartScreenComp, [
     connect(mapStateToProps, mapDispatchToProps)
 ]);

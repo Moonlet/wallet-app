@@ -20,7 +20,7 @@ import { IReduxState } from '../../redux/state';
 import { AccountStats } from '../../core/blockchain/types/stats';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 import { getAccountStats } from '../../redux/ui/stats/selectors';
-import { SmartScreen } from '../../screens/smart-screen/smart-screen';
+import { SmartScreenComponent } from '../smart-screen/smart-screen';
 import { ContextScreen } from '../widgets/types';
 
 interface IExternalProps {
@@ -103,7 +103,7 @@ export class TokenDashboardComponent extends React.Component<
                     ]}
                 >
                     {Platform.OS !== 'web' && (
-                        <SmartScreen
+                        <SmartScreenComponent
                             context={{
                                 screen: ContextScreen.DASHBOARD
                             }}

@@ -8,7 +8,8 @@ export interface IScreenRequest {
 }
 
 export interface IScreenContext {
-    screen: ContextScreen;
+    screen: any; // ContextScreen;
+    step?: ContextStep;
     tab?: ContextTab;
 }
 
@@ -21,6 +22,8 @@ export enum ContextScreen {
 export enum ContextTab {
     ACCOUNT = 'account'
 }
+
+export enum ContextStep {}
 
 export interface IScreenUser {
     os: 'android' | 'ios' | 'web';
@@ -47,10 +50,21 @@ export interface IScreenUser {
 }
 
 export interface IScreenResponse {
+    header?: IScreenHeader;
     widgets: IScreenWidget[];
+    bottomFixedArea?: IScreenWidget[];
 }
 
-export interface ICta {
+export interface IScreenHeader {
+    title: string;
+    color?: string;
+    leftIcon?: {
+        value: IconValues;
+        onPress: () => void;
+    };
+}
+
+export interface ICtaActions {
     type: 'callAction' | 'openUrl' | 'navigateTo';
     params: {
         action?: string;
@@ -58,6 +72,22 @@ export interface ICta {
         screen?: string;
         params?: any;
     };
+}
+
+export interface ICta {
+    actions?: ICtaActions[];
+
+    /** @deprecated use actions instead */
+    type?: 'callAction' | 'openUrl' | 'navigateTo';
+
+    /** @deprecated use actions instead */
+    params?: {
+        action?: string;
+        url?: string;
+        screen?: string;
+        params?: any;
+    };
+
     label?: string;
     buttonProps?: {
         primary?: boolean;

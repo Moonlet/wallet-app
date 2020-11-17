@@ -59,6 +59,7 @@ import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
 import { Platform } from 'react-native';
 import { QuickStakeSelectValidatorScreen } from '../screens/quick-stake-select-validator/quick-stake-select-validator';
 import { PromoDetailsScreen } from '../screens/promo-details/promo-details';
+import { SmartScreen } from '../screens/smart-screen/smart-screen';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -204,6 +205,9 @@ export const WalletNavigation = createStackNavigator(
         PosBasicAction: {
             screen: PosBasicAction
         },
+        SmartScreen: {
+            screen: SmartScreen
+        },
 
         // wallet creation
         CreateWalletMnemonic: {
@@ -271,6 +275,9 @@ export const SettingsNavigation = createStackNavigator(
         },
         ConnectExtension: {
             screen: ConnectExtensionScreen
+        },
+        SmartScreen: {
+            screen: SmartScreen
         },
 
         // wallet creation

@@ -57,7 +57,7 @@
         "bowser": "^2.9.0",
         "bs58": "^4.0.1",
         "crypto-js": "^4.0.0",
-        "detox": "^16.7.2",
+        "detox": "^17.8.4",
         "detox-getprops": "^0.1.2",
         "dotenv": "^8.2.0",
         "elliptic": "^6.5.3",

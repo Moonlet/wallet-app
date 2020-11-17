@@ -117,7 +117,7 @@ jobs:
           node-version: "10.x"
       - uses: actions/checkout@v1
       - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Add to host

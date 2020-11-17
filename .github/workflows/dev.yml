@@ -80,7 +80,7 @@ jobs:
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Add to host

@@ -180,7 +180,7 @@ jobs:
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-          echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+          echo "TAG_NAME=v${VERSION}.${BUILD}" >> $GITHUB_ENV
       - name: Create Chrome extenion zip
         run: cd extension/build/beta/chrome && zip -r ./chrome-extension-dev-$TAG_NAME.zip ./
       - name: Upload Chrome extenion zip via FTP

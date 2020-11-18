@@ -17,7 +17,7 @@ import { ErrorWidget } from '../../components/widgets/components/error-widget/er
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from '../../components/smart-screen/components/loading-skeleton/loading-skeleton';
 import { clearInput } from '../../redux/ui/screens/input-data/actions';
-import { Text, Button } from '../../library';
+import { Text } from '../../library';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -198,8 +198,6 @@ class SmartScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                {/* Header */}
-
                 {/* Color Background */}
                 {background && background?.color && typeof background.color === 'string' && (
                     <View
@@ -224,7 +222,7 @@ class SmartScreenComponent extends React.Component<
                         {screenData.response?.widgets &&
                             this.renderWidgets(screenData.response.widgets)}
 
-                        {/* TODO: remove this */}
+                        {/* TODO: remove this: only for test purposes */}
                         {!loadingScreenData && screenData.response?.widgets.length === 0 && (
                             <Text style={{ color: 'red' }}>{`Empty section - no widgets`}</Text>
                         )}
@@ -237,10 +235,12 @@ class SmartScreenComponent extends React.Component<
                 )}
 
                 {/* Bottom Fixed Area */}
-                <View style={styles.fixedBottomArea}>
-                    {/* only one widget */}
-                    <Button primary>{'Text'}</Button>
-                </View>
+                {screenData?.response?.bottomFixedArea && (
+                    <View style={styles.fixedBottomArea}>
+                        {/* only one widget */}
+                        {this.renderWidgets([screenData.response.bottomFixedArea])}
+                    </View>
+                )}
             </View>
         );
     }

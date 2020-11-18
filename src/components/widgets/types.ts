@@ -50,18 +50,8 @@ export interface IScreenUser {
 }
 
 export interface IScreenResponse {
-    header?: IScreenHeader;
     widgets: IScreenWidget[];
-    bottomFixedArea?: IScreenWidget[];
-}
-
-export interface IScreenHeader {
-    title: string;
-    color?: string;
-    leftIcon?: {
-        value: IconValues;
-        onPress: () => void;
-    };
+    bottomFixedArea?: IScreenWidget;
 }
 
 export interface ICtaActions {

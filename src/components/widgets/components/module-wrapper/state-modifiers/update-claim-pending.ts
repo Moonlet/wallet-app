@@ -59,6 +59,7 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
             const index = Object.values(walletTransactions).findIndex(
                 tx =>
                     // success claim tx
+                    tx?.data?.params &&
                     tx?.data?.params[0] === v.validatorId &&
                     tx.status === TransactionStatus.SUCCESS &&
                     (tx?.additionalInfo?.posAction === PosBasicActionType.CLAIM_REWARD ||

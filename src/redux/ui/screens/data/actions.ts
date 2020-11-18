@@ -3,6 +3,7 @@ import DeviceInfo from 'react-native-device-info';
 import { IReduxState } from '../../../state';
 import {
     ICta,
+    ICtaAction,
     IScreenContext,
     IScreenRequest,
     IScreenResponse
@@ -127,8 +128,10 @@ export const fetchScreenData = (context: IScreenContext) => async (
     }
 };
 
-export const handleCta = (
-    cta: ICta,
+const handleCtaAction = async (
+    action: ICtaAction,
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState,
     options?: {
         screenKey?: string;
         validator?: {
@@ -138,29 +141,25 @@ export const handleCta = (
             website?: string;
         };
     }
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    if (!cta) {
-        return;
-    }
-
+) => {
     const state = getState();
 
-    switch (cta.type) {
+    switch (action.type) {
         case 'callAction':
-            switch (cta.params.action) {
+            switch (action.params.action) {
                 case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
                     let validators = [];
 
-                    if (cta.params?.params?.validators) {
-                        for (const v of cta.params.params.validators) {
+                    if (action.params?.params?.validators) {
+                        for (const v of action.params.params.validators) {
                             const validator = buildDummyValidator(v.validatorId, v.validatorName);
                             validators.push(validator);
                         }
                     } else {
                         validators = [
                             buildDummyValidator(
-                                cta.params.params.validatorId,
-                                cta.params.params.validatorName
+                                action.params.params.validatorId,
+                                action.params.params.validatorName
                             )
                         ];
                     }
@@ -168,25 +167,25 @@ export const handleCta = (
                     claimRewardNoInput(
                         getSelectedAccount(state),
                         validators,
-                        cta.params.params.tokenSymbol,
+                        action.params?.params?.tokenSymbol,
                         undefined
                     )(dispatch, getState);
                     break;
 
                 case PosBasicActionType.WITHDRAW: {
                     const withdrawValidator =
-                        cta?.params?.params?.validatorId &&
-                        cta?.params?.params?.validatorName &&
+                        action?.params?.params?.validatorId &&
+                        action?.params?.params?.validatorName &&
                         buildDummyValidator(
-                            cta.params.params.validatorId,
-                            cta.params.params.validatorName
+                            action.params.params.validatorId,
+                            action.params.params.validatorName
                         );
 
                     withdraw(
                         getSelectedAccount(state),
                         withdrawValidator && [withdrawValidator],
-                        cta.params.params.tokenSymbol,
-                        { amount: cta.params.params.amount },
+                        action.params?.params?.tokenSymbol,
+                        { amount: action.params?.params?.amount },
                         undefined
                     )(dispatch, getState);
                     break;
@@ -229,19 +228,19 @@ export const handleCta = (
             break;
 
         case 'navigateTo':
-            const screen = cta.params?.params?.screen || cta.params?.screen;
+            const screen = action.params?.params?.screen || action.params?.screen;
 
             const account = getSelectedAccount(state);
             const chainId = getChainId(state, account.blockchain);
 
             let token: ITokenState;
-            if (cta?.params?.params?.token === true) {
+            if (action?.params?.params?.token === true) {
                 const blockchainConfig = getBlockchain(account.blockchain);
                 token = account.tokens[chainId][blockchainConfig.config.coin];
             }
 
             NavigationService.navigate(screen, {
-                ...cta.params.params,
+                ...action.params?.params,
                 blockchain: account?.blockchain,
                 accountIndex: account?.index,
                 token
@@ -249,10 +248,48 @@ export const handleCta = (
             break;
 
         case 'openUrl':
-            cta?.params?.url && openURL(cta.params.url);
+            action?.params?.url && openURL(action.params.url);
+            break;
+
+        case 'onBack':
+            NavigationService.goBack();
             break;
 
         default:
             break;
+    }
+};
+
+export const handleCta = (
+    cta: ICta,
+    options?: {
+        screenKey?: string;
+        validator?: {
+            id: string;
+            name: string;
+            icon?: string;
+            website?: string;
+        };
+    }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    if (!cta) {
+        return;
+    }
+
+    if (cta?.actions && Array.isArray(cta?.actions)) {
+        for (const action of cta.actions) {
+            await handleCtaAction(action, dispatch, getState, options);
+        }
+    } else {
+        // used this to handle deprecated versions
+        await handleCtaAction(
+            {
+                type: cta.type,
+                params: cta?.params
+            },
+            dispatch,
+            getState,
+            options
+        );
     }
 };

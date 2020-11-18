@@ -54,7 +54,7 @@ export interface IScreenResponse {
     bottomFixedArea?: IScreenWidget;
 }
 
-export interface ICtaActions {
+export interface ICtaAction {
     type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
     params: {
         action?: string;
@@ -65,7 +65,7 @@ export interface ICtaActions {
 }
 
 export interface ICta {
-    actions?: ICtaActions[];
+    actions?: ICtaAction[];
 
     /** @deprecated use actions instead */
     type?: 'callAction' | 'openUrl' | 'navigateTo';

@@ -9,7 +9,6 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
 
     const wallet = getSelectedWallet(state);
     const selectedAccount = getSelectedAccount(state);
-    const blockchain = selectedAccount.blockchain;
 
     const wrapperCycleStart = wrapper?.data?.DEFAULT?.details?.cycleStart;
     const wrapperValidators = wrapper?.data?.DEFAULT?.details?.validators;
@@ -20,7 +19,7 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
         const posAction = tx?.additionalInfo?.posAction;
 
         if (
-            tx?.blockchain === blockchain &&
+            tx?.blockchain === selectedAccount?.blockchain &&
             tx?.data?.params &&
             Array.isArray(tx?.data?.params) &&
             tx?.data?.params[0] === wrapper?.data?.DEFAULT?.details?.validatorId &&
@@ -41,7 +40,7 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
 
         // Claim all module - PENDING
         if (
-            tx?.blockchain === blockchain &&
+            tx?.blockchain === selectedAccount?.blockchain &&
             // at least one claim tx in pending
             tx.status === TransactionStatus.PENDING &&
             (posAction === PosBasicActionType.CLAIM_REWARD ||
@@ -62,7 +61,7 @@ export const updateClaimPending = (state: IReduxState, module: IScreenModule): s
         for (const v of wrapperValidators) {
             const index = Object.values(walletTransactions).findIndex(
                 tx =>
-                    tx?.blockchain === blockchain &&
+                    tx?.blockchain === selectedAccount?.blockchain &&
                     tx?.data?.params &&
                     Array.isArray(tx?.data?.params) &&
                     tx?.data?.params[0] === v.validatorId &&

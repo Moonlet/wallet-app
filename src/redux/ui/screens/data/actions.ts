@@ -56,6 +56,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
     const body: IScreenRequest = {
         context: {
             screen: context.screen,
+            step: context?.step,
             tab: context?.tab
         },
         user: {

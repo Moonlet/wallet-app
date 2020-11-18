@@ -39,6 +39,7 @@ const mapStateToProps = (state: IReduxState) => {
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
+        step: undefined,
         tab: undefined
     });
 

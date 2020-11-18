@@ -13,6 +13,7 @@ export const quickStakeSelectedValidator = (state: IReduxState, module: IScreenM
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
+        step: undefined,
         tab: undefined
     });
 

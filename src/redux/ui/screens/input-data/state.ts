@@ -16,7 +16,7 @@ export interface IScreenInputDataValidations {
 }
 
 export interface IScreenInputData {
-    // key: 'walletPubKey-blockchain-chainId-address-tab'
+    // key: 'walletPubKey-blockchain-chainId-address-step-tab'
     [key: string]: {
         validators: InputDataValidator[];
         validation: IScreenInputDataValidations;

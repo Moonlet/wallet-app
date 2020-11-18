@@ -90,6 +90,7 @@ class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, ISta
             blockchain: props.account?.blockchain,
             chainId: props.chainId,
             address: props.account?.address,
+            step: props.context?.step,
             tab: props.context?.tab
         });
     }

@@ -238,6 +238,7 @@ class SmartScreenComponent extends React.Component<
 
                 {/* Bottom Fixed Area */}
                 <View style={styles.fixedBottomArea}>
+                    {/* only one widget */}
                     <Button primary>{'Text'}</Button>
                 </View>
             </View>

@@ -231,7 +231,7 @@ class SmartScreenComponent extends React.Component<
                 )}
 
                 {/* Bottom Fixed Area */}
-                {screenData?.response?.bottomFixedArea && (
+                {!loadingScreenData && screenData?.response?.bottomFixedArea && (
                     <View style={styles.fixedBottomArea}>
                         {/* only one widget */}
                         {this.renderWidgets([screenData.response.bottomFixedArea])}

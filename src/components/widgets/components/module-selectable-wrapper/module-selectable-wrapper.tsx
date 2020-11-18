@@ -10,7 +10,6 @@ import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
-import { InfoModal } from '../../../info-modal/info-modal';
 import { handleCta } from '../../../../redux/ui/screens/data/actions';
 import { clearInput } from '../../../../redux/ui/screens/input-data/actions';
 
@@ -102,24 +101,6 @@ class ModuleSelectableWrapperComponent extends React.Component<
                 {this.props.modules.map((m: IScreenModule, index: number) => (
                     <View key={`module-${index}`}>{renderModule(m, actions, moduleOptions)}</View>
                 ))}
-                {module?.info && (
-                    <TouchableOpacity
-                        style={[
-                            styles.infoWrapper,
-                            {
-                                right:
-                                    !module.info?.position || module.info?.position === 'top-right'
-                                        ? 0
-                                        : undefined,
-                                left: module.info?.position === 'top-left' ? 0 : undefined
-                            },
-                            module?.info?.style && formatStyles(module.info.style)
-                        ]}
-                        onPress={() => InfoModal.open(module.info.data?.cta?.params?.params)}
-                    >
-                        {renderModule(module.info.data, actions, moduleOptions)}
-                    </TouchableOpacity>
-                )}
             </TouchableOpacity>
         );
 

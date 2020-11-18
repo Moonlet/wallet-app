@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -40,5 +45,12 @@ export default (theme: ITheme) =>
         },
         quickDelegateBannerContainer: {
             marginBottom: BASE_DIMENSION
+        },
+        infoWrapper: {
+            top: 0,
+            position: 'absolute',
+            width: normalize(40),
+            height: normalize(40),
+            justifyContent: 'center'
         }
     });

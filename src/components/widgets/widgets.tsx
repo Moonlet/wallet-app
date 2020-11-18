@@ -14,6 +14,7 @@ import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
 import { handleCta } from '../../redux/ui/screens/data/actions';
 import { clearInput } from '../../redux/ui/screens/input-data/actions';
+import { InfoModal } from '../info-modal/info-modal';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -132,23 +133,44 @@ class WidgetsComponent extends React.Component<
                     </Text>
                 )}
 
-                {widget.modules.map((module: IScreenModule, i: number) =>
-                    module.type === ModuleTypes.MODULE_SELECTABLE_WRAPPER ? (
-                        <ModuleSelectableWrapper
-                            key={`module-${i}`}
-                            module={module}
-                            screenKey={screenKey}
-                            actions={this.props.actions}
-                        />
-                    ) : (
-                        <View key={`module-${i}`}>
-                            {renderModule(module, actions, {
+                {widget.modules.map((module: IScreenModule, i: number) => (
+                    <View key={`module-${i}`}>
+                        {module.type === ModuleTypes.MODULE_SELECTABLE_WRAPPER ? (
+                            <ModuleSelectableWrapper
+                                module={module}
+                                screenKey={screenKey}
+                                actions={this.props.actions}
+                            />
+                        ) : (
+                            renderModule(module, actions, {
                                 screenKey,
                                 moduleColWrapperContainer: styles.moduleColWrapperContainer
-                            })}
-                        </View>
-                    )
-                )}
+                            })
+                        )}
+
+                        {module?.info && (
+                            <TouchableOpacity
+                                style={[
+                                    styles.infoWrapper,
+                                    {
+                                        right:
+                                            !module.info?.position ||
+                                            module.info?.position === 'top-right'
+                                                ? 0
+                                                : undefined,
+                                        left: module.info?.position === 'top-left' ? 0 : undefined
+                                    },
+                                    module?.info?.style && formatStyles(module.info.style)
+                                ]}
+                                onPress={() =>
+                                    InfoModal.open(module.info.data?.cta?.params?.params)
+                                }
+                            >
+                                {renderModule(module.info.data, actions, undefined)}
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                ))}
             </View>
         );
     }

@@ -17,7 +17,6 @@ import { ErrorWidget } from '../../components/widgets/components/error-widget/er
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from '../../components/smart-screen/components/loading-skeleton/loading-skeleton';
 import { clearInput } from '../../redux/ui/screens/input-data/actions';
-import { Text } from '../../library';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -220,16 +219,12 @@ class SmartScreenComponent extends React.Component<
                         {loadingScreenData && this.renderLoadingSkeleton(4)}
 
                         {/* Render Widgets */}
-                        {screenData.response?.widgets &&
+                        {!loadingScreenData &&
+                            screenData.response?.widgets &&
                             this.renderWidgets(screenData.response.widgets)}
 
-                        {/* TODO: remove this: only for test purposes */}
-                        {!loadingScreenData && screenData.response?.widgets.length === 0 && (
-                            <Text style={{ color: 'red' }}>{`Empty section - no widgets`}</Text>
-                        )}
-
                         {/* Display Error */}
-                        {screenData.error && (
+                        {!loadingScreenData && screenData.error && (
                             <View style={styles.errorContainer}>{this.renderErrorWidget()}</View>
                         )}
                     </ScrollView>

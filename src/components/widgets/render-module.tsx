@@ -147,6 +147,10 @@ export const renderModule = (
             });
             break;
 
+        case ModuleTypes.CTA:
+            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta);
+            break;
+
         default:
             return null;
     }
@@ -181,10 +185,12 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
             wrapperStyle={
                 cta?.buttonProps?.wrapperStyle && formatStyles(cta.buttonProps.wrapperStyle)
             }
-            style={{
-                backgroundColor: cta?.buttonProps?.colors?.bg,
-                borderColor: cta?.buttonProps?.colors?.bg
-            }}
+            style={
+                cta?.buttonProps?.colors?.bg && {
+                    backgroundColor: cta.buttonProps.colors.bg,
+                    borderColor: cta.buttonProps.colors.bg
+                }
+            }
             onPress={() => handleCTA(cta)}
         >
             {cta?.label || ''}

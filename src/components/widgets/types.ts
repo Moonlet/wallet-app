@@ -107,6 +107,7 @@ export interface IScreenModule {
     style?: IDataStyle;
     type:
         | ModuleTypes.BALANCES_GRID_ICONS
+        | ModuleTypes.CTA
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
@@ -149,6 +150,7 @@ export interface IScreenModule {
 
 export enum ModuleTypes {
     BALANCES_GRID_ICONS = 'balances-grid-icons',
+    CTA = 'cta',
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',

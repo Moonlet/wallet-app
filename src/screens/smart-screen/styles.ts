@@ -11,10 +11,10 @@ export default (theme: ITheme) =>
             flexGrow: 1
         },
         fixedBottomArea: {
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0
+            // position: 'absolute',
+            // bottom: 0,
+            // left: 0,
+            // right: 0
         },
         errorContainer: {
             flex: 1,

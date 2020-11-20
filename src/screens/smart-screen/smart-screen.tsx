@@ -16,7 +16,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from '../../components/smart-screen/components/loading-skeleton/loading-skeleton';
-import { clearInput } from '../../redux/ui/screens/input-data/actions';
+import { clearScreenInputData } from '../../redux/ui/screens/input-data/actions';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -54,13 +54,13 @@ interface IReduxProps {
 
     fetchScreenData: typeof fetchScreenData;
     handleCta: typeof handleCta;
-    clearInput: typeof clearInput;
+    clearScreenInputData: typeof clearScreenInputData;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     handleCta,
-    clearInput
+    clearScreenInputData
 };
 
 interface IState {
@@ -104,6 +104,15 @@ class SmartScreenComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IReduxProps & INavigationParams) {
         this.updateLoading(prevProps);
+        this.handleScreenValidation();
+    }
+
+    private handleScreenValidation() {
+        const screenData = this.getScreenData(this.props);
+        if (screenData?.response?.validation) {
+            // console.log('run validations: ', screenData.response.validation);
+            // screenData.response.validation
+        }
     }
 
     private getScreenKey(props: IReduxProps & INavigationParams) {
@@ -164,7 +173,7 @@ class SmartScreenComponent extends React.Component<
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
                     handleCta: this.props.handleCta,
-                    clearInput: this.props.clearInput
+                    clearScreenInputData: this.props.clearScreenInputData
                 }}
                 blockchain={this.props.account.blockchain}
             />

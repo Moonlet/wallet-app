@@ -11,14 +11,14 @@ import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
 import { handleCta } from '../../../../redux/ui/screens/data/actions';
-import { clearInput } from '../../../../redux/ui/screens/input-data/actions';
+import { clearScreenInputData } from '../../../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
     screenKey: string;
     actions: {
         handleCta: typeof handleCta;
-        clearInput: typeof clearInput;
+        clearScreenInputData: typeof clearScreenInputData;
     };
 }
 
@@ -64,7 +64,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public componentWillUnmount() {
-        this.props.actions.clearInput(this.props.screenKey, { validators: [] });
+        this.props.actions.clearScreenInputData(this.props.screenKey, { validators: [] });
     }
 
     public render() {

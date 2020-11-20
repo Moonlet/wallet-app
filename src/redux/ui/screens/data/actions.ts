@@ -20,7 +20,7 @@ import {
 } from '@sentry/react-native';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { buildDummyValidator, claimRewardNoInput, withdraw } from '../../../wallets/actions';
-import { selectInput, toggleValidatorMultiple } from '../input-data/actions';
+import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actions';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
@@ -202,7 +202,7 @@ const handleCtaAction = async (
                     break;
 
                 case 'SINGLE_SELECTION':
-                    selectInput(
+                    setScreenInputData(
                         options.screenKey,
                         [
                             {

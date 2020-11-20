@@ -15,7 +15,6 @@ export default (theme: ITheme) =>
         },
         widgetContainer: {
             marginBottom: BASE_DIMENSION,
-            backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS
         },
         moduleColWrapperContainer: {

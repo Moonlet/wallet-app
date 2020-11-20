@@ -52,6 +52,22 @@ export interface IScreenUser {
 export interface IScreenResponse {
     widgets: IScreenWidget[];
     bottomFixedArea?: IScreenWidget;
+    validation?: IScreenValidation;
+}
+
+export interface IScreenValidation {
+    validators: {
+        [field: string]: {
+            fn: string;
+            params?: any[];
+            messages?: {
+                [key: string]: {
+                    type: string;
+                    text: string;
+                };
+            };
+        }[];
+    };
 }
 
 export interface ICtaAction {
@@ -91,6 +107,11 @@ export interface ICta {
         leftIcon?: IconValues;
         wrapperStyle?: any;
     };
+
+    // TODO: check this
+    screenDataValidation?: {
+        context: IScreenContext; // not sure if needed
+    };
 }
 
 export interface IScreenWidget {
@@ -106,6 +127,7 @@ export interface IScreenModule {
     hidden?: boolean;
     style?: IDataStyle;
     type:
+        | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.CTA
         | ModuleTypes.ICON
@@ -127,9 +149,10 @@ export interface IScreenModule {
     data:
         | I2LinesTextBannerData
         | I3LinesCtaData
+        | IAmountInputData
         | IBalanceGridData
         | IBalanceGridData[]
-        // | IIconData
+        | IIconData
         | IIconTwoLinesData
         | IImageBannerData
         | IMdTextData
@@ -149,6 +172,7 @@ export interface IScreenModule {
 }
 
 export enum ModuleTypes {
+    AMOUNT_INPUT = 'amount-input',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     CTA = 'cta',
     ICON = 'icon',
@@ -234,7 +258,6 @@ export interface IData {
     data: ITextData | ICurrencyData;
 }
 
-// Used for `3-lines-cta`
 export interface I3LinesCtaData {
     firstLine: IData[];
     secondLine: IData[];
@@ -275,7 +298,6 @@ export interface I2LinesTextBannerData {
     backgroundColor?: string;
 }
 
-// Used for `separator`
 export interface ISeparatorData {
     color?: string;
 }
@@ -306,4 +328,15 @@ export interface IThreeLinesIconData {
 export interface IMdTextData {
     text: string;
     style?: any;
+}
+
+export interface IAmountInputData {
+    input?: {
+        style?: IDataStyle;
+    };
+    label?: IData;
+    amounts?: {
+        value: string | number;
+        label: string;
+    }[];
 }

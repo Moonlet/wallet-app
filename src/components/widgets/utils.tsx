@@ -83,6 +83,8 @@ const formatCurrencyData = (data: ICurrencyData): string => {
 };
 
 export const formatStyles = (style: IDataStyle): { [key: string]: string | number } => {
+    if (!style) return {};
+
     const finalStyle = {};
 
     for (const s of Object.keys(style)) {

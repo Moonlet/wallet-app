@@ -19,6 +19,7 @@ export interface IScreenInputData {
     // key: 'walletPubKey-blockchain-chainId-address-step-tab'
     [key: string]: {
         validators: InputDataValidator[];
+        amount: string;
         validation: IScreenInputDataValidations;
     };
 }

@@ -13,7 +13,7 @@ import { formatStyles } from './utils';
 import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
 import { handleCta } from '../../redux/ui/screens/data/actions';
-import { clearInput } from '../../redux/ui/screens/input-data/actions';
+import { clearScreenInputData } from '../../redux/ui/screens/input-data/actions';
 import { InfoModal } from '../info-modal/info-modal';
 
 interface IExternalProps {
@@ -21,7 +21,7 @@ interface IExternalProps {
     screenKey: string;
     actions: {
         handleCta: typeof handleCta;
-        clearInput: typeof clearInput;
+        clearScreenInputData: typeof clearScreenInputData;
     };
     blockchain: Blockchain;
 }

@@ -13,7 +13,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { ErrorWidget } from '../widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
-import { clearInput } from '../../redux/ui/screens/input-data/actions';
+import { clearScreenInputData } from '../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     context: IScreenContext;
@@ -41,13 +41,13 @@ interface IReduxProps {
 
     fetchScreenData: typeof fetchScreenData;
     handleCta: typeof handleCta;
-    clearInput: typeof clearInput;
+    clearScreenInputData: typeof clearScreenInputData;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     handleCta,
-    clearInput
+    clearScreenInputData
 };
 
 interface IState {
@@ -143,7 +143,7 @@ class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, ISta
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
                     handleCta: this.props.handleCta,
-                    clearInput: this.props.clearInput
+                    clearScreenInputData: this.props.clearScreenInputData
                 }}
                 blockchain={this.props.account.blockchain}
             />

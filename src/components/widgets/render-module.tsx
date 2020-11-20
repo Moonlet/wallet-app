@@ -19,6 +19,7 @@ import { formatStyles } from './utils';
 import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/actions';
 import { MdText } from './components/md-text/md-text';
+import { AmountInput } from './components/amount-input/amount-input';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -149,6 +150,10 @@ export const renderModule = (
 
         case ModuleTypes.CTA:
             moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta);
+            break;
+
+        case ModuleTypes.AMOUNT_INPUT:
+            moduleJSX = <AmountInput module={module} screenKey={options?.screenKey} />;
             break;
 
         default:

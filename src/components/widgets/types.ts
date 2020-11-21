@@ -55,18 +55,20 @@ export interface IScreenResponse {
     validation?: IScreenValidation;
 }
 
+export interface IScreenFieldValidation {
+    fn: string;
+    params?: any[];
+    messages?: {
+        [key: string]: {
+            type: string;
+            message: string;
+        };
+    };
+}
+
 export interface IScreenValidation {
     validators: {
-        [field: string]: {
-            fn: string;
-            params?: any[];
-            messages?: {
-                [key: string]: {
-                    type: string;
-                    text: string;
-                };
-            };
-        }[];
+        [field: string]: IScreenFieldValidation[];
     };
 }
 

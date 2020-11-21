@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { IScreenContext, IScreenWidget } from '../../components/widgets/types';
+import { IScreenContext, IScreenValidation, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
@@ -16,7 +16,10 @@ import { IAccountState } from '../../redux/wallets/state';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from '../../components/smart-screen/components/loading-skeleton/loading-skeleton';
-import { clearScreenInputData } from '../../redux/ui/screens/input-data/actions';
+import {
+    clearScreenInputData,
+    runScreenValidation
+} from '../../redux/ui/screens/input-data/actions';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -55,12 +58,14 @@ interface IReduxProps {
     fetchScreenData: typeof fetchScreenData;
     handleCta: typeof handleCta;
     clearScreenInputData: typeof clearScreenInputData;
+    runScreenValidation: typeof runScreenValidation;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     handleCta,
-    clearScreenInputData
+    clearScreenInputData,
+    runScreenValidation
 };
 
 interface IState {
@@ -110,8 +115,8 @@ class SmartScreenComponent extends React.Component<
     private handleScreenValidation() {
         const screenData = this.getScreenData(this.props);
         if (screenData?.response?.validation) {
-            // console.log('run validations: ', screenData.response.validation);
-            // screenData.response.validation
+            const screenKey = this.getScreenKey(this.props);
+            this.props.runScreenValidation(screenData.response.validation, screenKey);
         }
     }
 
@@ -166,16 +171,18 @@ class SmartScreenComponent extends React.Component<
         }
     }
 
-    private renderWidgets(widgets: IScreenWidget[]) {
+    private renderWidgets(widgets: IScreenWidget[], validation?: IScreenValidation) {
         return (
             <Widgets
                 data={widgets}
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
                     handleCta: this.props.handleCta,
-                    clearScreenInputData: this.props.clearScreenInputData
+                    clearScreenInputData: this.props.clearScreenInputData,
+                    runScreenValidation: this.props.runScreenValidation
                 }}
                 blockchain={this.props.account.blockchain}
+                validation={validation}
             />
         );
     }
@@ -230,7 +237,10 @@ class SmartScreenComponent extends React.Component<
                         {/* Render Widgets */}
                         {!loadingScreenData &&
                             screenData.response?.widgets &&
-                            this.renderWidgets(screenData.response.widgets)}
+                            this.renderWidgets(
+                                screenData.response.widgets,
+                                screenData.response?.validation
+                            )}
 
                         {/* Display Error */}
                         {!loadingScreenData && screenData.error && (

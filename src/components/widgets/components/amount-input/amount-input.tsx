@@ -4,34 +4,59 @@ import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IScreenModule, IAmountInputData } from '../../types';
+import { IScreenModule, IAmountInputData, IScreenValidation } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import {
     setScreenInputData,
-    clearScreenInputData
+    clearScreenInputData,
+    setScreenAmount,
+    runScreenValidation
 } from '../../../../redux/ui/screens/input-data/actions';
+import { formatNumber } from '../../../../core/utils/format-number';
+import BigNumber from 'bignumber.js';
+import { Blockchain } from '../../../../core/blockchain/types';
+import { getSelectedBlockchain } from '../../../../redux/wallets/selectors';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 
 interface IExternalProps {
     module: IScreenModule;
     screenKey: string;
+    actions: {
+        runScreenValidation?: typeof runScreenValidation;
+    };
+    screenValidation: IScreenValidation;
 }
 
 interface IReduxProps {
+    blockchain: Blockchain;
+
     inputAmount: string;
+    screenAmount: string;
+    inputValidation: IScreenInputDataValidations;
+
     setScreenInputData: typeof setScreenInputData;
+    setScreenAmount: typeof setScreenAmount;
     clearScreenInputData: typeof clearScreenInputData;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    const screenKey = ownProps?.screenKey;
+
     return {
-        inputAmount: ownProps?.screenKey && state.ui.screens.inputData[ownProps.screenKey]?.amount
+        blockchain: getSelectedBlockchain(state),
+
+        inputAmount: screenKey && state.ui.screens.inputData[screenKey]?.inputAmount,
+        screenAmount: screenKey && state.ui.screens.inputData[screenKey]?.screenAmount,
+        inputValidation: screenKey && state.ui.screens.inputData[screenKey]?.validation
     };
 };
 
 const mapDispatchToProps = {
     setScreenInputData,
+    setScreenAmount,
     clearScreenInputData
 };
 
@@ -40,14 +65,25 @@ class AmountInputComponent extends React.Component<
 > {
     public componentDidMount() {
         this.props.clearScreenInputData(this.props.screenKey, { amount: '' });
+        this.props.setScreenAmount(this.props.screenKey);
     }
 
     public render() {
-        const { inputAmount, module, screenKey, styles, theme } = this.props;
+        const {
+            inputAmount,
+            blockchain,
+            module,
+            inputValidation,
+            screenAmount,
+            screenKey,
+            styles,
+            theme
+        } = this.props;
         const data = module.data as IAmountInputData;
 
-        // console.log('data: ', data);
-        // console.log('amount: ', inputAmount);
+        const formattedScreenAmount = formatNumber(new BigNumber(screenAmount || '0'), {
+            currency: getBlockchain(blockchain).config.coin
+        });
 
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
@@ -61,7 +97,11 @@ class AmountInputComponent extends React.Component<
                         value={inputAmount}
                         onChangeText={text => {
                             text = text.replace(/,/g, '.');
-                            this.props.setScreenInputData(screenKey, text, 'amount');
+                            this.props.setScreenInputData(screenKey, text, 'inputAmount');
+                            this.props.actions.runScreenValidation(
+                                this.props.screenValidation,
+                                screenKey
+                            );
                         }}
                         keyboardType="decimal-pad"
                         returnKeyType="done"
@@ -72,16 +112,28 @@ class AmountInputComponent extends React.Component<
                 {data?.label && (
                     <View style={styles.row}>
                         {formatDataJSXElements(data.label, styles.label)}
-                        {/* TODO */}
-                        <Text style={styles.amountText}>{`100,000.00 ZIL`}</Text>
+                        <Text style={styles.amountText}>{formattedScreenAmount}</Text>
                     </View>
                 )}
 
-                <Text style={styles.errorText}>{`insufficientFundsNotice`}</Text>
+                {inputValidation?.fieldsErrors &&
+                    inputValidation.fieldsErrors.map((fieldError, index: number) => {
+                        if (fieldError.type === 'ERROR_MSG') {
+                            return (
+                                <Text key={`error-${index}`} style={styles.errorText}>
+                                    {fieldError.message}
+                                </Text>
+                            );
+                        }
 
-                <Text style={styles.warningText}>
-                    {`insufficientFundsNotice insufficientFundsNotice insufficientFundsNotice insufficientFundsNotice`}
-                </Text>
+                        if (fieldError.type === 'WARN_MSG') {
+                            return (
+                                <Text key={`error-${index}`} style={styles.warningText}>
+                                    {fieldError.message}
+                                </Text>
+                            );
+                        }
+                    })}
             </View>
         );
     }

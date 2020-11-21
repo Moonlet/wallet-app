@@ -7,11 +7,9 @@ export interface InputDataValidator {
 
 export interface IScreenInputDataValidations {
     fieldsErrors: {
-        [key: string]: {
-            type: 'ERROR_MSG' | 'WARN_MSG';
-            message: string;
-        }[];
-    };
+        type: 'ERROR_MSG' | 'WARN_MSG';
+        message: string;
+    }[];
     valid: boolean;
 }
 
@@ -19,7 +17,8 @@ export interface IScreenInputData {
     // key: 'walletPubKey-blockchain-chainId-address-step-tab'
     [key: string]: {
         validators: InputDataValidator[];
-        amount: string;
+        inputAmount: string;
+        screenAmount: string;
         validation: IScreenInputDataValidations;
     };
 }

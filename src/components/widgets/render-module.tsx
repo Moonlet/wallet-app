@@ -1,7 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Button } from '../../library';
-import { ICta, IScreenModule, IScreenModuleColumnsWrapperData, ModuleTypes } from './types';
+import {
+    ICta,
+    IScreenModule,
+    IScreenModuleColumnsWrapperData,
+    IScreenValidation,
+    ModuleTypes
+} from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
@@ -20,6 +26,7 @@ import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/actions';
 import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
+import { runScreenValidation } from '../../redux/ui/screens/input-data/actions';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -32,6 +39,7 @@ const renderModules = (
         style?: any;
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
+        validation?: IScreenValidation;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
@@ -58,6 +66,7 @@ export const renderModule = (
     module: IScreenModule,
     actions: {
         handleCta: typeof handleCta;
+        runScreenValidation?: typeof runScreenValidation;
     },
     options?: {
         screenKey?: string;
@@ -65,6 +74,7 @@ export const renderModule = (
         style?: any;
         moduleColWrapperContainer?: any;
         moduleWrapperState?: string;
+        validation?: IScreenValidation;
     }
 ) => {
     let moduleJSX = null;
@@ -153,7 +163,14 @@ export const renderModule = (
             break;
 
         case ModuleTypes.AMOUNT_INPUT:
-            moduleJSX = <AmountInput module={module} screenKey={options?.screenKey} />;
+            moduleJSX = (
+                <AmountInput
+                    module={module}
+                    screenKey={options?.screenKey}
+                    actions={actions}
+                    screenValidation={options?.validation}
+                />
+            );
             break;
 
         default:

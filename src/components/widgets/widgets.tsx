@@ -6,14 +6,17 @@ import Icon from '../icon/icon';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { IScreenModule, IScreenWidget, ModuleTypes } from './types';
+import { IScreenModule, IScreenValidation, IScreenWidget, ModuleTypes } from './types';
 import { Text } from '../../library';
 import { Blockchain } from '../../core/blockchain/types';
 import { formatStyles } from './utils';
 import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
 import { handleCta } from '../../redux/ui/screens/data/actions';
-import { clearScreenInputData } from '../../redux/ui/screens/input-data/actions';
+import {
+    clearScreenInputData,
+    runScreenValidation
+} from '../../redux/ui/screens/input-data/actions';
 import { InfoModal } from '../info-modal/info-modal';
 
 interface IExternalProps {
@@ -22,8 +25,10 @@ interface IExternalProps {
     actions: {
         handleCta: typeof handleCta;
         clearScreenInputData: typeof clearScreenInputData;
+        runScreenValidation?: typeof runScreenValidation;
     };
     blockchain: Blockchain;
+    validation?: IScreenValidation;
 }
 
 interface IState {
@@ -113,7 +118,8 @@ class WidgetsComponent extends React.Component<
                             <View key={`module-${i}`}>
                                 {renderModule(module, actions, {
                                     isWidgetExpanded,
-                                    moduleColWrapperContainer: styles.moduleColWrapperContainer
+                                    moduleColWrapperContainer: styles.moduleColWrapperContainer,
+                                    validation: this.props.validation
                                 })}
                             </View>
                         ))}
@@ -144,7 +150,8 @@ class WidgetsComponent extends React.Component<
                         ) : (
                             renderModule(module, actions, {
                                 screenKey,
-                                moduleColWrapperContainer: styles.moduleColWrapperContainer
+                                moduleColWrapperContainer: styles.moduleColWrapperContainer,
+                                validation: this.props.validation
                             })
                         )}
 

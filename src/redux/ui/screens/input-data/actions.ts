@@ -112,11 +112,9 @@ const amountAvailableFunds = (
         tokenConfig.decimals
     );
 
-    // TODO
-    // also validate input amount
-    // show error for letters, multiple dots, etc.
+    const regexMultipleDots = /(\..*){2,}/;
 
-    if (inputAmountToStd.isGreaterThan(screenAmountToStd)) {
+    if (inputAmountToStd.isGreaterThan(screenAmountToStd) || regexMultipleDots.test(inputAmount)) {
         // Show error
 
         const fieldsErrors = [];

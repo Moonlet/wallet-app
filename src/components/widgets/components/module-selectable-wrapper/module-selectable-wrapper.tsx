@@ -35,7 +35,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         ...ownProps,
         modules: wrapperData?.submodules || [],
-        style: wrapperData?.style[wrapperState],
+        style: wrapperState && wrapperData?.style && wrapperData?.style[wrapperState],
         wrapperState
     };
 };

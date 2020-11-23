@@ -19,11 +19,17 @@ import {
     captureException as SentryCaptureException
 } from '@sentry/react-native';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
-import { buildDummyValidator, claimRewardNoInput, withdraw } from '../../../wallets/actions';
+import {
+    buildDummyValidator,
+    claimRewardNoInput,
+    delegate,
+    withdraw
+} from '../../../wallets/actions';
 import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actions';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { getScreenDataKey } from './reducer';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
@@ -148,7 +154,7 @@ const handleCtaAction = async (
     switch (action.type) {
         case 'callAction':
             switch (action.params.action) {
-                case PosBasicActionType.CLAIM_REWARD_NO_INPUT:
+                case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
                     let validators = [];
 
                     if (action.params?.params?.validators) {
@@ -172,6 +178,7 @@ const handleCtaAction = async (
                         undefined
                     )(dispatch, getState);
                     break;
+                }
 
                 case PosBasicActionType.WITHDRAW: {
                     const withdrawValidator =
@@ -223,12 +230,55 @@ const handleCtaAction = async (
                     });
                     break;
 
+                case 'delegateToValidator': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    if (
+                        action.params?.params?.validatorId &&
+                        action.params?.params?.validatorName &&
+                        action.params?.params?.step &&
+                        action.params?.params?.token
+                    ) {
+                        const { validatorId, validatorName, step, token } = action.params.params;
+
+                        const screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step,
+                            tab: undefined
+                        });
+
+                        if (
+                            screenKey &&
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[screenKey]?.inputAmount
+                        ) {
+                            const amount = state.ui.screens.inputData[screenKey].inputAmount;
+
+                            const validators = [buildDummyValidator(validatorId, validatorName)];
+
+                            delegate(
+                                account,
+                                amount,
+                                validators,
+                                token,
+                                undefined, // feeOptions
+                                undefined
+                            )(dispatch, getState);
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
             break;
 
-        case 'navigateTo':
+        case 'navigateTo': {
             const screen = action.params?.params?.screen || action.params?.screen;
             const screenKey = action.params?.params?.context?.key;
 
@@ -252,6 +302,7 @@ const handleCtaAction = async (
                 screenKey
             );
             break;
+        }
 
         case 'openUrl':
             action?.params?.url && openURL(action.params.url);

@@ -201,9 +201,57 @@ const amountAvailableFundsToKeep = (
     }
 };
 
+const minAmountToStake = (
+    validation: IScreenFieldValidation,
+    screenKey: string,
+    getState: () => IReduxState,
+    dispatch: Dispatch<IAction<any>>
+) => {
+    const state = getState();
+
+    const account = getSelectedAccount(state);
+
+    const inputData: any = state.ui.screens.inputData[screenKey];
+
+    const blockchain = account.blockchain;
+    const blockchainInstance = getBlockchain(blockchain);
+    const chainId = getChainId(state, blockchain);
+    const token = account.tokens[chainId][blockchainInstance.config.coin];
+
+    const tokenConfig = getTokenConfig(blockchain, token.symbol);
+
+    const inputAmount = inputData?.inputAmount;
+    const inputAmountToStd = blockchainInstance.account.amountToStd(
+        new BigNumber(inputAmount),
+        tokenConfig.decimals
+    );
+
+    const minimumAmountToKeep = blockchainInstance.config.amountToKeepInAccount[account.type];
+
+    if (inputAmountToStd.isLessThan(minimumAmountToKeep)) {
+        // Show error
+
+        const fieldsErrors = [];
+
+        for (const msgKey of Object.keys(validation?.messages || [])) {
+            fieldsErrors.push(validation.messages[msgKey]);
+        }
+
+        setScreenInputData(
+            screenKey,
+            {
+                fieldsErrors,
+                valid: false
+            },
+            'validation'
+        )(dispatch, getState);
+    }
+};
+
 const validationActions = {
     amountAvailableFunds,
-    amountAvailableFundsToKeep
+    amountAvailableFundsToKeep,
+    minAmountToStake
 };
 
 export const runScreenValidation = (validation: IScreenValidation, screenKey: string) => async (

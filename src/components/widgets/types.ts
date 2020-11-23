@@ -11,6 +11,7 @@ export interface IScreenContext {
     screen: string;
     step?: string;
     tab?: string;
+    flowId?: string;
 }
 
 /** @deprecated use string instead */

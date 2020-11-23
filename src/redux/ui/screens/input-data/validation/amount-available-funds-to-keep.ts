@@ -11,7 +11,7 @@ import { setScreenInputData } from '../actions';
 
 export const amountAvailableFundsToKeep = (
     validation: IScreenFieldValidation,
-    screenKey: string,
+    flowId: string,
     getState: () => IReduxState,
     dispatch: Dispatch<IAction<any>>
 ) => {
@@ -19,7 +19,7 @@ export const amountAvailableFundsToKeep = (
 
     const account = getSelectedAccount(state);
 
-    const inputData: any = state.ui.screens.inputData[screenKey];
+    const inputData: any = state.ui.screens.inputData[flowId];
 
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
@@ -55,7 +55,7 @@ export const amountAvailableFundsToKeep = (
         }
 
         setScreenInputData(
-            screenKey,
+            flowId,
             {
                 fieldsErrors,
                 valid: false

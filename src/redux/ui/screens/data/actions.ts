@@ -29,7 +29,6 @@ import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actio
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { getScreenDataKey } from './reducer';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
@@ -63,7 +62,8 @@ export const fetchScreenData = (context: IScreenContext) => async (
         context: {
             screen: context.screen,
             step: context?.step,
-            tab: context?.tab
+            tab: context?.tab,
+            flowId: context?.flowId
         },
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',
@@ -231,37 +231,24 @@ const handleCtaAction = async (
                     break;
 
                 case 'delegateToValidator': {
-                    const account = getSelectedAccount(state);
-                    const chainId = getChainId(state, account.blockchain);
-
                     if (
                         action.params?.params?.validatorId &&
                         action.params?.params?.validatorName &&
-                        action.params?.params?.step &&
-                        action.params?.params?.token
+                        action.params?.params?.token &&
+                        action.params?.params?.flowId
                     ) {
-                        const { validatorId, validatorName, step, token } = action.params.params;
-
-                        const screenKey = getScreenDataKey({
-                            pubKey: getSelectedWallet(state)?.walletPublicKey,
-                            blockchain: account?.blockchain,
-                            chainId: String(chainId),
-                            address: account?.address,
-                            step,
-                            tab: undefined
-                        });
+                        const { flowId, token, validatorId, validatorName } = action.params.params;
 
                         if (
-                            screenKey &&
                             state.ui.screens.inputData &&
-                            state.ui.screens.inputData[screenKey]?.inputAmount
+                            state.ui.screens.inputData[flowId]?.inputAmount
                         ) {
-                            const amount = state.ui.screens.inputData[screenKey].inputAmount;
+                            const amount = state.ui.screens.inputData[flowId].inputAmount;
 
                             const validators = [buildDummyValidator(validatorId, validatorName)];
 
                             delegate(
-                                account,
+                                getSelectedAccount(state),
                                 amount,
                                 validators,
                                 token,

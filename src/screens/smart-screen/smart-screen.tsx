@@ -22,6 +22,7 @@ import {
 } from '../../redux/ui/screens/input-data/actions';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
+import { v4 as uuidv4 } from 'uuid';
 
 interface INavigationParams {
     context: IScreenContext;
@@ -30,6 +31,7 @@ interface INavigationParams {
         color?: string;
         gradient?: string[];
     };
+    newFlow?: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -71,6 +73,7 @@ const mapDispatchToProps = {
 interface IState {
     loadingTimeoutInProgress: boolean;
     loadingScreenData: boolean;
+    context: IScreenContext;
 }
 
 const navigationOptions = ({ navigation, theme }: any) =>
@@ -92,9 +95,14 @@ class SmartScreenComponent extends React.Component<
             IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
+
         this.state = {
             loadingTimeoutInProgress: false,
-            loadingScreenData: false
+            loadingScreenData: false,
+            context: {
+                ...props.context,
+                flowId: props.newFlow ? uuidv4() : props.context?.flowId
+            }
         };
     }
 
@@ -104,7 +112,7 @@ class SmartScreenComponent extends React.Component<
                 navigationOptions: this.props.navigationOptions
             });
 
-        this.props.fetchScreenData(this.props.context);
+        this.props.fetchScreenData(this.state.context);
     }
 
     public componentDidUpdate(prevProps: IReduxProps & INavigationParams) {
@@ -114,9 +122,14 @@ class SmartScreenComponent extends React.Component<
 
     private handleScreenValidation() {
         const screenData = this.getScreenData(this.props);
+
         if (screenData?.response?.validation) {
             const screenKey = this.getScreenKey(this.props);
-            this.props.runScreenValidation(screenData.response.validation, screenKey);
+
+            this.props.runScreenValidation(
+                screenData.response.validation,
+                this.state.context?.flowId || screenKey
+            );
         }
     }
 
@@ -175,6 +188,7 @@ class SmartScreenComponent extends React.Component<
         return (
             <Widgets
                 data={widgets}
+                context={this.state.context}
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
                     handleCta: this.props.handleCta,
@@ -194,7 +208,7 @@ class SmartScreenComponent extends React.Component<
                 body={translate('Widgets.didNotLoad')}
                 cta={{
                     label: translate('App.labels.retry'),
-                    onPress: () => this.props.fetchScreenData(this.props.context)
+                    onPress: () => this.props.fetchScreenData(this.state.context)
                 }}
             />
         );

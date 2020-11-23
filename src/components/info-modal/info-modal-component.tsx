@@ -65,7 +65,7 @@ export class InfoModalComponent extends React.Component<
                 typeof message === 'string' ? (
                     <Text style={styles.message}>{message}</Text>
                 ) : (
-                    renderModule(message, undefined)
+                    renderModule(message, undefined, undefined)
                 );
 
             return (

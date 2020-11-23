@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { IScreenModule, IScreenModuleSelectableWrapperData } from '../../types';
+import { IScreenContext, IScreenModule, IScreenModuleSelectableWrapperData } from '../../types';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
@@ -15,6 +15,7 @@ import { clearScreenInputData } from '../../../../redux/ui/screens/input-data/ac
 
 interface IExternalProps {
     module: IScreenModule;
+    context: IScreenContext;
     screenKey: string;
     actions: {
         handleCta: typeof handleCta;
@@ -68,7 +69,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public render() {
-        const { actions, module, screenKey, styles } = this.props;
+        const { actions, context, module, screenKey, styles } = this.props;
 
         if (module?.hidden === true) {
             // Hide module
@@ -99,7 +100,9 @@ class ModuleSelectableWrapperComponent extends React.Component<
                 activeOpacity={0.8}
             >
                 {this.props.modules.map((m: IScreenModule, index: number) => (
-                    <View key={`module-${index}`}>{renderModule(m, actions, moduleOptions)}</View>
+                    <View key={`module-${index}`}>
+                        {renderModule(m, context, actions, moduleOptions)}
+                    </View>
                 ))}
             </TouchableOpacity>
         );

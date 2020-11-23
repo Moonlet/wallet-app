@@ -4,13 +4,12 @@ import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IScreenModule, IAmountInputData, IScreenValidation } from '../../types';
+import { IScreenModule, IAmountInputData, IScreenValidation, IScreenContext } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import {
     setScreenInputData,
-    clearScreenInputData,
     setScreenAmount,
     runScreenValidation
 } from '../../../../redux/ui/screens/input-data/actions';
@@ -23,7 +22,7 @@ import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-
 
 interface IExternalProps {
     module: IScreenModule;
-    screenKey: string;
+    context: IScreenContext;
     actions: {
         runScreenValidation?: typeof runScreenValidation;
     };
@@ -39,46 +38,48 @@ interface IReduxProps {
 
     setScreenInputData: typeof setScreenInputData;
     setScreenAmount: typeof setScreenAmount;
-    clearScreenInputData: typeof clearScreenInputData;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
-    const screenKey = ownProps?.screenKey;
+    const flowId = ownProps.context?.flowId;
 
     return {
         blockchain: getSelectedBlockchain(state),
 
-        inputAmount: screenKey && state.ui.screens.inputData[screenKey]?.inputAmount,
-        screenAmount: screenKey && state.ui.screens.inputData[screenKey]?.screenAmount,
-        inputValidation: screenKey && state.ui.screens.inputData[screenKey]?.validation
+        inputAmount: flowId && state.ui.screens.inputData[flowId]?.inputAmount,
+        screenAmount: flowId && state.ui.screens.inputData[flowId]?.screenAmount,
+        inputValidation: flowId && state.ui.screens.inputData[flowId]?.validation
     };
 };
 
 const mapDispatchToProps = {
     setScreenInputData,
-    setScreenAmount,
-    clearScreenInputData
+    setScreenAmount
 };
 
 class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
     public componentDidMount() {
-        this.props.clearScreenInputData(this.props.screenKey, { amount: '' });
-        this.props.setScreenAmount(this.props.screenKey);
+        if (this.props.context?.flowId) {
+            this.props.setScreenAmount(this.props.context.flowId);
+        }
     }
 
     public render() {
         const {
             inputAmount,
             blockchain,
+            context,
             module,
             inputValidation,
             screenAmount,
-            screenKey,
             styles,
             theme
         } = this.props;
+
+        const { flowId } = context;
+
         const data = module.data as IAmountInputData;
 
         const formattedScreenAmount = formatNumber(new BigNumber(screenAmount || '0'), {
@@ -97,10 +98,10 @@ class AmountInputComponent extends React.Component<
                         value={inputAmount}
                         onChangeText={text => {
                             text = text.replace(/,/g, '.');
-                            this.props.setScreenInputData(screenKey, text, 'inputAmount');
+                            this.props.setScreenInputData(flowId, text, 'inputAmount');
                             this.props.actions.runScreenValidation(
                                 this.props.screenValidation,
-                                screenKey
+                                flowId
                             );
                         }}
                         keyboardType="decimal-pad"

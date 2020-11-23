@@ -58,7 +58,7 @@ export const clearScreenInputData = (
     });
 };
 
-export const setScreenAmount = (screenKey: string) => async (
+export const setScreenAmount = (flowId: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -78,11 +78,11 @@ export const setScreenAmount = (screenKey: string) => async (
         .toString();
 
     // Set screen amount
-    setScreenInputData(screenKey, amountFromStd, 'screenAmount')(dispatch, getState);
-    setScreenInputData(screenKey, amountFromStd, 'inputAmount')(dispatch, getState);
+    setScreenInputData(flowId, amountFromStd, 'screenAmount')(dispatch, getState);
+    setScreenInputData(flowId, amountFromStd, 'inputAmount')(dispatch, getState);
 };
 
-export const runScreenValidation = (validation: IScreenValidation, screenKey: string) => async (
+export const runScreenValidation = (validation: IScreenValidation, flowId: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -91,7 +91,7 @@ export const runScreenValidation = (validation: IScreenValidation, screenKey: st
     for (const validator of Object.keys(validators)) {
         for (const val of validators[validator]) {
             if (typeof screenInputValidationActions[val.fn] === 'function') {
-                screenInputValidationActions[val.fn](val, screenKey, getState, dispatch);
+                screenInputValidationActions[val.fn](val, flowId, getState, dispatch);
             }
         }
     }

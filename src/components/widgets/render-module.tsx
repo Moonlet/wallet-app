@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Button } from '../../library';
 import {
     ICta,
+    IScreenContext,
     IScreenModule,
     IScreenModuleColumnsWrapperData,
     IScreenValidation,
@@ -30,6 +31,7 @@ import { runScreenValidation } from '../../redux/ui/screens/input-data/actions';
 
 const renderModules = (
     modules: IScreenModule[],
+    context: IScreenContext,
     actions: {
         handleCta: typeof handleCta;
     },
@@ -44,7 +46,7 @@ const renderModules = (
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
         <React.Fragment key={`screen-module-${i}`}>
-            {renderModule(m, actions, options)}
+            {renderModule(m, context, actions, options)}
         </React.Fragment>
     ));
 
@@ -64,6 +66,7 @@ const renderModules = (
 
 export const renderModule = (
     module: IScreenModule,
+    context: IScreenContext,
     actions: {
         handleCta: typeof handleCta;
         runScreenValidation?: typeof runScreenValidation;
@@ -141,7 +144,7 @@ export const renderModule = (
             moduleJSX = (
                 <ModuleWrapper
                     module={module}
-                    renderModule={m => renderModule(m, actions, options)}
+                    renderModule={m => renderModule(m, context, actions, options)}
                     moduleWrapperState={options?.moduleWrapperState}
                 />
             );
@@ -149,12 +152,10 @@ export const renderModule = (
 
         case ModuleTypes.MODULE_COLUMNS_WRAPPER:
             const colWrapperData = module.data as IScreenModuleColumnsWrapperData;
-            moduleJSX = renderModules(colWrapperData.submodules, actions, {
+            moduleJSX = renderModules(colWrapperData.submodules, context, actions, {
                 ...options,
                 colWrapperStyle:
-                    (module?.style && formatStyles(module?.style)) ||
-                    (colWrapperData?.style && formatStyles(colWrapperData.style)) ||
-                    {}
+                    formatStyles(module?.style) || formatStyles(colWrapperData?.style) || {}
             });
             break;
 
@@ -166,7 +167,7 @@ export const renderModule = (
             moduleJSX = (
                 <AmountInput
                     module={module}
-                    screenKey={options?.screenKey}
+                    context={context}
                     actions={actions}
                     screenValidation={options?.validation}
                 />

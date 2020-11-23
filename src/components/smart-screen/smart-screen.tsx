@@ -140,6 +140,7 @@ class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, ISta
         return (
             <Widgets
                 data={widgets}
+                context={this.props.context}
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
                     handleCta: this.props.handleCta,

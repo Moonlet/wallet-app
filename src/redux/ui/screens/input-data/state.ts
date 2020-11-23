@@ -15,9 +15,10 @@ export interface IScreenInputDataValidations {
 
 export interface IScreenInputData {
     validators: InputDataValidator[];
+    validation: IScreenInputDataValidations;
     inputAmount: string;
     screenAmount: string;
-    validation: IScreenInputDataValidations;
+    switchNodeValidator: any;
 }
 
 export interface IScreenInputState {

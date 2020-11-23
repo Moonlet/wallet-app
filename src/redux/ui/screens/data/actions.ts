@@ -260,6 +260,50 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'switchNodeDelegateToValidator': {
+                    if (action.params?.params?.token && action.params?.params?.flowId) {
+                        const { flowId, token } = action.params.params;
+
+                        if (
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[flowId]?.inputAmount &&
+                            state.ui.screens.inputData[flowId]?.switchNodeValidator
+                        ) {
+                            const data = state.ui.screens.inputData[flowId];
+
+                            const validators = [
+                                buildDummyValidator(
+                                    data.switchNodeValidator.id,
+                                    data.switchNodeValidator.name
+                                )
+                            ];
+
+                            delegate(
+                                getSelectedAccount(state),
+                                data.switchNodeValidator.availableBalance,
+                                validators,
+                                token,
+                                undefined, // feeOptions
+                                undefined
+                            )(dispatch, getState);
+                        }
+                    }
+                    break;
+                }
+
+                case 'setSwitchNodeValidator':
+                    setScreenInputData(
+                        action.params?.params?.flowId,
+                        {
+                            id: action.params?.params?.validatorId,
+                            name: action.params?.params?.validatorName,
+                            availableBalance: action.params?.params?.availableBalance
+                        },
+                        'switchNodeValidator'
+                    )(dispatch, getState);
+
+                    break;
+
                 default:
                     break;
             }

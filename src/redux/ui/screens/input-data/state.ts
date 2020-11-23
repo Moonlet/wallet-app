@@ -1,8 +1,15 @@
-export interface InputDataValidator {
-    id: string;
-    name: string;
-    icon?: string;
-    website?: string;
+export interface IScreenInputState {
+    // 'walletPubKey-blockchain-chainId-address-step-tab'
+    [screenKey: string]: IScreenInputData;
+}
+
+export interface IScreenInputData {
+    validation: IScreenInputDataValidations;
+
+    // Save here any input data
+    data: {
+        [key: string]: any;
+    };
 }
 
 export interface IScreenInputDataValidations {
@@ -13,15 +20,9 @@ export interface IScreenInputDataValidations {
     valid: boolean;
 }
 
-export interface IScreenInputData {
-    validators: InputDataValidator[];
-    validation: IScreenInputDataValidations;
-    inputAmount: string;
-    screenAmount: string;
-    switchNodeValidator: any;
-}
-
-export interface IScreenInputState {
-    // 'walletPubKey-blockchain-chainId-address-step-tab'
-    [screenKey: string]: IScreenInputData;
+export interface InputDataValidator {
+    id: string;
+    name: string;
+    icon?: string;
+    website?: string;
 }

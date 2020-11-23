@@ -7,7 +7,7 @@ import { IReduxState } from '../../../../state';
 import { getTokenConfig } from '../../../../tokens/static-selectors';
 import { IAction } from '../../../../types';
 import { getSelectedAccount } from '../../../../wallets/selectors';
-import { setScreenInputData } from '../actions';
+import { setScreenInputValidation } from '../actions';
 
 export const amountAvailableFunds = (
     validation: IScreenFieldValidation,
@@ -19,7 +19,7 @@ export const amountAvailableFunds = (
 
     const account = getSelectedAccount(state);
 
-    const inputData: any = state.ui.screens.inputData[flowId];
+    const inputData: any = state.ui.screens.inputData[flowId]?.data;
 
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
@@ -51,24 +51,16 @@ export const amountAvailableFunds = (
             fieldsErrors.push(validation.messages[msgKey]);
         }
 
-        setScreenInputData(
-            flowId,
-            {
-                fieldsErrors,
-                valid: false
-            },
-            'validation'
-        )(dispatch, getState);
+        setScreenInputValidation(flowId, {
+            fieldsErrors,
+            valid: false
+        })(dispatch, getState);
     } else {
         // Valid input
 
-        setScreenInputData(
-            flowId,
-            {
-                fieldsErrors: undefined,
-                valid: true
-            },
-            'validation'
-        )(dispatch, getState);
+        setScreenInputValidation(flowId, {
+            fieldsErrors: undefined,
+            valid: true
+        })(dispatch, getState);
     }
 };

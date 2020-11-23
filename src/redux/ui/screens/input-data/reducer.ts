@@ -1,6 +1,6 @@
 import { IScreenInputState } from './state';
 import { IAction } from '../../../types';
-import { TOGGLE_VALIDATOR_MULTIPLE, SET_INPUT, CLEAR_INPUT } from './actions';
+import { TOGGLE_VALIDATOR_MULTIPLE, SET_INPUT, CLEAR_INPUT, SET_INPUT_VALIDATION } from './actions';
 
 const intialState: IScreenInputState = {};
 
@@ -9,7 +9,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
         case TOGGLE_VALIDATOR_MULTIPLE:
             const validator = action.data.validator;
             const validators = [];
-            Object.assign(validators, state[action.data.screenKey]?.validators);
+            Object.assign(validators, state[action.data.screenKey]?.data?.validators);
             const validatorIndex = validators.findIndex(v => v.id === validator.id);
 
             if (validatorIndex === -1) {
@@ -24,7 +24,10 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    validators
+                    data: {
+                        ...state[action.data.screenKey]?.data,
+                        validators
+                    }
                 }
             };
 
@@ -33,12 +36,24 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    [action.data.inputKey]: action.data.inputData
+                    data: {
+                        ...state[action.data.screenKey]?.data,
+                        [action.data.inputKey]: action.data.inputData
+                    }
+                }
+            };
+
+        case SET_INPUT_VALIDATION:
+            return {
+                ...state,
+                [action.data.screenKey]: {
+                    ...state[action.data.screenKey],
+                    validation: action.data.validation
                 }
             };
 
         case CLEAR_INPUT:
-            const screenData = state[action.data.screenKey];
+            const screenData = state[action.data.screenKey].data;
 
             for (const inputKey of Object.keys(action.data.inputData || [])) {
                 const inputValue = action.data.inputData[inputKey];
@@ -51,7 +66,10 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    [action.data.input]: screenData
+                    data: {
+                        ...state[action.data.screenKey]?.data,
+                        ...screenData
+                    }
                 }
             };
 

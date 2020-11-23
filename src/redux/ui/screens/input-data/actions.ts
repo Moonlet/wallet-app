@@ -7,10 +7,12 @@ import { IReduxState } from '../../../state';
 import { getTokenConfig } from '../../../tokens/static-selectors';
 import { IAction } from '../../../types';
 import { getSelectedAccount } from '../../../wallets/selectors';
+import { IScreenInputDataValidations } from './state';
 import { screenInputValidationActions } from './validation/index';
 
 export const TOGGLE_VALIDATOR_MULTIPLE = 'TOGGLE_VALIDATOR_MULTIPLE';
 export const SET_INPUT = 'SET_INPUT';
+export const SET_INPUT_VALIDATION = 'SET_INPUT_VALIDATION';
 export const CLEAR_INPUT = 'CLEAR_INPUT';
 
 export const toggleValidatorMultiple = (
@@ -41,6 +43,19 @@ export const setScreenInputData = (screenKey: string, inputData: any, inputKey: 
             screenKey,
             inputData,
             inputKey
+        }
+    });
+};
+
+export const setScreenInputValidation = (
+    screenKey: string,
+    validation: IScreenInputDataValidations
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    dispatch({
+        type: SET_INPUT_VALIDATION,
+        data: {
+            screenKey,
+            validation
         }
     });
 };

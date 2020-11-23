@@ -241,9 +241,9 @@ const handleCtaAction = async (
 
                         if (
                             state.ui.screens.inputData &&
-                            state.ui.screens.inputData[flowId]?.inputAmount
+                            state.ui.screens.inputData[flowId]?.data?.inputAmount
                         ) {
-                            const amount = state.ui.screens.inputData[flowId].inputAmount;
+                            const amount = state.ui.screens.inputData[flowId].data.inputAmount;
 
                             const validators = [buildDummyValidator(validatorId, validatorName)];
 
@@ -266,10 +266,10 @@ const handleCtaAction = async (
 
                         if (
                             state.ui.screens.inputData &&
-                            state.ui.screens.inputData[flowId]?.inputAmount &&
-                            state.ui.screens.inputData[flowId]?.switchNodeValidator
+                            state.ui.screens.inputData[flowId]?.data?.inputAmount &&
+                            state.ui.screens.inputData[flowId]?.data?.switchNodeValidator
                         ) {
-                            const data = state.ui.screens.inputData[flowId];
+                            const data = state.ui.screens.inputData[flowId].data;
 
                             const validators = [
                                 buildDummyValidator(

@@ -14,15 +14,13 @@ export interface IScreenInputDataValidations {
 }
 
 export interface IScreenInputData {
-    // key: 'walletPubKey-blockchain-chainId-address-step-tab'
-    [key: string]: {
-        validators: InputDataValidator[];
-        inputAmount: string;
-        screenAmount: string;
-        validation: IScreenInputDataValidations;
-    };
+    validators: InputDataValidator[];
+    inputAmount: string;
+    screenAmount: string;
+    validation: IScreenInputDataValidations;
 }
 
 export interface IScreenInputState {
-    [screen: string]: IScreenInputData;
+    // 'walletPubKey-blockchain-chainId-address-step-tab'
+    [screenKey: string]: IScreenInputData;
 }

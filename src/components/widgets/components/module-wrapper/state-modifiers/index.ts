@@ -8,10 +8,12 @@ import {
 
 import { updateClaimPending } from './update-claim-pending';
 import { quickStakeSelectedValidator } from './quick-stake-selected-validator';
+import { stakeEnterAmountStakeNow } from './stake-enter-amount-stake-now';
 
 const stateModifiers = {
     updateClaimPending,
-    quickStakeSelectedValidator
+    quickStakeSelectedValidator,
+    stakeEnterAmountStakeNow
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {

@@ -119,24 +119,27 @@ class AmountInputComponent extends React.Component<
                     </View>
                 )}
 
+                {/* TODO: here shoud take only amount errors or all the errors */}
                 {inputValidation?.fieldsErrors &&
-                    inputValidation.fieldsErrors.map((fieldError, index: number) => {
-                        if (fieldError.type === 'ERROR_MSG') {
-                            return (
-                                <Text key={`error-${index}`} style={styles.errorText}>
-                                    {fieldError.message}
-                                </Text>
-                            );
-                        }
+                    Object.keys(inputValidation.fieldsErrors).map((field: string) =>
+                        inputValidation.fieldsErrors[field].map((fieldError, index: number) => {
+                            if (fieldError.type === 'ERROR_MSG') {
+                                return (
+                                    <Text key={`error-${index}`} style={styles.errorText}>
+                                        {fieldError.message}
+                                    </Text>
+                                );
+                            }
 
-                        if (fieldError.type === 'WARN_MSG') {
-                            return (
-                                <Text key={`error-${index}`} style={styles.warningText}>
-                                    {fieldError.message}
-                                </Text>
-                            );
-                        }
-                    })}
+                            if (fieldError.type === 'WARN_MSG') {
+                                return (
+                                    <Text key={`error-${index}`} style={styles.warningText}>
+                                        {fieldError.message}
+                                    </Text>
+                                );
+                            }
+                        })
+                    )}
             </View>
         );
     }

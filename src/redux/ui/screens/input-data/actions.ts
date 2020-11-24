@@ -104,10 +104,10 @@ export const runScreenValidation = (validation: IScreenValidation, flowId: strin
 ) => {
     const validators = validation.validators;
 
-    for (const validator of Object.keys(validators)) {
-        for (const val of validators[validator]) {
+    for (const field of Object.keys(validators)) {
+        for (const val of validators[field]) {
             if (typeof screenInputValidationActions[val.fn] === 'function') {
-                screenInputValidationActions[val.fn](val, flowId, getState, dispatch);
+                screenInputValidationActions[val.fn](val, field, flowId, getState, dispatch);
             }
         }
     }

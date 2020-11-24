@@ -11,6 +11,7 @@ import { setScreenInputValidation } from '../actions';
 
 export const minAmountToStake = (
     validation: IScreenFieldValidation,
+    field: string,
     flowId: string,
     getState: () => IReduxState,
     dispatch: Dispatch<IAction<any>>
@@ -46,7 +47,9 @@ export const minAmountToStake = (
         }
 
         setScreenInputValidation(flowId, {
-            fieldsErrors,
+            fieldsErrors: {
+                [field]: fieldsErrors
+            },
             valid: false
         })(dispatch, getState);
     }

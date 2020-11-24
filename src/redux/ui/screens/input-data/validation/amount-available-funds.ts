@@ -11,6 +11,7 @@ import { setScreenInputValidation } from '../actions';
 
 export const amountAvailableFunds = (
     validation: IScreenFieldValidation,
+    field: string,
     flowId: string,
     getState: () => IReduxState,
     dispatch: Dispatch<IAction<any>>
@@ -52,7 +53,9 @@ export const amountAvailableFunds = (
         }
 
         setScreenInputValidation(flowId, {
-            fieldsErrors,
+            fieldsErrors: {
+                [field]: fieldsErrors
+            },
             valid: false
         })(dispatch, getState);
     } else {

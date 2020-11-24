@@ -14,9 +14,11 @@ export interface IScreenInputData {
 
 export interface IScreenInputDataValidations {
     fieldsErrors: {
-        type: 'ERROR_MSG' | 'WARN_MSG';
-        message: string;
-    }[];
+        [fieldName: string]: {
+            type: 'ERROR_MSG' | 'WARN_MSG';
+            message: string;
+        }[];
+    };
     valid: boolean;
 }
 

@@ -7,22 +7,14 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getSelectedAccount } from '../../../../redux/wallets/selectors';
 import { IScreenModule } from './../../types';
 
-export const getStakeEnterAllBalance = (
-    state: IReduxState,
-    module: IScreenModule,
-    options: { screenKey: string }
-) => {
+export const getStakeEnterAllBalance = (state: IReduxState, module: IScreenModule) => {
     const account = getSelectedAccount(state);
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
     const token = account.tokens[chainId][blockchainInstance.config.coin];
 
-    const balance =
-        (options.screenKey &&
-            state.ui.screens.inputData &&
-            state.ui.screens.inputData[options.screenKey]?.data?.amount) ||
-        '0';
+    const balance = token.balance?.available || '0';
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 

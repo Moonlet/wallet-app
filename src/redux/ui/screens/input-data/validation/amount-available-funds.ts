@@ -29,7 +29,9 @@ export const amountAvailableFunds = (
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
-    const inputAmount = inputData?.inputAmount;
+    // TODO
+
+    const inputAmount = inputData?.amount;
     const inputAmountToStd = blockchainInstance.account.amountToStd(
         new BigNumber(inputAmount),
         tokenConfig.decimals

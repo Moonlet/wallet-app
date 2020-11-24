@@ -4,7 +4,7 @@ import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IScreenModule, IAmountInputData, IScreenValidation } from '../../types';
+import { IScreenModule, IAmountInputData, IScreenValidation, IScreenContext } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
@@ -18,8 +18,8 @@ import { getStateSelectors } from '../ui-state-selectors/index';
 
 interface IExternalProps {
     module: IScreenModule;
+    context: IScreenContext;
     screenKey: string;
-    flowId: string;
     actions: {
         runScreenValidation?: typeof runScreenValidation;
     };
@@ -40,7 +40,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
         inputValidation: state.ui.screens.inputData[ownProps.screenKey]?.validation,
         ...getStateSelectors(state, ownProps.module, {
             screenKey: ownProps.screenKey,
-            flowId: ownProps.flowId
+            flowId: ownProps.context.flowId
         })
     };
 };
@@ -54,7 +54,7 @@ class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
     public componentDidMount() {
-        this.props.setScreenAmount(this.props.screenKey);
+        // this.props.setScreenAmount(this.props.screenKey);
     }
 
     public render() {
@@ -74,13 +74,10 @@ class AmountInputComponent extends React.Component<
                         value={amount}
                         onChangeText={text => {
                             text = text.replace(/,/g, '.');
-                            // this.props.setScreenInputData(flowId, {
-                            //     inputAmount: text
-                            // });
-                            // this.props.actions.runScreenValidation(
-                            //     this.props.screenValidation,
-                            //     flowId
-                            // );
+                            this.props.setScreenAmount(text, {
+                                screenKey: this.props.screenKey,
+                                context: this.props.context
+                            });
                         }}
                         keyboardType="decimal-pad"
                         returnKeyType="done"

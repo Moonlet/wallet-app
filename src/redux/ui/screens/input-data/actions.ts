@@ -1,10 +1,7 @@
 import { Dispatch } from 'react';
-import { IScreenValidation } from '../../../../components/widgets/types';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { getChainId } from '../../../preferences/selectors';
+import { IScreenContext, IScreenValidation } from '../../../../components/widgets/types';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
-import { getSelectedAccount } from '../../../wallets/selectors';
 import { IScreenInputDataValidations } from './state';
 import { screenInputValidationActions } from './validation/index';
 
@@ -70,20 +67,30 @@ export const clearScreenInputData = (
     });
 };
 
-export const setScreenAmount = (screenKey: string) => async (
+export const setScreenAmount = (
+    balance: string,
+    options: {
+        screenKey: string;
+        context: IScreenContext;
+    }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    setScreenInputData(options.screenKey, {
+        amount: balance
+    })(dispatch, getState);
+
+    const state = getState();
+
+    runScreenValidation(
+        state.ui.screens.data[options.context.screen][options.screenKey].response?.validation,
+        options.screenKey
+    )(dispatch, getState);
+};
+
+export const setFlowAmount = (balance: string, flowId: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    const state = getState();
-
-    const account = getSelectedAccount(state);
-    const blockchain = account.blockchain;
-    const chainId = getChainId(state, blockchain);
-    const token = account.tokens[chainId][getBlockchain(blockchain).config.coin];
-    const balance = token.balance?.available || '0';
-
-    // Set screen amount
-    setScreenInputData(screenKey, {
+    setScreenInputData(flowId, {
         amount: balance
     })(dispatch, getState);
 };

@@ -29,7 +29,7 @@ export const minAmountToStake = (
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
-    const inputAmount = inputData?.inputAmount;
+    const inputAmount = inputData?.amount;
     const inputAmountToStd = blockchainInstance.account.amountToStd(
         new BigNumber(inputAmount),
         tokenConfig.decimals

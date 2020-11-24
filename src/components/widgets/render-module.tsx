@@ -173,8 +173,8 @@ export const renderModule = (
             moduleJSX = (
                 <AmountInput
                     module={module}
+                    context={context}
                     screenKey={options?.screenKey}
-                    flowId={context?.flowId}
                     actions={actions}
                     screenValidation={options?.validation}
                 />

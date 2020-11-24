@@ -246,7 +246,11 @@ class SmartScreenComponent extends React.Component<
                 {/* Widgets */}
                 {screenData && (
                     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                        {loadingScreenData && this.renderLoadingSkeleton(4)}
+                        {loadingScreenData && (
+                            <View style={styles.skeletonContainer}>
+                                {this.renderLoadingSkeleton(6)}
+                            </View>
+                        )}
 
                         {/* Render Widgets */}
                         {!loadingScreenData &&
@@ -256,20 +260,17 @@ class SmartScreenComponent extends React.Component<
                                 screenData.response?.validation
                             )}
 
-                        {/* Display Error */}
+                        {/* Display Error (Try again)*/}
                         {!loadingScreenData && screenData.error && (
                             <View style={styles.errorContainer}>{this.renderErrorWidget()}</View>
                         )}
                     </ScrollView>
                 )}
 
-                {/* Bottom Fixed Area */}
-                {!loadingScreenData && screenData?.response?.bottomFixedArea && (
-                    <View style={styles.fixedBottomArea}>
-                        {/* only one widget */}
-                        {this.renderWidgets([screenData.response.bottomFixedArea])}
-                    </View>
-                )}
+                {/* Bottom Fixed Area (only one widget)*/}
+                {!loadingScreenData &&
+                    screenData?.response?.bottomFixedArea &&
+                    this.renderWidgets([screenData.response.bottomFixedArea])}
             </View>
         );
     }

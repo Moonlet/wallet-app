@@ -44,7 +44,7 @@ const mapStateToProps = (state: IReduxState) => {
     });
 
     return {
-        validators: state.ui.screens.inputData[screenKey]?.data?.validators || [],
+        validators: state.ui.screens.inputData[screenKey]?.flowInputData?.validators || [],
         account,
         token: account.tokens[chainId][getBlockchain(account.blockchain).config.coin]
     };

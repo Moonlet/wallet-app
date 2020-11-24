@@ -46,8 +46,8 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         blockchain: getSelectedBlockchain(state),
 
-        inputAmount: flowId && state.ui.screens.inputData[flowId]?.data?.inputAmount,
-        screenAmount: flowId && state.ui.screens.inputData[flowId]?.data?.screenAmount,
+        inputAmount: flowId && state.ui.screens.inputData[flowId]?.flowInputData?.inputAmount,
+        screenAmount: flowId && state.ui.screens.inputData[flowId]?.flowInputData?.screenAmount,
         inputValidation: flowId && state.ui.screens.inputData[flowId]?.validation
     };
 };

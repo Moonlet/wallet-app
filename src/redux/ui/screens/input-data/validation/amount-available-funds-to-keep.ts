@@ -20,7 +20,7 @@ export const amountAvailableFundsToKeep = (
 
     const account = getSelectedAccount(state);
 
-    const inputData: any = state.ui.screens.inputData[flowId]?.data;
+    const inputData: any = state.ui.screens.inputData[flowId]?.flowInputData;
 
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);

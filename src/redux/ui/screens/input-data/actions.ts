@@ -33,7 +33,7 @@ export const toggleValidatorMultiple = (
     });
 };
 
-export const setScreenInputData = (screenKey: string, inputData: any, inputKey: string) => async (
+export const setScreenInputData = (screenKey: string, inputData: { [key: string]: any }) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -41,8 +41,7 @@ export const setScreenInputData = (screenKey: string, inputData: any, inputKey: 
         type: SET_INPUT,
         data: {
             screenKey,
-            inputData,
-            inputKey
+            inputData
         }
     });
 };
@@ -93,8 +92,10 @@ export const setScreenAmount = (flowId: string) => async (
         .toString();
 
     // Set screen amount
-    setScreenInputData(flowId, amountFromStd, 'screenAmount')(dispatch, getState);
-    setScreenInputData(flowId, amountFromStd, 'inputAmount')(dispatch, getState);
+    setScreenInputData(flowId, {
+        screenAmount: amountFromStd,
+        inputAmount: amountFromStd
+    })(dispatch, getState);
 };
 
 export const runScreenValidation = (validation: IScreenValidation, flowId: string) => async (

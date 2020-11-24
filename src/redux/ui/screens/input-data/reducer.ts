@@ -38,7 +38,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                     ...state[action.data.screenKey],
                     data: {
                         ...state[action.data.screenKey]?.data,
-                        [action.data.inputKey]: action.data.inputData
+                        ...action.data.inputData
                     }
                 }
             };
@@ -53,7 +53,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
             };
 
         case CLEAR_INPUT:
-            const screenData = state[action.data.screenKey].data;
+            const screenData = state[action.data.screenKey]?.data;
 
             for (const inputKey of Object.keys(action.data.inputData || [])) {
                 const inputValue = action.data.inputData[inputKey];

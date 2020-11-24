@@ -98,7 +98,9 @@ class AmountInputComponent extends React.Component<
                         value={inputAmount}
                         onChangeText={text => {
                             text = text.replace(/,/g, '.');
-                            this.props.setScreenInputData(flowId, text, 'inputAmount');
+                            this.props.setScreenInputData(flowId, {
+                                inputAmount: text
+                            });
                             this.props.actions.runScreenValidation(
                                 this.props.screenValidation,
                                 flowId

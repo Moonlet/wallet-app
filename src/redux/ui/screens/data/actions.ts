@@ -29,6 +29,8 @@ import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actio
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { getTokenConfig } from '../../../tokens/static-selectors';
+import BigNumber from 'bignumber.js';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
@@ -209,18 +211,16 @@ const handleCtaAction = async (
                     break;
 
                 case 'SINGLE_SELECTION':
-                    setScreenInputData(
-                        options.screenKey,
-                        [
+                    setScreenInputData(options.screenKey, {
+                        validators: [
                             {
                                 id: options.validator.id,
                                 name: options.validator.name,
                                 icon: options.validator?.icon,
                                 website: options.validator?.website
                             }
-                        ],
-                        'validators'
-                    )(dispatch, getState);
+                        ]
+                    })(dispatch, getState);
                     break;
 
                 case 'LOAD_MORE_VALIDATORS':
@@ -278,9 +278,12 @@ const handleCtaAction = async (
                                 )
                             ];
 
+                            // data.switchNodeValidator.availableBalance
+                            const amount = state.ui.screens.inputData[flowId].data.inputAmount;
+
                             delegate(
                                 getSelectedAccount(state),
-                                data.switchNodeValidator.availableBalance,
+                                amount,
                                 validators,
                                 token,
                                 undefined, // feeOptions
@@ -292,17 +295,40 @@ const handleCtaAction = async (
                 }
 
                 case 'setSwitchNodeValidator':
-                    setScreenInputData(
-                        action.params?.params?.flowId,
-                        {
+                    setScreenInputData(action.params?.params?.flowId, {
+                        switchNodeValidator: {
                             id: action.params?.params?.validatorId,
-                            name: action.params?.params?.validatorName,
-                            availableBalance: action.params?.params?.availableBalance
-                        },
-                        'switchNodeValidator'
-                    )(dispatch, getState);
-
+                            name: action.params?.params?.validatorName
+                        }
+                    })(dispatch, getState);
                     break;
+
+                case 'setSwitchNodeBalance': {
+                    const balance = action.params?.params?.availableBalance;
+                    const flowId = action.params?.params?.flowId;
+
+                    const account = getSelectedAccount(state);
+                    const blockchain = account.blockchain;
+                    const blockchainInstance = getBlockchain(blockchain);
+                    const chainId = getChainId(state, blockchain);
+                    const token = account.tokens[chainId][blockchainInstance.config.coin];
+                    // const balance = token.balance?.available || '0';
+
+                    const tokenConfig = getTokenConfig(blockchain, token.symbol);
+
+                    const amountFromStd = blockchainInstance.account
+                        .amountFromStd(new BigNumber(balance), tokenConfig.decimals)
+                        .toString();
+
+                    // TODO
+
+                    // Set screen amount
+                    setScreenInputData(flowId, {
+                        screenAmount: amountFromStd,
+                        inputAmount: amountFromStd
+                    })(dispatch, getState);
+                    break;
+                }
 
                 default:
                     break;

@@ -20,7 +20,7 @@ export const minAmountToStake = (
 
     const account = getSelectedAccount(state);
 
-    const inputData: any = state.ui.screens.inputData[flowId]?.flowInputData;
+    const inputData: any = state.ui.screens.inputData[flowId]?.data;
 
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
@@ -34,6 +34,10 @@ export const minAmountToStake = (
         new BigNumber(inputAmount),
         tokenConfig.decimals
     );
+
+    // TODO
+    // sa iau valoarea din contract
+    // dupa stake validatorul ramane in cont min stake delegat sau 0
 
     const minimumAmountToKeep = blockchainInstance.config.amountToKeepInAccount[account.type];
 

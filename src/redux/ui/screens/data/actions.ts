@@ -29,8 +29,6 @@ import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actio
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { getTokenConfig } from '../../../tokens/static-selectors';
-import BigNumber from 'bignumber.js';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
@@ -241,9 +239,9 @@ const handleCtaAction = async (
 
                         if (
                             state.ui.screens.inputData &&
-                            state.ui.screens.inputData[flowId]?.data?.inputAmount
+                            state.ui.screens.inputData[flowId]?.data?.amount
                         ) {
-                            const amount = state.ui.screens.inputData[flowId].data.inputAmount;
+                            const amount = state.ui.screens.inputData[flowId].data.amount;
 
                             const validators = [buildDummyValidator(validatorId, validatorName)];
 
@@ -266,7 +264,7 @@ const handleCtaAction = async (
 
                         if (
                             state.ui.screens.inputData &&
-                            state.ui.screens.inputData[flowId]?.data?.inputAmount &&
+                            state.ui.screens.inputData[flowId]?.data?.amount &&
                             state.ui.screens.inputData[flowId]?.data?.switchNodeValidator
                         ) {
                             const data = state.ui.screens.inputData[flowId].data;
@@ -279,7 +277,7 @@ const handleCtaAction = async (
                             ];
 
                             // data.switchNodeValidator.availableBalance
-                            const amount = state.ui.screens.inputData[flowId].data.inputAmount;
+                            const amount = state.ui.screens.inputData[flowId].data.amount;
 
                             delegate(
                                 getSelectedAccount(state),
@@ -298,37 +296,11 @@ const handleCtaAction = async (
                     setScreenInputData(action.params?.params?.flowId, {
                         switchNodeValidator: {
                             id: action.params?.params?.validatorId,
-                            name: action.params?.params?.validatorName
+                            name: action.params?.params?.validatorName,
+                            availableBalance: action.params?.params?.availableBalance
                         }
                     })(dispatch, getState);
                     break;
-
-                case 'setSwitchNodeBalance': {
-                    const balance = action.params?.params?.availableBalance;
-                    const flowId = action.params?.params?.flowId;
-
-                    const account = getSelectedAccount(state);
-                    const blockchain = account.blockchain;
-                    const blockchainInstance = getBlockchain(blockchain);
-                    const chainId = getChainId(state, blockchain);
-                    const token = account.tokens[chainId][blockchainInstance.config.coin];
-                    // const balance = token.balance?.available || '0';
-
-                    const tokenConfig = getTokenConfig(blockchain, token.symbol);
-
-                    const amountFromStd = blockchainInstance.account
-                        .amountFromStd(new BigNumber(balance), tokenConfig.decimals)
-                        .toString();
-
-                    // TODO
-
-                    // Set screen amount
-                    setScreenInputData(flowId, {
-                        screenAmount: amountFromStd,
-                        inputAmount: amountFromStd
-                    })(dispatch, getState);
-                    break;
-                }
 
                 default:
                     break;

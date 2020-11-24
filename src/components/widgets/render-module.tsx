@@ -121,7 +121,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.ONE_LINE_TEXT_BANNER:
-            moduleJSX = <OneLineTextBanner module={module} actions={actions} options={options} />;
+            moduleJSX = (
+                <OneLineTextBanner
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.THREE_LINES_ICON:
@@ -167,7 +173,8 @@ export const renderModule = (
             moduleJSX = (
                 <AmountInput
                     module={module}
-                    context={context}
+                    screenKey={options?.screenKey}
+                    flowId={context?.flowId}
                     actions={actions}
                     screenValidation={options?.validation}
                 />

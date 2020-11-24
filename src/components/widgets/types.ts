@@ -172,6 +172,18 @@ export interface IScreenModule {
         style?: IDataStyle;
         data: IScreenModule;
     };
+
+    state: {
+        // uiStateSelector?: IStateSelector, // aka state modifier - not implemented now
+        selectors: {
+            [key: string]: IStateSelector;
+        };
+    };
+}
+
+export interface IStateSelector {
+    fn: string;
+    params: any[];
 }
 
 export enum ModuleTypes {
@@ -337,7 +349,7 @@ export interface IAmountInputData {
     input?: {
         style?: IDataStyle;
     };
-    label?: IData;
+    labels?: IData[];
     amounts?: {
         value: string | number;
         label: string;

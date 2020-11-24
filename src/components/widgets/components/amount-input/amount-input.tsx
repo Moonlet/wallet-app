@@ -4,7 +4,7 @@ import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IScreenModule, IAmountInputData, IScreenValidation, IScreenContext } from '../../types';
+import { IScreenModule, IAmountInputData, IScreenValidation } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
@@ -13,16 +13,13 @@ import {
     setScreenAmount,
     runScreenValidation
 } from '../../../../redux/ui/screens/input-data/actions';
-import { formatNumber } from '../../../../core/utils/format-number';
-import BigNumber from 'bignumber.js';
-import { Blockchain } from '../../../../core/blockchain/types';
-import { getSelectedBlockchain } from '../../../../redux/wallets/selectors';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
+import { getStateSelectors } from '../ui-state-selectors/index';
 
 interface IExternalProps {
     module: IScreenModule;
-    context: IScreenContext;
+    screenKey: string;
+    flowId: string;
     actions: {
         runScreenValidation?: typeof runScreenValidation;
     };
@@ -30,10 +27,7 @@ interface IExternalProps {
 }
 
 interface IReduxProps {
-    blockchain: Blockchain;
-
-    inputAmount: string;
-    screenAmount: string;
+    amount: string;
     inputValidation: IScreenInputDataValidations;
 
     setScreenInputData: typeof setScreenInputData;
@@ -41,14 +35,13 @@ interface IReduxProps {
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
-    const flowId = ownProps.context?.flowId;
-
     return {
-        blockchain: getSelectedBlockchain(state),
-
-        inputAmount: flowId && state.ui.screens.inputData[flowId]?.flowInputData?.inputAmount,
-        screenAmount: flowId && state.ui.screens.inputData[flowId]?.flowInputData?.screenAmount,
-        inputValidation: flowId && state.ui.screens.inputData[flowId]?.validation
+        amount: state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
+        inputValidation: state.ui.screens.inputData[ownProps.screenKey]?.validation,
+        ...getStateSelectors(state, ownProps.module, {
+            screenKey: ownProps.screenKey,
+            flowId: ownProps.flowId
+        })
     };
 };
 
@@ -61,30 +54,13 @@ class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
     public componentDidMount() {
-        if (this.props.context?.flowId) {
-            this.props.setScreenAmount(this.props.context.flowId);
-        }
+        this.props.setScreenAmount(this.props.screenKey);
     }
 
     public render() {
-        const {
-            inputAmount,
-            blockchain,
-            context,
-            module,
-            inputValidation,
-            screenAmount,
-            styles,
-            theme
-        } = this.props;
-
-        const { flowId } = context;
+        const { amount, module, inputValidation, styles, theme } = this.props;
 
         const data = module.data as IAmountInputData;
-
-        const formattedScreenAmount = formatNumber(new BigNumber(screenAmount || '0'), {
-            currency: getBlockchain(blockchain).config.coin
-        });
 
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
@@ -95,16 +71,16 @@ class AmountInputComponent extends React.Component<
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={inputAmount}
+                        value={amount}
                         onChangeText={text => {
                             text = text.replace(/,/g, '.');
-                            this.props.setScreenInputData(flowId, {
-                                inputAmount: text
-                            });
-                            this.props.actions.runScreenValidation(
-                                this.props.screenValidation,
-                                flowId
-                            );
+                            // this.props.setScreenInputData(flowId, {
+                            //     inputAmount: text
+                            // });
+                            // this.props.actions.runScreenValidation(
+                            //     this.props.screenValidation,
+                            //     flowId
+                            // );
                         }}
                         keyboardType="decimal-pad"
                         returnKeyType="done"
@@ -112,34 +88,33 @@ class AmountInputComponent extends React.Component<
                     />
                 </View>
 
-                {data?.label && (
+                {data?.labels && (
                     <View style={styles.row}>
-                        {formatDataJSXElements(data.label, styles.label)}
-                        <Text style={styles.amountText}>{formattedScreenAmount}</Text>
+                        {formatDataJSXElements(
+                            data.labels,
+                            styles.label,
+                            module?.state && { translateKeys: this.props as any }
+                        )}
                     </View>
                 )}
 
-                {/* TODO: here shoud take only amount errors or all the errors */}
-                {inputValidation?.fieldsErrors &&
-                    Object.keys(inputValidation.fieldsErrors).map((field: string) =>
-                        inputValidation.fieldsErrors[field].map((fieldError, index: number) => {
-                            if (fieldError.type === 'ERROR_MSG') {
-                                return (
-                                    <Text key={`error-${index}`} style={styles.errorText}>
-                                        {fieldError.message}
-                                    </Text>
-                                );
-                            }
+                {(inputValidation?.fieldsErrors?.amount || []).map((fieldError, index: number) => {
+                    if (fieldError.type === 'ERROR_MSG') {
+                        return (
+                            <Text key={`error-${index}`} style={styles.errorText}>
+                                {fieldError.message}
+                            </Text>
+                        );
+                    }
 
-                            if (fieldError.type === 'WARN_MSG') {
-                                return (
-                                    <Text key={`error-${index}`} style={styles.warningText}>
-                                        {fieldError.message}
-                                    </Text>
-                                );
-                            }
-                        })
-                    )}
+                    if (fieldError.type === 'WARN_MSG') {
+                        return (
+                            <Text key={`error-${index}`} style={styles.warningText}>
+                                {fieldError.message}
+                            </Text>
+                        );
+                    }
+                })}
             </View>
         );
     }

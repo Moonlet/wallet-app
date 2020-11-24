@@ -1,10 +1,8 @@
-import BigNumber from 'bignumber.js';
 import { Dispatch } from 'react';
 import { IScreenValidation } from '../../../../components/widgets/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../preferences/selectors';
 import { IReduxState } from '../../../state';
-import { getTokenConfig } from '../../../tokens/static-selectors';
 import { IAction } from '../../../types';
 import { getSelectedAccount } from '../../../wallets/selectors';
 import { IScreenInputDataValidations } from './state';
@@ -72,7 +70,7 @@ export const clearScreenInputData = (
     });
 };
 
-export const setScreenAmount = (flowId: string) => async (
+export const setScreenAmount = (screenKey: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -80,21 +78,13 @@ export const setScreenAmount = (flowId: string) => async (
 
     const account = getSelectedAccount(state);
     const blockchain = account.blockchain;
-    const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
-    const token = account.tokens[chainId][blockchainInstance.config.coin];
+    const token = account.tokens[chainId][getBlockchain(blockchain).config.coin];
     const balance = token.balance?.available || '0';
 
-    const tokenConfig = getTokenConfig(blockchain, token.symbol);
-
-    const amountFromStd = blockchainInstance.account
-        .amountFromStd(new BigNumber(balance), tokenConfig.decimals)
-        .toString();
-
     // Set screen amount
-    setScreenInputData(flowId, {
-        screenAmount: amountFromStd,
-        inputAmount: amountFromStd
+    setScreenInputData(screenKey, {
+        amount: balance
     })(dispatch, getState);
 };
 

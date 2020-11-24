@@ -5,7 +5,7 @@ export interface IScreenInputState {
 
 export interface IScreenInputData {
     validation: IScreenInputDataValidations;
-    flowInputData: {
+    data: {
         [key: string]: any;
     };
 }

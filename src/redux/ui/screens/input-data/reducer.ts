@@ -9,7 +9,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
         case TOGGLE_VALIDATOR_MULTIPLE:
             const validator = action.data.validator;
             const validators = [];
-            Object.assign(validators, state[action.data.screenKey]?.flowInputData?.validators);
+            Object.assign(validators, state[action.data.screenKey]?.data?.validators);
             const validatorIndex = validators.findIndex(v => v.id === validator.id);
 
             if (validatorIndex === -1) {
@@ -24,8 +24,8 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    flowInputData: {
-                        ...state[action.data.screenKey]?.flowInputData,
+                    data: {
+                        ...state[action.data.screenKey]?.data,
                         validators
                     }
                 }
@@ -36,8 +36,8 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    flowInputData: {
-                        ...state[action.data.screenKey]?.flowInputData,
+                    data: {
+                        ...state[action.data.screenKey]?.data,
                         ...action.data.inputData
                     }
                 }
@@ -53,7 +53,7 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
             };
 
         case CLEAR_INPUT:
-            const screenData = state[action.data.screenKey]?.flowInputData;
+            const screenData = state[action.data.screenKey]?.data;
 
             for (const inputKey of Object.keys(action.data.inputData || [])) {
                 const inputValue = action.data.inputData[inputKey];
@@ -66,8 +66,8 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                 ...state,
                 [action.data.screenKey]: {
                     ...state[action.data.screenKey],
-                    flowInputData: {
-                        ...state[action.data.screenKey]?.flowInputData,
+                    data: {
+                        ...state[action.data.screenKey]?.data,
                         ...screenData
                     }
                 }

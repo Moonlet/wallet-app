@@ -275,35 +275,49 @@ const handleCtaAction = async (
                 }
 
                 case 'switchNodeDelegateToValidator': {
-                    if (action.params?.params?.token && action.params?.params?.flowId) {
-                        const { flowId, token } = action.params.params;
+                    // Run Screen Validations
 
-                        if (
-                            state.ui.screens.inputData &&
-                            state.ui.screens.inputData[flowId]?.data?.amount &&
-                            state.ui.screens.inputData[flowId]?.data?.switchNodeValidator
-                        ) {
-                            const data = state.ui.screens.inputData[flowId].data;
+                    // Take amount from screen
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
 
-                            const validators = [
-                                buildDummyValidator(
-                                    data.switchNodeValidator.id,
-                                    data.switchNodeValidator.name
-                                )
-                            ];
+                    const context = action.params?.params?.context;
 
-                            // data.switchNodeValidator.availableBalance
-                            const amount = state.ui.screens.inputData[flowId].data.amount;
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: context?.step,
+                        tab: undefined
+                    });
 
-                            delegate(
-                                getSelectedAccount(state),
-                                amount,
-                                validators,
-                                token,
-                                undefined, // feeOptions
-                                undefined
-                            )(dispatch, getState);
-                        }
+                    // Node details are stored on flow
+                    const switchNodeValidator =
+                        state.ui.screens.inputData[context?.flowId]?.data?.switchNodeValidator;
+
+                    // Open Process Tx
+                    if (
+                        switchNodeValidator &&
+                        action.params?.params?.token &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey] &&
+                        state.ui.screens.inputData[screenKey]?.data?.amount
+                    ) {
+                        const validators = [
+                            buildDummyValidator(switchNodeValidator.id, switchNodeValidator.name)
+                        ];
+
+                        const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+
+                        delegate(
+                            getSelectedAccount(state),
+                            amount,
+                            validators,
+                            action.params.params.token,
+                            undefined, // feeOptions
+                            undefined
+                        )(dispatch, getState);
                     }
                     break;
                 }

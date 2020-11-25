@@ -15,7 +15,7 @@ import { setScreenInputValidation } from '../actions';
 export const minAmountToStake = (
     validation: IScreenFieldValidation,
     field: string,
-    flowId: string,
+    screenKey: string,
     getState: () => IReduxState,
     dispatch: Dispatch<IAction<any>>
 ) => {
@@ -23,7 +23,7 @@ export const minAmountToStake = (
 
     const account = getSelectedAccount(state);
 
-    const inputData: any = state.ui.screens.inputData[flowId]?.data;
+    const inputData: any = state.ui.screens.inputData[screenKey]?.data;
 
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
@@ -53,7 +53,7 @@ export const minAmountToStake = (
             fieldsErrors.push(validation.messages[msgKey]);
         }
 
-        setScreenInputValidation(flowId, {
+        setScreenInputValidation(screenKey, {
             fieldsErrors: {
                 [field]: fieldsErrors
             },

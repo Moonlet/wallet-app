@@ -9,10 +9,13 @@ import { IAction } from '../../../../types';
 import { getSelectedAccount } from '../../../../wallets/selectors';
 import { setScreenInputValidation } from '../actions';
 
+/**
+ * This data is stored on screen key
+ */
 export const amountAvailableFunds = (
     validation: IScreenFieldValidation,
     field: string,
-    flowId: string,
+    screenKey: string,
     getState: () => IReduxState,
     dispatch: Dispatch<IAction<any>>
 ) => {
@@ -20,7 +23,7 @@ export const amountAvailableFunds = (
 
     const account = getSelectedAccount(state);
 
-    const inputData: any = state.ui.screens.inputData[flowId]?.data;
+    const inputData: any = state.ui.screens.inputData[screenKey]?.data;
 
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
@@ -29,7 +32,7 @@ export const amountAvailableFunds = (
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
-    // TODO
+    const availableBalance = new BigNumber(token.balance?.available || '0');
 
     const inputAmount = inputData?.amount;
     const inputAmountToStd = blockchainInstance.account.amountToStd(
@@ -37,15 +40,9 @@ export const amountAvailableFunds = (
         tokenConfig.decimals
     );
 
-    const screenAmount = inputData?.screenAmount;
-    const screenAmountToStd = blockchainInstance.account.amountToStd(
-        new BigNumber(screenAmount),
-        tokenConfig.decimals
-    );
-
     const regexMultipleDots = /(\..*){2,}/;
 
-    if (inputAmountToStd.isGreaterThan(screenAmountToStd) || regexMultipleDots.test(inputAmount)) {
+    if (inputAmountToStd.isGreaterThan(availableBalance) || regexMultipleDots.test(inputAmount)) {
         // Show error
 
         const fieldsErrors = [];
@@ -54,7 +51,7 @@ export const amountAvailableFunds = (
             fieldsErrors.push(validation.messages[msgKey]);
         }
 
-        setScreenInputValidation(flowId, {
+        setScreenInputValidation(screenKey, {
             fieldsErrors: {
                 [field]: fieldsErrors
             },
@@ -63,7 +60,7 @@ export const amountAvailableFunds = (
     } else {
         // Valid input
 
-        setScreenInputValidation(flowId, {
+        setScreenInputValidation(screenKey, {
             fieldsErrors: undefined,
             valid: true
         })(dispatch, getState);

@@ -1,7 +1,8 @@
+import { Platform } from 'react-native';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
-import { persistReducer } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import { persistConfig } from './utils/persistConfig';
 import walletsReducer from './wallets/reducer';
 import appReducer from './app/reducer';
@@ -14,6 +15,7 @@ import { uiReducer } from './ui/reducer';
 import tokensReducer from './tokens/reducer';
 import { connectExtensionMiddleware } from './utils/connect-extension-middleware';
 // import logger from 'redux-logger';
+import { Store, applyMiddleware as applyMiddlewareWebExt } from 'webext-redux';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
@@ -39,4 +41,20 @@ const configureStore = () => {
     );
 };
 
-export const store = configureStore();
+let _store;
+let _persistor;
+if (Platform.OS === 'web' && process.env.CONTEXT !== 'extension-background') {
+    _store = applyMiddlewareWebExt(
+        new Store({
+            portName: 'moonlet-extension-store-port'
+        }),
+        thunk
+    );
+} else {
+    _store = configureStore();
+    _persistor = persistStore(_store);
+}
+
+export const store = _store;
+
+export const persistor = _persistor;

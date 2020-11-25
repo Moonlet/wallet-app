@@ -6,6 +6,7 @@ Object {
     "ui",
   ],
   "key": "extensionStorage",
+  "migrate": [Function],
   "storage": Object {
     "getItem": [Function],
     "removeItem": [Function],

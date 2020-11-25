@@ -1,6 +1,6 @@
-Team's log. Stardate 2011.14:
+Team's log. Stardate 2011.18:
 
-This release comes with a mind blowing Airdrop Campaign that will incentivise all users who committed to stake their tokens to Moonlet for the long run. As well we did a few fixes here and there. Ah! We also added CAD to our currency list for all amazing Canadians outhere. :)
+Some annoying bug that made the whole app dark it drove us crazy. But we found it and came with a fix. Now it should work fine :)
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 

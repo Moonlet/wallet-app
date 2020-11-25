@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalizeFontAndLineHeight,
+    SCREEN_HEIGHT
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -14,13 +19,15 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         container: {
+            maxHeight: (SCREEN_HEIGHT * 3) / 4,
             marginHorizontal: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             padding: BASE_DIMENSION * 2
         },
-        messageContainer: {
-            marginBottom: BASE_DIMENSION * 2
+        scrollView: {
+            flexGrow: 1,
+            paddingVertical: BASE_DIMENSION * 2
         },
         message: {
             lineHeight: normalizeFontAndLineHeight(22),

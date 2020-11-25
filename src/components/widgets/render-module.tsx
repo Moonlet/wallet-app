@@ -211,16 +211,16 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
             primary={cta?.buttonProps?.primary}
             secondary={cta?.buttonProps?.secondary}
             disabled={cta?.buttonProps?.disabled}
+            disabledSecondary={cta?.buttonProps?.disabledSecondary}
             leftIcon={cta?.buttonProps?.leftIcon}
-            wrapperStyle={
-                cta?.buttonProps?.wrapperStyle && formatStyles(cta.buttonProps.wrapperStyle)
-            }
-            style={
+            wrapperStyle={formatStyles(cta?.buttonProps?.wrapperStyle)}
+            style={[
                 cta?.buttonProps?.colors?.bg && {
                     backgroundColor: cta.buttonProps.colors.bg,
                     borderColor: cta.buttonProps.colors.bg
-                }
-            }
+                },
+                formatStyles(cta?.buttonProps?.buttonStyle)
+            ]}
             onPress={() => handleCTA(cta)}
         >
             {cta?.label || ''}

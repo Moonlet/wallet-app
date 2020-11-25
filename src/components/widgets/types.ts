@@ -103,12 +103,17 @@ export interface ICta {
         primary?: boolean;
         secondary?: boolean;
         disabled?: boolean;
+        disabledSecondary?: boolean;
+
         colors?: {
             label: string;
             bg: string;
         };
+
         leftIcon?: IconValues;
+
         wrapperStyle?: any;
+        buttonStyle?: any;
     };
 
     // TODO: check this

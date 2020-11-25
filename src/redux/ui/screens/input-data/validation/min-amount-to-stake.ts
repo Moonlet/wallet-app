@@ -9,6 +9,9 @@ import { IAction } from '../../../../types';
 import { getSelectedAccount } from '../../../../wallets/selectors';
 import { setScreenInputValidation } from '../actions';
 
+/**
+ * This data is stored on screen key
+ */
 export const minAmountToStake = (
     validation: IScreenFieldValidation,
     field: string,

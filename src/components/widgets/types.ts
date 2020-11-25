@@ -1,6 +1,12 @@
 import { Blockchain } from '../../core/blockchain/types';
+import { handleCta } from '../../redux/ui/screens/data/actions';
 import { AccountType } from '../../redux/wallets/state';
 import { IconValues } from '../icon/values';
+import {
+    clearScreenInputData,
+    runScreenValidation,
+    runScreenStateActions
+} from '../../redux/ui/screens/input-data/actions';
 
 export interface IScreenRequest {
     context: IScreenContext;
@@ -24,6 +30,13 @@ export enum ContextScreen {
 /** @deprecated use string instead */
 export enum ContextTab {
     ACCOUNT = 'account'
+}
+
+export interface ISmartScreenActions {
+    handleCta?: typeof handleCta;
+    clearScreenInputData?: typeof clearScreenInputData;
+    runScreenValidation?: typeof runScreenValidation;
+    runScreenStateActions?: typeof runScreenStateActions;
 }
 
 export interface IScreenUser {
@@ -180,6 +193,7 @@ export interface IScreenModule {
 
     state: {
         // uiStateSelector?: IStateSelector, // aka state modifier - not implemented now
+        actions?: IStateSelector[];
         selectors: {
             [key: string]: IStateSelector;
         };
@@ -188,7 +202,7 @@ export interface IScreenModule {
 
 export interface IStateSelector {
     fn: string;
-    params: any[];
+    params?: any[];
 }
 
 export enum ModuleTypes {

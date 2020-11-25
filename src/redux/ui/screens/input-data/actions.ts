@@ -1,7 +1,12 @@
 import { Dispatch } from 'react';
-import { IScreenContext, IScreenValidation } from '../../../../components/widgets/types';
+import {
+    IScreenContext,
+    IScreenValidation,
+    IStateSelector
+} from '../../../../components/widgets/types';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
+import { screenActions } from './screen-actions';
 import { IScreenInputDataValidations } from './state';
 import { screenInputValidationActions } from './validation/index';
 
@@ -106,6 +111,24 @@ export const runScreenValidation = (validation: IScreenValidation, flowId: strin
             if (typeof screenInputValidationActions[val.fn] === 'function') {
                 screenInputValidationActions[val.fn](val, field, flowId, getState, dispatch);
             }
+        }
+    }
+};
+
+export const runScreenStateActions = (options: {
+    actions: IStateSelector[];
+    context: IScreenContext;
+    screenKey: string;
+}) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    for (const action of options.actions) {
+        if (typeof screenActions[action.fn] === 'function') {
+            screenActions[action.fn](
+                action?.params,
+                options.context,
+                options.screenKey,
+                getState,
+                dispatch
+            );
         }
     }
 };

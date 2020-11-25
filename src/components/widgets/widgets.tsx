@@ -11,6 +11,7 @@ import {
     IScreenModule,
     IScreenValidation,
     IScreenWidget,
+    ISmartScreenActions,
     ModuleTypes
 } from './types';
 import { Text } from '../../library';
@@ -18,22 +19,13 @@ import { Blockchain } from '../../core/blockchain/types';
 import { formatStyles } from './utils';
 import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
-import { handleCta } from '../../redux/ui/screens/data/actions';
-import {
-    clearScreenInputData,
-    runScreenValidation
-} from '../../redux/ui/screens/input-data/actions';
 import { InfoModal } from '../info-modal/info-modal';
 
 interface IExternalProps {
     data: IScreenWidget[];
     context: IScreenContext;
     screenKey: string;
-    actions: {
-        handleCta: typeof handleCta;
-        clearScreenInputData: typeof clearScreenInputData;
-        runScreenValidation?: typeof runScreenValidation;
-    };
+    actions: ISmartScreenActions;
     blockchain: Blockchain;
     validation?: IScreenValidation;
 }

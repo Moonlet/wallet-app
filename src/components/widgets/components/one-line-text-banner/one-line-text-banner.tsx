@@ -3,18 +3,15 @@ import { TouchableOpacity, View } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IOneLineTextBannerData, IScreenModule } from '../../types';
+import { IOneLineTextBannerData, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../../../redux/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: {
-        handleCta: typeof handleCta;
-    };
+    actions: ISmartScreenActions;
     options?: {
         screenKey?: string;
         flowId?: string;

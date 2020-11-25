@@ -7,6 +7,7 @@ import {
     IScreenModule,
     IScreenModuleColumnsWrapperData,
     IScreenValidation,
+    ISmartScreenActions,
     ModuleTypes
 } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
@@ -27,14 +28,11 @@ import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/actions';
 import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
-import { runScreenValidation } from '../../redux/ui/screens/input-data/actions';
 
 const renderModules = (
     modules: IScreenModule[],
     context: IScreenContext,
-    actions: {
-        handleCta: typeof handleCta;
-    },
+    actions: ISmartScreenActions,
     options?: {
         screenKey?: string;
         isWidgetExpanded?: boolean;
@@ -67,10 +65,7 @@ const renderModules = (
 export const renderModule = (
     module: IScreenModule,
     context: IScreenContext,
-    actions: {
-        handleCta: typeof handleCta;
-        runScreenValidation?: typeof runScreenValidation;
-    },
+    actions: ISmartScreenActions,
     options?: {
         screenKey?: string;
         isWidgetExpanded?: boolean;

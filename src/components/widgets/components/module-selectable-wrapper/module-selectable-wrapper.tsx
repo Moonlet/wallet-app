@@ -1,6 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { IScreenContext, IScreenModule, IScreenModuleSelectableWrapperData } from '../../types';
+import {
+    IScreenContext,
+    IScreenModule,
+    IScreenModuleSelectableWrapperData,
+    ISmartScreenActions
+} from '../../types';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
@@ -10,17 +15,12 @@ import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
-import { clearScreenInputData } from '../../../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
     context: IScreenContext;
     screenKey: string;
-    actions: {
-        handleCta: typeof handleCta;
-        clearScreenInputData: typeof clearScreenInputData;
-    };
+    actions: ISmartScreenActions;
 }
 
 interface IReduxProps {

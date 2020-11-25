@@ -4,14 +4,19 @@ import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IScreenModule, IAmountInputData, IScreenValidation, IScreenContext } from '../../types';
+import {
+    IScreenModule,
+    IAmountInputData,
+    IScreenValidation,
+    IScreenContext,
+    ISmartScreenActions
+} from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import {
     setScreenInputData,
-    setScreenAmount,
-    runScreenValidation
+    setScreenAmount
 } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
@@ -20,9 +25,7 @@ interface IExternalProps {
     module: IScreenModule;
     context: IScreenContext;
     screenKey: string;
-    actions: {
-        runScreenValidation?: typeof runScreenValidation;
-    };
+    actions: ISmartScreenActions;
     screenValidation: IScreenValidation;
 }
 
@@ -54,7 +57,15 @@ class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
     public componentDidMount() {
-        // this.props.setScreenAmount(this.props.screenKey);
+        const { module } = this.props;
+
+        if (module?.state?.actions) {
+            this.props.actions.runScreenStateActions({
+                actions: module.state.actions,
+                context: this.props.context,
+                screenKey: this.props.screenKey
+            });
+        }
     }
 
     public render() {

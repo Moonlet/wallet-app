@@ -18,7 +18,8 @@ import { translate } from '../../core/i18n';
 import { LoadingSkeleton } from '../../components/smart-screen/components/loading-skeleton/loading-skeleton';
 import {
     clearScreenInputData,
-    runScreenValidation
+    runScreenValidation,
+    runScreenStateActions
 } from '../../redux/ui/screens/input-data/actions';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
@@ -61,13 +62,15 @@ interface IReduxProps {
     handleCta: typeof handleCta;
     clearScreenInputData: typeof clearScreenInputData;
     runScreenValidation: typeof runScreenValidation;
+    runScreenStateActions: typeof runScreenStateActions;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     handleCta,
     clearScreenInputData,
-    runScreenValidation
+    runScreenValidation,
+    runScreenStateActions
 };
 
 interface IState {
@@ -193,7 +196,8 @@ class SmartScreenComponent extends React.Component<
                 actions={{
                     handleCta: this.props.handleCta,
                     clearScreenInputData: this.props.clearScreenInputData,
-                    runScreenValidation: this.props.runScreenValidation
+                    runScreenValidation: this.props.runScreenValidation,
+                    runScreenStateActions: this.props.runScreenStateActions
                 }}
                 blockchain={this.props.account.blockchain}
                 validation={validation}

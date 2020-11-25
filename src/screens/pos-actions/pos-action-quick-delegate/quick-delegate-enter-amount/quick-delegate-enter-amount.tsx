@@ -196,7 +196,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                     showSteps={false}
                     minimumDelegateAmount={this.state.minimumDelegateAmount}
                     allBalanceNotice={translate('Validator.allBalanceNotice', {
-                        amount: this.state.minimumAmountToKeep.toFixed(),
+                        amount: this.state.minimumAmountToKeep?.toFixed(),
                         token: this.state.tokenSymbol
                     })}
                     onPressNext={this.onPressConfirm}

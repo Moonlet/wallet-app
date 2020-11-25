@@ -171,7 +171,7 @@ export class DelegateEnterAmountComponent extends React.Component<
                     minimumDelegateAmount={this.state.minimumDelegateAmount}
                     allBalanceNotice={translate('Validator.allBalanceNotice', {
                         amount: this.state.minimumAmountToKeep
-                            ? this.state.minimumAmountToKeep.toFixed()
+                            ? this.state.minimumAmountToKeep?.toFixed()
                             : '0',
                         token: this.state.tokenSymbol
                     })}

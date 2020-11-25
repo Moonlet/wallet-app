@@ -20,7 +20,6 @@ import {
 } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
-import { delay } from '../../../../core/utils/time';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -57,17 +56,10 @@ const mapDispatchToProps = {
 class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
-    public async componentDidMount() {
-        const { module } = this.props;
-
-        // TODO: this should be remove
-        // if you navigate between multiple nodes, the details of the node ar not taken properly from store
-        // it takes the previous node and not the current one
-        await delay(100);
-
-        if (module?.state?.actions) {
+    public componentDidMount() {
+        if (this.props.module?.state?.actions) {
             this.props.actions.runScreenStateActions({
-                actions: module.state.actions,
+                actions: this.props.module.state.actions,
                 context: this.props.context,
                 screenKey: this.props.screenKey
             });

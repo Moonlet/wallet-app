@@ -29,6 +29,7 @@ import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actio
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { getScreenDataKey } from './reducer';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
@@ -229,19 +230,34 @@ const handleCtaAction = async (
                     break;
 
                 case 'delegateToValidator': {
+                    // Run Screen Validations
+
+                    // Take amount from screen
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    // Open Process Tx
                     if (
                         action.params?.params?.validatorId &&
                         action.params?.params?.validatorName &&
-                        action.params?.params?.token &&
-                        action.params?.params?.flowId
+                        action.params?.params?.token
                     ) {
-                        const { flowId, token, validatorId, validatorName } = action.params.params;
+                        const { token, validatorId, validatorName } = action.params.params;
 
                         if (
                             state.ui.screens.inputData &&
-                            state.ui.screens.inputData[flowId]?.data?.amount
+                            state.ui.screens.inputData[screenKey]?.data?.amount
                         ) {
-                            const amount = state.ui.screens.inputData[flowId].data.amount;
+                            const amount = state.ui.screens.inputData[screenKey].data.amount;
 
                             const validators = [buildDummyValidator(validatorId, validatorName)];
 

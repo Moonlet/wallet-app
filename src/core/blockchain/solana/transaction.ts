@@ -1,32 +1,76 @@
 import {
     AbstractBlockchainTransactionUtils,
     IBlockchainTransaction,
+    IPosTransaction,
     ITransferTransaction,
     TransactionType
 } from '../types';
 
 import { TransactionStatus } from '../../wallet/types';
-import { TokenType } from '../types/token';
+import { PosBasicActionType, TokenType } from '../types/token';
 import { Solana } from '.';
 import { Client as SolanaClient } from './client';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { StakeProgram } from '@solana/web3.js/src/stake-program';
 import { SystemProgram } from '@solana/web3.js/src/system-program';
 import { PublicKey } from '@solana/web3.js/src/publickey';
 import { Account } from '@solana/web3.js/src/account';
 import { Transaction } from '@solana/web3.js/src/transaction';
-import { SolanaTransactionActionType } from './types';
+import { SolanaTransactionInstructionType } from './types';
 import { decode as bs58Decode } from 'bs58';
-// import solanaWeb3 from '@solana/web3.js';
+import BigNumber from 'bignumber.js';
+import { cloneDeep } from 'lodash';
+import { splitStake } from '../../utils/balance';
+import { Contracts } from '../solana/config';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const account = new Account(bs58Decode(privateKey));
-        const transaction = new Transaction();
-        const transactionInstruction = tx.additionalInfo.actions[0].instruction;
-        transaction.add(transactionInstruction); // TO DO - change this when integrating staking
+        let transaction;
+
+        switch (tx.additionalInfo.type) {
+            case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED: {
+                transaction = StakeProgram.createAccountWithSeed(tx.additionalInfo.instructions[0]);
+            }
+            case SolanaTransactionInstructionType.DELEGATE_STAKE: {
+                transaction = StakeProgram.delegate(tx.additionalInfo.instructions[0]);
+            }
+            case SolanaTransactionInstructionType.TRANSFER: {
+                transaction = new Transaction();
+                transaction.add(tx.additionalInfo.instructions[0]);
+            }
+        }
+
         transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
         transaction.sign(...[account]);
         return transaction.serialize();
+    }
+
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Solana.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.DELEGATE: {
+                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
+
+                for (const validator of tx.validators) {
+                    const txStake: IPosTransaction = cloneDeep(tx);
+                    txStake.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].delegateStake(txStake, validator);
+                    transactions.push(transaction);
+                }
+                break;
+            }
+        }
+
+        return transactions;
     }
 
     public async buildTransferTransaction(
@@ -61,15 +105,14 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             status: TransactionStatus.PENDING,
             additionalInfo: {
                 currentBlockHash: blockHash,
-                actions: [
-                    {
-                        type: SolanaTransactionActionType.TRANSFER,
-                        instruction: SystemProgram.transfer({
-                            fromPubkey: new PublicKey(tx.account.address),
-                            toPubkey: new PublicKey(tx.toAddress),
-                            lamports: tx.amount
-                        })
-                    }
+
+                type: SolanaTransactionInstructionType.TRANSFER,
+                instructions: [
+                    SystemProgram.transfer({
+                        fromPubkey: new PublicKey(tx.account.address),
+                        toPubkey: new PublicKey(tx.toAddress),
+                        lamports: tx.amount
+                    })
                 ]
             }
         };

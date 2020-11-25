@@ -4,6 +4,7 @@ import { getChainId } from '../../preferences/selectors';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { IAccountState } from '../../wallets/state';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
+import { Blockchain } from '../../../core/blockchain/types';
 
 export const ADD_VALIDATORS = 'ADD_VALIDATORS';
 
@@ -14,7 +15,10 @@ export const fetchValidators = (account: IAccountState, posAction: PosBasicActio
     const state = getState();
     const blockchain = account.blockchain;
     const chainId = getChainId(state, blockchain).toString();
-    const address = account.address.toLowerCase();
+
+    // TODO fix the non base 58 problem on solana
+    const address =
+        account.blockchain === Blockchain.SOLANA ? account.address : account.address.toLowerCase();
 
     dispatch({
         type: ADD_VALIDATORS,

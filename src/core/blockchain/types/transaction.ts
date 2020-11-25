@@ -108,6 +108,8 @@ export interface ITransactionExtraFields {
     validatorName?: string;
     fromValidator?: IValidator;
     amount?: string;
+    rootAccount?: string;
+    stakeAccountKey?: string;
     //
 }
 

@@ -95,6 +95,7 @@ export class DelegateEnterAmountComponent extends React.Component<
 
         try {
             this.setState({ loading: true });
+
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
                 .getAvailableBalanceForDelegate(this.props.account, this.props.validators[0]?.id);
@@ -169,7 +170,9 @@ export class DelegateEnterAmountComponent extends React.Component<
                     showSteps={false}
                     minimumDelegateAmount={this.state.minimumDelegateAmount}
                     allBalanceNotice={translate('Validator.allBalanceNotice', {
-                        amount: this.state.minimumAmountToKeep.toFixed(),
+                        amount: this.state.minimumAmountToKeep
+                            ? this.state.minimumAmountToKeep.toFixed()
+                            : '0',
                         token: this.state.tokenSymbol
                     })}
                     onPressNext={this.onPressNext}

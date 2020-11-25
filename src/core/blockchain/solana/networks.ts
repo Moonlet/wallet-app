@@ -24,5 +24,17 @@ export const networks: IBlockchainNetwork[] = [
             getAccountUrl: addr => `https://explorer.solana.com/address/${addr}?cluster=devnet`,
             getTransactionUrl: txn => `https://explorer.solana.com/tx/${txn}?cluster=devnet`
         }
+    },
+    {
+        name: 'Testnet',
+        chainId: '3',
+        mainNet: false,
+        url: 'https://testnet.solana.com',
+        wsUrl: 'wss://testnet.solana.com/',
+        explorer: {
+            name: 'Explorer',
+            getAccountUrl: addr => `https://explorer.solana.com/address/${addr}?cluster=testnet`,
+            getTransactionUrl: txn => `https://explorer.solana.com/tx/${txn}?cluster=testnet`
+        }
     }
 ];

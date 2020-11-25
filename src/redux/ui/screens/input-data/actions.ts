@@ -126,8 +126,8 @@ export const runScreenStateActions = (options: {
                 action?.params,
                 options.context,
                 options.screenKey,
-                getState,
-                dispatch
+                dispatch,
+                getState
             );
         }
     }

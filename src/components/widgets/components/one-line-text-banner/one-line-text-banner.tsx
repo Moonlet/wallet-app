@@ -3,19 +3,26 @@ import { TouchableOpacity, View } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IOneLineTextBannerData, IScreenModule } from '../../types';
+import { IOneLineTextBannerData, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
+import { connect } from 'react-redux';
+import { IReduxState } from '../../../../redux/state';
+import { getStateSelectors } from '../ui-state-selectors/index';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: {
-        handleCta: typeof handleCta;
-    };
+    actions: ISmartScreenActions;
     options?: {
         screenKey?: string;
+        flowId?: string;
     };
 }
+
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return getStateSelectors(state, ownProps.module, {
+        flowId: ownProps?.options?.flowId
+    });
+};
 
 const OneLineTextBannerComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
@@ -25,7 +32,11 @@ const OneLineTextBannerComponent = (
 
     const moduleJSX = (
         <View style={[styles.container, module?.style && formatStyles(module.style)]}>
-            {formatDataJSXElements(data.line, styles.text)}
+            {formatDataJSXElements(
+                data.line,
+                styles.text,
+                module?.state && { translateKeys: props as any }
+            )}
         </View>
     );
 
@@ -44,5 +55,6 @@ const OneLineTextBannerComponent = (
 };
 
 export const OneLineTextBanner = smartConnect<IExternalProps>(OneLineTextBannerComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

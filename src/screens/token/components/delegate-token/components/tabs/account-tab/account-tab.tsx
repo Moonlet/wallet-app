@@ -19,7 +19,7 @@ import { PosBasicActionType } from '../../../../../../../core/blockchain/types/t
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 import { Dialog } from '../../../../../../../components/dialog/dialog';
-import { SmartScreen } from '../../../../../../smart-screen/smart-screen';
+import { SmartScreenComponent } from '../../../../../../../components/smart-screen/smart-screen';
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 
 interface IExternalProps {
@@ -126,7 +126,7 @@ export class AccountTabComponent extends React.Component<
                         </View>
 
                         {Platform.OS !== 'web' && (
-                            <SmartScreen
+                            <SmartScreenComponent
                                 context={{
                                     screen: ContextScreen.TOKEN,
                                     tab: ContextTab.ACCOUNT

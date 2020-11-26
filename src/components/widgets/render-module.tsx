@@ -1,7 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Button } from '../../library';
-import { ICta, IScreenModule, IScreenModuleColumnsWrapperData, ModuleTypes } from './types';
+import {
+    ICta,
+    IScreenContext,
+    IScreenModule,
+    IScreenModuleColumnsWrapperData,
+    IScreenValidation,
+    ISmartScreenActions,
+    ModuleTypes
+} from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
 import { StaticTextColBottomHeader } from './components/static-text-col-bottom-header/static-text-col-bottom-header';
@@ -19,23 +27,24 @@ import { formatStyles } from './utils';
 import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/actions';
 import { MdText } from './components/md-text/md-text';
+import { AmountInput } from './components/amount-input/amount-input';
 
 const renderModules = (
     modules: IScreenModule[],
-    actions: {
-        handleCta: typeof handleCta;
-    },
+    context: IScreenContext,
+    actions: ISmartScreenActions,
     options?: {
         screenKey?: string;
         isWidgetExpanded?: boolean;
         style?: any;
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
+        validation?: IScreenValidation;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
         <React.Fragment key={`screen-module-${i}`}>
-            {renderModule(m, actions, options)}
+            {renderModule(m, context, actions, options)}
         </React.Fragment>
     ));
 
@@ -55,15 +64,15 @@ const renderModules = (
 
 export const renderModule = (
     module: IScreenModule,
-    actions: {
-        handleCta: typeof handleCta;
-    },
+    context: IScreenContext,
+    actions: ISmartScreenActions,
     options?: {
         screenKey?: string;
         isWidgetExpanded?: boolean;
         style?: any;
         moduleColWrapperContainer?: any;
         moduleWrapperState?: string;
+        validation?: IScreenValidation;
     }
 ) => {
     let moduleJSX = null;
@@ -107,7 +116,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.ONE_LINE_TEXT_BANNER:
-            moduleJSX = <OneLineTextBanner module={module} actions={actions} options={options} />;
+            moduleJSX = (
+                <OneLineTextBanner
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.THREE_LINES_ICON:
@@ -130,7 +145,7 @@ export const renderModule = (
             moduleJSX = (
                 <ModuleWrapper
                     module={module}
-                    renderModule={m => renderModule(m, actions, options)}
+                    renderModule={m => renderModule(m, context, actions, options)}
                     moduleWrapperState={options?.moduleWrapperState}
                 />
             );
@@ -138,13 +153,27 @@ export const renderModule = (
 
         case ModuleTypes.MODULE_COLUMNS_WRAPPER:
             const colWrapperData = module.data as IScreenModuleColumnsWrapperData;
-            moduleJSX = renderModules(colWrapperData.submodules, actions, {
+            moduleJSX = renderModules(colWrapperData.submodules, context, actions, {
                 ...options,
                 colWrapperStyle:
-                    (module?.style && formatStyles(module?.style)) ||
-                    (colWrapperData?.style && formatStyles(colWrapperData.style)) ||
-                    {}
+                    formatStyles(module?.style) || formatStyles(colWrapperData?.style) || {}
             });
+            break;
+
+        case ModuleTypes.CTA:
+            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta);
+            break;
+
+        case ModuleTypes.AMOUNT_INPUT:
+            moduleJSX = (
+                <AmountInput
+                    module={module}
+                    context={context}
+                    screenKey={options?.screenKey}
+                    actions={actions}
+                    screenValidation={options?.validation}
+                />
+            );
             break;
 
         default:
@@ -177,14 +206,16 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
             primary={cta?.buttonProps?.primary}
             secondary={cta?.buttonProps?.secondary}
             disabled={cta?.buttonProps?.disabled}
+            disabledSecondary={cta?.buttonProps?.disabledSecondary}
             leftIcon={cta?.buttonProps?.leftIcon}
-            wrapperStyle={
-                cta?.buttonProps?.wrapperStyle && formatStyles(cta.buttonProps.wrapperStyle)
-            }
-            style={{
-                backgroundColor: cta?.buttonProps?.colors?.bg,
-                borderColor: cta?.buttonProps?.colors?.bg
-            }}
+            wrapperStyle={formatStyles(cta?.buttonProps?.wrapperStyle)}
+            style={[
+                cta?.buttonProps?.colors?.bg && {
+                    backgroundColor: cta.buttonProps.colors.bg,
+                    borderColor: cta.buttonProps.colors.bg
+                },
+                formatStyles(cta?.buttonProps?.buttonStyle)
+            ]}
             onPress={() => handleCTA(cta)}
         >
             {cta?.label || ''}

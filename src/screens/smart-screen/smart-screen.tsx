@@ -1,9 +1,12 @@
 import React from 'react';
+import { ScrollView, View } from 'react-native';
 import { smartConnect } from '../../core/utils/smart-connect';
+import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
-import { ContextScreen, IScreenContext, IScreenWidget } from '../../components/widgets/types';
+import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
+import { IScreenContext, IScreenValidation, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
@@ -12,19 +15,35 @@ import { getChainId } from '../../redux/preferences/selectors';
 import { IAccountState } from '../../redux/wallets/state';
 import { ErrorWidget } from '../../components/widgets/components/error-widget/error-widget';
 import { translate } from '../../core/i18n';
-import { LoadingSkeleton } from './components/loading-skeleton/loading-skeleton';
-import { clearInput } from '../../redux/ui/screens/input-data/actions';
+import { LoadingSkeleton } from '../../components/smart-screen/components/loading-skeleton/loading-skeleton';
+import {
+    clearScreenInputData,
+    runScreenValidation,
+    runScreenStateActions
+} from '../../redux/ui/screens/input-data/actions';
+import { IThemeProps, withTheme } from '../../core/theme/with-theme';
+import LinearGradient from 'react-native-linear-gradient';
+import { v4 as uuidv4 } from 'uuid';
 
-interface IExternalProps {
+interface INavigationParams {
     context: IScreenContext;
+    navigationOptions?: any;
+    background?: {
+        color?: string;
+        gradient?: string[];
+    };
+    newFlow?: boolean;
 }
 
-const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     const account = getSelectedAccount(state);
     const chainId = account && getChainId(state, account.blockchain);
 
     return {
-        screenData: state.ui.screens.data && state.ui.screens.data[ownProps.context.screen],
+        screenData:
+            state.ui.screens.data &&
+            ownProps?.context?.screen &&
+            state.ui.screens.data[ownProps.context.screen],
 
         walletPublicKey: getSelectedWallet(state)?.walletPublicKey,
         account,
@@ -41,66 +60,99 @@ interface IReduxProps {
 
     fetchScreenData: typeof fetchScreenData;
     handleCta: typeof handleCta;
-    clearInput: typeof clearInput;
+    clearScreenInputData: typeof clearScreenInputData;
+    runScreenValidation: typeof runScreenValidation;
+    runScreenStateActions: typeof runScreenStateActions;
 }
 
 const mapDispatchToProps = {
     fetchScreenData,
     handleCta,
-    clearInput
+    clearScreenInputData,
+    runScreenValidation,
+    runScreenStateActions
 };
 
 interface IState {
     loadingTimeoutInProgress: boolean;
     loadingScreenData: boolean;
+    context: IScreenContext;
 }
 
-class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps, IState> {
+const navigationOptions = ({ navigation, theme }: any) =>
+    navigation?.state?.params?.navigationOptions || {};
+
+class SmartScreenComponent extends React.Component<
+    INavigationProps<INavigationParams> &
+        IReduxProps &
+        IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    public static navigationOptions = navigationOptions;
+
     private loadingTimeout: any;
 
-    constructor(props: IReduxProps & IExternalProps) {
+    constructor(
+        props: INavigationProps<INavigationParams> &
+            IReduxProps &
+            IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
+
         this.state = {
             loadingTimeoutInProgress: false,
-            loadingScreenData: false
+            loadingScreenData: false,
+            context: {
+                ...props.context,
+                flowId: props.newFlow ? uuidv4() : props.context?.flowId
+            }
         };
     }
 
     public componentDidMount() {
-        this.props.fetchScreenData(this.props.context);
+        this.props.navigationOptions &&
+            this.props.navigation.setParams({
+                navigationOptions: this.props.navigationOptions
+            });
+
+        this.props.fetchScreenData(this.state.context);
     }
 
-    public componentDidUpdate(prevProps: IReduxProps & IExternalProps) {
-        if (
-            this.props.account?.address !== prevProps.account?.address ||
-            this.props.walletPublicKey !== prevProps.walletPublicKey ||
-            this.props.chainId !== prevProps.chainId ||
-            this.props.context.screen !== prevProps.context.screen ||
-            this.props.context?.tab !== prevProps.context?.tab
-        ) {
-            this.props.fetchScreenData(this.props.context);
-        }
-
+    public componentDidUpdate(prevProps: IReduxProps & INavigationParams) {
         this.updateLoading(prevProps);
+        this.handleScreenValidation();
     }
 
-    private getScreenKey(props: IReduxProps & IExternalProps) {
+    private handleScreenValidation() {
+        const screenData = this.getScreenData(this.props);
+
+        if (screenData?.response?.validation) {
+            const screenKey = this.getScreenKey(this.props);
+
+            this.props.runScreenValidation(
+                screenData.response.validation,
+                this.state.context?.flowId || screenKey
+            );
+        }
+    }
+
+    private getScreenKey(props: IReduxProps & INavigationParams) {
         return getScreenDataKey({
             pubKey: props.walletPublicKey,
             blockchain: props.account?.blockchain,
             chainId: props.chainId,
             address: props.account?.address,
+            step: props.context?.step,
             tab: props.context?.tab
         });
     }
 
-    private getScreenData(props: IReduxProps & IExternalProps): IScreenData {
+    private getScreenData(props: IReduxProps & INavigationParams): IScreenData {
         const screenKey = this.getScreenKey(props);
-
         return props.screenData && screenKey && props.screenData[screenKey];
     }
 
-    private updateLoading(prevProps: IReduxProps & IExternalProps) {
+    private updateLoading(prevProps: IReduxProps & INavigationParams) {
         const screenData = this.getScreenData(this.props);
         const prevScreenData = this.getScreenData(prevProps);
 
@@ -135,16 +187,20 @@ class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps,
         }
     }
 
-    private renderWidgets(widgets: IScreenWidget[]) {
+    private renderWidgets(widgets: IScreenWidget[], validation?: IScreenValidation) {
         return (
             <Widgets
                 data={widgets}
+                context={this.state.context}
                 screenKey={this.getScreenKey(this.props)}
                 actions={{
                     handleCta: this.props.handleCta,
-                    clearInput: this.props.clearInput
+                    clearScreenInputData: this.props.clearScreenInputData,
+                    runScreenValidation: this.props.runScreenValidation,
+                    runScreenStateActions: this.props.runScreenStateActions
                 }}
                 blockchain={this.props.account.blockchain}
+                validation={validation}
             />
         );
     }
@@ -156,47 +212,76 @@ class SmartScreenComponent extends React.Component<IReduxProps & IExternalProps,
                 body={translate('Widgets.didNotLoad')}
                 cta={{
                     label: translate('App.labels.retry'),
-                    onPress: () => this.props.fetchScreenData(this.props.context)
+                    onPress: () => this.props.fetchScreenData(this.state.context)
                 }}
             />
         );
     }
 
+    private renderLoadingSkeleton(nr: number = 1) {
+        return new Array(nr)
+            .fill('')
+            .map((_, index: number) => <LoadingSkeleton key={`skeleton-${index}`} />);
+    }
+
     public render() {
+        const { background, styles } = this.props;
+        const { loadingScreenData } = this.state;
+
         const screenData = this.getScreenData(this.props);
 
-        if (screenData) {
-            if (this.state.loadingScreenData) {
-                // TODO: refactor this
-                // getLoadingSkeleton
-                // param of function type getLoadingSkeleton so we can customize the skeleton where we include smart screen component
-                switch (this.props.context.screen) {
-                    case ContextScreen.TOKEN:
-                    case ContextScreen.QUICK_STAKE_SELECT_VALIDATOR:
-                        return new Array(4)
-                            .fill('')
-                            .map((_, index: number) => (
-                                <LoadingSkeleton key={`skeleton-${index}`} />
-                            ));
+        return (
+            <View style={styles.container}>
+                {/* Color Background */}
+                {background && background?.color && typeof background.color === 'string' && (
+                    <View
+                        style={[styles.gradientBackground, { backgroundColor: background.color }]}
+                    />
+                )}
 
-                    default:
-                        return <LoadingSkeleton />;
-                }
-            }
+                {/* Gradient Background */}
+                {background && background?.gradient && Array.isArray(background.gradient) && (
+                    <LinearGradient
+                        colors={background.gradient}
+                        style={styles.gradientBackground}
+                    />
+                )}
 
-            if (screenData.response?.widgets) {
-                return this.renderWidgets(screenData.response.widgets);
-            }
+                {/* Widgets */}
+                {screenData && (
+                    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+                        {loadingScreenData && (
+                            <View style={styles.skeletonContainer}>
+                                {this.renderLoadingSkeleton(6)}
+                            </View>
+                        )}
 
-            if (screenData.error) {
-                return this.renderErrorWidget();
-            }
-        }
+                        {/* Render Widgets */}
+                        {!loadingScreenData &&
+                            screenData.response?.widgets &&
+                            this.renderWidgets(
+                                screenData.response.widgets,
+                                screenData.response?.validation
+                            )}
 
-        return null;
+                        {/* Display Error (Try again)*/}
+                        {!loadingScreenData && screenData.error && (
+                            <View style={styles.errorContainer}>{this.renderErrorWidget()}</View>
+                        )}
+                    </ScrollView>
+                )}
+
+                {/* Bottom Fixed Area (only one widget)*/}
+                {!loadingScreenData &&
+                    screenData?.response?.bottomFixedArea &&
+                    this.renderWidgets([screenData.response.bottomFixedArea])}
+            </View>
+        );
     }
 }
 
-export const SmartScreen = smartConnect<IExternalProps>(SmartScreenComponent, [
-    connect(mapStateToProps, mapDispatchToProps)
+export const SmartScreen = smartConnect(SmartScreenComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

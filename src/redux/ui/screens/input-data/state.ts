@@ -1,17 +1,28 @@
+export interface IScreenInputState {
+    // 'walletPubKey-blockchain-chainId-address-step-tab'
+    [screenKey: string]: IScreenInputData;
+}
+
+export interface IScreenInputData {
+    validation: IScreenInputDataValidations;
+    data: {
+        [key: string]: any;
+    };
+}
+
+export interface IScreenInputDataValidations {
+    fieldsErrors: {
+        [fieldName: string]: {
+            type: 'ERROR_MSG' | 'WARN_MSG';
+            message: string;
+        }[];
+    };
+    valid: boolean;
+}
+
 export interface InputDataValidator {
     id: string;
     name: string;
     icon?: string;
     website?: string;
-}
-
-export interface IScreenInputData {
-    // key: 'walletPubKey-blockchain-chainId-address-tab'
-    [key: string]: {
-        validators: InputDataValidator[];
-    };
-}
-
-export interface IScreenInputState {
-    [screen: string]: IScreenInputData;
 }

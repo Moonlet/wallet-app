@@ -4,15 +4,12 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
-import { I3LinesCtaData, ICta, IScreenModule } from '../../types';
+import { I3LinesCtaData, ICta, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: {
-        handleCta: typeof handleCta;
-    };
+    actions: ISmartScreenActions;
 }
 
 const ThreeLinesCtaComponent = (

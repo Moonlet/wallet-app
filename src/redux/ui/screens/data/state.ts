@@ -9,7 +9,7 @@ export interface IScreenData {
 }
 
 export interface IScreensData {
-    // key: 'walletPubKey-blockchain-chainId-address-tab'
+    // key: 'walletPubKey-blockchain-chainId-address-step-tab'
     [key: string]: IScreenData;
 }
 

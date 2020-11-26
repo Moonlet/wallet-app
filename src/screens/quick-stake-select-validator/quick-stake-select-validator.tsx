@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { translate } from '../../core/i18n';
-import { SmartScreen } from '../smart-screen/smart-screen';
+import { SmartScreenComponent } from '../../components/smart-screen/smart-screen';
 import { ContextScreen } from '../../components/widgets/types';
 import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
@@ -39,11 +39,12 @@ const mapStateToProps = (state: IReduxState) => {
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
+        step: undefined,
         tab: undefined
     });
 
     return {
-        validators: state.ui.screens.inputData[screenKey]?.validators || [],
+        validators: state.ui.screens.inputData[screenKey]?.data?.validators || [],
         account,
         token: account.tokens[chainId][getBlockchain(account.blockchain).config.coin]
     };
@@ -114,7 +115,7 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                 >
-                    <SmartScreen
+                    <SmartScreenComponent
                         context={{
                             screen: ContextScreen.QUICK_STAKE_SELECT_VALIDATOR
                         }}

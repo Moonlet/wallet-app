@@ -41,7 +41,7 @@ class PromoDetailsScreenComponent extends React.Component<
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                 >
-                    {renderModule(this.props.module, {
+                    {renderModule(this.props.module, undefined, {
                         handleCta: this.props.handleCta
                     })}
                 </ScrollView>

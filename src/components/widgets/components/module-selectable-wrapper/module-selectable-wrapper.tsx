@@ -1,6 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { IScreenModule, IScreenModuleSelectableWrapperData } from '../../types';
+import {
+    IScreenContext,
+    IScreenModule,
+    IScreenModuleSelectableWrapperData,
+    ISmartScreenActions
+} from '../../types';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
@@ -10,17 +15,12 @@ import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { formatStyles } from '../../utils';
 import LinearGradient from 'react-native-linear-gradient';
-import { InfoModal } from '../../../info-modal/info-modal';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
-import { clearInput } from '../../../../redux/ui/screens/input-data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
+    context: IScreenContext;
     screenKey: string;
-    actions: {
-        handleCta: typeof handleCta;
-        clearInput: typeof clearInput;
-    };
+    actions: ISmartScreenActions;
 }
 
 interface IReduxProps {
@@ -36,7 +36,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         ...ownProps,
         modules: wrapperData?.submodules || [],
-        style: wrapperData?.style[wrapperState],
+        style: wrapperState && wrapperData?.style && wrapperData?.style[wrapperState],
         wrapperState
     };
 };
@@ -65,11 +65,11 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     public componentWillUnmount() {
-        this.props.actions.clearInput(this.props.screenKey, { validators: [] });
+        this.props.actions.clearScreenInputData(this.props.screenKey, { validators: [] });
     }
 
     public render() {
-        const { actions, module, screenKey, styles } = this.props;
+        const { actions, context, module, screenKey, styles } = this.props;
 
         if (module?.hidden === true) {
             // Hide module
@@ -100,26 +100,10 @@ class ModuleSelectableWrapperComponent extends React.Component<
                 activeOpacity={0.8}
             >
                 {this.props.modules.map((m: IScreenModule, index: number) => (
-                    <View key={`module-${index}`}>{renderModule(m, actions, moduleOptions)}</View>
+                    <View key={`module-${index}`}>
+                        {renderModule(m, context, actions, moduleOptions)}
+                    </View>
                 ))}
-                {module?.info && (
-                    <TouchableOpacity
-                        style={[
-                            styles.infoWrapper,
-                            {
-                                right:
-                                    !module.info?.position || module.info?.position === 'top-right'
-                                        ? 0
-                                        : undefined,
-                                left: module.info?.position === 'top-left' ? 0 : undefined
-                            },
-                            module?.info?.style && formatStyles(module.info.style)
-                        ]}
-                        onPress={() => InfoModal.open(module.info.data?.cta?.params?.params)}
-                    >
-                        {renderModule(module.info.data, actions, moduleOptions)}
-                    </TouchableOpacity>
-                )}
             </TouchableOpacity>
         );
 

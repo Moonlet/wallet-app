@@ -4,15 +4,12 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { ResizeMode, SmartImage } from '../../../../library/image/smart-image';
-import { IImageBannerData, IScreenModule } from '../../types';
+import { IImageBannerData, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatStyles } from '../../utils';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: {
-        handleCta: typeof handleCta;
-    };
+    actions: ISmartScreenActions;
 }
 
 const ImageBannerComponent = (

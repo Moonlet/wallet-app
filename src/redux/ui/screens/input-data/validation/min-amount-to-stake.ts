@@ -38,11 +38,9 @@ export const minAmountToStake = (
         tokenConfig.decimals
     );
 
-    const amountToKeepInAccount =
-        (validation.params && validation.params[0].amountToKeepInAccount) ||
-        blockchainInstance.config.amountToKeepInAccount[account.type];
+    const minAmountDelegate = validation.params && validation.params[0]?.minAmountDelegate;
 
-    if (inputAmountToStd.isLessThan(amountToKeepInAccount)) {
+    if (inputAmountToStd.isLessThan(minAmountDelegate)) {
         // Show error
 
         const fieldsErrors = [];

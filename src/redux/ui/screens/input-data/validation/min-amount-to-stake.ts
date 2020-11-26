@@ -38,13 +38,11 @@ export const minAmountToStake = (
         tokenConfig.decimals
     );
 
-    // TODO
-    // sa iau valoarea din contract
-    // dupa stake validatorul ramane in cont min stake delegat sau 0
+    const amountToKeepInAccount =
+        (validation.params && validation.params[0].amountToKeepInAccount) ||
+        blockchainInstance.config.amountToKeepInAccount[account.type];
 
-    const minimumAmountToKeep = blockchainInstance.config.amountToKeepInAccount[account.type];
-
-    if (inputAmountToStd.isLessThan(minimumAmountToKeep)) {
+    if (inputAmountToStd.isLessThan(amountToKeepInAccount)) {
         // Show error
 
         const fieldsErrors = [];

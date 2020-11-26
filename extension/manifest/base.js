@@ -16,10 +16,10 @@ module.exports = {
     content_scripts: [
         {
             matches: [
-                'https://fire.moonlet.io/*', 
-                'https://fire.moonlet.dev/*', 
-                'https://api.moonlet.app/*', 
-                'https://api.moonlet.io/*', 
+                'https://fire.moonlet.io/*',
+                'https://fire.moonlet.dev/*',
+                'https://api.moonlet.app/*',
+                'https://api.moonlet.io/*',
                 'https://api.moonlet.dev/*'
             ],
             run_at: 'document_start',

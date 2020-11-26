@@ -29,20 +29,26 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         let transaction;
 
         switch (tx.additionalInfo.type) {
-            case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED: {
+            case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
                 transaction = StakeProgram.createAccountWithSeed(tx.additionalInfo.instructions[0]);
-            }
-            case SolanaTransactionInstructionType.DELEGATE_STAKE: {
+                break;
+            case SolanaTransactionInstructionType.DELEGATE_STAKE:
                 transaction = StakeProgram.delegate(tx.additionalInfo.instructions[0]);
-            }
-            case SolanaTransactionInstructionType.TRANSFER: {
+                break;
+            case SolanaTransactionInstructionType.UNSTAKE:
+                transaction = StakeProgram.deactivate(tx.additionalInfo.instructions[0]);
+                break;
+
+            case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();
                 transaction.add(tx.additionalInfo.instructions[0]);
-            }
+                break;
         }
 
         transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+
         transaction.sign(...[account]);
+
         return transaction.serialize();
     }
 
@@ -55,7 +61,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         const transactions: IBlockchainTransaction[] = [];
 
         switch (transactionType) {
-            case PosBasicActionType.DELEGATE: {
+            case PosBasicActionType.DELEGATE:
                 const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
 
                 for (const validator of tx.validators) {
@@ -67,7 +73,12 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     transactions.push(transaction);
                 }
                 break;
-            }
+            case PosBasicActionType.UNSTAKE:
+                const transactionUnstake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].unStake(cloneDeep(tx), tx.validators[0]);
+                transactions.push(transactionUnstake);
+                break;
         }
 
         return transactions;

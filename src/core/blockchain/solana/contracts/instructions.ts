@@ -8,15 +8,16 @@ import { ISolanaTransactionInstruction, SolanaTransactionInstructionType } from 
 export const createAccountWithSeedInstruction = (
     tx: IPosTransaction
 ): ISolanaTransactionInstruction => {
+    // TODO - find correct stake account and seed
     const stakePubkey = '';
     const seed = '';
-    const baseAccountKey = tx.extraFields.rootAccount;
+    const baseAccountKey = new PublicKey(tx.account.address);
     return {
         type: SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED,
         instruction: {
-            fromPubkey: new PublicKey(tx.account.address),
+            fromPubkey: baseAccountKey,
             stakePubkey,
-            basePubkey: new PublicKey(tx.account.address),
+            basePubkey: baseAccountKey,
             seed,
             lamports: tx.amount,
             authorized: new Authorized(baseAccountKey, baseAccountKey),
@@ -25,18 +26,32 @@ export const createAccountWithSeedInstruction = (
     };
 };
 
-export const delegateInstruction = (
+export const delegateInstruction = async (
     tx: IPosTransaction,
     validator: IValidator
-): ISolanaTransactionInstruction => {
-    const stakePubkey = tx.extraFields.stakeAccountKey;
-    const baseAccountKey = tx.extraFields.rootAccount;
+): Promise<ISolanaTransactionInstruction> => {
+    const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
+    const baseAccountKey = new PublicKey(tx.account.address);
     return {
         type: SolanaTransactionInstructionType.DELEGATE_STAKE,
         instruction: {
             stakePubkey,
             authorizedPubkey: baseAccountKey,
-            votePubkey: validator.id
+            votePubkey: new PublicKey(validator.id)
+        }
+    };
+};
+
+export const deactivateInstruction = async (
+    tx: IPosTransaction
+): Promise<ISolanaTransactionInstruction> => {
+    const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
+    const baseAccountKey = new PublicKey(tx.account.address);
+    return {
+        type: SolanaTransactionInstructionType.UNSTAKE,
+        instruction: {
+            stakePubkey,
+            authorizedPubkey: baseAccountKey
         }
     };
 };

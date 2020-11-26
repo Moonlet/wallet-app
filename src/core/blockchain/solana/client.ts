@@ -7,11 +7,12 @@ import {
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
-import { config } from './config';
+import { config, Contracts } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { Connection } from '@solana/web3.js/src/connection';
+import { Staking } from './contracts/staking';
 
 export class Client extends BlockchainGenericClient {
     private connection;
@@ -21,6 +22,7 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
         this.connection = new Connection(this.network.url);
+        this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
     public async getBalance(address: string): Promise<IBalance> {

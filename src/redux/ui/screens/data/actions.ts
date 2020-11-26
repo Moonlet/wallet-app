@@ -11,7 +11,11 @@ import {
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { AccountType, ITokenState } from '../../../wallets/state';
 import { IAction } from '../../../types';
-import { getSelectedAccount, getSelectedWallet } from '../../../wallets/selectors';
+import {
+    getNrPendingTransactions,
+    getSelectedAccount,
+    getSelectedWallet
+} from '../../../wallets/selectors';
 import { Platform } from 'react-native';
 import { getChainId } from '../../../preferences/selectors';
 import {
@@ -30,6 +34,8 @@ import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { getScreenDataKey } from './reducer';
+import { Dialog } from '../../../../components/dialog/dialog';
+import { translate } from '../../../../core/i18n';
 
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
@@ -331,6 +337,25 @@ const handleCtaAction = async (
                         }
                     })(dispatch, getState);
                     break;
+
+                case 'hasPendingTransactions': {
+                    if (getNrPendingTransactions(state)) {
+                        const nvServiceFn =
+                            NavigationService.getCurrentRoute() === 'Dashboard'
+                                ? 'navigate'
+                                : 'replace';
+                        Dialog.alert(
+                            translate('Validator.cannotInitiateTxTitle'),
+                            translate('Validator.cannotInitiateTxMessage'),
+                            undefined,
+                            {
+                                text: translate('App.labels.ok'),
+                                onPress: () =>
+                                    NavigationService[nvServiceFn]('TransactonsHistory', {})
+                            }
+                        );
+                    }
+                }
 
                 default:
                     break;

@@ -9,7 +9,7 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
-import { menuIcon } from './utils';
+import { menuIcon, menuIconWithNewLabel } from './utils';
 
 import { DashboardScreen } from '../screens/dashboard/dashboard';
 import { SettingsScreen } from '../screens/settings/settings';
@@ -56,10 +56,10 @@ import { CreateNearAccountScreen } from '../screens/blockchain/near/create-accou
 import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-account/recover-account';
 import { AddTokenScreen } from '../screens/token/components/add-token/add-token';
 import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
-import { Platform } from 'react-native';
 import { QuickStakeSelectValidatorScreen } from '../screens/quick-stake-select-validator/quick-stake-select-validator';
 import { PromoDetailsScreen } from '../screens/promo-details/promo-details';
 import { SmartScreen } from '../screens/smart-screen/smart-screen';
+import { HeaderIcon } from '../components/header-icon/header-icon';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -323,6 +323,30 @@ export const ScanNavigation = createStackNavigator(
     }
 );
 
+export const PromotionsNavigation = createStackNavigator(
+    {
+        SmartScreen: {
+            screen: SmartScreen,
+            params: {
+                context: { screen: 'Promotions' },
+                navigationOptions: {
+                    title: 'Promotions',
+                    headerLeft: <HeaderIcon />
+                }
+            }
+        }
+    },
+    {
+        initialRouteName: 'SmartScreen',
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        }),
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+    }
+);
+
 // main dashboard navigation
 export const navigationConfig = {
     Dashboard: {
@@ -331,13 +355,19 @@ export const navigationConfig = {
             tabBarIcon: menuIcon(IconValues.DASHBOARD)
         })
     },
-    Scan: {
-        screen: ScanNavigation,
-        headerTransparent: true,
+    Promotions: {
+        screen: PromotionsNavigation,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon(IconValues.QR_CODE_SCAN)
+            tabBarIcon: menuIconWithNewLabel(IconValues.PRODUCT_GIFT)
         })
     },
+    // Scan: {
+    //     screen: ScanNavigation,
+    //     headerTransparent: true,
+    //     navigationOptions: () => ({
+    //         tabBarIcon: menuIcon(IconValues.QR_CODE_SCAN)
+    //     })
+    // },
     Settings: {
         screen: SettingsNavigation,
         headerTransparent: true,
@@ -347,9 +377,9 @@ export const navigationConfig = {
     }
 };
 
-if (Platform.OS === 'web') {
-    delete navigationConfig.Scan;
-}
+// if (Platform.OS === 'web') {
+//     delete navigationConfig.Scan;
+// }
 
 // wallet creation flow stack
 export const OnboardingNavigation = createStackNavigator(

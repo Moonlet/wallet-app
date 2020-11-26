@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Icon } from '../components/icon/icon';
 import { COLORS } from '../styles/colors';
 import { StackViewStyleInterpolator } from 'react-navigation-stack';
-import { normalize } from '../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 
 export const DummyScreen = () => (
     <View style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
@@ -18,6 +18,26 @@ export const menuIcon = (icon: string) => ({ focused }: any) => (
         size={normalize(25)}
         style={{ color: focused ? COLORS.AQUA : COLORS.DARK_GRAY }}
     />
+);
+
+export const menuIconWithNewLabel = (icon: string) => ({ focused }: any) => (
+    <View>
+        <Image
+            source={require('../assets/images/png/new-tag.png')}
+            style={{
+                position: 'absolute',
+                top: -BASE_DIMENSION,
+                right: -BASE_DIMENSION * 3,
+                width: normalize(21),
+                height: normalize(21)
+            }}
+        />
+        <Icon
+            name={icon}
+            size={normalize(25)}
+            style={{ color: focused ? COLORS.AQUA : COLORS.DARK_GRAY }}
+        />
+    </View>
 );
 
 // remove animation when transitioning to any of `noAnimationScreens`

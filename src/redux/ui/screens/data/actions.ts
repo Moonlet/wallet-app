@@ -27,6 +27,7 @@ import {
     buildDummyValidator,
     claimRewardNoInput,
     delegate,
+    redelegate,
     withdraw
 } from '../../../wallets/actions';
 import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actions';
@@ -308,21 +309,30 @@ const handleCtaAction = async (
                         action.params?.params?.token &&
                         state.ui.screens.inputData &&
                         state.ui.screens.inputData[screenKey] &&
-                        state.ui.screens.inputData[screenKey]?.data?.amount
+                        state.ui.screens.inputData[screenKey]?.data?.amount &&
+                        action.params?.params?.toValidator
                     ) {
+                        const fromValidator = buildDummyValidator(
+                            switchNodeValidator.id,
+                            switchNodeValidator.name
+                        );
+
                         const validators = [
-                            buildDummyValidator(switchNodeValidator.id, switchNodeValidator.name)
+                            buildDummyValidator(
+                                action.params.params.toValidator.id,
+                                action.params.params.toValidator.name
+                            )
                         ];
 
                         const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
 
-                        delegate(
+                        redelegate(
                             getSelectedAccount(state),
                             amount,
                             validators,
                             action.params.params.token,
                             undefined, // feeOptions
-                            undefined
+                            { fromValidator }
                         )(dispatch, getState);
                     }
                     break;

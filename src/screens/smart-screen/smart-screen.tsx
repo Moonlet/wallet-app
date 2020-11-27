@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { smartConnect } from '../../core/utils/smart-connect';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
@@ -24,6 +24,7 @@ import {
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
 import { v4 as uuidv4 } from 'uuid';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface INavigationParams {
     context: IScreenContext;
@@ -249,7 +250,11 @@ class SmartScreenComponent extends React.Component<
 
                 {/* Widgets */}
                 {screenData && (
-                    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+                    <KeyboardAwareScrollView
+                        style={styles.scrollView}
+                        showsVerticalScrollIndicator={false}
+                        enableOnAndroid
+                    >
                         {loadingScreenData && (
                             <View style={styles.skeletonContainer}>
                                 {this.renderLoadingSkeleton(6)}
@@ -268,7 +273,7 @@ class SmartScreenComponent extends React.Component<
                         {!loadingScreenData && screenData.error && (
                             <View style={styles.errorContainer}>{this.renderErrorWidget()}</View>
                         )}
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
                 )}
 
                 {/* Bottom Fixed Area (only one widget)*/}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -9,7 +9,8 @@ import {
     IAmountInputData,
     IScreenValidation,
     IScreenContext,
-    ISmartScreenActions
+    ISmartScreenActions,
+    IAmountInputAmountBox
 } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { Text } from '../../../../library';
@@ -20,6 +21,8 @@ import {
 } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
+import BigNumber from 'bignumber.js';
+import isEqual from 'lodash/isEqual';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -32,6 +35,7 @@ interface IExternalProps {
 interface IReduxProps {
     amount: string;
     inputValidation: IScreenInputDataValidations;
+    amountBox: IAmountInputAmountBox;
 
     setScreenInputData: typeof setScreenInputData;
     setScreenAmount: typeof setScreenAmount;
@@ -41,6 +45,8 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         amount: state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
         inputValidation: state.ui.screens.inputData[ownProps.screenKey]?.validation,
+        amountBox: state.ui.screens.inputData[ownProps.screenKey]?.data?.amountBox,
+
         ...getStateSelectors(state, ownProps.module, {
             screenKey: ownProps.screenKey,
             flowId: ownProps.context.flowId
@@ -64,6 +70,86 @@ class AmountInputComponent extends React.Component<
                 screenKey: this.props.screenKey
             });
         }
+    }
+
+    private renderAmountComp(amount: IAmountInputAmountBox, index: number) {
+        const { amountBox, styles } = this.props;
+
+        const isSelected = amountBox && isEqual(amountBox, amount);
+
+        let label = '';
+        if (amount.type === 'percentage') label = `${amount.value}%`;
+        if (amount.type === 'value') {
+            if (typeof amount.value === 'number') label = `+${amount.value}`;
+            if (typeof amount.value === 'string') label = amount.value;
+        }
+
+        return (
+            <TouchableOpacity
+                key={`amount-comp-${index}`}
+                style={[
+                    styles.amountComp,
+                    isSelected && styles.amountCompSelected,
+                    index === 0 && { marginLeft: 0 },
+                    index === (this.props.module.data as IAmountInputData).amounts.length - 1 && {
+                        marginRight: 0
+                    }
+                ]}
+                activeOpacity={0.8}
+                onPress={() => {
+                    switch (amount.type) {
+                        case 'percentage': {
+                            const newAmount = new BigNumber((this.props as any).allBalance)
+                                .multipliedBy(
+                                    new BigNumber(amount.value).dividedBy(new BigNumber(100))
+                                )
+                                .toFixed();
+
+                            this.props.setScreenAmount(newAmount, {
+                                screenKey: this.props.screenKey,
+                                context: this.props.context
+                            });
+
+                            this.props.setScreenInputData(this.props.screenKey, {
+                                amountBox: amount
+                            });
+                            break;
+                        }
+
+                        case 'value': {
+                            let newAmount = new BigNumber((this.props as any).allBalance);
+
+                            if (typeof amount.value === 'number') {
+                                newAmount = newAmount.plus(new BigNumber(amount.value));
+                            }
+
+                            if (typeof amount.value === 'string') {
+                                // TODO
+                                // half
+                                // all
+                            }
+
+                            this.props.setScreenAmount(newAmount.toFixed(), {
+                                screenKey: this.props.screenKey,
+                                context: this.props.context
+                            });
+
+                            this.props.setScreenInputData(this.props.screenKey, {
+                                amountBox: amount
+                            });
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+                }}
+            >
+                <Text style={[styles.amountCompText, isSelected && styles.amountCompTextSelected]}>
+                    {label}
+                </Text>
+            </TouchableOpacity>
+        );
     }
 
     public render() {
@@ -100,6 +186,14 @@ class AmountInputComponent extends React.Component<
                             data.labels,
                             styles.label,
                             module?.state && { translateKeys: this.props as any }
+                        )}
+                    </View>
+                )}
+
+                {data?.amounts && (
+                    <View style={styles.amountsContainer}>
+                        {data.amounts.map((a: IAmountInputAmountBox, index: number) =>
+                            this.renderAmountComp(a, index)
                         )}
                     </View>
                 )}

@@ -2,12 +2,19 @@ import { IReduxState } from '../../../../redux/state';
 import { IScreenModule } from './../../types';
 
 import { getSwitchNodeSelectedValidatorName } from './switch-node-selected-validator';
-import { getStakeEnterAllBalance } from './stake-enter-all-balance';
-import { getSwitchNodeEnterAvailableBalance } from './switch-node-enter-available-balance';
+import { getStakeEnterAllBalance, getStakeEnterAllBalanceFormat } from './stake-enter-all-balance';
+import {
+    getSwitchNodeEnterAvailableBalance,
+    getSwitchNodeEnterAvailableBalanceFormat
+} from './switch-node-enter-available-balance';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
+    getStakeEnterAllBalanceFormat,
+
     getSwitchNodeEnterAvailableBalance,
+    getSwitchNodeEnterAvailableBalanceFormat,
+
     getSwitchNodeSelectedValidatorName
 };
 

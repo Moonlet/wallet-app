@@ -31,6 +31,7 @@ export const menuIconWithNewLabel = (icon: string) => ({ focused }: any) => (
                 width: normalize(21),
                 height: normalize(21)
             }}
+            resizeMode="contain"
         />
         <Icon
             name={icon}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator, StackViewTransitionConfigs } from 'react-navigation-stack';
@@ -454,9 +455,10 @@ export const navigationConfig = {
     }
 };
 
-// if (Platform.OS === 'web') {
-//     delete navigationConfig.Scan;
-// }
+if (Platform.OS === 'web') {
+    delete navigationConfig.Promotions;
+    // delete navigationConfig.Scan;
+}
 
 // wallet creation flow stack
 export const OnboardingNavigation = createStackNavigator(

@@ -6,7 +6,7 @@ import stylesProvider from './styles';
 import { ResizeMode } from '../../../../library/image/smart-image';
 import { IImageBannerData, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatStyles } from '../../utils';
-import FastImage from 'react-native-fast-image';
+import { FastImage } from '../../../../library/fast-image/fast-image';
 
 interface IExternalProps {
     module: IScreenModule;

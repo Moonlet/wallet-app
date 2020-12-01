@@ -47,5 +47,30 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(19),
             color: theme.colors.error,
             marginTop: BASE_DIMENSION / 2
+        },
+        amountsContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION
+        },
+        amountComp: {
+            flex: 1,
+            borderRadius: BORDER_RADIUS / 2,
+            borderWidth: 1,
+            borderColor: theme.colors.textTertiary,
+            paddingVertical: BASE_DIMENSION / 2,
+            marginHorizontal: BASE_DIMENSION / 2
+        },
+        amountCompSelected: {
+            borderColor: theme.colors.accent
+        },
+        amountCompText: {
+            fontSize: normalizeFontAndLineHeight(16),
+            textAlign: 'center',
+            color: theme.colors.textTertiary
+        },
+        amountCompTextSelected: {
+            color: theme.colors.accent
         }
     });

@@ -120,6 +120,10 @@ class SmartScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps & INavigationParams) {
+        if (this.props.account?.blockchain !== prevProps.account?.blockchain) {
+            this.props.fetchScreenData(this.state.context);
+        }
+
         this.updateLoading(prevProps);
         this.handleScreenValidation();
     }

@@ -7,7 +7,7 @@ import { translate } from '../../core/i18n';
 import { ICta, IScreenModule } from '../../components/widgets/types';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { renderCta, renderModule } from '../../components/widgets/render-module';
-import { handleCta } from '../../redux/ui/screens/data/actions';
+import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { connect } from 'react-redux';
 
 interface INavigationParams {

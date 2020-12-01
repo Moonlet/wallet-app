@@ -1,5 +1,5 @@
 import { Blockchain } from '../../core/blockchain/types';
-import { handleCta } from '../../redux/ui/screens/data/actions';
+import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { AccountType } from '../../redux/wallets/state';
 import { IconValues } from '../icon/values';
 import {

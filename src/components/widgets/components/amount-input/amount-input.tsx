@@ -99,7 +99,7 @@ class AmountInputComponent extends React.Component<
                 onPress={() => {
                     switch (amount.type) {
                         case 'percentage': {
-                            const newAmount = new BigNumber(this.props.amount)
+                            const newAmount = new BigNumber((this.props as any).allBalance)
                                 .multipliedBy(
                                     new BigNumber(amount.value).dividedBy(new BigNumber(100))
                                 )
@@ -117,7 +117,7 @@ class AmountInputComponent extends React.Component<
                         }
 
                         case 'value': {
-                            let newAmount = new BigNumber(this.props.amount);
+                            let newAmount = new BigNumber((this.props as any).allBalance);
 
                             if (typeof amount.value === 'number') {
                                 newAmount = newAmount.plus(new BigNumber(amount.value));

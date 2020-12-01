@@ -28,6 +28,7 @@ import {
     claimRewardNoInput,
     delegate,
     redelegate,
+    setSelectedBlockchain,
     withdraw
 } from '../../../wallets/actions';
 import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actions';
@@ -348,7 +349,7 @@ const handleCtaAction = async (
                     })(dispatch, getState);
                     break;
 
-                case 'hasPendingTransactions': {
+                case 'hasPendingTransactions':
                     if (getNrPendingTransactions(state)) {
                         const nvServiceFn =
                             NavigationService.getCurrentRoute() === 'Dashboard'
@@ -365,7 +366,11 @@ const handleCtaAction = async (
                             }
                         );
                     }
-                }
+                    break;
+
+                case 'selectBlockchain':
+                    setSelectedBlockchain(action.params?.params?.blockchain)(dispatch, getState);
+                    break;
 
                 default:
                     break;

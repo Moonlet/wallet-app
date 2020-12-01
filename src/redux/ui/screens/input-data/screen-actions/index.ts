@@ -5,7 +5,7 @@ import { IReduxState } from '../../../../state';
 import { getTokenConfig } from '../../../../tokens/static-selectors';
 import { IAction } from '../../../../types';
 import { getSelectedBlockchain } from '../../../../wallets/selectors';
-import { setScreenAmount } from '../actions';
+import { setScreenAmount, setScreenInputData } from '../actions';
 
 const getSwitchNodeValidatorAmount = (
     params: any,
@@ -65,6 +65,19 @@ const setScreenAmountAction = (
     }
 };
 
+const setScreenAmountBox = (
+    params: any,
+    context: IScreenContext,
+    screenKey: string,
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    setScreenInputData(screenKey, {
+        amountBox: params[0]
+    })(dispatch, getState);
+};
+
 export const screenActions = {
-    setScreenAmountAction
+    setScreenAmountAction,
+    setScreenAmountBox
 };

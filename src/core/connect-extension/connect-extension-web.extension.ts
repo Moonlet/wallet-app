@@ -1,5 +1,5 @@
 import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.extension';
-import { v4 as uuidv4 } from 'uuid';
+import uuidv4 from 'uuid/v4';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { database, storage } from 'firebase/app';
 import 'firebase/database';
@@ -24,6 +24,9 @@ import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/browser';
+import { IExtensionMessage } from '../communication/extension';
+import { getBgPort } from '../communication/bg-port.extension';
+import klona from 'klona';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -53,6 +56,18 @@ export const ConnectExtensionWeb = (() => {
             // delete the connection session
             await deleteFromStorage(CONN_EXTENSION);
 
+            // send message to background script
+            const message: IExtensionMessage = {
+                id: uuidv4(),
+                type: 'REQUEST',
+                request: {
+                    origin: document.location.href,
+                    controller: 'WalletSyncController',
+                    method: 'extensionDisconnected',
+                    params: []
+                }
+            };
+            getBgPort().postMessage(message);
             return Promise.resolve();
         } catch (err) {
             return Promise.reject(err);
@@ -228,6 +243,19 @@ export const ConnectExtensionWeb = (() => {
                     NavigationService.navigate('MainNavigation', {});
 
                     buildTransactions(decryptedState.state.wallets);
+
+                    // send message to background script
+                    const message: IExtensionMessage = {
+                        id: uuidv4(),
+                        type: 'REQUEST',
+                        request: {
+                            origin: document.location.href,
+                            controller: 'WalletSyncController',
+                            method: 'extensionConnected',
+                            params: []
+                        }
+                    };
+                    getBgPort().postMessage(message);
                 } else {
                     // Retry
                     syncConnect(conn, connectionsRef, syncConnAttempts - 1);
@@ -282,6 +310,10 @@ export const ConnectExtensionWeb = (() => {
         );
     };
 
+    const getRequestIdData = async (requestId: string): Promise<any> => {
+        //
+    };
+
     const getRequestIdParams = async (requestId: string): Promise<any> => {
         //
     };
@@ -304,11 +336,8 @@ export const ConnectExtensionWeb = (() => {
                     if (snapshot.exists()) {
                         const snap = await snapshot.val();
 
-                        const result = { txHash: undefined, tx: undefined };
-
-                        if (snap?.result) {
-                            result.txHash = snap.result.txHash;
-
+                        const result = klona(snap?.result) || {};
+                        if (snap?.result?.tx) {
                             const tx: IBlockchainTransaction = JSON.parse(
                                 await decrypt(snap.result.tx, connection.encKey)
                             );
@@ -336,6 +365,7 @@ export const ConnectExtensionWeb = (() => {
         downloadFileStorage,
         listenLastSync,
         listenLastSyncForConnect,
+        getRequestIdData,
         getRequestIdParams,
         listenerReqResponse
     };

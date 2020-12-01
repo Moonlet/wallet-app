@@ -60,6 +60,7 @@ import { Platform } from 'react-native';
 import { QuickStakeSelectValidatorScreen } from '../screens/quick-stake-select-validator/quick-stake-select-validator';
 import { PromoDetailsScreen } from '../screens/promo-details/promo-details';
 import { SmartScreen } from '../screens/smart-screen/smart-screen';
+import { ConnectedWebsitesScreen } from '../screens/connected-websites/connected-websites';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -173,6 +174,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Notifications: {
             screen: NotificationsScreen
+        },
+        ConnectedWebsites: {
+            screen: ConnectedWebsitesScreen
         },
         CreateNearAccount: {
             screen: CreateNearAccountScreen

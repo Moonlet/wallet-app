@@ -32,10 +32,13 @@ export class Client extends EthereumClient {
         this.http = new HttpClient(url);
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         return this.http.jsonRpc('eth_sendRawTransaction', [transaction]).then(res => {
             if (res.result) {
-                return res.result;
+                return {
+                    txHash: res.result,
+                    rawResponse: res
+                };
             } else {
                 SentryCaptureException(new Error(JSON.stringify(res || 'no result from rpc')));
             }

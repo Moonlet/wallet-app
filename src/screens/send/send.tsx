@@ -161,8 +161,14 @@ export class SendScreenComponent extends React.Component<
                 type: TransactionMessageType.INFO
             });
 
+            const account = this.props.account;
+            const token = this.props.token;
+            const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
+
+            const blockchainInstance = getBlockchain(account.blockchain);
+
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
-                currency: getBlockchain(this.props.account.blockchain).config.coin
+                currency: token.symbol
             });
 
             const formattedAddress = formatAddress(
@@ -170,23 +176,24 @@ export class SendScreenComponent extends React.Component<
                 this.props.account.blockchain
             );
 
-            const account = this.props.account;
-            const token = this.props.token;
-
-            const moonletTransferPayload: any = {
+            const tx = await blockchainInstance.transaction.buildTransferTransaction({
                 account,
+                chainId: this.props.chainId,
                 toAddress: this.state.toAddress,
-                amount: this.state.amount,
+                amount: blockchainInstance.account
+                    .amountToStd(this.state.amount, tokenConfig.decimals)
+                    .toFixed(0, BigNumber.ROUND_DOWN),
                 token: token.symbol,
                 feeOptions: this.state.feeOptions,
-                extraFields: { memo: this.state.memo },
-                walletId: this.props.selectedWallet.id // extra data needed for Tx Request Screen
-            };
+                extraFields: { memo: this.state.memo }
+            });
+
+            tx.walletPubKey = this.props.selectedWallet.walletPublicKey;
 
             // add type to this
             const sendRequestPayload = {
-                method: NotificationType.MOONLET_TRANSFER,
-                params: [moonletTransferPayload],
+                method: NotificationType.MOONLET_TRANSACTION,
+                params: [tx],
                 notification: {
                     title: translate('Notifications.extensionTx.title'),
                     body: translate('Notifications.extensionTx.body', {

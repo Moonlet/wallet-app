@@ -97,6 +97,28 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
+    const getRequestIdData = async (requestId: string) => {
+        try {
+            const requestsRef = getRealtimeDBRequestsRef();
+            const dataSnap = await requestsRef
+                .child(requestId)
+                .child('req')
+                .once('value');
+
+            const data = await dataSnap.val();
+
+            const connection = await getConnection();
+
+            if (connection) {
+                data.params = JSON.parse(await decrypt(data.params, connection.encKey));
+                return data; // transaction
+            }
+        } catch (e) {
+            //
+        }
+        return undefined;
+    };
+
     const getRequestIdParams = async (requestId: string) => {
         try {
             const requestsRef = getRealtimeDBRequestsRef();
@@ -141,6 +163,7 @@ export const ConnectExtensionWeb = (() => {
         downloadFileStorage,
         listenLastSync,
         listenLastSyncForConnect,
+        getRequestIdData,
         getRequestIdParams,
         listenerReqResponse
     };

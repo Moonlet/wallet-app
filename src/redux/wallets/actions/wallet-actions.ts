@@ -536,6 +536,101 @@ export const updateTransactionFromBlockchain = (
     await LoadingModal.close();
 };
 
+export const signMessage = (
+    walletPublicKey: string,
+    blockchain: Blockchain,
+    address: string,
+    message: string,
+    sendResponse?: { requestId: string }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    try {
+        const state = getState();
+
+        const appWallet = Object.values(state.wallets).find(
+            w => w.id === walletPublicKey || w.walletPublicKey === walletPublicKey
+        );
+
+        if (!appWallet) {
+            throw new Error('GENERIC_ERROR_MSG_SIGN');
+        }
+
+        const account = appWallet.accounts.find(
+            acc => acc.blockchain === blockchain && acc.address === address
+        );
+
+        if (!account) {
+            throw new Error('GENERIC_ERROR_MSG_SIGN');
+        }
+
+        let password = '';
+
+        if (appWallet.type === WalletType.HD) {
+            password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignMessage'),
+                { sensitive: true, showCloseButton: true }
+            );
+            await LoadingModal.open({
+                type: TransactionMessageType.INFO,
+                text: TransactionMessageText.SIGNING
+            });
+        }
+
+        const wallet: {
+            signMessage: (
+                blockchain: Blockchain,
+                accountIndex: number,
+                accountType: AccountType,
+                message: string
+            ) => Promise<any>;
+        } =
+            appWallet.type === WalletType.HW
+                ? LedgerConnect
+                : await WalletFactory.get(appWallet.id, appWallet.type, {
+                      pass: password,
+                      deviceVendor: appWallet.hwOptions?.deviceVendor,
+                      deviceModel: appWallet.hwOptions?.deviceModel,
+                      deviceId: appWallet.hwOptions?.deviceId,
+                      connectionType: appWallet.hwOptions?.connectionType
+                  }); // encrypted string: pass)
+
+        const signedMessage = await wallet.signMessage(
+            account.blockchain,
+            account.index,
+            account.type,
+            message
+        );
+
+        if (signedMessage) {
+            if (sendResponse) {
+                let result;
+                try {
+                    result = JSON.parse(signedMessage);
+                } catch {
+                    result = signedMessage;
+                }
+                await ConnectExtension.sendResponse(sendResponse.requestId, {
+                    result
+                });
+
+                dispatch({ type: CLOSE_TX_REQUEST });
+            }
+
+            await LoadingModal.close();
+            dispatch(closeTransactionRequest());
+            return;
+        } else {
+            throw new Error('GENERIC_ERROR_MSG_SIGN');
+        }
+    } catch (errorMessage) {
+        await LoadingModal.close();
+        Dialog.info(
+            translate('LoadingModal.messageSignFailed'),
+            translate('LoadingModal.GENERIC_ERROR_MSG_SIGN')
+        );
+    }
+};
+
 export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
@@ -548,6 +643,40 @@ export const sendTransferTransaction = (
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
+    const chainId = getChainId(state, account.blockchain);
+    const blockchainInstance = getBlockchain(account.blockchain);
+    const tokenConfig = getTokenConfig(account.blockchain, token);
+
+    const tx = await blockchainInstance.transaction.buildTransferTransaction({
+        chainId,
+        account,
+        toAddress,
+        amount: blockchainInstance.account.amountToStd(amount, tokenConfig.decimals).toFixed(),
+        token,
+        feeOptions: {
+            gasPrice: feeOptions.gasPrice.toString(),
+            gasLimit: feeOptions.gasLimit.toString()
+        },
+        extraFields
+    });
+
+    sendTransaction(tx, {
+        sendResponse,
+        goBack,
+        navigation
+    })(dispatch, getState);
+};
+
+export const sendTransaction = (
+    tx: IBlockchainTransaction,
+    options: {
+        navigation?: NavigationScreenProp<NavigationState>;
+        goBack?: boolean;
+        sendResponse?: { requestId: string };
+    }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const state = getState();
+    const account = getAccounts(state, tx.blockchain)?.find(acc => acc.address === tx.address);
     const chainId = getChainId(state, account.blockchain);
 
     const appWallet = getSelectedWallet(state);
@@ -585,22 +714,8 @@ export const sendTransferTransaction = (
                   }); // encrypted string: pass)
 
         const blockchainInstance = getBlockchain(account.blockchain);
-        const tokenConfig = getTokenConfig(account.blockchain, token);
 
-        let tx = await blockchainInstance.transaction.buildTransferTransaction({
-            chainId,
-            account,
-            toAddress,
-            amount: blockchainInstance.account.amountToStd(amount, tokenConfig.decimals).toFixed(),
-            token,
-            feeOptions: {
-                gasPrice: feeOptions.gasPrice.toString(),
-                gasLimit: feeOptions.gasLimit.toString()
-            },
-            extraFields
-        });
-
-        const client = getBlockchain(account.blockchain).getClient(chainId);
+        const client = blockchainInstance.getClient(chainId);
         const currentBlockchainNonce = await client.getNonce(account.address, account.publicKey);
         const nrPendingTransactions = getNrPendingTransactions(state);
         tx = {
@@ -617,10 +732,8 @@ export const sendTransferTransaction = (
         });
         // }
 
-        const txHash = await getBlockchain(account.blockchain)
-            .getClient(chainId)
-            .sendTransaction(transaction);
-
+        const txRes = await client.sendTransaction(transaction);
+        const txHash = txRes?.txHash;
         if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,
@@ -631,10 +744,10 @@ export const sendTransferTransaction = (
                 }
             });
 
-            if (sendResponse) {
-                await ConnectExtension.sendResponse(sendResponse.requestId, {
+            if (options.sendResponse) {
+                await ConnectExtension.sendResponse(options.sendResponse.requestId, {
                     result: {
-                        txHash,
+                        ...txRes,
                         tx
                     }
                 });
@@ -648,7 +761,7 @@ export const sendTransferTransaction = (
             //     await LedgerConnect.close();
             // }
             dispatch(closeTransactionRequest());
-            if (!sendResponse) {
+            if (!options.sendResponse) {
                 NavigationService.navigate('Token', {
                     activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
                 });
@@ -657,17 +770,30 @@ export const sendTransferTransaction = (
         } else {
             throw new Error('GENERIC_ERROR');
         }
-    } catch (errorMessage) {
+    } catch (res) {
+        const errorMessage = res.error || 'GENERIC_ERROR';
+
         if (appWallet.type === WalletType.HD) {
             await LoadingModal.close();
         } else {
             await LedgerConnect.close();
         }
 
+        if (options.sendResponse) {
+            await ConnectExtension.sendResponse(options.sendResponse.requestId, {
+                result: {
+                    ...res,
+                    tx
+                }
+            });
+
+            dispatch({ type: CLOSE_TX_REQUEST });
+        }
+
         const message =
             translate('LoadingModal.' + errorMessage, {
                 app: account.blockchain,
-                address: formatAddress(toAddress, account.blockchain)
+                address: formatAddress(tx.toAddress, account.blockchain)
             }) || translate('LoadingModal.GENERIC_ERROR');
 
         Dialog.info(translate('LoadingModal.txFailed'), message);
@@ -881,7 +1007,7 @@ export const createNearAccount = (name: string, extension: string, password: str
                 account.type
             );
 
-            const txHash = await client.sendTransaction(transaction);
+            const { txHash } = await client.sendTransaction(transaction);
 
             if (txHash) {
                 const hashPolling = await client.getTransactionStatusPolling(

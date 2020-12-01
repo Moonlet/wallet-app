@@ -39,6 +39,16 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         return r + s;
     }
 
+    public async signMessage(message: string, privateKey: string): Promise<string> {
+        const publicKey = Zilliqa.account.privateToPublic(privateKey);
+        const signature = this.schnorrSign(Buffer.from(message, 'hex'), privateKey);
+        return JSON.stringify({
+            signature,
+            publicKey,
+            message
+        });
+    }
+
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
         const toAddress = isBech32(tx.toAddress)
@@ -53,7 +63,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
             amount: new BN(tx.amount),
             gasPrice: new BN(tx.feeOptions.gasPrice.toString()),
             gasLimit: Long.fromString(tx.feeOptions.gasLimit.toString()),
-            code: '',
+            code: tx.code || '',
             data: tx.data?.raw || '',
             signature: '',
             priority: true
@@ -256,7 +266,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
-        if (tokenInfo.type === TokenType.ZRC2 || tx?.data?.params) {
+        if (tokenInfo?.type === TokenType.ZRC2 || tx?.data?.params) {
             return tx?.data?.params[1];
         } else {
             return tx.amount;

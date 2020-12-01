@@ -24,6 +24,7 @@ interface IExternalProps {
         visible: boolean;
         wrapperStyle?: any;
     };
+    numberOfLines?: number;
 }
 
 interface IReduxProps {
@@ -59,6 +60,7 @@ export const AmountComponent = (
                 maximumFractionDigits: props.uiDecimals || 4
             }}
             isAnimated={props.isAnimated}
+            numberOfLines={props.numberOfLines}
         >
             {amount}
         </Text>

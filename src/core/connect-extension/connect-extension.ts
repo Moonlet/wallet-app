@@ -103,18 +103,20 @@ export const ConnectExtension = (() => {
             const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
 
             const http = new HttpClient(CONFIG.extSync.sendResponseUrl);
+
+            if (sendResponsePayload?.result?.tx) {
+                sendResponsePayload.result.tx = await encrypt(
+                    JSON.stringify(sendResponsePayload.result.tx),
+                    connection.encKey
+                );
+            }
+
             const res = await http.post('', {
                 connectionId: connection.connectionId,
                 requestId,
                 authToken: sha256(connection.encKey),
                 data: {
-                    result: sendResponsePayload.result && {
-                        txHash: sendResponsePayload.result.txHash,
-                        tx: await encrypt(
-                            JSON.stringify(sendResponsePayload.result.tx),
-                            connection.encKey
-                        )
-                    },
+                    result: sendResponsePayload.result,
                     errorCode: sendResponsePayload?.errorCode
                 }
             });

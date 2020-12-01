@@ -5,11 +5,13 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { View, TouchableHighlight } from 'react-native';
 import Icon from '../icon/icon';
-import { ICON_SIZE, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, ICON_SIZE, normalize } from '../../styles/dimensions';
+import { SmartImage } from '../../library/image/smart-image';
+import { IconValues } from '../icon/values';
 
 interface IExternalProps {
     label: string | JSX.Element;
-    leftIcon?: string;
+    leftIcon?: string | IconValues | React.ComponentType<any>;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;
@@ -49,11 +51,22 @@ export const ListCardComponent = (
                     props?.disabled?.value === true && styles.cardDisabled
                 ]}
             >
-                {props.leftIcon && (
-                    <View style={[styles.iconContainer, { alignItems: 'flex-start' }]}>
-                        <Icon name={props.leftIcon} size={ICON_SIZE} style={styles.icon} />
-                    </View>
-                )}
+                {props.leftIcon ? (
+                    props.leftIcon.toString().includes('data:image/') ? (
+                        <SmartImage
+                            source={{ iconComponent: props.leftIcon as React.ComponentType }}
+                            style={{ marginRight: BASE_DIMENSION * 2 }}
+                        />
+                    ) : (
+                        <View style={[styles.iconContainer, { alignItems: 'flex-start' }]}>
+                            <Icon
+                                name={props.leftIcon as IconValues}
+                                size={ICON_SIZE}
+                                style={styles.icon}
+                            />
+                        </View>
+                    )
+                ) : null}
 
                 <View style={styles.labelContainer}>
                     {label}

@@ -334,6 +334,83 @@ export const PromotionsNavigation = createStackNavigator(
                     headerLeft: <HeaderIcon />
                 }
             }
+        },
+
+        // Import all screens if needed
+        Token: {
+            screen: TokenScreen
+        },
+        Send: {
+            screen: SendScreen
+        },
+        Receive: {
+            screen: ReceiveScreen
+        },
+        Wallets: {
+            screen: WalletsScreen
+        },
+        ViewWalletMnemonic: {
+            screen: ViewWalletMnemonicScreen
+        },
+        TransactonsHistory: {
+            screen: TransactionsHistoryScreen
+        },
+        TransactionDetails: {
+            screen: TransactionDetails
+        },
+        ManageAccounts: {
+            screen: ManageAccountsScreen
+        },
+        AddToken: {
+            screen: AddTokenScreen
+        },
+        ManageToken: {
+            screen: ManageTokenScreen
+        },
+        ConnectExtension: {
+            screen: ConnectExtensionScreen
+        },
+        Validator: {
+            screen: ValidatorScreen
+        },
+        PosDelegate: {
+            screen: DelegateEnterAmount
+        },
+        DelegateEnterAmount: {
+            screen: DelegateEnterAmount
+        },
+        Notifications: {
+            screen: NotificationsScreen
+        },
+        CreateNearAccount: {
+            screen: CreateNearAccountScreen
+        },
+        RecoverNearAccount: {
+            screen: RecoverNearAccountScreen
+        },
+        PromoDetails: {
+            screen: PromoDetailsScreen
+        },
+        QuickStakeSelectValidator: {
+            screen: QuickStakeSelectValidatorScreen
+        },
+        PosQuickDelegate: {
+            screen: QuickDelegateSelectValidator
+        },
+        QuickDelegateEnterAmount: {
+            screen: QuickDelegateEnterAmount
+        },
+        PosRedelegate: {
+            screen: RedelegateSelectValidator
+        },
+        RedelegateEnterAmount: {
+            screen: RedelegateEnterAmount
+        },
+        RedelegateConfirm: {
+            screen: RedelegateConfirm
+        },
+        PosBasicAction: {
+            screen: PosBasicAction
         }
     },
     {

@@ -315,7 +315,13 @@ export interface IBalanceGridData {
 }
 
 export interface IImageBannerData {
-    imageUrl: string;
+    image: IImageInfo;
+}
+
+export interface IImageInfo {
+    url: string;
+    width: number;
+    height: number;
 }
 
 export interface IOneLineTextBannerData {

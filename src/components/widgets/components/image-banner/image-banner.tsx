@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -13,43 +13,22 @@ interface IExternalProps {
     actions: ISmartScreenActions;
 }
 
-interface IState {
-    aspectRatio: number;
-}
-
 class ImageBannerComponent extends React.Component<
-    IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps,
-    IState
+    IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
-    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps) {
-        super(props);
-        this.state = {
-            aspectRatio: 1
-        };
-    }
-
-    public componentDidMount() {
-        Image.getSize(
-            (this.props.module.data as IImageBannerData).imageUrl,
-            (width, height) => this.setState({ aspectRatio: width / height }),
-            error => {
-                // no need to handle
-            }
-        );
-    }
-
     public render() {
         const { actions, module, styles } = this.props;
         const data = module.data as IImageBannerData;
 
+        let aspectRatio = 1;
+        if (data?.image?.width && data?.image?.height) {
+            aspectRatio = data.image.width / data.image.height;
+        }
+
         const moduleJSX = (
             <FastImage
-                style={[
-                    { aspectRatio: this.state.aspectRatio },
-                    styles.image,
-                    formatStyles(module?.style)
-                ]}
-                source={{ uri: data.imageUrl }}
+                style={[{ aspectRatio }, styles.image, formatStyles(module?.style)]}
+                source={{ uri: data.image.url }}
                 resizeMode={ResizeMode.contain}
             />
         );

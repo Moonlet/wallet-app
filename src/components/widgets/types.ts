@@ -364,13 +364,20 @@ export interface IMdTextData {
     style?: any;
 }
 
+/**
+ * value: +0.1 | half | all
+ * percentage: 10%
+ */
+export interface IAmountInputAmountBox {
+    type: 'value' | 'percentage';
+    value: string | number;
+    // label: string;
+}
+
 export interface IAmountInputData {
     input?: {
         style?: IDataStyle;
     };
     labels?: IData[];
-    amounts?: {
-        value: string | number;
-        label: string;
-    }[];
+    amounts?: IAmountInputAmountBox[];
 }

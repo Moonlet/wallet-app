@@ -4,7 +4,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
-import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
+import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IScreenContext, IScreenValidation, IScreenWidget } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
@@ -25,6 +25,7 @@ import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
 import { v4 as uuidv4 } from 'uuid';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 
 interface INavigationParams {
     context: IScreenContext;
@@ -120,6 +121,10 @@ class SmartScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps & INavigationParams) {
+        if (this.props.account?.blockchain !== prevProps.account?.blockchain) {
+            this.props.fetchScreenData(this.state.context);
+        }
+
         this.updateLoading(prevProps);
         this.handleScreenValidation();
     }

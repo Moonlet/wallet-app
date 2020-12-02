@@ -2,7 +2,7 @@ import React from 'react';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Widgets } from '../widgets/widgets';
-import { fetchScreenData, handleCta } from '../../redux/ui/screens/data/actions';
+import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { ContextScreen, IScreenContext, IScreenWidget } from '../widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
@@ -17,6 +17,7 @@ import {
     clearScreenInputData,
     runScreenStateActions
 } from '../../redux/ui/screens/input-data/actions';
+import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 
 interface IExternalProps {
     context: IScreenContext;

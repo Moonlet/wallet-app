@@ -32,17 +32,18 @@ export const amountAvailableFundsToKeep = (
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
-    const availableBalance = new BigNumber(token.balance?.available || '0').minus(
-        blockchainInstance.config.amountToKeepInAccount[account.type]
-    );
+    let availableBalance = new BigNumber(token.balance?.available || '0');
+    const minimumAmountToKeep = blockchainInstance.config.amountToKeepInAccount[account.type];
+
+    if (availableBalance.isGreaterThan(new BigNumber(0))) {
+        availableBalance = availableBalance.minus(minimumAmountToKeep);
+    }
 
     const inputAmount = inputData?.amount;
     const inputAmountToStd = blockchainInstance.account.amountToStd(
         new BigNumber(inputAmount),
         tokenConfig.decimals
     );
-
-    const minimumAmountToKeep = blockchainInstance.config.amountToKeepInAccount[account.type];
 
     if (
         availableBalance.isLessThan(inputAmountToStd) &&

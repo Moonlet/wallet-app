@@ -14,9 +14,11 @@ export const getStakeEnterAllBalanceFormat = (state: IReduxState, module: IScree
     const chainId = getChainId(state, blockchain);
     const token = account.tokens[chainId][blockchainInstance.config.coin];
 
-    const balance = new BigNumber(token.balance?.available || '0').minus(
-        blockchainInstance.config.amountToKeepInAccount[account.type]
-    );
+    let balance = new BigNumber(token.balance?.available || '0');
+
+    if (balance.isGreaterThan(new BigNumber(0))) {
+        balance = balance.minus(blockchainInstance.config.amountToKeepInAccount[account.type]);
+    }
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
@@ -34,9 +36,11 @@ export const getStakeEnterAllBalance = (state: IReduxState, module: IScreenModul
     const chainId = getChainId(state, blockchain);
     const token = account.tokens[chainId][blockchainInstance.config.coin];
 
-    const balance = new BigNumber(token.balance?.available || '0').minus(
-        blockchainInstance.config.amountToKeepInAccount[account.type]
-    );
+    let balance = new BigNumber(token.balance?.available || '0');
+
+    if (balance.isGreaterThan(new BigNumber(0))) {
+        balance = balance.minus(blockchainInstance.config.amountToKeepInAccount[account.type]);
+    }
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 

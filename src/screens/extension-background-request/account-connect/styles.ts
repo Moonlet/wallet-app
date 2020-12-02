@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, LETTER_SPACING } from '../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    LETTER_SPACING,
+    normalizeFontAndLineHeight
+} from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -18,16 +22,16 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2 + BASE_DIMENSION / 2
         },
         headerTitle: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
             letterSpacing: LETTER_SPACING,
-            color: '#FFFFFF',
+            color: theme.colors.text,
             alignSelf: 'center'
         },
         allowText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
         bottomButtonsContainer: {
@@ -35,8 +39,8 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         bottomText: {
-            fontSize: normalize(12),
-            lineHeight: normalize(16),
+            fontSize: normalizeFontAndLineHeight(12),
+            lineHeight: normalizeFontAndLineHeight(16),
             color: theme.colors.textTertiary
         },
         bottomLeftButton: {
@@ -48,24 +52,24 @@ export default (theme: ITheme) =>
             marginLeft: BASE_DIMENSION / 2
         },
         sectionLabel: {
-            fontSize: normalize(21),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(21),
+            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: 'bold',
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION * 2,
             marginTop: BASE_DIMENSION * 3
         },
         accountName: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
             marginRight: BASE_DIMENSION
         },
         accountAddress: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: LETTER_SPACING,
             color: theme.colors.accent

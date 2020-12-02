@@ -179,7 +179,10 @@ export class NativeForwardComp extends React.Component<
                             blockchain: account.blockchain,
                             chainId: this.props.request?.chainId,
                             type: TransactionType.TRANSFER,
-                            token: getTokenConfig(account.blockchain, 'ZIL'),
+                            token: getTokenConfig(
+                                account.blockchain,
+                                getBlockchain(account.blockchain).config.coin
+                            ),
 
                             address: account.address,
                             publicKey: account.publicKey,

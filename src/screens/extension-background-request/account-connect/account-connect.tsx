@@ -10,7 +10,6 @@ import { IReduxState } from '../../../redux/state';
 import { IAccountState, IWalletsState, IWalletState } from '../../../redux/wallets/state';
 import { connect } from 'react-redux';
 import { BASE_DIMENSION } from '../../../styles/dimensions';
-import {} from 'react-native-gesture-handler';
 import { IconValues } from '../../../components/icon/values';
 import { Blockchain, ChainIdType } from '../../../core/blockchain/types';
 import { getChainId } from '../../../redux/preferences/selectors';

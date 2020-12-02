@@ -108,8 +108,8 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: normalize(22),
-        lineHeight: normalize(28),
+        fontSize: normalizeFontAndLineHeight(22),
+        lineHeight: normalizeFontAndLineHeight(28),
         color: themes[theme].colors.text,
         letterSpacing: LETTER_SPACING,
         textAlign: 'center',

@@ -31,7 +31,8 @@ import {
     getWalletWithAddress,
     getWalletAndTransactionForHash,
     generateAccountConfig,
-    getNrPendingTransactions
+    getNrPendingTransactions,
+    getWalletByPubKey
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -546,9 +547,7 @@ export const signMessage = (
     try {
         const state = getState();
 
-        const appWallet = Object.values(state.wallets).find(
-            w => w.id === walletPublicKey || w.walletPublicKey === walletPublicKey
-        );
+        const appWallet = getWalletByPubKey(state, walletPublicKey);
 
         if (!appWallet) {
             throw new Error('GENERIC_ERROR_MSG_SIGN');

@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, LETTER_SPACING } from '../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    LETTER_SPACING,
+    normalizeFontAndLineHeight
+} from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -24,8 +29,8 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION
         },
         headerTitle: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
             letterSpacing: LETTER_SPACING,
             color: '#FFFFFF',
@@ -36,8 +41,8 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         loadingText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             marginTop: BASE_DIMENSION * 4

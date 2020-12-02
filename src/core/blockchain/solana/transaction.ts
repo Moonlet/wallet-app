@@ -18,10 +18,11 @@ import { Account } from '@solana/web3.js/src/account';
 import { Transaction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from './types';
 import { decode as bs58Decode } from 'bs58';
-import BigNumber from 'bignumber.js';
 import { cloneDeep } from 'lodash';
+import { config, Contracts } from '../solana/config';
 import { splitStake } from '../../utils/balance';
-import { Contracts } from '../solana/config';
+import BigNumber from 'bignumber.js';
+import { selectStakeAccounts } from './contracts/base-contract';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -62,15 +63,48 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE:
+                const allStakeAccounts =
+                    tx.account.tokens[client.chainId][config.coin].balance?.detailed;
+
                 const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
 
+                const selectedStakeAccounts = await selectStakeAccounts(
+                    tx.account.address,
+                    allStakeAccounts,
+                    PosBasicActionType.DELEGATE,
+                    splitAmount.toFixed()
+                );
+
                 for (const validator of tx.validators) {
-                    const txStake: IPosTransaction = cloneDeep(tx);
-                    txStake.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].delegateStake(txStake, validator);
-                    transactions.push(transaction);
+                    for (const key in selectedStakeAccounts) {
+                        if (selectedStakeAccounts[key]) {
+                            const stakeAccount = selectedStakeAccounts[key];
+
+                            if (stakeAccount.shouldCreate) {
+                                const txCreate: IPosTransaction = cloneDeep(tx);
+                                txCreate.extraFields.stakeAccountKey = key;
+                                txCreate.amount = new BigNumber(stakeAccount.amount).toFixed(
+                                    0,
+                                    BigNumber.ROUND_DOWN
+                                );
+                                const transactionCreate: IBlockchainTransaction = await client.contracts[
+                                    Contracts.STAKING
+                                ].createStakeAccountWithSeed(txCreate);
+                                transactions.push(transactionCreate);
+                            }
+
+                            const txStake: IPosTransaction = cloneDeep(tx);
+                            txStake.amount = new BigNumber(stakeAccount.amount).toFixed(
+                                0,
+                                BigNumber.ROUND_DOWN
+                            );
+                            txStake.extraFields.stakeAccountKey = key;
+                            const transaction: IBlockchainTransaction = await client.contracts[
+                                Contracts.STAKING
+                            ].delegateStake(txStake, validator);
+                            transactions.push(transaction);
+                        }
+                    }
                 }
                 break;
             case PosBasicActionType.UNSTAKE:

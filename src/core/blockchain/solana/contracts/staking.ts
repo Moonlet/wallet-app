@@ -13,24 +13,25 @@ import { SolanaTransactionInstructionType } from '../types';
 import {
     createAccountWithSeedInstruction,
     deactivateInstruction,
-    delegateInstruction
+    delegateInstruction,
+    splitInstruction
 } from './instructions';
 import { PosBasicActionType } from '../../types/token';
 import { Client } from '../client';
 
 export class Staking {
     constructor(private client: Client) {}
-    public async createStakeAccountWithSeed(
-        tx: IPosTransaction,
-        validator: IValidator
-    ): Promise<IBlockchainTransaction> {
+
+    public async createStakeAccountWithSeed(tx: IPosTransaction): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
         const blockHash = await this.client.getCurrentBlockHash();
+        const instruction = await createAccountWithSeedInstruction(tx);
 
         transaction.additionalInfo = {
             type: SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED,
-            instructions: [createAccountWithSeedInstruction(tx)],
-            currentBlockHash: blockHash
+            instructions: [instruction.instruction],
+            currentBlockHash: blockHash,
+            posAction: PosBasicActionType.CREATE_STAKE_ACCOUNT
         };
 
         return transaction;
@@ -57,13 +58,31 @@ export class Staking {
         return transaction;
     }
 
+    public async splitStake(
+        tx: IPosTransaction,
+        splitStakePubKey: string
+    ): Promise<IBlockchainTransaction> {
+        const transaction = await buildBaseTransaction(tx);
+
+        const blockHash = await this.client.getCurrentBlockHash();
+        const instruction = await splitInstruction(tx, splitStakePubKey);
+
+        transaction.additionalInfo = {
+            posAction: PosBasicActionType.SPLIT_STAKE,
+            type: SolanaTransactionInstructionType.SPLIT_STAKE,
+            instructions: [instruction.instruction],
+            currentBlockHash: blockHash
+        };
+
+        return transaction;
+    }
+
     public async delegateStake(
         tx: IPosTransaction,
         validator: IValidator
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
 
-        tx.extraFields.stakeAccountKey = 'ENEEAp89ZfHKKhE3opuE3jMTzi79zeorEUM1NADmaZ3U';
         const blockHash = await this.client.getCurrentBlockHash();
         const instruction = await delegateInstruction(tx, validator);
 

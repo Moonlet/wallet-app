@@ -1,4 +1,5 @@
 import {
+    Blockchain,
     BlockchainGenericClient,
     ChainIdType,
     IBalance,
@@ -13,6 +14,7 @@ import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { Connection } from '@solana/web3.js/src/connection';
 import { Staking } from './contracts/staking';
+import { ApiClient } from '../../utils/api-client/api-client';
 
 export class Client extends BlockchainGenericClient {
     private connection;
@@ -26,12 +28,24 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getBalance(address: string): Promise<IBalance> {
-        return this.http.jsonRpc('getBalance', [address]).then(res => {
+        try {
+            const data = await new ApiClient().validators.getBalance(
+                address,
+                Blockchain.SOLANA,
+                this.chainId.toString()
+            );
             return {
-                total: new BigNumber(res.result?.value),
-                available: new BigNumber(res.result?.value)
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0),
+                detailed: data?.balance.detailed || {}
             };
-        });
+        } catch {
+            return {
+                total: new BigNumber(0),
+                available: new BigNumber(0),
+                detailed: {}
+            };
+        }
     }
 
     public async getNonce(address: string): Promise<number> {

@@ -69,7 +69,8 @@ export const accountToken = (symbolKey: string, order: number): ITokenState => {
             timestamp: undefined,
             error: undefined,
             available: '0',
-            total: '0'
+            total: '0',
+            detailed: {}
         }
     };
 };
@@ -101,7 +102,8 @@ export const generateAccountTokenState = (
             timestamp: undefined,
             error: undefined,
             available: '0',
-            total: '0'
+            total: '0',
+            detailed: {}
         }
     };
 };

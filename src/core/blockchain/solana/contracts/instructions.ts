@@ -9,8 +9,8 @@ export const createAccountWithSeedInstruction = (
     tx: IPosTransaction
 ): ISolanaTransactionInstruction => {
     // TODO - find correct stake account and seed
-    const stakePubkey = '';
-    const seed = '';
+    const stakePubkey = new PublicKey('ENEEAp89ZfHKKhE3opuE3jMTzi79zeorEUM1NADmaZ3U');
+    const seed = 'stake:0';
     const baseAccountKey = new PublicKey(tx.account.address);
     return {
         type: SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED,
@@ -22,6 +22,23 @@ export const createAccountWithSeedInstruction = (
             lamports: tx.amount,
             authorized: new Authorized(baseAccountKey, baseAccountKey),
             lockup: new Lockup(0, 0, baseAccountKey)
+        }
+    };
+};
+
+export const splitInstruction = async (
+    tx: IPosTransaction,
+    splitStakePubkey: string
+): Promise<ISolanaTransactionInstruction> => {
+    const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
+    const baseAccountKey = new PublicKey(tx.account.address);
+    return {
+        type: SolanaTransactionInstructionType.DELEGATE_STAKE,
+        instruction: {
+            stakePubkey,
+            authorizedPubkey: baseAccountKey,
+            lamports: tx.amount,
+            splitStakePubkey: new PublicKey(splitStakePubkey)
         }
     };
 };

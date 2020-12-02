@@ -62,6 +62,7 @@ export interface ITokenState {
         error: any;
         available: string;
         total: string;
+        detailed: any;
     };
 }
 

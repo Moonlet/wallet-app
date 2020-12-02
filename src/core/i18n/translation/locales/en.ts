@@ -350,6 +350,7 @@ export const translation: ITranslations = {
             processTitleTextLedger:
                 'Please sign each transaction from your Ledger in order to start broadcasting to the blockchain network',
             registerAccount: 'Registering account',
+            creatingStakeAccount: 'Creating stake account',
             transactionType: 'Transaction Type'
         },
         Statistics: {

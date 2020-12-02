@@ -29,7 +29,7 @@ export const networks: IBlockchainNetwork[] = [
         name: 'Testnet',
         chainId: '3',
         mainNet: false,
-        url: 'https://testnet.solana.com',
+        url: 'http://167.233.14.77/',
         wsUrl: 'wss://testnet.solana.com/',
         explorer: {
             name: 'Explorer',

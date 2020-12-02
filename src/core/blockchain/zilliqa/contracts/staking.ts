@@ -66,8 +66,9 @@ export class Staking {
 
             const lastRewardCycle = Number(res[0][ContractFields.LASTREWARDCYCLE]);
 
-            const lastBufferDepositCycleDeleg =
-                res[1][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
+            const lastBufferDepositCycleDeleg = res[1]
+                ? res[1][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address]
+                : -1;
 
             let lastBufferDepositCycleDelegValue = 0;
             if (lastBufferDepositCycleDeleg && lastBufferDepositCycleDeleg[ssnaddr]) {

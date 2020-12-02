@@ -5,7 +5,7 @@ export const networks: IBlockchainNetwork[] = [
         name: 'Main Network',
         chainId: 1,
         mainNet: true,
-        url: 'https://api.zilliqa.com/',
+        url: 'https://node-zilliqa.moonlet.network/api',
         wsUrl: 'wss://api-ws.zilliqa.com/',
         explorer: {
             name: 'Viewblock',

@@ -158,6 +158,21 @@ class SmartScreenComponent extends React.Component<
         return props.screenData && screenKey && props.screenData[screenKey];
     }
 
+    private startLoadingTimeout() {
+        clearTimeout(this.loadingTimeout);
+        this.loadingTimeout = setTimeout(() => {
+            const localScreenData = this.getScreenData(this.props);
+            if (!localScreenData?.isLoading) {
+                this.setState({
+                    loadingTimeoutInProgress: false,
+                    loadingScreenData: false
+                });
+            } else {
+                this.setState({ loadingTimeoutInProgress: false });
+            }
+        }, 1500);
+    }
+
     private updateLoading(prevProps: IReduxProps & INavigationParams) {
         const screenData = this.getScreenData(this.props);
         const prevScreenData = this.getScreenData(prevProps);
@@ -170,18 +185,7 @@ class SmartScreenComponent extends React.Component<
                         loadingTimeoutInProgress: true
                     });
 
-                    clearTimeout(this.loadingTimeout);
-                    this.loadingTimeout = setTimeout(() => {
-                        const localScreenData = this.getScreenData(this.props);
-                        if (!localScreenData?.isLoading) {
-                            this.setState({
-                                loadingTimeoutInProgress: false,
-                                loadingScreenData: false
-                            });
-                        } else {
-                            this.setState({ loadingTimeoutInProgress: false });
-                        }
-                    }, 1500);
+                    this.startLoadingTimeout();
                 }
             } else {
                 if (!this.state.loadingTimeoutInProgress) {
@@ -218,7 +222,21 @@ class SmartScreenComponent extends React.Component<
                 body={translate('Widgets.didNotLoad')}
                 cta={{
                     label: translate('App.labels.retry'),
-                    onPress: () => this.props.fetchScreenData(this.state.context)
+                    onPress: () => {
+                        // Start loading
+                        this.setState(
+                            {
+                                loadingScreenData: true,
+                                loadingTimeoutInProgress: true
+                            },
+                            () => {
+                                // Start loading screen timemout
+                                this.startLoadingTimeout();
+                                // Fetch screen data
+                                this.props.fetchScreenData(this.state.context);
+                            }
+                        );
+                    }
                 }}
             />
         );

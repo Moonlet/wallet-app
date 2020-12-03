@@ -7,7 +7,7 @@ export default (theme: ITheme) =>
         skeletonWrapper: {
             flexDirection: 'row',
             flexWrap: 'wrap',
-            backgroundColor: theme.colors.cardBackground,
+            // backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
             marginBottom: BASE_DIMENSION,

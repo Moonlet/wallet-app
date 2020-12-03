@@ -50,7 +50,8 @@ export const fetchScreenData = (context: IScreenContext) => async (
             screen: context.screen,
             step: context?.step,
             tab: context?.tab,
-            flowId: context?.flowId
+            flowId: context?.flowId,
+            params: context?.params
         },
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',

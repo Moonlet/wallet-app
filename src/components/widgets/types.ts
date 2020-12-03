@@ -13,11 +13,12 @@ export interface IScreenRequest {
     user: IScreenUser;
 }
 
-export interface IScreenContext {
+export interface IScreenContext<ScreenParams = any> {
     screen: string;
     step?: string;
     tab?: string;
     flowId?: string;
+    params?: ScreenParams;
 }
 
 /** @deprecated use string instead */

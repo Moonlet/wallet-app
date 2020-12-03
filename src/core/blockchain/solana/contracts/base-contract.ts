@@ -69,6 +69,7 @@ export const selectStakeAccounts = (
     },
     action: PosBasicActionType,
     amount: string,
+    usedStakedAccounts: string[],
     validatorId?: string
 ): { [key: string]: { amount?: string; shouldCreate?: boolean } } => {
     const selectedStakeAccounts = {};
@@ -76,7 +77,7 @@ export const selectStakeAccounts = (
 
     if (PosBasicActionType.DELEGATE) {
         Object.keys(accounts).map(address => {
-            if (amountForAction.isGreaterThan(0)) {
+            if (amountForAction.isGreaterThan(0) && !usedStakedAccounts.includes(address)) {
                 const object = accounts[address];
                 if (object.unstaked && new BigNumber(object.unstaked).isGreaterThan(0)) {
                     if (new BigNumber(amountForAction).isGreaterThanOrEqualTo(object.unstaked)) {

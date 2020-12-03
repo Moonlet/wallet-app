@@ -13,6 +13,7 @@ Object {
         "active": true,
         "balance": Object {
           "available": "0",
+          "detailed": Object {},
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
@@ -26,6 +27,7 @@ Object {
         "active": true,
         "balance": Object {
           "available": "0",
+          "detailed": Object {},
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
@@ -39,6 +41,7 @@ Object {
         "active": true,
         "balance": Object {
           "available": "0",
+          "detailed": Object {},
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
@@ -54,6 +57,7 @@ Object {
         "active": true,
         "balance": Object {
           "available": "0",
+          "detailed": Object {},
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
@@ -67,6 +71,7 @@ Object {
         "active": true,
         "balance": Object {
           "available": "0",
+          "detailed": Object {},
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,

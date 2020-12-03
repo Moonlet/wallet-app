@@ -68,14 +68,17 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
 
-                const selectedStakeAccounts = await selectStakeAccounts(
-                    tx.account.address,
-                    allStakeAccounts,
-                    PosBasicActionType.DELEGATE,
-                    splitAmount.toFixed()
-                );
+                const usedStakedAccounts: string[] = [];
 
                 for (const validator of tx.validators) {
+                    const selectedStakeAccounts = await selectStakeAccounts(
+                        tx.account.address,
+                        allStakeAccounts,
+                        PosBasicActionType.DELEGATE,
+                        splitAmount.toFixed(),
+                        usedStakedAccounts
+                    );
+
                     for (const key in selectedStakeAccounts) {
                         if (selectedStakeAccounts[key]) {
                             const stakeAccount = selectedStakeAccounts[key];
@@ -103,6 +106,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                                 Contracts.STAKING
                             ].delegateStake(txStake, validator);
                             transactions.push(transaction);
+                            usedStakedAccounts.push(key);
                         }
                     }
                 }

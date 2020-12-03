@@ -43,7 +43,6 @@ export class Staking {
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
 
-        tx.extraFields.stakeAccountKey = '8GAP6NmyMz2DCLVFjudKXkB5uGAykZHb325eECizy5Zm';
         const blockHash = await this.client.getCurrentBlockHash();
         const instruction = await deactivateInstruction(tx);
 

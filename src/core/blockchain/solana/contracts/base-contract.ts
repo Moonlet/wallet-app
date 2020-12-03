@@ -71,7 +71,17 @@ export const selectStakeAccounts = (
     amount: string,
     usedStakedAccounts: string[],
     validatorId?: string
-): { [key: string]: { amount?: string; shouldCreate?: boolean } } => {
+): {
+    [key: string]: {
+        amount?: string;
+        options?: {
+            shouldCreate?: boolean;
+            shouldSplit?: boolean;
+            splitFrom?: string;
+            index?: number;
+        };
+    };
+} => {
     const selectedStakeAccounts = {};
     let amountForAction: BigNumber = new BigNumber(amount);
 
@@ -87,6 +97,13 @@ export const selectStakeAccounts = (
                         amountForAction = amountForAction.minus(object.unstaked);
                     } else {
                         // split
+                        const newIndex = Object.keys(accounts).length;
+                        const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
+                        selectedStakeAccounts[newStakeAccountAddress] = {
+                            amount: amountForAction,
+                            options: { shouldSplit: true, splitFrom: address }
+                        };
+                        amountForAction = new BigNumber(0);
                     }
                 }
             }
@@ -96,7 +113,7 @@ export const selectStakeAccounts = (
             const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
             selectedStakeAccounts[newStakeAccountAddress] = {
                 amount: amountForAction,
-                shouldCreate: true
+                options: { shouldCreate: true, index: newIndex }
             };
         }
     }

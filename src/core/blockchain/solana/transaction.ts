@@ -27,7 +27,10 @@ import { selectStakeAccounts } from './contracts/base-contract';
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const account = new Account(bs58Decode(privateKey));
+        const client = Solana.getClient(tx.chainId) as SolanaClient;
         let transaction;
+
+        const blockHash = await client.getCurrentBlockHash();
 
         switch (tx.additionalInfo.type) {
             case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
@@ -39,6 +42,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             case SolanaTransactionInstructionType.UNSTAKE:
                 transaction = StakeProgram.deactivate(tx.additionalInfo.instructions[0]);
                 break;
+            case SolanaTransactionInstructionType.SPLIT_STAKE:
+                transaction = StakeProgram.split(tx.additionalInfo.instructions[0]);
+                break;
 
             case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();
@@ -46,7 +52,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
         }
 
-        transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+        transaction.recentBlockhash = blockHash;
 
         transaction.sign(...[account]);
 
@@ -83,9 +89,10 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         if (selectedStakeAccounts[key]) {
                             const stakeAccount = selectedStakeAccounts[key];
 
-                            if (stakeAccount.shouldCreate) {
+                            if (stakeAccount.options?.shouldCreate) {
                                 const txCreate: IPosTransaction = cloneDeep(tx);
                                 txCreate.extraFields.stakeAccountKey = key;
+                                txCreate.extraFields.stakeAccountIndex = stakeAccount.options.index;
                                 txCreate.amount = new BigNumber(stakeAccount.amount).toFixed(
                                     0,
                                     BigNumber.ROUND_DOWN
@@ -94,6 +101,21 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                                     Contracts.STAKING
                                 ].createStakeAccountWithSeed(txCreate);
                                 transactions.push(transactionCreate);
+                            }
+
+                            if (stakeAccount.options?.shouldSplit) {
+                                const txSplit: IPosTransaction = cloneDeep(tx);
+                                txSplit.extraFields.stakeAccountKey = key;
+                                txSplit.amount = new BigNumber(stakeAccount.amount).toFixed(
+                                    0,
+                                    BigNumber.ROUND_DOWN
+                                );
+                                txSplit.extraFields.stakeAccountKey =
+                                    stakeAccount.options.splitFrom;
+                                const transactionSplit: IBlockchainTransaction = await client.contracts[
+                                    Contracts.STAKING
+                                ].splitStake(txSplit, key);
+                                transactions.push(transactionSplit);
                             }
 
                             const txStake: IPosTransaction = cloneDeep(tx);

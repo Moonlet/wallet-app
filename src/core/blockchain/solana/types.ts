@@ -3,7 +3,8 @@ export enum SolanaTransactionInstructionType {
     CREATE_ACCOUNT_WITH_SEED = 'CREATE_ACCOUNT_WITH_SEED',
     DELEGATE_STAKE = 'DELEGATE_STAKE',
     SPLIT_STAKE = 'SPLIT_STAKE',
-    UNSTAKE = 'UNSTAKE'
+    UNSTAKE = 'UNSTAKE',
+    WITHDRAW = 'WITHDRAW'
 }
 
 export interface ISolanaTransactionInstruction {

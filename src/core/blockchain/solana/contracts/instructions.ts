@@ -73,3 +73,19 @@ export const deactivateInstruction = async (
         }
     };
 };
+
+export const withdrawInstruction = async (
+    tx: IPosTransaction
+): Promise<ISolanaTransactionInstruction> => {
+    const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
+    const baseAccountKey = new PublicKey(tx.account.address);
+    return {
+        type: SolanaTransactionInstructionType.UNSTAKE,
+        instruction: {
+            stakePubkey,
+            authorizedPubkey: baseAccountKey,
+            toPubkey: baseAccountKey,
+            lamports: tx.amount
+        }
+    };
+};

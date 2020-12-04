@@ -43,6 +43,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             case SolanaTransactionInstructionType.SPLIT_STAKE:
                 transaction = StakeProgram.split(tx.additionalInfo.instructions[0]);
                 break;
+            case SolanaTransactionInstructionType.WITHDRAW:
+                transaction = StakeProgram.withdraw(tx.additionalInfo.instructions[0]);
+                break;
 
             case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();

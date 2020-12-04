@@ -32,12 +32,13 @@ export const splitInstruction = async (
 ): Promise<ISolanaTransactionInstruction> => {
     const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
     const baseAccountKey = new PublicKey(tx.account.address);
+
     return {
         type: SolanaTransactionInstructionType.SPLIT_STAKE,
         instruction: {
             stakePubkey,
             authorizedPubkey: baseAccountKey,
-            lamports: tx.amount,
+            lamports: Number(tx.amount),
             splitStakePubkey: new PublicKey(splitStakePubkey)
         }
     };

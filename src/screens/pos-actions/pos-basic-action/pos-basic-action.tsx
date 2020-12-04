@@ -131,11 +131,12 @@ export class PosBasicActionComponent extends React.Component<
 
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
 
+        const balance = new BigNumber(this.props.validators[0].amountDelegated.active).plus(
+            this.props.validators[0].amountDelegated.pending
+        );
+
         const activeBalance = blockchainInstance.account
-            .amountFromStd(
-                new BigNumber(this.props.validators[0].amountDelegated.active),
-                tokenConfig.decimals
-            )
+            .amountFromStd(balance, tokenConfig.decimals)
             .toFixed();
 
         const amount = await availableAmount(

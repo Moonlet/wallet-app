@@ -41,6 +41,7 @@ import { delay } from '../../../core/utils/time';
 import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
 import { NavigationService } from '../../../navigation/navigation-service';
 import BigNumber from 'bignumber.js';
+import { SolanaTransactionInstructionType } from '../../../core/blockchain/solana/types';
 
 export const redelegate = (
     account: IAccountState,
@@ -397,6 +398,22 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         if (action?.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL) {
                             await delay(2000);
                         }
+                    }
+                }
+
+                // CREATE_ACCOUNT_WITH_SEED: delay 20 seconds for now
+                // The creation of account takes a lot of time and if not completed the stake transaction after will not work
+                // Need to tell this to user
+                if (
+                    account.blockchain === Blockchain.SOLANA &&
+                    additionalInfo &&
+                    transactions.length > 1
+                ) {
+                    if (
+                        additionalInfo.type ===
+                        SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED
+                    ) {
+                        await delay(20000);
                     }
                 }
 

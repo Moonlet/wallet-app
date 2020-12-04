@@ -85,16 +85,16 @@ export const selectStakeAccounts = (
     const selectedStakeAccounts = {};
     let amountForAction: BigNumber = new BigNumber(amount);
 
-    if (PosBasicActionType.DELEGATE) {
+    if (action === PosBasicActionType.DELEGATE) {
         Object.keys(accounts).map(address => {
             if (amountForAction.isGreaterThan(0) && !usedStakedAccounts.includes(address)) {
-                const object = accounts[address];
-                if (object.unstaked && new BigNumber(object.unstaked).isGreaterThan(0)) {
-                    if (new BigNumber(amountForAction).isGreaterThanOrEqualTo(object.unstaked)) {
+                const account = accounts[address];
+                if (account.unstaked && new BigNumber(account.unstaked).isGreaterThan(0)) {
+                    if (new BigNumber(amountForAction).isGreaterThanOrEqualTo(account.unstaked)) {
                         selectedStakeAccounts[address] = {
-                            amount: object.unstaked
+                            amount: account.unstaked
                         };
-                        amountForAction = amountForAction.minus(object.unstaked);
+                        amountForAction = amountForAction.minus(account.unstaked);
                     } else {
                         // split
                         const newIndex = Object.keys(accounts).length;
@@ -116,6 +116,38 @@ export const selectStakeAccounts = (
                 options: { shouldCreate: true, index: newIndex }
             };
         }
+    } else if (action === PosBasicActionType.UNSTAKE) {
+        Object.keys(accounts).map(address => {
+            const account = accounts[address];
+            if (
+                amountForAction.isGreaterThan(0) &&
+                !usedStakedAccounts.includes(address) &&
+                account.validatorId === validatorId
+            ) {
+                if (account.staked && new BigNumber(account.staked).isGreaterThan(0)) {
+                    if (new BigNumber(amountForAction).isGreaterThanOrEqualTo(account.staked)) {
+                        selectedStakeAccounts[address] = {
+                            amount: account.staked
+                        };
+                        amountForAction = amountForAction.minus(account.staked);
+                    } else {
+                        // split
+                    }
+                } else if (
+                    account.activating &&
+                    new BigNumber(account.activating).isGreaterThan(0)
+                ) {
+                    if (new BigNumber(amountForAction).isGreaterThanOrEqualTo(account.activating)) {
+                        selectedStakeAccounts[address] = {
+                            amount: account.activating
+                        };
+                        amountForAction = amountForAction.minus(account.activating);
+                    } else {
+                        // split
+                    }
+                }
+            }
+        });
     }
 
     return selectedStakeAccounts;

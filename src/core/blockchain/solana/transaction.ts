@@ -27,10 +27,8 @@ import { selectStakeAccounts } from './contracts/base-contract';
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const account = new Account(bs58Decode(privateKey));
-        const client = Solana.getClient(tx.chainId) as SolanaClient;
+        // const client = Solana.getClient(tx.chainId) as SolanaClient;
         let transaction;
-
-        const blockHash = await client.getCurrentBlockHash();
 
         switch (tx.additionalInfo.type) {
             case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
@@ -52,7 +50,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
         }
 
-        transaction.recentBlockhash = blockHash;
+        transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
 
         transaction.sign(...[account]);
 
@@ -77,7 +75,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const usedStakedAccounts: string[] = [];
 
                 for (const validator of tx.validators) {
-                    const selectedStakeAccounts = await selectStakeAccounts(
+                    const stakeAccounts = selectStakeAccounts(
                         tx.account.address,
                         allStakeAccounts,
                         PosBasicActionType.DELEGATE,
@@ -85,9 +83,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         usedStakedAccounts
                     );
 
-                    for (const key in selectedStakeAccounts) {
-                        if (selectedStakeAccounts[key]) {
-                            const stakeAccount = selectedStakeAccounts[key];
+                    for (const key in stakeAccounts) {
+                        if (stakeAccounts[key]) {
+                            const stakeAccount = stakeAccounts[key];
 
                             if (stakeAccount.options?.shouldCreate) {
                                 const txCreate: IPosTransaction = cloneDeep(tx);
@@ -105,7 +103,6 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                             if (stakeAccount.options?.shouldSplit) {
                                 const txSplit: IPosTransaction = cloneDeep(tx);
-                                txSplit.extraFields.stakeAccountKey = key;
                                 txSplit.amount = new BigNumber(stakeAccount.amount).toFixed(
                                     0,
                                     BigNumber.ROUND_DOWN
@@ -134,10 +131,28 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 }
                 break;
             case PosBasicActionType.UNSTAKE:
-                const transactionUnstake: IBlockchainTransaction = await client.contracts[
-                    Contracts.STAKING
-                ].unStake(cloneDeep(tx), tx.validators[0]);
-                transactions.push(transactionUnstake);
+                const selectedStakeAccounts = selectStakeAccounts(
+                    tx.account.address,
+                    allStakeAccounts,
+                    PosBasicActionType.UNSTAKE,
+                    tx.amount,
+                    usedStakedAccounts
+                );
+                for (const key in selectedStakeAccounts) {
+                    if (selectedStakeAccounts[key]) {
+                        const stakeAccount = selectedStakeAccounts[key];
+                        const transactionUnstake: IBlockchainTransaction = await client.contracts[
+                            Contracts.STAKING
+                        ].unStake(cloneDeep(tx), tx.validators[0]);
+
+                        transactionUnstake.amount = new BigNumber(stakeAccount.amount).toFixed(
+                            0,
+                            BigNumber.ROUND_DOWN
+                        );
+                        transactions.push(transactionUnstake);
+                    }
+                }
+
                 break;
         }
 

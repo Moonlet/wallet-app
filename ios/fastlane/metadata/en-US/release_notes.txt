@@ -1,6 +1,6 @@
-Team's log. Stardate 2011.18:
+Team's log. Stardate 2012.05:
 
-Some annoying bug that made the whole app dark it drove us crazy. But we found it and came with a fix. Now it should work fine :)
+This release comes with Promotions hub, a new feature that will allow users to have faster access to relevant promotional campaigns. As well we have a fresh new stake flow which should simplify the whole experience making it much easier to stake your tokens.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 

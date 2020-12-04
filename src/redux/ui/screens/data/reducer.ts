@@ -21,6 +21,7 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 blockchain: request.user.blockchain,
                 chainId: request.user.chainId,
                 address: request.user.address,
+                step: request.context?.step,
                 tab: request.context?.tab
             });
 
@@ -48,6 +49,7 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 blockchain: request.user.blockchain,
                 chainId: request.user.chainId,
                 address: request.user.address,
+                step: request.context?.step,
                 tab: request.context?.tab
             });
 
@@ -99,10 +101,15 @@ export const getScreenDataKey = (data: {
     blockchain: Blockchain;
     chainId: string;
     address: string;
-    tab?: string;
+    step: string;
+    tab: string;
 }): string => {
-    // 'walletPubKey-blockchain-chainId-address-tab'
+    // 'walletPubKey-blockchain-chainId-address-step-tab'
     let key = data.pubKey + '-' + data.blockchain + '-' + data.chainId + '-' + data.address;
+
+    if (data?.step) {
+        key = key + '-' + data.step;
+    }
 
     if (data?.tab) {
         key = key + '-' + data.tab;

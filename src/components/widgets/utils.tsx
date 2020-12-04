@@ -6,7 +6,12 @@ import { formatNumber } from '../../core/utils/format-number';
 import { normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
 import { formatTranslate } from '../../core/i18n';
 
-const formatTextData = (data: ITextData): string => {
+const formatTextData = (
+    data: ITextData,
+    translationKeys?: {
+        [key: string]: string;
+    }
+): string => {
     let text = '';
 
     if (data?.params) {
@@ -17,7 +22,7 @@ const formatTextData = (data: ITextData): string => {
             const val = data.params[param];
 
             if (val.type === DataType.TEXT) {
-                translateKeys[param] = formatTextData(val.data as ITextData);
+                translateKeys[param] = formatTextData(val.data as ITextData, translateKeys);
             }
 
             if (val.type === DataType.CURRENCY) {
@@ -29,6 +34,10 @@ const formatTextData = (data: ITextData): string => {
     } else {
         // Static text
         text = String(data.value);
+
+        if (translationKeys) {
+            text = formatTranslate(text, translationKeys);
+        }
     }
 
     return text;
@@ -83,6 +92,8 @@ const formatCurrencyData = (data: ICurrencyData): string => {
 };
 
 export const formatStyles = (style: IDataStyle): { [key: string]: string | number } => {
+    if (!style) return {};
+
     const finalStyle = {};
 
     for (const s of Object.keys(style)) {
@@ -144,7 +155,15 @@ const beautify = (
     return out;
 };
 
-export const formatDataJSXElements = (data: IData | IData[], baseStyle: any): JSX.Element[] => {
+export const formatDataJSXElements = (
+    data: IData | IData[],
+    baseStyle: any,
+    options?: {
+        translateKeys?: {
+            [key: string]: string;
+        };
+    }
+): JSX.Element[] => {
     if (!Array.isArray(data)) {
         data = [data];
     }
@@ -159,7 +178,7 @@ export const formatDataJSXElements = (data: IData | IData[], baseStyle: any): JS
                         key={`data-text-${index}`}
                         style={[baseStyle, d?.style && formatStyles(d.style)]}
                     >
-                        {formatTextData(d.data as ITextData)}
+                        {formatTextData(d.data as ITextData, options?.translateKeys)}
                     </Text>
                 );
                 break;

@@ -13,10 +13,11 @@ export const quickStakeSelectedValidator = (state: IReduxState, module: IScreenM
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
+        step: undefined,
         tab: undefined
     });
 
-    const validators: any = state.ui.screens.inputData[screenKey]?.validators;
+    const validators: any = state.ui.screens.inputData[screenKey]?.data?.validators;
     const validatorId = module?.details?.validator.id;
 
     if (validators && validatorId && validators.findIndex(v => v.id === validatorId) !== -1) {

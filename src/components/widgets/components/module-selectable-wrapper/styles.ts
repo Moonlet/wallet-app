@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -14,12 +14,5 @@ export default (theme: ITheme) =>
         moduleColWrapperContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between'
-        },
-        infoWrapper: {
-            top: 0,
-            position: 'absolute',
-            width: normalize(40),
-            height: normalize(40),
-            justifyContent: 'center'
         }
     });

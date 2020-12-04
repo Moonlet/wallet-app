@@ -3,17 +3,14 @@ import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { I2LinesTextBannerData, IScreenModule } from '../../types';
+import { I2LinesTextBannerData, IScreenModule, ISmartScreenActions } from '../../types';
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
 import { formatDataJSXElements, formatStyles } from '../../utils';
-import { handleCta } from '../../../../redux/ui/screens/data/actions';
 
 interface IExternalProps {
     module: IScreenModule;
-    actions: {
-        handleCta: typeof handleCta;
-    };
+    actions: ISmartScreenActions;
 }
 
 const TwoLinesStakeBannerComponent = (

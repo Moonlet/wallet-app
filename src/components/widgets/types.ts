@@ -1,6 +1,12 @@
 import { Blockchain } from '../../core/blockchain/types';
+import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { AccountType } from '../../redux/wallets/state';
 import { IconValues } from '../icon/values';
+import {
+    clearScreenInputData,
+    runScreenValidation,
+    runScreenStateActions
+} from '../../redux/ui/screens/input-data/actions';
 
 export interface IScreenRequest {
     context: IScreenContext;
@@ -8,18 +14,29 @@ export interface IScreenRequest {
 }
 
 export interface IScreenContext {
-    screen: ContextScreen;
-    tab?: ContextTab;
+    screen: string;
+    step?: string;
+    tab?: string;
+    flowId?: string;
 }
 
+/** @deprecated use string instead */
 export enum ContextScreen {
     DASHBOARD = 'dashboard',
     TOKEN = 'token',
     QUICK_STAKE_SELECT_VALIDATOR = 'quickStakeSelectValidator'
 }
 
+/** @deprecated use string instead */
 export enum ContextTab {
     ACCOUNT = 'account'
+}
+
+export interface ISmartScreenActions {
+    handleCta?: typeof handleCta;
+    clearScreenInputData?: typeof clearScreenInputData;
+    runScreenValidation?: typeof runScreenValidation;
+    runScreenStateActions?: typeof runScreenStateActions;
 }
 
 export interface IScreenUser {
@@ -48,27 +65,73 @@ export interface IScreenUser {
 
 export interface IScreenResponse {
     widgets: IScreenWidget[];
+    bottomFixedArea?: IScreenWidget;
+    validation?: IScreenValidation;
 }
 
-export interface ICta {
-    type: 'callAction' | 'openUrl' | 'navigateTo';
+export interface IScreenFieldValidation {
+    fn: string;
+    params?: any[];
+    messages?: {
+        [key: string]: {
+            type: string;
+            message: string;
+        };
+    };
+}
+
+export interface IScreenValidation {
+    validators: {
+        [field: string]: IScreenFieldValidation[];
+    };
+}
+
+export interface ICtaAction {
+    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
     params: {
         action?: string;
         url?: string;
         screen?: string;
         params?: any;
     };
+}
+
+export interface ICta {
+    actions?: ICtaAction[];
+
+    /** @deprecated use actions instead */
+    type?: 'callAction' | 'openUrl' | 'navigateTo';
+
+    /** @deprecated use actions instead */
+    params?: {
+        action?: string;
+        url?: string;
+        screen?: string;
+        params?: any;
+    };
+
     label?: string;
+
     buttonProps?: {
         primary?: boolean;
         secondary?: boolean;
         disabled?: boolean;
+        disabledSecondary?: boolean;
+
         colors?: {
             label: string;
             bg: string;
         };
+
         leftIcon?: IconValues;
+
         wrapperStyle?: any;
+        buttonStyle?: any;
+    };
+
+    // TODO: check this
+    screenDataValidation?: {
+        context: IScreenContext; // not sure if needed
     };
 }
 
@@ -85,7 +148,9 @@ export interface IScreenModule {
     hidden?: boolean;
     style?: IDataStyle;
     type:
+        | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.BALANCES_GRID_ICONS
+        | ModuleTypes.CTA
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
@@ -105,9 +170,10 @@ export interface IScreenModule {
     data:
         | I2LinesTextBannerData
         | I3LinesCtaData
+        | IAmountInputData
         | IBalanceGridData
         | IBalanceGridData[]
-        // | IIconData
+        | IIconData
         | IIconTwoLinesData
         | IImageBannerData
         | IMdTextData
@@ -124,10 +190,25 @@ export interface IScreenModule {
         style?: IDataStyle;
         data: IScreenModule;
     };
+
+    state: {
+        // uiStateSelector?: IStateSelector, // aka state modifier - not implemented now
+        actions?: IStateSelector[];
+        selectors: {
+            [key: string]: IStateSelector;
+        };
+    };
+}
+
+export interface IStateSelector {
+    fn: string;
+    params?: any[];
 }
 
 export enum ModuleTypes {
+    AMOUNT_INPUT = 'amount-input',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
+    CTA = 'cta',
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
@@ -211,7 +292,6 @@ export interface IData {
     data: ITextData | ICurrencyData;
 }
 
-// Used for `3-lines-cta`
 export interface I3LinesCtaData {
     firstLine: IData[];
     secondLine: IData[];
@@ -235,7 +315,13 @@ export interface IBalanceGridData {
 }
 
 export interface IImageBannerData {
-    imageUrl: string;
+    image: IImageInfo;
+}
+
+export interface IImageInfo {
+    url: string;
+    width: number;
+    height: number;
 }
 
 export interface IOneLineTextBannerData {
@@ -252,7 +338,6 @@ export interface I2LinesTextBannerData {
     backgroundColor?: string;
 }
 
-// Used for `separator`
 export interface ISeparatorData {
     color?: string;
 }
@@ -283,4 +368,22 @@ export interface IThreeLinesIconData {
 export interface IMdTextData {
     text: string;
     style?: any;
+}
+
+/**
+ * value: +0.1 | half | all
+ * percentage: 10%
+ */
+export interface IAmountInputAmountBox {
+    type: 'value' | 'percentage';
+    value: string | number;
+    // label: string;
+}
+
+export interface IAmountInputData {
+    input?: {
+        style?: IDataStyle;
+    };
+    labels?: IData[];
+    amounts?: IAmountInputAmountBox[];
 }

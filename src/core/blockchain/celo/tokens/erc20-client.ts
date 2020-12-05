@@ -11,7 +11,7 @@ export class Erc20Client {
         return this.client
             .callContract(contractAddress, 'balanceOf(address):(uint256)', [accountAddress])
             .then(v => ({
-                available: new BigNumber(0), // TODO
+                available: new BigNumber(String(v)),
                 total: new BigNumber(String(v))
             }));
     }

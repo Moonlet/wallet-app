@@ -126,6 +126,7 @@ const handleCtaAction = async (
                 }
 
                 case 'MULTIPLE_SELECTION':
+                case 'multipleSelection':
                     toggleValidatorMultiple(options.screenKey, {
                         id: options.validator.id,
                         name: options.validator.name,
@@ -135,6 +136,7 @@ const handleCtaAction = async (
                     break;
 
                 case 'SINGLE_SELECTION':
+                case 'singleSelection':
                     setScreenInputData(options.screenKey, {
                         validators: [
                             {
@@ -148,6 +150,7 @@ const handleCtaAction = async (
                     break;
 
                 case 'LOAD_MORE_VALIDATORS':
+                case 'loadMoreValidators':
                     dispatch({
                         type: LOAD_MORE_VALIDATORS,
                         data: { screenKey: options.screenKey }

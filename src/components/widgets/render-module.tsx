@@ -92,7 +92,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.THREE_LINES_CTA:
-            moduleJSX = <ThreeLinesCta module={module} actions={actions} />;
+            moduleJSX = (
+                <ThreeLinesCta
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.BALANCES_GRID_ICONS:

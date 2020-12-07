@@ -6,11 +6,24 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
 import { I3LinesCtaData, ICta, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
+import { connect } from 'react-redux';
+import { IReduxState } from '../../../../redux/state';
+import { getStateSelectors } from '../ui-state-selectors';
 
 interface IExternalProps {
     module: IScreenModule;
     actions: ISmartScreenActions;
+    options?: {
+        screenKey?: string;
+        flowId?: string;
+    };
 }
+
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return getStateSelectors(state, ownProps.module, {
+        flowId: ownProps?.options?.flowId
+    });
+};
 
 const ThreeLinesCtaComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
@@ -22,16 +35,28 @@ const ThreeLinesCtaComponent = (
     const handleOnPress = () => actions.handleCta(cta);
 
     return (
-        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
+        <View style={[styles.container, formatStyles(module?.style)]}>
             <View style={styles.generalFlex}>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data.firstLine, styles.firstLineText)}
+                    {formatDataJSXElements(
+                        data.firstLine,
+                        styles.firstLineText,
+                        module?.state && { translateKeys: props as any }
+                    )}
                 </View>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data.secondLine, styles.secondLine)}
+                    {formatDataJSXElements(
+                        data.secondLine,
+                        styles.secondLine,
+                        module?.state && { translateKeys: props as any }
+                    )}
                 </View>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data.thirdLine, styles.thirdLine)}
+                    {formatDataJSXElements(
+                        data.thirdLine,
+                        styles.thirdLine,
+                        module?.state && { translateKeys: props as any }
+                    )}
                 </View>
             </View>
 
@@ -42,14 +67,22 @@ const ThreeLinesCtaComponent = (
                     disabled={cta.buttonProps?.disabled}
                     style={[
                         styles.actionButton,
-                        {
-                            backgroundColor: cta.buttonProps?.colors.bg,
-                            borderColor: cta.buttonProps?.colors.bg
+                        cta?.buttonProps?.colors?.bg && {
+                            backgroundColor: cta.buttonProps.colors.bg,
+                            borderColor: cta.buttonProps.colors.bg
                         }
                     ]}
                     onPress={handleOnPress}
                 >
-                    <Text style={{ color: cta.buttonProps?.colors.label }}>{cta.label}</Text>
+                    <Text
+                        style={
+                            cta?.buttonProps?.colors?.label && {
+                                color: cta.buttonProps.colors.label
+                            }
+                        }
+                    >
+                        {cta.label}
+                    </Text>
                 </Button>
             </View>
         </View>
@@ -57,5 +90,6 @@ const ThreeLinesCtaComponent = (
 };
 
 export const ThreeLinesCta = smartConnect<IExternalProps>(ThreeLinesCtaComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

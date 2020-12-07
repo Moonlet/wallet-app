@@ -159,8 +159,6 @@ export const selectStakeAccounts = (
                     }
                 }
             });
-        case PosBasicActionType.WITHDRAW:
-            break;
     }
 
     return selectedStakeAccounts;

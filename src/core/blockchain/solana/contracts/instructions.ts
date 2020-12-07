@@ -85,7 +85,7 @@ export const withdrawInstruction = async (
             stakePubkey,
             authorizedPubkey: baseAccountKey,
             toPubkey: baseAccountKey,
-            lamports: tx.amount
+            lamports: tx.extraFields.amount
         }
     };
 };

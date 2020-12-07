@@ -157,6 +157,18 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 }
 
                 break;
+            case PosBasicActionType.WITHDRAW:
+                const transactionWithdraW: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdraw(cloneDeep(tx));
+
+                transactionWithdraW.amount = new BigNumber(tx.extraFields.amount).toFixed(
+                    0,
+                    BigNumber.ROUND_DOWN
+                );
+                transactions.push(transactionWithdraW);
+
+                break;
         }
 
         return transactions;

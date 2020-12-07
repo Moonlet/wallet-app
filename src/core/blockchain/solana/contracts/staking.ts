@@ -14,7 +14,8 @@ import {
     createAccountWithSeedInstruction,
     deactivateInstruction,
     delegateInstruction,
-    splitInstruction
+    splitInstruction,
+    withdrawInstruction
 } from './instructions';
 import { PosBasicActionType } from '../../types/token';
 import { Client } from '../client';
@@ -89,6 +90,22 @@ export class Staking {
             posAction: PosBasicActionType.STAKE,
             validatorName: validator.name,
             type: SolanaTransactionInstructionType.DELEGATE_STAKE,
+            instructions: [instruction.instruction],
+            currentBlockHash: blockHash
+        };
+
+        return transaction;
+    }
+
+    public async withdraw(tx: IPosTransaction): Promise<IBlockchainTransaction> {
+        const transaction = await buildBaseTransaction(tx);
+
+        const blockHash = await this.client.getCurrentBlockHash();
+        const instruction = await withdrawInstruction(tx);
+
+        transaction.additionalInfo = {
+            posAction: PosBasicActionType.WITHDRAW,
+            type: SolanaTransactionInstructionType.WITHDRAW,
             instructions: [instruction.instruction],
             currentBlockHash: blockHash
         };

@@ -41,7 +41,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 transaction = StakeProgram.deactivate(tx.additionalInfo.instructions[0]);
                 break;
             case SolanaTransactionInstructionType.SPLIT_STAKE:
-                transaction = StakeProgram.split(tx.additionalInfo.instructions[0]);
+                transaction = tx.additionalInfo.splitTransaction;
                 break;
             case SolanaTransactionInstructionType.WITHDRAW:
                 transaction = StakeProgram.withdraw(tx.additionalInfo.instructions[0]);
@@ -112,9 +112,10 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                                 );
                                 txSplit.extraFields.stakeAccountKey =
                                     stakeAccount.options.splitFrom;
+                                txSplit.extraFields.stakeAccountIndex = stakeAccount.options.index;
                                 const transactionSplit: IBlockchainTransaction = await client.contracts[
                                     Contracts.STAKING
-                                ].splitStake(txSplit, key);
+                                ].split(txSplit, key);
                                 transactions.push(transactionSplit);
                             }
 

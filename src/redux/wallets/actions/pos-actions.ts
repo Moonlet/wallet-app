@@ -411,7 +411,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                 ) {
                     if (
                         additionalInfo.type ===
-                        SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED
+                            SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED ||
+                        additionalInfo.type === SolanaTransactionInstructionType.SPLIT_STAKE
                     ) {
                         await delay(20000);
                     }

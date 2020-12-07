@@ -4,17 +4,17 @@ import { IValidator } from '../../types/stats';
 // import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction } from './base-contract';
 
-// import { SystemProgram } from '@solana/web3.js/src/system-program';
-// import { StakeProgram } from '@solana/web3.js/src/stake-program';
-// import { PublicKey } from '@solana/web3.js/src/publickey';
+import { SystemProgram } from '@solana/web3.js/src/system-program';
+import { StakeProgram, STAKE_INSTRUCTION_LAYOUTS } from '@solana/web3.js/src/stake-program';
+import { encodeData } from '@solana/web3.js/src/instruction';
+import { PublicKey } from '@solana/web3.js/src/publickey';
 // import { Account } from '@solana/web3.js/src/account';
-// import { Transaction } from '@solana/web3.js/src/transaction';
+import { Transaction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from '../types';
 import {
     createAccountWithSeedInstruction,
     deactivateInstruction,
     delegateInstruction,
-    splitInstruction,
     withdrawInstruction
 } from './instructions';
 import { PosBasicActionType } from '../../types/token';
@@ -58,19 +58,47 @@ export class Staking {
         return transaction;
     }
 
-    public async splitStake(
+    public async split(
         tx: IPosTransaction,
         splitStakePubKey: string
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
 
         const blockHash = await this.client.getCurrentBlockHash();
-        const instruction = await splitInstruction(tx, splitStakePubKey);
+        const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
+        const baseAccountKey = new PublicKey(tx.account.address);
+        const newStakeAccountKey = new PublicKey(splitStakePubKey);
+
+        const solanaTransaction = new Transaction();
+        solanaTransaction.add(
+            SystemProgram.createAccountWithSeed({
+                fromPubkey: baseAccountKey,
+                newAccountPubkey: newStakeAccountKey,
+                basePubkey: baseAccountKey,
+                seed: `stake:${tx.extraFields.stakeAccountIndex}`,
+                lamports: tx.amount,
+                space: StakeProgram.space,
+                programId: StakeProgram.programId
+            })
+        );
+
+        const type = STAKE_INSTRUCTION_LAYOUTS.Split;
+        const data = encodeData(type, { lamports: tx.amount });
+
+        solanaTransaction.add({
+            keys: [
+                { pubkey: stakePubkey, isSigner: false, isWritable: true },
+                { pubkey: newStakeAccountKey, isSigner: false, isWritable: true },
+                { pubkey: baseAccountKey, isSigner: true, isWritable: false }
+            ],
+            programId: StakeProgram.programId,
+            data
+        });
 
         transaction.additionalInfo = {
             posAction: PosBasicActionType.SPLIT_STAKE,
             type: SolanaTransactionInstructionType.SPLIT_STAKE,
-            instructions: [instruction.instruction],
+            splitTransaction: solanaTransaction,
             currentBlockHash: blockHash
         };
 

@@ -107,7 +107,7 @@ export const selectStakeAccounts = (
                             );
                             selectedStakeAccounts[newStakeAccountAddress] = {
                                 amount: amountForAction,
-                                options: { shouldSplit: true, splitFrom: address }
+                                options: { shouldSplit: true, splitFrom: address, index: newIndex }
                             };
                             amountForAction = new BigNumber(0);
                         }

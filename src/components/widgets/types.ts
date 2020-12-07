@@ -396,7 +396,6 @@ export interface IIconOneLineData {
     icon: {
         value: IconValues;
         style?: IDataStyle;
-        color?: string;
     };
     line: IData[];
 }

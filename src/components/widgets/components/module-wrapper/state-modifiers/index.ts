@@ -11,15 +11,19 @@ import { quickStakeSelectedValidator } from './quick-stake-selected-validator';
 import { stakeEnterAmountStakeNow } from './stake-enter-amount-stake-now';
 import {
     switchNodeSelectValidator,
-    switchNodeSelectNodeBottomWrapper
-} from './switch-node-select-validator';
+    switchNodeSelectNodeBottomWrapper,
+    switchNodeSelectReasons,
+    switchNodeContinueInfo1
+} from './switch-node';
 
 const stateModifiers = {
     updateClaimPending,
     quickStakeSelectedValidator,
     stakeEnterAmountStakeNow,
     switchNodeSelectValidator,
-    switchNodeSelectNodeBottomWrapper
+    switchNodeSelectNodeBottomWrapper,
+    switchNodeSelectReasons,
+    switchNodeContinueInfo1
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {

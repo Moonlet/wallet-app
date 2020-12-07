@@ -292,6 +292,30 @@ const handleCtaAction = async (
                     setSelectedBlockchain(action.params?.params?.blockchain)(dispatch, getState);
                     break;
 
+                case 'switchNodeSelectReasons':
+                    const infoText = action.params?.params?.infoText;
+                    const flowId = action.params?.params?.flowId;
+
+                    const selectReasons = [];
+                    Object.assign(
+                        selectReasons,
+                        state.ui.screens.inputData[flowId]?.data?.selectReasons
+                    );
+                    const reasonIndex = selectReasons.findIndex(r => r === infoText);
+
+                    if (reasonIndex === -1) {
+                        // select reason
+                        selectReasons.push(infoText);
+                    } else {
+                        // unselect reason
+                        selectReasons.splice(reasonIndex, 1);
+                    }
+
+                    setScreenInputData(flowId, {
+                        selectReasons
+                    })(dispatch, getState);
+                    break;
+
                 default:
                     break;
             }

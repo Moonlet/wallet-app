@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from '../../library';
+import { Button, Text } from '../../library';
 import {
     ICta,
     IScreenContext,
@@ -137,7 +137,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.ICON_ONE_LINE:
-            moduleJSX = <IconOneLine module={module} />;
+            moduleJSX = (
+                <IconOneLine
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.ICON_TWO_LINES:
@@ -229,7 +235,15 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
             ]}
             onPress={() => handleCTA(cta)}
         >
-            {cta?.label || ''}
+            <Text
+                style={
+                    cta?.buttonProps?.colors?.label && {
+                        color: cta.buttonProps.colors.label
+                    }
+                }
+            >
+                {cta.label}
+            </Text>
         </Button>
     );
 };

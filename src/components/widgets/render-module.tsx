@@ -28,6 +28,7 @@ import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
+import { IconOneLine } from './components/icon-one-line/icon-one-line';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -133,6 +134,10 @@ export const renderModule = (
 
         case ModuleTypes.THREE_LINES_ICON:
             moduleJSX = <ThreeLinesIcon module={module} />;
+            break;
+
+        case ModuleTypes.ICON_ONE_LINE:
+            moduleJSX = <IconOneLine module={module} />;
             break;
 
         case ModuleTypes.ICON_TWO_LINES:

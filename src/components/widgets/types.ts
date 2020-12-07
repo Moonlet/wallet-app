@@ -152,6 +152,7 @@ export interface IScreenModule {
         | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.CTA
+        | ModuleTypes.ICON_ONE_LINE
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
@@ -176,6 +177,7 @@ export interface IScreenModule {
         | IBalanceGridData[]
         | IIconData
         | IIconTwoLinesData
+        | IIconOneLineData
         | IImageBannerData
         | IMdTextData
         | IOneLineTextBannerData
@@ -210,6 +212,7 @@ export enum ModuleTypes {
     AMOUNT_INPUT = 'amount-input',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     CTA = 'cta',
+    ICON_ONE_LINE = 'cta-one-line',
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
@@ -387,4 +390,13 @@ export interface IAmountInputData {
     };
     labels?: IData[];
     amounts?: IAmountInputAmountBox[];
+}
+
+export interface IIconOneLineData {
+    icon: {
+        value: IconValues;
+        style?: IDataStyle;
+        color?: string;
+    };
+    line: IData[];
 }

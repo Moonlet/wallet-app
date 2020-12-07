@@ -1,6 +1,6 @@
-Team's log. Stardate 2011.18:
+Team's log. Stardate 2012.07:
 
-Some annoying bug that made the whole app dark it drove us crazy. But we found it and came with a fix. Now it should work fine :)
+We had to fix some issues with the fresh new Promotions hub. Now you should be able to see promotions on all accounts or when use a Ledger device.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 

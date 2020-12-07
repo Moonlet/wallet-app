@@ -25,10 +25,16 @@ class ImageBannerComponent extends React.Component<
             aspectRatio = data.image.width / data.image.height;
         }
 
+        // Used this in order not to crash in case of api rollback
+        const uri = data?.image?.url || (data as any)?.imageUrl;
+
+        // Hide image banner if uri does not exist
+        if (!uri) return null;
+
         const moduleJSX = (
             <FastImage
                 style={[{ aspectRatio }, styles.image, formatStyles(module?.style)]}
-                source={{ uri: data.image.url }}
+                source={{ uri }}
                 resizeMode={ResizeMode.contain}
             />
         );

@@ -1,6 +1,6 @@
-Team's log. Stardate 2012.05:
+Team's log. Stardate 2012.07:
 
-This release comes with Promotions hub, a new feature that will allow users to have faster access to relevant promotional campaigns. As well we have a fresh new stake flow which should simplify the whole experience making it much easier to stake your tokens.
+We had to fix some issues with the fresh new Promotions hub. Now you should be able to see promotions on all accounts or when use a Ledger device.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 

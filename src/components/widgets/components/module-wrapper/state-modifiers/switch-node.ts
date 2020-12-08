@@ -70,7 +70,7 @@ export const switchNodeContinueInfo2 = (state: IReduxState, module: IScreenModul
     if (
         flowId &&
         state.ui.screens.inputData &&
-        (state.ui.screens.inputData[flowId]?.data?.input).length >= 1
+        state.ui.screens.inputData[flowId]?.data?.input?.length >= 1
     ) {
         return 'SELECTED';
     }

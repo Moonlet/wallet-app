@@ -5,7 +5,8 @@ import { IconValues } from '../icon/values';
 import {
     clearScreenInputData,
     runScreenValidation,
-    runScreenStateActions
+    runScreenStateActions,
+    setScreenInputData
 } from '../../redux/ui/screens/input-data/actions';
 
 export interface IScreenRequest {
@@ -38,6 +39,7 @@ export interface ISmartScreenActions {
     clearScreenInputData?: typeof clearScreenInputData;
     runScreenValidation?: typeof runScreenValidation;
     runScreenStateActions?: typeof runScreenStateActions;
+    setScreenInputData?: typeof setScreenInputData;
 }
 
 export interface IScreenUser {
@@ -156,6 +158,7 @@ export interface IScreenModule {
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
+        | ModuleTypes.INPUT
         | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
@@ -179,6 +182,7 @@ export interface IScreenModule {
         | IIconTwoLinesData
         | IIconOneLineData
         | IImageBannerData
+        | IInputData
         | IMdTextData
         | IOneLineTextBannerData
         | IScreenModuleColumnsWrapperData
@@ -216,6 +220,7 @@ export enum ModuleTypes {
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
+    INPUT = 'input',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
@@ -398,4 +403,19 @@ export interface IIconOneLineData {
         style?: IDataStyle;
     };
     line: IData[];
+}
+
+export interface IInputData {
+    style?: {
+        input?: IDataStyle;
+        inputContainer?: IDataStyle;
+    };
+    options?: {
+        keyboardType?: string;
+        placeholder?: {
+            value: string;
+            color?: string;
+        };
+        multiline?: boolean;
+    };
 }

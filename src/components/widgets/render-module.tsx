@@ -29,6 +29,7 @@ import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
 import { IconOneLine } from './components/icon-one-line/icon-one-line';
+import { InputModule } from './components/input/input';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -116,6 +117,16 @@ export const renderModule = (
 
         case ModuleTypes.IMAGE_BANNER:
             moduleJSX = <ImageBanner module={module} actions={actions} />;
+            break;
+
+        case ModuleTypes.INPUT:
+            moduleJSX = (
+                <InputModule
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.TWO_LINES_TEXT_BANNER:

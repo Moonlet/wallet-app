@@ -392,9 +392,14 @@ export interface IAmountInputAmountBox {
 export interface IAmountInputData {
     input?: {
         style?: IDataStyle;
+        textStyle?: IDataStyle;
     };
     labels?: IData[];
     amounts?: IAmountInputAmountBox[];
+    placeholder?: {
+        value: string;
+        color?: string;
+    };
 }
 
 export interface IIconOneLineData {

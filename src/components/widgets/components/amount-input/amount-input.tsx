@@ -23,6 +23,7 @@ import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-
 import { getStateSelectors } from '../ui-state-selectors/index';
 import BigNumber from 'bignumber.js';
 import isEqual from 'lodash/isEqual';
+import { Capitalize } from '../../../../core/utils/format-string';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -81,7 +82,7 @@ class AmountInputComponent extends React.Component<
         if (amount.type === 'percentage') label = `${amount.value}%`;
         if (amount.type === 'value') {
             if (typeof amount.value === 'number') label = `+${amount.value}`;
-            if (typeof amount.value === 'string') label = amount.value;
+            if (typeof amount.value === 'string') label = Capitalize(amount.value);
         }
 
         return (
@@ -118,9 +119,11 @@ class AmountInputComponent extends React.Component<
 
                         case 'value': {
                             if (typeof amount.value === 'number') {
-                                const newAmount = new BigNumber(this.props.amount).plus(
-                                    new BigNumber(amount.value)
-                                );
+                                const newAmount = new BigNumber(
+                                    isNaN(Number(this.props.amount)) || this.props.amount === ''
+                                        ? 0
+                                        : this.props.amount
+                                ).plus(new BigNumber(amount.value));
 
                                 this.props.setScreenAmount(newAmount.toFixed(), {
                                     screenKey: this.props.screenKey,
@@ -177,10 +180,12 @@ class AmountInputComponent extends React.Component<
                 <View style={[styles.inputBox, formatStyles(data?.input?.style)]}>
                     <TextInput
                         testID="enter-amount"
-                        style={styles.inputText}
+                        style={[styles.inputText, formatStyles(data?.input?.textStyle)]}
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
+                        placeholder={data?.placeholder?.value}
+                        placeholderTextColor={data?.placeholder?.color || theme.colors.textTertiary}
                         value={amount}
                         onChangeText={text => {
                             text = text.replace(/,/g, '.');

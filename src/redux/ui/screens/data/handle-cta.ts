@@ -259,6 +259,66 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'switchNodeConfirm': {
+                    // Run Screen Validations
+
+                    // Take amount from screen
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const context = action.params?.params?.context;
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: context?.step,
+                        tab: undefined
+                    });
+
+                    // Node details are stored on flow
+                    const switchNodeValidator =
+                        state.ui.screens.inputData[context?.flowId]?.data?.switchNodeValidator;
+
+                    const switchNodeToValidator =
+                        state.ui.screens.inputData[context?.flowId]?.data?.switchNodeToValidator;
+
+                    // Open Process Tx
+                    if (
+                        switchNodeValidator &&
+                        switchNodeToValidator &&
+                        action.params?.params?.token &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey] &&
+                        state.ui.screens.inputData[screenKey]?.data?.amount
+                    ) {
+                        const fromValidator = buildDummyValidator(
+                            switchNodeValidator.id,
+                            switchNodeValidator.name
+                        );
+
+                        const validators = [
+                            buildDummyValidator(
+                                switchNodeToValidator.id,
+                                switchNodeToValidator.name
+                            )
+                        ];
+
+                        const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+
+                        redelegate(
+                            getSelectedAccount(state),
+                            amount,
+                            validators,
+                            action.params.params.token,
+                            undefined, // feeOptions
+                            { fromValidator }
+                        )(dispatch, getState);
+                    }
+                    break;
+                }
+
                 case 'setSwitchNodeValidator':
                     setScreenInputData(action.params?.params?.flowId, {
                         switchNodeValidator: {

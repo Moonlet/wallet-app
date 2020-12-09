@@ -32,7 +32,8 @@ import {
     getWalletAndTransactionForHash,
     generateAccountConfig,
     getNrPendingTransactions,
-    getWalletByPubKey
+    getWalletByPubKey,
+    getSelectedBlockchain
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -73,6 +74,10 @@ import {
 } from '../../ui/process-transactions/actions';
 import cloneDeep from 'lodash/cloneDeep';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
+import { ExtensionEventEmitter } from '../../../core/communication/extension-event-emitter';
+import { ExtensionEvents } from '../../../core/communication/extension';
+import { bgPortRequest } from '../../../core/communication/bg-port';
+import { Platform } from 'react-native';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -101,6 +106,7 @@ export const addWallet = (walletData: IWalletState) => {
 };
 
 export const setSelectedWallet = (walletId: string) => {
+    ExtensionEventEmitter.emit(ExtensionEvents.DEFAULT_ACCOUNT_CHANGED);
     return {
         type: SELECT_WALLET,
         data: walletId
@@ -116,6 +122,7 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     if (wallet === undefined) {
         return;
     }
+    ExtensionEventEmitter.emit(ExtensionEvents.DEFAULT_ACCOUNT_CHANGED);
     dispatch({
         type: WALLET_SELECT_BLOCKCHAIN,
         data: {
@@ -139,7 +146,7 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     }
 };
 
-export const setSelectedAccount = (account: IAccountState) => (
+export const setSelectedAccount = (account: IAccountState) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -149,6 +156,14 @@ export const setSelectedAccount = (account: IAccountState) => (
     if (wallet === undefined) {
         return;
     }
+    // send message to extension background script
+    await bgPortRequest({
+        origin: Platform.OS === 'web' && document.location.hash,
+        controller: 'AccountAccessController',
+        method: 'switchAccount',
+        params: [wallet.walletPublicKey || wallet.id, getSelectedBlockchain(state), account.address]
+    });
+    ExtensionEventEmitter.emit(ExtensionEvents.DEFAULT_ACCOUNT_CHANGED);
 
     dispatch({
         type: WALLET_SELECT_ACCOUNT,

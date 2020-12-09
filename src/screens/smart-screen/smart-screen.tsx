@@ -137,6 +137,20 @@ class SmartScreenComponent extends React.Component<
 
         this.updateLoading(prevProps);
         this.handleScreenValidation();
+        this.getResponseNavigationOptions(prevProps);
+    }
+
+    private getResponseNavigationOptions(prevProps: IReduxProps & INavigationParams) {
+        const screenData = this.getScreenData(this.props);
+        const prevScreenData = this.getScreenData(prevProps);
+
+        if (
+            screenData?.response?.navigationOptions !== prevScreenData?.response?.navigationOptions
+        ) {
+            this.props.navigation.setParams({
+                navigationOptions: screenData.response.navigationOptions
+            });
+        }
     }
 
     private handleScreenValidation() {

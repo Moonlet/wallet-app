@@ -78,9 +78,6 @@ const validatorCTA = {
                         step: 'SwitchNodeSelectNode',
                         key: 'switch-node-select-node'
                     },
-                    navigationOptions: {
-                        title: 'Switch Node (1/6)' // TODO: this should be sent from api
-                    },
                     newFlow: true
                 }
             }

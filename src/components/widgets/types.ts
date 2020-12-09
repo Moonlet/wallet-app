@@ -70,6 +70,7 @@ export interface IScreenResponse {
     widgets: IScreenWidget[];
     bottomFixedArea?: IScreenWidget;
     validation?: IScreenValidation;
+    navigationOptions?: any;
 }
 
 export interface IScreenFieldValidation {

@@ -4,10 +4,16 @@ import BigNumber from 'bignumber.js';
 export class Erc20Client {
     constructor(private client: Client) {}
 
-    public getBalance(contractAddress, accountAddress): Promise<BigNumber> {
+    public getBalance(
+        contractAddress,
+        accountAddress
+    ): Promise<{ available: BigNumber; total: BigNumber }> {
         return this.client
             .callContract(contractAddress, 'balanceOf(address):(uint256)', [accountAddress])
-            .then(v => new BigNumber(v as string));
+            .then(v => ({
+                available: new BigNumber(String(v)),
+                total: new BigNumber(String(v))
+            }));
     }
 
     public getSymbol(contractAddress) {

@@ -13,8 +13,8 @@ export default describe('Navigation', () => {
             expect(menuIcon).toHaveBeenCalledWith(IconValues.DASHBOARD);
             (menuIcon as any).mockClear();
 
-            navigationConfig.Scan.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith(IconValues.QR_CODE_SCAN);
+            navigationConfig.Promotions.navigationOptions();
+            // expect(menuIcon).toHaveBeenCalledWith(IconValues.QR_CODE_SCAN);
             (menuIcon as any).mockClear();
 
             navigationConfig.Settings.navigationOptions();

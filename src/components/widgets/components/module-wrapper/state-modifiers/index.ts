@@ -11,6 +11,7 @@ import { quickStakeSelectedValidator } from './quick-stake-selected-validator';
 import { stakeEnterAmountStakeNow } from './stake-enter-amount-stake-now';
 import {
     switchNodeSelectValidator,
+    switchNodeSelectToValidator,
     switchNodeSelectNodeBottomWrapper,
     switchNodeSelectReasons,
     switchNodeContinueInfo1,
@@ -22,6 +23,7 @@ const stateModifiers = {
     quickStakeSelectedValidator,
     stakeEnterAmountStakeNow,
     switchNodeSelectValidator,
+    switchNodeSelectToValidator,
     switchNodeSelectNodeBottomWrapper,
     switchNodeSelectReasons,
     switchNodeContinueInfo1,

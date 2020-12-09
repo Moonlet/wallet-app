@@ -50,7 +50,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
         ...getStateSelectors(state, ownProps.module, {
             screenKey: ownProps.screenKey,
-            flowId: ownProps.context.flowId
+            flowId: ownProps.context?.flowId
         })
     };
 };
@@ -64,6 +64,10 @@ class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
     public componentDidMount() {
+        this.props.actions.clearScreenInputData(this.props.screenKey, {
+            amount: undefined
+        });
+
         if (this.props.module?.state?.actions) {
             this.props.actions.runScreenStateActions({
                 actions: this.props.module.state.actions,
@@ -129,11 +133,6 @@ class AmountInputComponent extends React.Component<
                                     screenKey: this.props.screenKey,
                                     context: this.props.context
                                 });
-
-                                // used to clear selection
-                                this.props.setScreenInputData(this.props.screenKey, {
-                                    amountBox: undefined
-                                });
                             }
 
                             if (typeof amount.value === 'string') {
@@ -148,10 +147,6 @@ class AmountInputComponent extends React.Component<
                                 this.props.setScreenAmount(newAmount.toFixed(), {
                                     screenKey: this.props.screenKey,
                                     context: this.props.context
-                                });
-
-                                this.props.setScreenInputData(this.props.screenKey, {
-                                    amountBox: amount
                                 });
                             }
 

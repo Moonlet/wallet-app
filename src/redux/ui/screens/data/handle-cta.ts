@@ -269,6 +269,16 @@ const handleCtaAction = async (
                     })(dispatch, getState);
                     break;
 
+                case 'setSwitchNodeToValidator':
+                    setScreenInputData(action.params?.params?.flowId, {
+                        switchNodeToValidator: {
+                            id: action.params?.params?.validatorId,
+                            name: action.params?.params?.validatorName,
+                            availableBalance: action.params?.params?.availableBalance
+                        }
+                    })(dispatch, getState);
+                    break;
+
                 case 'hasPendingTransactions':
                     if (getNrPendingTransactions(state)) {
                         const nvServiceFn =

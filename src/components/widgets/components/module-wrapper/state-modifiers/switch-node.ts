@@ -16,6 +16,21 @@ export const switchNodeSelectValidator = (state: IReduxState, module: IScreenMod
     return 'DEFAULT';
 };
 
+export const switchNodeSelectToValidator = (state: IReduxState, module: IScreenModule): string => {
+    const flowId = module?.details?.flowId;
+
+    if (
+        flowId &&
+        state.ui.screens.inputData &&
+        state.ui.screens.inputData[flowId]?.data?.switchNodeToValidator?.id ===
+            module?.details?.validator?.id
+    ) {
+        return 'SELECTED';
+    }
+
+    return 'DEFAULT';
+};
+
 export const switchNodeSelectNodeBottomWrapper = (
     state: IReduxState,
     module: IScreenModule
@@ -25,7 +40,7 @@ export const switchNodeSelectNodeBottomWrapper = (
     if (
         flowId &&
         state.ui.screens.inputData &&
-        state.ui.screens.inputData[flowId]?.data?.switchNodeValidator?.id !== undefined
+        state.ui.screens.inputData[flowId]?.data?.switchNodeToValidator?.id !== undefined
     ) {
         return 'SELECTED';
     }

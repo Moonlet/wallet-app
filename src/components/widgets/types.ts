@@ -154,6 +154,7 @@ export interface IScreenModule {
         | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.CTA
+        | ModuleTypes.GRADIENT_WRAPPER
         | ModuleTypes.ICON_ONE_LINE
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
@@ -178,6 +179,7 @@ export interface IScreenModule {
         | IAmountInputData
         | IBalanceGridData
         | IBalanceGridData[]
+        | IGradientWrapperData
         | IIconData
         | IIconTwoLinesData
         | IIconOneLineData
@@ -216,6 +218,7 @@ export enum ModuleTypes {
     AMOUNT_INPUT = 'amount-input',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     CTA = 'cta',
+    GRADIENT_WRAPPER = 'gradient-wrapper',
     ICON_ONE_LINE = 'cta-one-line',
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
@@ -423,4 +426,9 @@ export interface IInputData {
         };
         multiline?: boolean;
     };
+}
+
+export interface IGradientWrapperData {
+    gradient: string[];
+    submodules: IScreenModule[];
 }

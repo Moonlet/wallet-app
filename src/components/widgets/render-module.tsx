@@ -30,6 +30,7 @@ import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
 import { IconOneLine } from './components/icon-one-line/icon-one-line';
 import { InputModule } from './components/input/input';
+import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -145,6 +146,17 @@ export const renderModule = (
 
         case ModuleTypes.THREE_LINES_ICON:
             moduleJSX = <ThreeLinesIcon module={module} />;
+            break;
+
+        case ModuleTypes.GRADIENT_WRAPPER:
+            moduleJSX = (
+                <GradientWrapper
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
             break;
 
         case ModuleTypes.ICON_ONE_LINE:

@@ -17,6 +17,7 @@ export interface IBlockInfo {
 export interface IBalance {
     total: BigNumber;
     available: BigNumber;
+    detailed?: {};
 }
 
 export abstract class BlockchainGenericClient {

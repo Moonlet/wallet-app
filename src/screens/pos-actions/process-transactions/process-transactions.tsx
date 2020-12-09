@@ -175,6 +175,16 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('Transaction.registerAccount');
                 break;
             }
+            case PosBasicActionType.CREATE_STAKE_ACCOUNT: {
+                topText = translate('Transaction.creatingStakeAccount');
+                middleText = amount;
+                break;
+            }
+            case PosBasicActionType.SPLIT_STAKE: {
+                topText = translate('Transaction.spliStakeAccount');
+                middleText = amount;
+                break;
+            }
             case PosBasicActionType.LOCK: {
                 topText = translate('App.labels.locking') + ' ' + amount;
                 break;

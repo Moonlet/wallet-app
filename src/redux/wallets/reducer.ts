@@ -38,7 +38,8 @@ const newBalance = (oldBalance: any, action: any) => ({
         : new BigNumber(oldBalance?.available).toFixed(),
     total: action.data.balance
         ? new BigNumber(action.data.balance.total).toFixed()
-        : new BigNumber(oldBalance?.total).toFixed()
+        : new BigNumber(oldBalance?.total).toFixed(),
+    detailed: action.data.balance ? action.data.balance.detailed || {} : oldBalance?.detailed || {}
 });
 
 export default (state: IWalletsState = intialState, action: IAction) => {
@@ -52,6 +53,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                           ...account,
 
                           // check here = NaN
+
                           tokens: Object.keys(account.tokens).reduce(
                               (tokenOut: any, tokenId: string) => {
                                   tokenOut[tokenId] = account.tokens[tokenId];

@@ -1,10 +1,11 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import SolIcon from '../../../assets/icons/blockchains/sol.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
+import { IconValues } from '../../../components/icon/values';
 
 export const SOL_NATIVE: ITokenConfigState = {
     name: 'Solana',
@@ -17,7 +18,7 @@ export const SOL_NATIVE: ITokenConfigState = {
     removable: false,
     ui: {
         decimals: 3,
-        tokenScreenComponent: TokenScreenComponentType.DEFAULT
+        tokenScreenComponent: TokenScreenComponentType.DELEGATE
     },
     type: TokenType.NATIVE,
     units: {
@@ -27,12 +28,47 @@ export const SOL_NATIVE: ITokenConfigState = {
     }
 };
 
+const accountCTA = {
+    mainCta: {
+        title: 'App.labels.stakeNow',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
+            params: { actionText: 'App.labels.stakeNow' }
+        }
+    }
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.stake',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'PosDelegate',
+            params: { actionText: 'App.labels.stake' }
+        }
+    },
+    otherCtas: [
+        {
+            title: 'App.labels.unstake',
+            iconName: IconValues.UNVOTE,
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.unstake',
+                    basicAction: PosBasicActionType.UNSTAKE
+                }
+            }
+        }
+    ]
+};
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/501'`,
     derivationType: DerivationType.HD_KEY_ED25519,
     coin: 'SOL',
     defaultUnit: 'NA',
-    droppedTxBlocksThreshold: 10,
+    droppedTxBlocksThreshold: 100,
     iconComponent: SolIcon,
     autoAddedTokensSymbols: {},
     tokens: {
@@ -54,6 +90,30 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalStakes',
+            amountCardLabel: 'App.labels.staked',
+            maximumNumberOfValidators: 9999 // TBD
+        },
+        token: {
+            labels: {
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.myStakes',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
+            },
+            actionScreenLabels: {},
+            sendStepLabels: [
+                'Validator.selectValidator',
+                'App.labels.enterAmount',
+                'Validator.confirmStake'
+            ],
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta
+            },
+            validatorCTA
+        },
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,
@@ -65,11 +125,16 @@ export const config: IBlockchainConfig = {
         fetchAccountStatsSec: 1
     },
     networks: {
-        testNet: '2',
+        testNet: '3',
         mainNet: '1'
     },
     defaultOrder: 0,
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(10).pow(12)
+        [AccountType.DEFAULT]: new BigNumber(1000000000),
+        [AccountType.ROOT]: new BigNumber(1000000000)
     }
 };
+
+export enum Contracts {
+    STAKING = 'STAKING'
+}

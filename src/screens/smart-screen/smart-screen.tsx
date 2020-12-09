@@ -145,6 +145,7 @@ class SmartScreenComponent extends React.Component<
         const prevScreenData = this.getScreenData(prevProps);
 
         if (
+            screenData?.response?.navigationOptions &&
             screenData?.response?.navigationOptions !== prevScreenData?.response?.navigationOptions
         ) {
             this.props.navigation.setParams({

@@ -160,6 +160,26 @@ export class LedgerConnectComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
+    public static async signMessage(
+        blockchain: Blockchain,
+        accountIndex: number,
+        accountType: AccountType,
+        message: string
+    ) {
+        return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
+            ref.signMessage(blockchain, accountIndex, accountType, message)
+        );
+    }
+
+    public async signMessage(
+        blockchain: Blockchain,
+        accountIndex: number,
+        accountType: AccountType,
+        message: string
+    ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
+        throw new Error('LedgerConnect.signMessage not implemented');
+    }
+
     private trySign() {
         this.selectStep(ScreenStep.SEARCH_LEDGER);
 

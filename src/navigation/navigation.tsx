@@ -60,6 +60,7 @@ import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
 import { QuickStakeSelectValidatorScreen } from '../screens/quick-stake-select-validator/quick-stake-select-validator';
 import { PromoDetailsScreen } from '../screens/promo-details/promo-details';
 import { SmartScreen } from '../screens/smart-screen/smart-screen';
+import { ConnectedWebsitesScreen } from '../screens/connected-websites/connected-websites';
 import { HeaderIcon } from '../components/header-icon/header-icon';
 
 interface IDefaultNavOptions {
@@ -108,8 +109,8 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: normalize(22),
-        lineHeight: normalize(28),
+        fontSize: normalizeFontAndLineHeight(22),
+        lineHeight: normalizeFontAndLineHeight(28),
         color: themes[theme].colors.text,
         letterSpacing: LETTER_SPACING,
         textAlign: 'center',
@@ -174,6 +175,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Notifications: {
             screen: NotificationsScreen
+        },
+        ConnectedWebsites: {
+            screen: ConnectedWebsitesScreen
         },
         CreateNearAccount: {
             screen: CreateNearAccountScreen

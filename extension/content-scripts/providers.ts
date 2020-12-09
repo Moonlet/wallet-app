@@ -1,14 +1,14 @@
 // create communication port with bg script
-import { browser } from 'webextension-polyfill-ts';
 import { IExtensionMessage, IExtensionRequest } from '../../src/core/communication/extension';
 import { bgPortRequest } from '../../src/core/communication/bg-port.extension';
-
-browser.runtime.sendMessage('TEST');
+import { ExtensionEventEmitter } from '../../src/core/communication/extension-event-emitter';
 
 const methodsWhitelist: RegExp[] = [
     // /^Controller\.(?!method2$|method$)/gi // example of negation, all methods from Controller beside method2 and method are allowed
     /^ProvidersController\.rpc$/gi
 ];
+
+let appTarget;
 
 const isRequestAllowed = (request: IExtensionRequest) => {
     const method = `${request.controller}.${request.method}`;
@@ -47,6 +47,7 @@ window.onmessage = async (event: MessageEvent) => {
         message.target === 'MOONLET_EXTENSION' &&
         message.type === 'REQUEST'
     ) {
+        appTarget = event.origin;
         // message received from dapp
         // forward it to bg script
 
@@ -88,3 +89,7 @@ window.onmessage = async (event: MessageEvent) => {
         }
     }
 };
+
+ExtensionEventEmitter.onMessage(message => {
+    sendMessage(message, appTarget);
+});

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, Platform } from 'react-native';
 import { Text } from '../../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -137,7 +137,10 @@ export class GasFeeAvancedComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasPrice}
                         onChangeText={value => this.addGasPrice(value)}
-                        keyboardType="number-pad"
+                        keyboardType={Platform.select({
+                            default: 'number-pad',
+                            ios: 'decimal-pad'
+                        })}
                         returnKeyType="done"
                     />
                 </View>
@@ -173,7 +176,10 @@ export class GasFeeAvancedComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasLimit.toString()}
                         onChangeText={value => this.addGasLimit(value)}
-                        keyboardType="number-pad"
+                        keyboardType={Platform.select({
+                            default: 'number-pad',
+                            ios: 'decimal-pad'
+                        })}
                         returnKeyType="done"
                     />
                 </View>

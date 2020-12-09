@@ -64,10 +64,13 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         return this.connection.sendRawTransaction(transaction).then(res => {
             if (res) {
-                return res;
+                return {
+                    txHash: res,
+                    rawResponse: res
+                };
             }
         });
     }

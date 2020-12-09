@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput, Platform, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -189,7 +189,10 @@ class AmountInputComponent extends React.Component<
                                 context: this.props.context
                             });
                         }}
-                        keyboardType="decimal-pad"
+                        keyboardType={Platform.select({
+                            default: 'number-pad',
+                            ios: 'decimal-pad'
+                        })}
                         returnKeyType="done"
                         // TODO: maxLength - max 8 decimals: 0.00000000
                     />

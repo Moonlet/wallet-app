@@ -94,7 +94,13 @@ export class NativeForwardComp extends React.Component<
                                     ? rpcParams.toAddr
                                     : toBech32Address(rpcParams.toAddr),
                                 amount: blockchainInstance.account
-                                    .amountFromStd(new BigNumber(rpcParams.amount), 12)
+                                    .amountFromStd(
+                                        new BigNumber(rpcParams.amount),
+                                        getTokenConfig(
+                                            account.blockchain,
+                                            blockchainInstance.config.coin
+                                        ).decimals
+                                    )
                                     .toFixed(),
                                 feeOptions: {
                                     gasPrice: rpcParams.gasPrice,

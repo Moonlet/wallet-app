@@ -172,7 +172,11 @@ export class NativeForwardComp extends React.Component<
                         }
                     } else {
                         const amount = blockchainInstance.account
-                            .amountFromStd(new BigNumber(rpcParams.amount), 12)
+                            .amountFromStd(
+                                new BigNumber(rpcParams.amount),
+                                getTokenConfig(account.blockchain, blockchainInstance.config.coin)
+                                    .decimals
+                            )
                             .toFixed();
                         const transaction: IBlockchainTransaction = {
                             walletPubKey: this.props.request?.walletPubKey,

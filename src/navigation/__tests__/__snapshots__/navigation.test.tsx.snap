@@ -15,10 +15,10 @@ Object {
   "headerTitleStyle": Object {
     "color": "#E0E0E0",
     "flex": 1,
-    "fontSize": 40,
+    "fontSize": 22,
     "fontWeight": "bold",
     "letterSpacing": 0.69,
-    "lineHeight": 51,
+    "lineHeight": 28,
     "textAlign": "center",
   },
 }
@@ -35,10 +35,10 @@ Object {
   "headerTitleStyle": Object {
     "color": "#E0E0E0",
     "flex": 1,
-    "fontSize": 40,
+    "fontSize": 22,
     "fontWeight": "bold",
     "letterSpacing": 0.69,
-    "lineHeight": 51,
+    "lineHeight": 28,
     "textAlign": "center",
   },
 }

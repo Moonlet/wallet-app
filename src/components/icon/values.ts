@@ -50,6 +50,7 @@ export enum IconValues {
     PENCIL = 'pencil',
     PENDING = 'pending',
     PLUS = 'plus',
+    PRODUCT_GIFT = 'products-give-gift',
     QR_CODE_SCAN = 'qr-code-scan',
     REINVEST = 'reinvest',
     REVOTE = 'revote',

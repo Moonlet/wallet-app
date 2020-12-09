@@ -25,7 +25,7 @@ import { ThreeLinesIcon } from './components/three-lines-icon/three-lines-icon';
 import { TwoLinesStakeBanner } from './components/two-lines-text-banner/two-lines-text-banner';
 import { formatStyles } from './utils';
 import { IconModule } from './components/icon/icon';
-import { handleCta } from '../../redux/ui/screens/data/actions';
+import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
 

@@ -117,26 +117,41 @@ class AmountInputComponent extends React.Component<
                         }
 
                         case 'value': {
-                            let newAmount = new BigNumber((this.props as any).allBalance);
-
                             if (typeof amount.value === 'number') {
-                                newAmount = newAmount.plus(new BigNumber(amount.value));
+                                const newAmount = new BigNumber(this.props.amount).plus(
+                                    new BigNumber(amount.value)
+                                );
+
+                                this.props.setScreenAmount(newAmount.toFixed(), {
+                                    screenKey: this.props.screenKey,
+                                    context: this.props.context
+                                });
+
+                                // used to clear selection
+                                this.props.setScreenInputData(this.props.screenKey, {
+                                    amountBox: undefined
+                                });
                             }
 
                             if (typeof amount.value === 'string') {
-                                // TODO
-                                // half
-                                // all
+                                // All balance
+                                let newAmount = new BigNumber((this.props as any).allBalance);
+
+                                // Half balance
+                                if (amount.value === 'half') {
+                                    newAmount = newAmount.dividedBy(new BigNumber(2));
+                                }
+
+                                this.props.setScreenAmount(newAmount.toFixed(), {
+                                    screenKey: this.props.screenKey,
+                                    context: this.props.context
+                                });
+
+                                this.props.setScreenInputData(this.props.screenKey, {
+                                    amountBox: amount
+                                });
                             }
 
-                            this.props.setScreenAmount(newAmount.toFixed(), {
-                                screenKey: this.props.screenKey,
-                                context: this.props.context
-                            });
-
-                            this.props.setScreenInputData(this.props.screenKey, {
-                                amountBox: amount
-                            });
                             break;
                         }
 

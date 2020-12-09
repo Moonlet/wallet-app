@@ -248,9 +248,10 @@ export class SettingsScreenComponent extends React.Component<
                     navigation.navigate('NetworkOptions')
                 )}
 
-                {this.renderRow(translate('ConnectExtension.title'), () =>
-                    navigation.navigate('ConnectExtension')
-                )}
+                {Platform.OS !== 'web' &&
+                    this.renderRow(translate('ConnectExtension.title'), () =>
+                        navigation.navigate('ConnectExtension')
+                    )}
             </View>
         );
     }
@@ -315,7 +316,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     {Platform.OS !== 'web' && this.renderSecuritySection()}
                     {Platform.OS !== 'web' && this.renderSetupSection()}
-                    {Platform.OS !== 'web' && this.renderToolsSection()}
+                    {this.renderToolsSection()}
                     {this.renderSupportSection()}
                     {this.renderAboutSection()}
                     {isFeatureActive(RemoteFeature.DEV_TOOLS) && (

@@ -76,7 +76,9 @@ const handleNotification = (
             NavigationService.navigate('Token', navigationParams);
             break;
 
+        case NotificationType.MOONLET_SIGN_MESSAGE:
         case NotificationType.MOONLET_TRANSFER:
+        case NotificationType.MOONLET_TRANSACTION:
             try {
                 const requestId = JSON.parse(notification.data)?.requestId;
 

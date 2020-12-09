@@ -140,14 +140,14 @@ export class TransactionDetailsComponent extends React.Component<
         const transaction = this.props.transaction;
         const account = this.props.account;
 
-        const date = new Date(transaction.date.signed);
+        const date = new Date(transaction.date.created);
 
         const blockchainInstance = getBlockchain(account.blockchain);
         const coin = blockchainInstance.config.coin;
         const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
 
-        const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);
-        const tokenType = transaction.token.type;
+        const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol || coin);
+        const tokenType = transaction?.token?.type;
 
         let recipient =
             tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20
@@ -160,11 +160,16 @@ export class TransactionDetailsComponent extends React.Component<
 
         let transactionType = translate('App.labels.transfer');
 
-        if (
-            tokenType === TokenType.ZRC2 ||
-            tokenType === TokenType.ERC20 ||
-            transactionType === TransactionType.CONTRACT_CALL
-        ) {
+        if (transaction.type === TransactionType.CONTRACT_DEPLOY) {
+            transactionType = translate('App.labels.contractDeploy');
+        }
+
+        if (transaction.type === TransactionType.CONTRACT_CALL) {
+            transactionType =
+                translate('App.labels.contractCall') + ` (${Capitalize(transaction.data.method)})`;
+        }
+
+        if (tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20) {
             transactionType = Capitalize(transaction.data.method);
         }
 

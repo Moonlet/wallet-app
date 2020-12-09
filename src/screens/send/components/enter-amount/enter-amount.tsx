@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput, TouchableOpacity, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Text } from '../../../../library';
@@ -63,7 +63,10 @@ export const EnterAmountComponent = (
                     selectionColor={theme.colors.accent}
                     value={value}
                     onChangeText={text => props.onChange(text)}
-                    keyboardType="decimal-pad"
+                    keyboardType={Platform.select({
+                        default: 'number-pad',
+                        ios: 'decimal-pad'
+                    })}
                     returnKeyType="done"
                     // TODO: maxLength - max 8 decimals: 0.00000000
                 />

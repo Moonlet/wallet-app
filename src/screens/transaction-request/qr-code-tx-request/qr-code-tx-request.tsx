@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableHighlight } from 'react-native';
+import { View, TextInput, TouchableHighlight, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { translate } from '../../../core/i18n';
 import stylesProvider from './styles';
@@ -424,7 +424,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.amount}
                         onChangeText={this.addAmount}
-                        keyboardType="decimal-pad"
+                        keyboardType={Platform.select({
+                            default: 'number-pad',
+                            ios: 'decimal-pad'
+                        })}
                         returnKeyType="done"
                         // TODO: maxLength - max 8 decimals: 0.00000000
                     />

@@ -382,7 +382,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             }
 
             try {
-                const txHash = await client.sendTransaction(signed);
+                const { txHash } = await client.sendTransaction(signed);
 
                 // SELECT_STAKING_POOL: delay 2 seconds
                 // Needed only if there are multiple operations, such as select_staking_pool and deposit_and_stake

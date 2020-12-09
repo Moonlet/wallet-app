@@ -27,6 +27,16 @@ export const getSelectedWallet = createSelector(
     }
 );
 
+export const getWalletByPubKey = (reduxState: IReduxState, walletPubKey: string): IWalletState =>
+    createSelector(
+        (state: IReduxState) => state.wallets,
+        (wallets: IWalletsState) => {
+            return Object.values(wallets)?.find(
+                w => w.id === walletPubKey || w.walletPublicKey === walletPubKey
+            );
+        }
+    )(reduxState);
+
 export const getSelectedAccount = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
     (state: IReduxState): Blockchain => getSelectedBlockchain(state),
@@ -111,7 +121,7 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
             )
             .sort(
                 (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>
-                    tx2.date?.signed - tx1.date?.signed
+                    tx2.date?.created - tx1.date?.created
             );
     }
 };

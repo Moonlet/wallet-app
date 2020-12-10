@@ -366,7 +366,7 @@ const handleCtaAction = async (
                     setSelectedBlockchain(action.params?.params?.blockchain)(dispatch, getState);
                     break;
 
-                case 'switchNodeSelectReasons':
+                case 'switchNodeSelectReasons': {
                     const infoText = action.params?.params?.infoText;
                     const flowId = action.params?.params?.flowId;
 
@@ -389,23 +389,53 @@ const handleCtaAction = async (
                         selectReasons
                     })(dispatch, getState);
                     break;
+                }
 
-                case 'switchNodeSaveData': {
-                    if (
-                        action?.params?.params?.url &&
-                        action?.params?.params?.context &&
-                        action?.params?.params?.user
-                    ) {
+                case 'saveDataToUrl': {
+                    if (action?.params?.params?.url && action?.params?.params?.data) {
+                        let data = action.params.params.data;
+
                         const url = action.params.params.url;
                         const httpClient = new HttpClient(url);
+
+                        const flowId = data?.flowId;
+
+                        if (
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[flowId]?.data
+                        ) {
+                            data = {
+                                ...data,
+                                flowData: state.ui.screens.inputData[flowId]?.data
+                            };
+                        }
+
+                        const account = getSelectedAccount(state);
+                        const chainId = getChainId(state, account.blockchain);
+
+                        const screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step: data?.context?.step || action.params?.params?.step,
+                            tab: undefined
+                        });
+
+                        if (
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[screenKey]?.data
+                        ) {
+                            data = {
+                                ...data,
+                                screenData: state.ui.screens.inputData[screenKey]?.data
+                            };
+                        }
+
                         try {
-                            await httpClient.post('', {
-                                context: action.params.params.context,
-                                user: action.params.params.user
-                            });
-                            // console.log(JSON.stringify(res, null, 4));
-                        } catch (err) {
-                            // console.log('>> err: ', err);
+                            await httpClient.post('', { ...data });
+                        } catch {
+                            //
                         }
                     }
                     break;

@@ -8,7 +8,12 @@ import { Button, Text } from '../../library';
 import { closeTransactionRequest } from '../../redux/ui/transaction-request/actions';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
-import { sendTransferTransaction, setSelectedWallet } from '../../redux/wallets/actions';
+import {
+    sendTransferTransaction,
+    sendTransaction,
+    setSelectedWallet,
+    signMessage
+} from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
@@ -30,6 +35,8 @@ import bind from 'bind-decorator';
 import { IWalletState, IWalletsState } from '../../redux/wallets/state';
 import { IconValues } from '../../components/icon/values';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
+import { NotificationType } from '../../core/messaging/types';
+import { IBlockchainTransaction, TransactionType } from '../../core/blockchain/types';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -37,6 +44,8 @@ export interface IReduxProps {
     qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
+    sendTransaction: typeof sendTransaction;
+    signMessage: typeof signMessage;
     selectedWallet: IWalletState;
     setSelectedWallet: typeof setSelectedWallet;
     wallets: IWalletsState;
@@ -55,6 +64,8 @@ export const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     closeTransactionRequest,
     sendTransferTransaction,
+    sendTransaction,
+    signMessage,
     setSelectedWallet
 };
 
@@ -109,16 +120,22 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private async getExtensionTxPayload() {
         try {
-            const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
-
+            const payload = await ConnectExtensionWeb.getRequestIdData(this.props.requestId);
             if (payload) {
-                const walletId = payload.walletId;
-                if (walletId !== this.props.selectedWallet.id) {
-                    if (
-                        Object.keys(this.props.wallets).filter(wId => wId === walletId).length === 1
-                    ) {
+                const payloadParams = payload?.params[0] || {};
+                const walletId = payloadParams.walletId || payloadParams.walletPubKey;
+
+                if (
+                    walletId !== this.props.selectedWallet.id &&
+                    walletId !== this.props.selectedWallet.walletPublicKey
+                ) {
+                    const wallet = Object.values(this.props.wallets).find(
+                        w => w.id === walletId || w.walletPublicKey === walletId
+                    );
+
+                    if (wallet) {
                         // Switch the wallet
-                        this.props.setSelectedWallet(walletId);
+                        this.props.setSelectedWallet(wallet.id);
 
                         this.setState({ extensionTxPayload: payload });
                     } else {
@@ -162,35 +179,52 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
-    @bind
-    private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
+    private async sendExtensionTx() {
         const { extensionTxPayload } = this.state;
 
-        if (extensionTxPayload) {
-            this.props.sendTransferTransaction(
-                extensionTxPayload.account,
-                extensionTxPayload.toAddress,
-                extensionTxPayload.amount,
-                extensionTxPayload.token,
-                extensionTxPayload.feeOptions,
-                undefined, // navigation - not needed
-                extensionTxPayload.extraFields,
-                false, // goBack
-                { requestId: this.props.requestId }
-            );
+        switch (extensionTxPayload.method as NotificationType) {
+            case 'MOONLET_SIGN_MESSAGE':
+                this.props.signMessage(
+                    extensionTxPayload?.params[0]?.walletPubKey,
+                    extensionTxPayload?.params[0]?.blockchain,
+                    extensionTxPayload?.params[0]?.address,
+                    extensionTxPayload?.params[0]?.message,
+                    { requestId: this.props.requestId }
+                );
+                break;
+            default:
+                this.props.sendTransaction(extensionTxPayload?.params[0], {
+                    goBack: false,
+                    sendResponse: {
+                        requestId: this.props.requestId
+                    }
+                });
         }
+    }
 
-        if (options?.qrCodeTransferData) {
-            this.props.sendTransferTransaction(
-                options.qrCodeTransferData.account,
-                options.qrCodeTransferData.toAddress,
-                options.qrCodeTransferData.amount,
-                options.qrCodeTransferData.token,
-                options.qrCodeTransferData.feeOptions,
-                undefined, // navigation - not needed
-                undefined, // extraFields - TODO
-                false // goBack
-            );
+    @bind
+    private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
+        try {
+            const { extensionTxPayload } = this.state;
+
+            if (extensionTxPayload) {
+                this.sendExtensionTx();
+            }
+
+            if (options?.qrCodeTransferData) {
+                this.props.sendTransferTransaction(
+                    options.qrCodeTransferData.account,
+                    options.qrCodeTransferData.toAddress,
+                    options.qrCodeTransferData.amount,
+                    options.qrCodeTransferData.token,
+                    options.qrCodeTransferData.feeOptions,
+                    undefined, // navigation - not needed
+                    undefined, // extraFields - TODO
+                    false // goBack
+                );
+            }
+        } catch {
+            //
         }
     }
 
@@ -395,6 +429,30 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
+    private getTitle() {
+        let title = translate('TransactionRequest.title');
+        if (this.state.extensionTxPayload) {
+            switch (this.state.extensionTxPayload?.method) {
+                case NotificationType.MOONLET_SIGN_MESSAGE:
+                    title = translate('App.labels.signMessage');
+                    break;
+                case NotificationType.MOONLET_TRANSACTION:
+                    const tx: IBlockchainTransaction = (this.state.extensionTxPayload?.params ||
+                        [])[0];
+                    switch (tx.type) {
+                        case TransactionType.CONTRACT_CALL:
+                            title = translate('App.labels.contractCall');
+                            break;
+                        case TransactionType.CONTRACT_DEPLOY:
+                            title = translate('App.labels.contractDeploy');
+                            break;
+                    }
+                    break;
+            }
+        }
+        return title;
+    }
+
     @bind
     private closeTxRequest() {
         this.props.closeTransactionRequest();
@@ -428,7 +486,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
+                    <Text style={styles.title}>{this.getTitle()}</Text>
 
                     {showTestnetBadge && <TestnetBadge />}
 

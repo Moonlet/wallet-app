@@ -15,6 +15,7 @@ export const translation: ITranslations = {
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
                 all: 'All',
+                allow: 'Allow',
                 amount: 'Amount',
                 average: 'Average',
                 balance: 'Balance',
@@ -36,6 +37,11 @@ export const translation: ITranslations = {
                 continueWith: 'Continue with',
                 contract: 'Contract',
                 contractAddress: 'Contract address',
+                contractCall: 'Contract call',
+                contractCallParams: 'Contract call params',
+                contractCode: 'Contract code',
+                contractDeploy: 'Contract deploy',
+                contractInit: 'Contract init',
                 copy: 'Copy',
                 create: 'Create',
                 createTicket: 'Create a ticket',
@@ -61,14 +67,18 @@ export const translation: ITranslations = {
                 find: 'Find',
                 for: 'For',
                 from: 'From',
+                function: 'Function',
                 half: 'Half',
+                hideDetails: 'Hide details',
                 holdUnveil: 'Hold to unveil',
+                learnMore: 'Learn more',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
                 locking: 'Locking',
                 low: 'Low',
                 maxFees: 'Max.Fees',
                 maybeLater: 'Maybe later',
+                message: 'Message',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
                 myVotes: 'My Votes',
                 myStakes: 'My Stakes',
@@ -108,6 +118,7 @@ export const translation: ITranslations = {
                 settings: 'Settings',
                 setup: 'Setup',
                 sign: 'Sign',
+                signMessage: 'Sign message',
                 simple: 'Simple',
                 simpleSetup: 'Simple setup',
                 standard: 'Standard',
@@ -133,6 +144,7 @@ export const translation: ITranslations = {
                 typeHere: 'Type here',
                 understand: 'I understand',
                 undelegate: 'Undelegate',
+                unknownOp: 'Unknown operation',
                 unvote: 'Unvote',
                 unlock: 'Unlock',
                 unlocking: 'Unlocking',
@@ -140,6 +152,7 @@ export const translation: ITranslations = {
                 unstake: 'Unstake',
                 unstaking: 'Unstaking',
                 validators: 'Validators',
+                viewDetails: 'View details',
                 vote: 'Vote',
                 voting: 'Voting',
                 wallets: 'Wallets',
@@ -219,6 +232,7 @@ export const translation: ITranslations = {
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
             subtitleSignTransaction: 'Your PIN is required\nto sign your transaction',
+            subtitleSignMessage: 'Your PIN is required\nto sign your message',
             dontMatch: "PIN code doesn't match",
             termsBody: 'You need to setup a PIN to secure your wallet.',
             termsCheckboxLabel:
@@ -322,7 +336,9 @@ export const translation: ITranslations = {
             connectLedger: 'Connect your Ledger!',
             quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests',
             connectWallet: 'Manage your wallets',
-            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets'
+            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets',
+            connectedWebsites: 'Connected websites',
+            manageWebsites: 'Manage your connected websites'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -350,6 +366,8 @@ export const translation: ITranslations = {
             processTitleTextLedger:
                 'Please sign each transaction from your Ledger in order to start broadcasting to the blockchain network',
             registerAccount: 'Registering account',
+            creatingStakeAccount: 'Creating stake account',
+            spliStakeAccount: 'Split stake account for the remaining amount',
             transactionType: 'Transaction Type'
         },
         Statistics: {
@@ -467,8 +485,11 @@ export const translation: ITranslations = {
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
+            messageSignFailed: 'Message signing failed!',
             GENERIC_ERROR:
                 'Something went wrong while broadcasting your transaction. Please try again.',
+            GENERIC_ERROR_MSG_SIGN:
+                'Something went wrong while signing your message. Please try again.',
             REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
             OPEN_APP: 'Please open {{app}} app on your Ledger',
             BROADCASTING: 'Broadcasting transaction',
@@ -524,6 +545,18 @@ export const translation: ITranslations = {
                 title: 'Confirm transaction',
                 body:
                     'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+            },
+            extensionSignMessage: {
+                title: 'Sign message',
+                body: 'Open Moonlet to sign the message'
+            },
+            extensionContractCall: {
+                title: 'Contract call',
+                body: 'Open Moonlet to sign the contract call transaction'
+            },
+            extensionContractDeploy: {
+                title: 'New contract deploy',
+                body: 'Open Moonlet to sign the contract deploy transaction'
             },
             notificationsCenter: {
                 emptyNotifTitle: 'No notifications available',
@@ -672,6 +705,20 @@ export const translation: ITranslations = {
         Widgets: {
             wentWrong: 'Oops, something went wrong...',
             didNotLoad: 'Widgets didn’t load. Please retry to connect.'
+        },
+        ExtensionBackgroundRequest: {
+            connectMoonlet: 'Connect with Moonlet',
+            waiting:
+                'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.',
+            viewAddress: 'to view the addresses of your follwing accounts:',
+            makeSure: 'Make sure you connect with websites you trust'
+        },
+        ConnectedWebsites: {
+            title: 'Connected websites',
+            connectedFollowing: 'is connected to the following websites:',
+            notConnected: 'You are not connected\nto any website',
+            disconnectTitle: 'Disconnect website',
+            disconnectBody: 'You’re about to disconnect from {{url}}'
         }
     },
     plural: (n: number, ord?: boolean) => {

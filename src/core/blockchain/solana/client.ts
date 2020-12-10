@@ -1,4 +1,5 @@
 import {
+    Blockchain,
     BlockchainGenericClient,
     ChainIdType,
     IBalance,
@@ -7,11 +8,13 @@ import {
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
-import { config } from './config';
+import { config, Contracts } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { Connection } from '@solana/web3.js/src/connection';
+import { Staking } from './contracts/staking';
+import { ApiClient } from '../../utils/api-client/api-client';
 
 export class Client extends BlockchainGenericClient {
     private connection;
@@ -21,15 +24,28 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
         this.connection = new Connection(this.network.url);
+        this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
     public async getBalance(address: string): Promise<IBalance> {
-        return this.http.jsonRpc('getBalance', [address]).then(res => {
+        try {
+            const data = await new ApiClient().validators.getBalance(
+                address,
+                Blockchain.SOLANA,
+                this.chainId.toString()
+            );
             return {
-                total: new BigNumber(res.result?.value),
-                available: new BigNumber(res.result?.value)
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0),
+                detailed: data?.balance.detailed || {}
             };
-        });
+        } catch {
+            return {
+                total: new BigNumber(0),
+                available: new BigNumber(0),
+                detailed: {}
+            };
+        }
     }
 
     public async getNonce(address: string): Promise<number> {
@@ -48,10 +64,13 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         return this.connection.sendRawTransaction(transaction).then(res => {
             if (res) {
-                return res;
+                return {
+                    txHash: res,
+                    rawResponse: res
+                };
             }
         });
     }

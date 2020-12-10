@@ -187,6 +187,15 @@ export class LedgerWallet implements IWallet {
         }
     }
 
+    signMessage(
+        blockchain: Blockchain,
+        accountIndex: number,
+        accountType: AccountType,
+        message: string
+    ): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+
     public getTransport() {
         return TransportFactory.get(this.deviceModel, this.connectionType, this.deviceId);
     }

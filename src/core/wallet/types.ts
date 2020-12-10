@@ -28,6 +28,12 @@ export interface IWallet {
         tx: IBlockchainTransaction,
         accountType: AccountType
     ): Promise<string>;
+    signMessage(
+        blockchain: Blockchain,
+        accountIndex: number,
+        accountType: AccountType,
+        message: string
+    ): Promise<string>;
     getPrivateKey(blockchain: Blockchain, accountIndex: number, accountType: AccountType): string;
     getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }>;
 }

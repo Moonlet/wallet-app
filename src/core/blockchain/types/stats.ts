@@ -70,6 +70,8 @@ export interface IValidator {
     amountDelegated: {
         pending: string;
         active: string;
+        deactivating?: string;
+        inactive?: string;
     };
     topStats: IStatValue[];
     chartStats: IStatValue[];

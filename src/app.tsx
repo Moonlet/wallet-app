@@ -38,6 +38,7 @@ import { ZilliqaTransactionUpdate } from './components/zilliqa-transaction-updat
 import { ContextScreen } from './components/widgets/types';
 import { fetchScreenData } from './redux/ui/screens/data/actions';
 import { InfoModal } from './components/info-modal/info-modal';
+import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -191,6 +192,48 @@ export default class App extends React.Component<{}, IState> {
         this.setState({ appState: nextAppState });
     };
 
+    public renderApp() {
+        const bgRequest = Platform.OS === 'web' && !!document.location.hash;
+        if (bgRequest) {
+            return <ExtensionBackgroundRequest />;
+        } else {
+            return (
+                <AppContainer
+                    ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
+                    theme="dark"
+                    onNavigationStateChange={(_, newState) => {
+                        if (!isEqual(this.state.navigationState, newState)) {
+                            this.setState({ navigationState: newState });
+
+                            const currentRoute = NavigationService.getCurrentRouteWithParams();
+
+                            // Sentry Breadcrumbs
+                            currentRoute &&
+                                currentRoute?.routeName &&
+                                addBreadcrumb({
+                                    message: JSON.stringify({
+                                        route: currentRoute.routeName,
+                                        params:
+                                            currentRoute?.params &&
+                                            filterObjectProps(currentRoute.params, [
+                                                'blockchain',
+                                                'accountIndex',
+                                                'step',
+                                                'appNetworks',
+                                                'transaction',
+                                                'wallet.selectedBlockchain',
+                                                'wallet.type',
+                                                'wallet.hwOptions'
+                                            ])
+                                    })
+                                });
+                        }
+                    }}
+                />
+            );
+        }
+    }
+
     public render() {
         if (this.state.appReady) {
             return (
@@ -198,38 +241,7 @@ export default class App extends React.Component<{}, IState> {
                     <PersistGateWrapper loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             {Platform.OS !== 'web' && <PasswordModal.Component />}
-                            <AppContainer
-                                ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
-                                theme="dark"
-                                onNavigationStateChange={(_, newState) => {
-                                    if (!isEqual(this.state.navigationState, newState)) {
-                                        this.setState({ navigationState: newState });
-
-                                        const currentRoute = NavigationService.getCurrentRouteWithParams();
-
-                                        // Sentry Breadcrumbs
-                                        currentRoute &&
-                                            currentRoute?.routeName &&
-                                            addBreadcrumb({
-                                                message: JSON.stringify({
-                                                    route: currentRoute.routeName,
-                                                    params:
-                                                        currentRoute?.params &&
-                                                        filterObjectProps(currentRoute.params, [
-                                                            'blockchain',
-                                                            'accountIndex',
-                                                            'step',
-                                                            'appNetworks',
-                                                            'transaction',
-                                                            'wallet.selectedBlockchain',
-                                                            'wallet.type',
-                                                            'wallet.hwOptions'
-                                                        ])
-                                                })
-                                            });
-                                    }
-                                }}
-                            />
+                            {this.renderApp()}
                             {Platform.OS !== 'android' && !this.state.displayApplication && (
                                 <ImageCanvas />
                             )}

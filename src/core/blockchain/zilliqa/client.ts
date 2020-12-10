@@ -233,24 +233,41 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         // return Promise.resolve(`${Math.random()}`); // hack to simulate transactions with success
         // return Promise.reject(); // hack to simulate transactions with fail
         return this.http.jsonRpc('CreateTransaction', [transaction]).then(res => {
             if (res.result) {
-                return res.result.TranID;
+                return {
+                    txHash: res.result.TranID,
+                    rawResponse: res
+                };
             }
 
             const errorMessage: string = res.error.message;
             if (errorMessage.includes('transaction underpriced')) {
-                return Promise.reject(TransactionMessageText.TR_UNDERPRICED);
+                return Promise.reject({
+                    error: TransactionMessageText.TR_UNDERPRICED,
+                    rawResponse: res
+                });
             }
             if (errorMessage.includes("Contract account won't accept normal txn")) {
-                return Promise.reject(TransactionMessageText.CONTRACT_TX_NORMAL_NOT_ALLOWED);
+                return Promise.reject({
+                    error: TransactionMessageText.CONTRACT_TX_NORMAL_NOT_ALLOWED,
+                    rawResponse: res
+                });
             }
             if (errorMessage.includes('Insufficient funds in source account!')) {
-                return Promise.reject(TransactionMessageText.INSUFFICIENT_FUNDS_SOURCE_ACCOUNT);
+                return Promise.reject({
+                    error: TransactionMessageText.INSUFFICIENT_FUNDS_SOURCE_ACCOUNT,
+                    rawResponse: res
+                });
             }
+
+            return Promise.reject({
+                error: 'GENERIC_ERROR',
+                rawResponse: res
+            });
         });
     }
 

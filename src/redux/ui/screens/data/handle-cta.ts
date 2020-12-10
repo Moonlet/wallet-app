@@ -119,7 +119,10 @@ const handleCtaAction = async (
                         getSelectedAccount(state),
                         withdrawValidator && [withdrawValidator],
                         action.params?.params?.tokenSymbol,
-                        { amount: action.params?.params?.amount },
+                        {
+                            amount: action.params?.params?.amount,
+                            stakeAccountKey: action.params?.params?.stakeAccountKey
+                        },
                         undefined
                     )(dispatch, getState);
                     break;

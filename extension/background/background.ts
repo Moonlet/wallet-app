@@ -13,6 +13,7 @@ import {
     IExtensionResponse
 } from '../../src/core/communication/extension';
 import { browser, Runtime } from 'webextension-polyfill-ts';
+import { PubSub } from './utils/pub-sub';
 
 // initialize store
 firebase.initializeApp(CONFIG.firebaseWebConfig);
@@ -68,6 +69,7 @@ const handleMessage = async (
 };
 
 // create communication port
+const eventEmitter = PubSub();
 browser.runtime.onConnect.addListener((port: Runtime.Port) => {
     if (port.name === ConnectionPort.BACKGROUND) {
         // const connectionId = uuid();
@@ -81,11 +83,41 @@ browser.runtime.onConnect.addListener((port: Runtime.Port) => {
             // TODO https check (only for production)
             // TODO blacklist check (message sender (origin), and sender tab url (parent))
             // TODO whitelist check for message origin (api.moonlet.io) -> to be sure the message was sent through our iframe
-            handleMessage(port.sender, message, (response: IExtensionMessage) => {
-                if (!portDisconnected) {
-                    port.postMessage(response);
-                }
-            });
+            if (
+                message.id &&
+                message.type === 'REQUEST' &&
+                message.request &&
+                message.request.controller === 'EventsController' &&
+                message.request.method === 'emit'
+            ) {
+                const event: IExtensionMessage = {
+                    id: message.id,
+                    type: 'EVENT',
+                    response: {
+                        data: message.request.params[0]
+                    }
+                };
+                eventEmitter.emit('extensionEvent', event);
+            } else {
+                handleMessage(port.sender, message, (response: IExtensionMessage) => {
+                    if (!portDisconnected) {
+                        port.postMessage(response);
+                    }
+                });
+            }
+        });
+    } else if (port.name === ConnectionPort.EVENTS) {
+        let portDisconnected = false;
+
+        const unsub = eventEmitter.subscribe('extensionEvent', (message: IExtensionMessage) => {
+            if (!portDisconnected) {
+                port.postMessage(message);
+            }
+        });
+
+        port.onDisconnect.addListener(() => {
+            portDisconnected = true;
+            unsub();
         });
     }
 });

@@ -1,7 +1,8 @@
 import { Blockchain, ChainIdType } from '../blockchain/types';
 
 export enum ConnectionPort {
-    BACKGROUND = 'BACKGROUND'
+    BACKGROUND = 'BACKGROUND',
+    EVENTS = 'EVENTS'
 }
 
 // Extension internal communication
@@ -31,7 +32,12 @@ export interface IExtensionRequest {
 export interface IExtensionMessage {
     id: string;
     target?: 'MOONLET_EXTENSION';
-    type: 'REQUEST' | 'RESPONSE';
+    type: 'REQUEST' | 'RESPONSE' | 'EVENT';
     request?: IExtensionRequest;
     response?: IExtensionResponse;
+}
+
+export enum ExtensionEvents {
+    DEFAULT_ACCOUNT_CHANGED = 'DEFAULT_ACCOUNT_CHANGED',
+    CURRENT_NETWORK_CHANGED = 'CURRENT_NETWORK_CHANGED'
 }

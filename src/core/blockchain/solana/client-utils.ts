@@ -3,7 +3,7 @@ import { Client } from './client';
 import { IBlockchainTransaction, Blockchain, TransactionType } from '../types';
 import { TransactionInstruction } from '@solana/web3.js/src/transaction';
 import { SystemInstruction } from '@solana/web3.js/src/system-program';
-
+import { StakeInstruction } from '@solana/web3.js/src/stake-program';
 import { config } from './config';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
@@ -51,13 +51,28 @@ export class ClientUtils implements IClientUtils {
             keys: [new PublicKey(fromAddress), new PublicKey(toAddress), programId]
         };
 
-        const type = SystemInstruction.decodeInstructionType(txInstruction);
+        let type = '';
+        try {
+            type = SystemInstruction.decodeInstructionType(txInstruction);
+        } catch {
+            type = undefined;
+        }
+        if (type === undefined) {
+            try {
+                type = StakeInstruction.decodeInstructionType(txInstruction);
+            } catch {
+                type = undefined;
+            }
+        }
 
-        if (type === 'Transfer') {
+        if (type && type === 'Transfer') {
             const transfer = SystemInstruction.decodeTransfer(txInstruction);
             amount = transfer.lamports.toString();
         }
-
+        // TODO
+        // else if (type && type === 'Delegate') {
+        //     const delegate = StakeInstruction.decodeDelegate(txInstruction);
+        // }
         const data: any = {};
 
         return {
@@ -70,7 +85,7 @@ export class ClientUtils implements IClientUtils {
             },
             blockchain: Blockchain.SOLANA,
             chainId: this.client.chainId,
-            type: TransactionType.TRANSFER,
+            type: type === 'Transfer' ? TransactionType.TRANSFER : TransactionType.CONTRACT_CALL,
 
             address: fromAddress,
             publicKey: fromAddress,

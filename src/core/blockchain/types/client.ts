@@ -17,6 +17,7 @@ export interface IBlockInfo {
 export interface IBalance {
     total: BigNumber;
     available: BigNumber;
+    detailed?: {};
 }
 
 export abstract class BlockchainGenericClient {
@@ -67,7 +68,9 @@ export abstract class BlockchainGenericClient {
         return Promise.resolve({ value: true, message: '' });
     }
 
-    public abstract sendTransaction(transaction: any): Promise<string>;
+    public abstract sendTransaction(
+        transaction: any
+    ): Promise<{ txHash: string; rawResponse: any }>;
 
     public abstract getFees(
         transactionType: TransactionType,

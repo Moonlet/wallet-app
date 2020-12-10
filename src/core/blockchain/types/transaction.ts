@@ -10,6 +10,9 @@ export abstract class AbstractBlockchainTransactionUtils {
     public async sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string> {
         throw new Error('Not Implemented');
     }
+    public async signMessage(message: string, privateKey: string): Promise<string> {
+        throw new Error('Not Implemented');
+    }
     public async buildTransferTransaction(
         tx: ITransferTransaction
     ): Promise<IBlockchainTransaction> {
@@ -32,6 +35,7 @@ export abstract class AbstractBlockchainTransactionUtils {
 // tslint:disable-next-line:no-shadowed-variable
 export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     id?: string;
+    walletPubKey?: string;
     date: {
         created: number;
         signed: number;
@@ -51,6 +55,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
         params?: string[];
         raw?: string;
     };
+    code?: string;
     feeOptions: IFeeOptions;
     broadcastedOnBlock: number;
     nonce: number;
@@ -60,7 +65,8 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
 
 export enum TransactionType {
     TRANSFER = 'TRANSFER',
-    CONTRACT_CALL = 'CONTRACT_CALL'
+    CONTRACT_CALL = 'CONTRACT_CALL',
+    CONTRACT_DEPLOY = 'CONTRACT_DEPLOY'
 }
 
 export interface IFeeOptions {
@@ -108,6 +114,8 @@ export interface ITransactionExtraFields {
     validatorName?: string;
     fromValidator?: IValidator;
     amount?: string;
+    stakeAccountKey?: string;
+    stakeAccountIndex?: number;
     //
 }
 

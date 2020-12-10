@@ -11,6 +11,8 @@ import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 import { IAction } from '../types';
 import { getBlockchains, hasNetwork, getBlockchainsPortfolio } from './selectors';
+import { ExtensionEvents } from '../../core/communication/extension';
+import { ExtensionEventEmitter } from '../../core/communication/extension-event-emitter';
 
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
@@ -66,6 +68,7 @@ export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainI
         }
     }
 
+    ExtensionEventEmitter.emit(ExtensionEvents.CURRENT_NETWORK_CHANGED);
     dispatch({
         type: PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
         data: { blockchain, chainId }
@@ -75,6 +78,7 @@ export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainI
 };
 
 export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    ExtensionEventEmitter.emit(ExtensionEvents.CURRENT_NETWORK_CHANGED);
     dispatch({
         type: SET_TEST_NET
     });

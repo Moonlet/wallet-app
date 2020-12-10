@@ -42,10 +42,13 @@ export class Client extends BlockchainGenericClient {
             });
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         return this.http.jsonRpc('eth_sendRawTransaction', [transaction]).then(res => {
             if (res.result) {
-                return res.result;
+                return {
+                    txHash: res.result,
+                    rawResponse: res
+                };
             }
 
             const errorMessage: string = res.error.message;

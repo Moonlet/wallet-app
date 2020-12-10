@@ -65,7 +65,7 @@ export const switchNodeSelectReasons = (state: IReduxState, module: IScreenModul
     return 'DEFAULT';
 };
 
-export const switchNodeContinueInfo1 = (state: IReduxState, module: IScreenModule): string => {
+export const switchNodeContinueInfo2 = (state: IReduxState, module: IScreenModule): string => {
     const flowId = module?.details?.flowId;
 
     if (
@@ -79,7 +79,7 @@ export const switchNodeContinueInfo1 = (state: IReduxState, module: IScreenModul
     return 'DEFAULT';
 };
 
-export const switchNodeContinueInfo2 = (state: IReduxState, module: IScreenModule): string => {
+export const switchNodeContinueInfo3 = (state: IReduxState, module: IScreenModule): string => {
     const flowId = module?.details?.flowId;
 
     if (

@@ -14,8 +14,8 @@ import {
     switchNodeSelectToValidator,
     switchNodeSelectNodeBottomWrapper,
     switchNodeSelectReasons,
-    switchNodeContinueInfo1,
-    switchNodeContinueInfo2
+    switchNodeContinueInfo2,
+    switchNodeContinueInfo3
 } from './switch-node';
 
 const stateModifiers = {
@@ -26,8 +26,8 @@ const stateModifiers = {
     switchNodeSelectToValidator,
     switchNodeSelectNodeBottomWrapper,
     switchNodeSelectReasons,
-    switchNodeContinueInfo1,
-    switchNodeContinueInfo2
+    switchNodeContinueInfo2,
+    switchNodeContinueInfo3
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {

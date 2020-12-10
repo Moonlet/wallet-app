@@ -26,6 +26,7 @@ import { Dialog } from '../../../../components/dialog/dialog';
 import { translate } from '../../../../core/i18n';
 import { LOAD_MORE_VALIDATORS } from './actions';
 import { ITokenState } from '../../../wallets/state';
+import { HttpClient } from '../../../../core/utils/http-client';
 
 export const handleCta = (
     cta: ICta,
@@ -388,6 +389,27 @@ const handleCtaAction = async (
                         selectReasons
                     })(dispatch, getState);
                     break;
+
+                case 'switchNodeSaveData': {
+                    if (
+                        action?.params?.params?.url &&
+                        action?.params?.params?.context &&
+                        action?.params?.params?.user
+                    ) {
+                        const url = action.params.params.url;
+                        const httpClient = new HttpClient(url);
+                        try {
+                            await httpClient.post('', {
+                                context: action.params.params.context,
+                                user: action.params.params.user
+                            });
+                            // console.log(JSON.stringify(res, null, 4));
+                        } catch (err) {
+                            // console.log('>> err: ', err);
+                        }
+                    }
+                    break;
+                }
 
                 default:
                     break;

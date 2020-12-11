@@ -5,5 +5,5 @@ export const getBgPort = (): any => {
 };
 
 export const bgPortRequest = (request: IExtensionRequest): Promise<IExtensionResponse> => {
-    return Promise.reject('NOT_IMPLEMENTED');
+    return Promise.resolve({});
 };

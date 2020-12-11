@@ -75,6 +75,20 @@ export class ValidatorScreenComponent extends React.Component<
         validator.actionType = CardActionType.CHECKBOX;
         validator.actionTypeSelected = true;
 
+        const otherCtas = config.ui.token.validatorCTA.otherCtas;
+        if (blockchain === Blockchain.ZILLIQA) {
+            otherCtas.map(cta =>
+                cta.title === 'App.labels.switchNode'
+                    ? (cta.navigateTo.params.context = {
+                          ...cta.navigateTo.params.context,
+                          params: {
+                              fromValidatorId: validator.id
+                          }
+                      })
+                    : cta
+            );
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.topContainer}>
@@ -118,7 +132,7 @@ export class ValidatorScreenComponent extends React.Component<
                 <View style={styles.bottomContainer}>
                     <CtaGroup
                         mainCta={config.ui.token.validatorCTA.mainCta}
-                        otherCtas={config.ui.token.validatorCTA.otherCtas}
+                        otherCtas={otherCtas}
                         params={{
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,

@@ -71,8 +71,15 @@ const validatorCTA = {
             title: 'App.labels.switchNode',
             iconName: IconValues.REVOTE,
             navigateTo: {
-                screen: 'PosRedelegate',
-                params: { actionText: 'App.labels.switchNode' }
+                screen: 'SmartScreen',
+                params: {
+                    context: {
+                        screen: 'SwitchNode',
+                        step: 'SwitchNodeSelectNode',
+                        key: 'switch-node-select-node'
+                    },
+                    newFlow: true
+                }
             }
         },
         {

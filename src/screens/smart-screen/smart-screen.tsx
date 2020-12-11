@@ -19,7 +19,8 @@ import { LoadingSkeleton } from '../../components/smart-screen/components/loadin
 import {
     clearScreenInputData,
     runScreenValidation,
-    runScreenStateActions
+    runScreenStateActions,
+    setScreenInputData
 } from '../../redux/ui/screens/input-data/actions';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import LinearGradient from 'react-native-linear-gradient';
@@ -65,6 +66,7 @@ interface IReduxProps {
     clearScreenInputData: typeof clearScreenInputData;
     runScreenValidation: typeof runScreenValidation;
     runScreenStateActions: typeof runScreenStateActions;
+    setScreenInputData: typeof setScreenInputData;
 }
 
 const mapDispatchToProps = {
@@ -72,7 +74,8 @@ const mapDispatchToProps = {
     handleCta,
     clearScreenInputData,
     runScreenValidation,
-    runScreenStateActions
+    runScreenStateActions,
+    setScreenInputData
 };
 
 interface IState {
@@ -134,6 +137,21 @@ class SmartScreenComponent extends React.Component<
 
         this.updateLoading(prevProps);
         this.handleScreenValidation();
+        this.getResponseNavigationOptions(prevProps);
+    }
+
+    private getResponseNavigationOptions(prevProps: IReduxProps & INavigationParams) {
+        const screenData = this.getScreenData(this.props);
+        const prevScreenData = this.getScreenData(prevProps);
+
+        if (
+            screenData?.response?.navigationOptions &&
+            screenData?.response?.navigationOptions !== prevScreenData?.response?.navigationOptions
+        ) {
+            this.props.navigation.setParams({
+                navigationOptions: screenData.response.navigationOptions
+            });
+        }
     }
 
     private handleScreenValidation() {
@@ -214,7 +232,8 @@ class SmartScreenComponent extends React.Component<
                     handleCta: this.props.handleCta,
                     clearScreenInputData: this.props.clearScreenInputData,
                     runScreenValidation: this.props.runScreenValidation,
-                    runScreenStateActions: this.props.runScreenStateActions
+                    runScreenStateActions: this.props.runScreenStateActions,
+                    setScreenInputData: this.props.setScreenInputData
                 }}
                 blockchain={this.props.account.blockchain}
                 validation={validation}

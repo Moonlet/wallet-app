@@ -5,7 +5,8 @@ import { IconValues } from '../icon/values';
 import {
     clearScreenInputData,
     runScreenValidation,
-    runScreenStateActions
+    runScreenStateActions,
+    setScreenInputData
 } from '../../redux/ui/screens/input-data/actions';
 
 export interface IScreenRequest {
@@ -13,11 +14,12 @@ export interface IScreenRequest {
     user: IScreenUser;
 }
 
-export interface IScreenContext {
+export interface IScreenContext<ScreenParams = any> {
     screen: string;
     step?: string;
     tab?: string;
     flowId?: string;
+    params?: ScreenParams;
 }
 
 /** @deprecated use string instead */
@@ -37,6 +39,7 @@ export interface ISmartScreenActions {
     clearScreenInputData?: typeof clearScreenInputData;
     runScreenValidation?: typeof runScreenValidation;
     runScreenStateActions?: typeof runScreenStateActions;
+    setScreenInputData?: typeof setScreenInputData;
 }
 
 export interface IScreenUser {
@@ -67,6 +70,7 @@ export interface IScreenResponse {
     widgets: IScreenWidget[];
     bottomFixedArea?: IScreenWidget;
     validation?: IScreenValidation;
+    navigationOptions?: any;
 }
 
 export interface IScreenFieldValidation {
@@ -151,9 +155,12 @@ export interface IScreenModule {
         | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.CTA
+        | ModuleTypes.GRADIENT_WRAPPER
+        | ModuleTypes.ICON_ONE_LINE
         | ModuleTypes.ICON
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
+        | ModuleTypes.INPUT
         | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
@@ -173,9 +180,12 @@ export interface IScreenModule {
         | IAmountInputData
         | IBalanceGridData
         | IBalanceGridData[]
+        | IGradientWrapperData
         | IIconData
         | IIconTwoLinesData
+        | IIconOneLineData
         | IImageBannerData
+        | IInputData
         | IMdTextData
         | IOneLineTextBannerData
         | IScreenModuleColumnsWrapperData
@@ -209,9 +219,12 @@ export enum ModuleTypes {
     AMOUNT_INPUT = 'amount-input',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     CTA = 'cta',
+    GRADIENT_WRAPPER = 'gradient-wrapper',
+    ICON_ONE_LINE = 'cta-one-line',
     ICON = 'icon',
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
+    INPUT = 'input',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
@@ -383,7 +396,40 @@ export interface IAmountInputAmountBox {
 export interface IAmountInputData {
     input?: {
         style?: IDataStyle;
+        textStyle?: IDataStyle;
     };
     labels?: IData[];
     amounts?: IAmountInputAmountBox[];
+    placeholder?: {
+        value: string;
+        color?: string;
+    };
+}
+
+export interface IIconOneLineData {
+    icon: {
+        value: IconValues;
+        style?: IDataStyle;
+    };
+    line: IData[];
+}
+
+export interface IInputData {
+    style?: {
+        input?: IDataStyle;
+        inputContainer?: IDataStyle;
+    };
+    options?: {
+        keyboardType?: string;
+        placeholder?: {
+            value: string;
+            color?: string;
+        };
+        multiline?: boolean;
+    };
+}
+
+export interface IGradientWrapperData {
+    gradient: string[];
+    submodules: IScreenModule[];
 }

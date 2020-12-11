@@ -26,6 +26,7 @@ import { Dialog } from '../../../../components/dialog/dialog';
 import { translate } from '../../../../core/i18n';
 import { LOAD_MORE_VALIDATORS } from './actions';
 import { ITokenState } from '../../../wallets/state';
+import { HttpClient } from '../../../../core/utils/http-client';
 
 export const handleCta = (
     cta: ICta,
@@ -129,6 +130,7 @@ const handleCtaAction = async (
                 }
 
                 case 'MULTIPLE_SELECTION':
+                case 'multipleSelection':
                     toggleValidatorMultiple(options.screenKey, {
                         id: options.validator.id,
                         name: options.validator.name,
@@ -138,6 +140,7 @@ const handleCtaAction = async (
                     break;
 
                 case 'SINGLE_SELECTION':
+                case 'singleSelection':
                     setScreenInputData(options.screenKey, {
                         validators: [
                             {
@@ -151,6 +154,7 @@ const handleCtaAction = async (
                     break;
 
                 case 'LOAD_MORE_VALIDATORS':
+                case 'loadMoreValidators':
                     dispatch({
                         type: LOAD_MORE_VALIDATORS,
                         data: { screenKey: options.screenKey }
@@ -259,9 +263,79 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'switchNodeConfirm': {
+                    // Run Screen Validations
+
+                    // Take amount from screen
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const context = action.params?.params?.context;
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: context?.step,
+                        tab: undefined
+                    });
+
+                    // Node details are stored on flow
+                    const switchNodeValidator =
+                        state.ui.screens.inputData[context?.flowId]?.data?.switchNodeValidator;
+
+                    const switchNodeToValidator =
+                        state.ui.screens.inputData[context?.flowId]?.data?.switchNodeToValidator;
+
+                    // Open Process Tx
+                    if (
+                        switchNodeValidator &&
+                        switchNodeToValidator &&
+                        action.params?.params?.token &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey] &&
+                        state.ui.screens.inputData[screenKey]?.data?.amount
+                    ) {
+                        const fromValidator = buildDummyValidator(
+                            switchNodeValidator.id,
+                            switchNodeValidator.name
+                        );
+
+                        const validators = [
+                            buildDummyValidator(
+                                switchNodeToValidator.id,
+                                switchNodeToValidator.name
+                            )
+                        ];
+
+                        const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+
+                        redelegate(
+                            getSelectedAccount(state),
+                            amount,
+                            validators,
+                            action.params.params.token,
+                            undefined, // feeOptions
+                            { fromValidator }
+                        )(dispatch, getState);
+                    }
+                    break;
+                }
+
                 case 'setSwitchNodeValidator':
                     setScreenInputData(action.params?.params?.flowId, {
                         switchNodeValidator: {
+                            id: action.params?.params?.validatorId,
+                            name: action.params?.params?.validatorName,
+                            availableBalance: action.params?.params?.availableBalance
+                        }
+                    })(dispatch, getState);
+                    break;
+
+                case 'setSwitchNodeToValidator':
+                    setScreenInputData(action.params?.params?.flowId, {
+                        switchNodeToValidator: {
                             id: action.params?.params?.validatorId,
                             name: action.params?.params?.validatorName,
                             availableBalance: action.params?.params?.availableBalance
@@ -291,6 +365,81 @@ const handleCtaAction = async (
                 case 'selectBlockchain':
                     setSelectedBlockchain(action.params?.params?.blockchain)(dispatch, getState);
                     break;
+
+                case 'switchNodeSelectReasons': {
+                    const infoText = action.params?.params?.infoText;
+                    const flowId = action.params?.params?.flowId;
+
+                    const selectReasons = [];
+                    Object.assign(
+                        selectReasons,
+                        state.ui.screens.inputData[flowId]?.data?.selectReasons
+                    );
+                    const reasonIndex = selectReasons.findIndex(r => r === infoText);
+
+                    if (reasonIndex === -1) {
+                        // select reason
+                        selectReasons.push(infoText);
+                    } else {
+                        // unselect reason
+                        selectReasons.splice(reasonIndex, 1);
+                    }
+
+                    setScreenInputData(flowId, {
+                        selectReasons
+                    })(dispatch, getState);
+                    break;
+                }
+
+                case 'saveDataToUrl': {
+                    if (action?.params?.params?.url && action?.params?.params?.data) {
+                        let data = action.params.params.data;
+
+                        const url = action.params.params.url;
+                        const httpClient = new HttpClient(url);
+
+                        const flowId = data?.flowId;
+
+                        if (
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[flowId]?.data
+                        ) {
+                            data = {
+                                ...data,
+                                flowData: state.ui.screens.inputData[flowId]?.data
+                            };
+                        }
+
+                        const account = getSelectedAccount(state);
+                        const chainId = getChainId(state, account.blockchain);
+
+                        const screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step: data?.context?.step || action.params?.params?.step,
+                            tab: undefined
+                        });
+
+                        if (
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[screenKey]?.data
+                        ) {
+                            data = {
+                                ...data,
+                                screenData: state.ui.screens.inputData[screenKey]?.data
+                            };
+                        }
+
+                        try {
+                            await httpClient.post('', { ...data });
+                        } catch {
+                            //
+                        }
+                    }
+                    break;
+                }
 
                 default:
                     break;

@@ -8,6 +8,7 @@ import { formatDataJSXElements, formatStyles } from '../../utils';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../../../redux/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
+import { Text } from '../../../../library';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -32,11 +33,13 @@ const OneLineTextBannerComponent = (
 
     const moduleJSX = (
         <View style={[styles.container, module?.style && formatStyles(module.style)]}>
-            {formatDataJSXElements(
-                data.line,
-                styles.text,
-                module?.state && { translateKeys: props as any }
-            )}
+            <Text>
+                {formatDataJSXElements(
+                    data.line,
+                    styles.text,
+                    module?.state && { translateKeys: props as any }
+                )}
+            </Text>
         </View>
     );
 

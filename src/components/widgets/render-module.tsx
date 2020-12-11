@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from '../../library';
+import { Button, Text } from '../../library';
 import {
     ICta,
     IScreenContext,
@@ -28,6 +28,9 @@ import { IconModule } from './components/icon/icon';
 import { handleCta } from '../../redux/ui/screens/data/handle-cta';
 import { MdText } from './components/md-text/md-text';
 import { AmountInput } from './components/amount-input/amount-input';
+import { IconOneLine } from './components/icon-one-line/icon-one-line';
+import { InputModule } from './components/input/input';
+import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -92,7 +95,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.THREE_LINES_CTA:
-            moduleJSX = <ThreeLinesCta module={module} actions={actions} />;
+            moduleJSX = (
+                <ThreeLinesCta
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.BALANCES_GRID_ICONS:
@@ -111,6 +120,16 @@ export const renderModule = (
             moduleJSX = <ImageBanner module={module} actions={actions} />;
             break;
 
+        case ModuleTypes.INPUT:
+            moduleJSX = (
+                <InputModule
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
+            break;
+
         case ModuleTypes.TWO_LINES_TEXT_BANNER:
             moduleJSX = <TwoLinesStakeBanner module={module} actions={actions} />;
             break;
@@ -127,6 +146,27 @@ export const renderModule = (
 
         case ModuleTypes.THREE_LINES_ICON:
             moduleJSX = <ThreeLinesIcon module={module} />;
+            break;
+
+        case ModuleTypes.GRADIENT_WRAPPER:
+            moduleJSX = (
+                <GradientWrapper
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
+            break;
+
+        case ModuleTypes.ICON_ONE_LINE:
+            moduleJSX = (
+                <IconOneLine
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.ICON_TWO_LINES:
@@ -218,7 +258,15 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
             ]}
             onPress={() => handleCTA(cta)}
         >
-            {cta?.label || ''}
+            <Text
+                style={
+                    cta?.buttonProps?.colors?.label && {
+                        color: cta.buttonProps.colors.label
+                    }
+                }
+            >
+                {cta.label}
+            </Text>
         </Button>
     );
 };

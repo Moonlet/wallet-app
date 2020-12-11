@@ -45,10 +45,21 @@ class ModuleSelectableWrapperComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public componentDidMount() {
+        this.autoSelectModule();
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
+        if (this.props.module && this.props.module !== prevProps.module) {
+            this.autoSelectModule();
+        }
+    }
+
+    private autoSelectModule() {
         const { actions, module } = this.props;
 
         // Add auto selected modules
         if (
+            module?.cta &&
             module?.details?.validator &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {

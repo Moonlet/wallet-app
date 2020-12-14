@@ -27,6 +27,9 @@ interface IReduxProps {
     modules: IScreenModule[];
     style: any;
     wrapperState: string;
+    inputData: {
+        [key: string]: any;
+    };
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -37,7 +40,9 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
         ...ownProps,
         modules: wrapperData?.submodules || [],
         style: wrapperState && wrapperData?.style && wrapperData?.style[wrapperState],
-        wrapperState
+        wrapperState,
+        inputData:
+            state.ui.screens.inputData && state.ui.screens.inputData[ownProps.screenKey]?.data
     };
 };
 
@@ -55,23 +60,32 @@ class ModuleSelectableWrapperComponent extends React.Component<
     }
 
     private autoSelectModule() {
-        const { actions, module } = this.props;
+        const { actions, inputData, module } = this.props;
 
-        // Add auto selected modules
         if (
             module?.cta &&
             module?.details?.validator &&
             (module?.data as IScreenModuleSelectableWrapperData)?.state === 'SELECTED'
         ) {
-            actions.handleCta(module.cta, {
-                screenKey: this.props.screenKey,
-                validator: {
-                    id: module.details.validator.id,
-                    name: module.details.validator.name,
-                    icon: module.details.validator?.icon,
-                    website: module.details.validator?.website
-                }
-            });
+            const validators = inputData?.validators || [];
+
+            // Add auto selected modules
+            // only if the card has been already selected
+            if (
+                validators.findIndex(
+                    v => v?.id?.toLowerCase() === module.details.validator?.id?.toLowerCase()
+                ) === -1
+            ) {
+                actions.handleCta(module.cta, {
+                    screenKey: this.props.screenKey,
+                    validator: {
+                        id: module.details.validator.id,
+                        name: module.details.validator.name,
+                        icon: module.details.validator?.icon,
+                        website: module.details.validator?.website
+                    }
+                });
+            }
         }
     }
 

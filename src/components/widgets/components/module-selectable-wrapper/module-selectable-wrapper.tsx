@@ -70,7 +70,7 @@ class ModuleSelectableWrapperComponent extends React.Component<
             const validators = inputData?.validators || [];
 
             // Add auto selected modules
-            // only if the card has been already selected
+            // only if the module has not been already selected
             if (
                 validators.findIndex(
                     v => v?.id?.toLowerCase() === module.details.validator?.id?.toLowerCase()

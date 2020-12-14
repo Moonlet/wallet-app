@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Button, Text } from '../../../../library';
+import { Button } from '../../../../library';
 import { I3LinesCtaData, ICta, IScreenModule, ISmartScreenActions } from '../../types';
 import { formatDataJSXElements, formatStyles } from '../../utils';
 import { connect } from 'react-redux';
@@ -63,27 +63,23 @@ const ThreeLinesCtaComponent = (
 
             <View style={styles.actionButtonContainer}>
                 <Button
-                    primary={cta.buttonProps?.primary}
-                    secondary={cta.buttonProps?.secondary}
-                    disabled={cta.buttonProps?.disabled}
+                    primary={cta?.buttonProps?.primary}
+                    secondary={cta?.buttonProps?.secondary}
+                    disabled={cta?.buttonProps?.disabled}
+                    disabledSecondary={cta?.buttonProps?.disabledSecondary}
+                    leftIcon={cta?.buttonProps?.leftIcon}
+                    wrapperStyle={formatStyles(cta?.buttonProps?.wrapperStyle)}
                     style={[
-                        styles.actionButton,
                         cta?.buttonProps?.colors?.bg && {
                             backgroundColor: cta.buttonProps.colors.bg,
                             borderColor: cta.buttonProps.colors.bg
-                        }
+                        },
+                        formatStyles(cta?.buttonProps?.buttonStyle)
                     ]}
+                    textStyle={formatStyles(cta?.buttonProps?.textStyle)}
                     onPress={handleOnPress}
                 >
-                    <Text
-                        style={
-                            cta?.buttonProps?.colors?.label && {
-                                color: cta.buttonProps.colors.label
-                            }
-                        }
-                    >
-                        {cta.label}
-                    </Text>
+                    {cta.label}
                 </Button>
             </View>
         </View>

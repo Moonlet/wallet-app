@@ -16,18 +16,27 @@ import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 export interface IButtonProps {
     testID?: string;
     testIDWrapper?: string;
+
     children?: any;
+
     wrapperStyle?: any;
     style?: any;
+    textStyle?: any;
+
     primary?: boolean;
     secondary?: boolean;
     disabled?: boolean;
     disabledSecondary?: boolean;
+
     onPress?: any;
+
     styles: ReturnType<typeof stylesProvider>;
+
     leftIcon?: string;
+
     onPressIn?: any;
     onPressOut?: any;
+
     bottomLabel?: string;
 }
 
@@ -78,7 +87,8 @@ export const ButtonComponent = (props: IButtonProps) => (
                         props.primary && props.styles.textPrimary,
                         props.secondary && props.styles.textSecondary,
                         props.disabled && props.styles.textDisabled,
-                        props.disabledSecondary && props.styles.textDisabledSecondary
+                        props.disabledSecondary && props.styles.textDisabledSecondary,
+                        props?.textStyle
                     ]}
                 >
                     {props.children}

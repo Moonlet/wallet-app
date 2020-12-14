@@ -123,14 +123,17 @@ export interface ICta {
         disabledSecondary?: boolean;
 
         colors?: {
-            label: string;
-            bg: string;
+            /** @deprecated use textStyle instead */
+            label?: string;
+
+            bg?: string;
         };
 
         leftIcon?: IconValues;
 
         wrapperStyle?: any;
         buttonStyle?: any;
+        textStyle?: any;
     };
 
     // TODO: check this

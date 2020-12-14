@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button, Text } from '../../library';
+import { Button } from '../../library';
 import {
     ICta,
     IScreenContext,
@@ -256,17 +256,10 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
                 },
                 formatStyles(cta?.buttonProps?.buttonStyle)
             ]}
+            textStyle={formatStyles(cta?.buttonProps?.textStyle)}
             onPress={() => handleCTA(cta)}
         >
-            <Text
-                style={
-                    cta?.buttonProps?.colors?.label && {
-                        color: cta.buttonProps.colors.label
-                    }
-                }
-            >
-                {cta.label}
-            </Text>
+            {cta.label}
         </Button>
     );
 };

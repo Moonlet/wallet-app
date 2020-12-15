@@ -81,6 +81,7 @@ export class DialogComponent extends React.Component<
         );
     }
 
+    // TODO: need to refactor this, also transform to `cancelButton: IAlertButton`
     public static async prompt(
         title: string,
         message: string,
@@ -150,6 +151,7 @@ export class DialogComponent extends React.Component<
             dialogType: DialogType.PROMPT,
             title,
             message,
+            cancelButton: { text: cancelButtonText },
             cancelButtonText,
             confirmButtonText,
             defaultInputValue,

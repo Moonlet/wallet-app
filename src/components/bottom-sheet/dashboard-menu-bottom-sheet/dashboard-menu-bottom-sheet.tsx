@@ -11,32 +11,52 @@ import { normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { Blockchain } from '../../../core/blockchain/types';
-import { getSelectedAccount, getSelectedBlockchain } from '../../../redux/wallets/selectors';
+import {
+    generateAccountConfig,
+    getSelectedAccount,
+    getSelectedBlockchain,
+    getSelectedWallet
+} from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
-import { IAccountState } from '../../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../../redux/wallets/state';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { Dialog } from '../../dialog/dialog';
+import {
+    addAccount,
+    getBalance,
+    setSelectedAccount
+} from '../../../redux/wallets/actions/wallet-actions';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onClose: () => void;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     blockchain: Blockchain;
     openTransactionRequest: typeof openTransactionRequest;
     selectedAccount: IAccountState;
+    selectedWallet: IWalletState;
+    addAccount: typeof addAccount;
+    setSelectedAccount: typeof setSelectedAccount;
+    getBalance: typeof getBalance;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
     blockchain: getSelectedBlockchain(state),
-    selectedAccount: getSelectedAccount(state)
+    selectedAccount: getSelectedAccount(state),
+    selectedWallet: getSelectedWallet(state)
 });
 
 const mapDispatchToProps = {
-    openTransactionRequest
+    openTransactionRequest,
+    addAccount,
+    setSelectedAccount,
+    getBalance
 };
 
 export class DashboardMenuBottomSheetComponent extends React.Component<
@@ -192,6 +212,50 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         onPress: () => this.copyToClipboard(),
                         hideArrow: true
                     })}
+
+                    {/*
+                     * Watch Account - Dev Tools feature
+                     */}
+                    {isFeatureActive(RemoteFeature.DEV_TOOLS) &&
+                        this.renderRow({
+                            title: translate('App.labels.watchAccount'),
+                            iconName: IconValues.EYE,
+                            onPress: async () => {
+                                const { blockchain, selectedAccount, selectedWallet } = this.props;
+
+                                const inputValue: string = await Dialog.prompt(
+                                    translate('App.labels.watchAccount'),
+                                    translate('Account.watchAccount'),
+                                    translate('App.labels.cancel'),
+                                    translate('App.labels.add')
+                                );
+
+                                if (inputValue && inputValue !== '') {
+                                    const account = generateAccountConfig(blockchain);
+                                    account.address = inputValue;
+                                    account.publicKey = selectedAccount.publicKey;
+
+                                    // Maybe in future find a better way to handle index
+                                    account.index = selectedWallet.accounts.filter(
+                                        a => a.blockchain === blockchain
+                                    ).length;
+
+                                    this.props.addAccount(selectedWallet.id, blockchain, account);
+
+                                    this.props.setSelectedAccount(account);
+
+                                    this.props.getBalance(
+                                        blockchain,
+                                        account.address,
+                                        undefined,
+                                        true
+                                    );
+
+                                    this.props.onClose();
+                                }
+                            },
+                            hideArrow: true
+                        })}
                 </ScrollView>
 
                 {/* TODO: move this - implement smart scan */}

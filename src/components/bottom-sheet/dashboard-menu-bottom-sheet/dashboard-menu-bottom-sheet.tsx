@@ -221,6 +221,8 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             title: translate('App.labels.watchAccount'),
                             iconName: IconValues.EYE,
                             onPress: async () => {
+                                const { blockchain, selectedAccount, selectedWallet } = this.props;
+
                                 const inputValue: string = await Dialog.prompt(
                                     translate('App.labels.watchAccount'),
                                     translate('Account.watchAccount'),
@@ -229,25 +231,21 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                                 );
 
                                 if (inputValue && inputValue !== '') {
-                                    const account = generateAccountConfig(this.props.blockchain);
+                                    const account = generateAccountConfig(blockchain);
                                     account.address = inputValue;
-                                    account.publicKey = this.props.selectedAccount.publicKey;
+                                    account.publicKey = selectedAccount.publicKey;
 
                                     // Maybe in future find a better way to handle index
-                                    account.index = this.props.selectedWallet.accounts.filter(
-                                        a => a.blockchain === this.props.blockchain
+                                    account.index = selectedWallet.accounts.filter(
+                                        a => a.blockchain === blockchain
                                     ).length;
 
-                                    this.props.addAccount(
-                                        this.props.selectedWallet.id,
-                                        this.props.blockchain,
-                                        account
-                                    );
+                                    this.props.addAccount(selectedWallet.id, blockchain, account);
 
                                     this.props.setSelectedAccount(account);
 
                                     this.props.getBalance(
-                                        this.props.blockchain,
+                                        blockchain,
                                         account.address,
                                         undefined,
                                         true

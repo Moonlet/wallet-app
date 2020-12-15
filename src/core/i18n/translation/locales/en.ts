@@ -158,6 +158,7 @@ export const translation: ITranslations = {
                 wallets: 'Wallets',
                 warning: 'Warning',
                 watch: 'Watch mode',
+                watchAccount: 'Watch account',
                 withdraw: 'Withdraw',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet',
                 youAreUsing: 'You are now using your',
@@ -417,7 +418,9 @@ export const translation: ITranslations = {
             transactionHistory:
                 'Transaction history will appear here once you start to send tokens to other accounts',
             manageAccounts: 'Manage accounts',
-            switchAccounts: 'Switch accounts'
+            switchAccounts: 'Switch accounts',
+            watchAccount:
+                'The account will be added on the selected wallet and the selected account'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',

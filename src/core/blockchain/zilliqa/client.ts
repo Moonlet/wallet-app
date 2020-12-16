@@ -220,7 +220,10 @@ export class Client extends BlockchainGenericClient {
                     return Promise.resolve({
                         value: false,
                         message: translate('Validator.operationNotAvailableMessage', {
-                            operation: Capitalize(action.toLowerCase())
+                            operation:
+                                action === PosBasicActionType.REDELEGATE
+                                    ? translate('App.labels.switchNode')
+                                    : Capitalize(action.toLowerCase())
                         })
                     });
                 else

@@ -1,6 +1,6 @@
-Team's log. Stardate 2012.07:
+Team's log. Stardate 2012.16:
 
-We had to fix some issues with the fresh new Promotions hub. Now you should be able to see promotions on all accounts or when use a Ledger device.
+We fixed some issues here and there. Also we improved the relevance of some error messages to make them more readable, less geeky hopefully.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 

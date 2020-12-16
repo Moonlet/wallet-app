@@ -492,7 +492,9 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             if (TransactionMessageText[errorMessage]) {
                 Dialog.alert(
                     translate('LoadingModal.txFailed'),
-                    translate(`LoadingModal.${errorMessage}`),
+                    translate(`LoadingModal.${errorMessage}`, {
+                        coin: blockchainInstance.config.coin
+                    }),
                     undefined,
                     {
                         text: translate('App.labels.ok'),

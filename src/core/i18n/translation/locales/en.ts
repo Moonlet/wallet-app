@@ -502,7 +502,7 @@ export const translation: ITranslations = {
             NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
             COSMOS_ERROR_12: 'Insufficient fee',
             COSMOS_ERROR_14: 'Insufficient funds for transaction',
-            INSUFFICIENT_FUNDS_SOURCE_ACCOUNT: 'Insufficient funds in source account!',
+            INSUFFICIENT_FUNDS_SOURCE_ACCOUNT: `You don't have enough {{coin}} available in your source account to pay for network fees. Please top-up a small amount to push the transaction through.`,
             CONTRACT_TX_NORMAL_NOT_ALLOWED:
                 "{{address}} is a smart contract that doesn't accept normal transactions",
             WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',
@@ -604,7 +604,7 @@ export const translation: ITranslations = {
             stakeSection: 'This section will become available once you start to stake your tokens.',
             operationNotAvailable: 'Operation not available',
             operationNotAvailableMessage:
-                'This operation can not be performed. You tried to {{operation}} too quickly. Please try again next network cycle, roughly up to 48 hours',
+                'This operation can not be performed. You tried to {{operation}} too quickly. Please try again next network cycle or immediately after rewards distribution.',
             restakeScreenMessageZil:
                 'The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
             unstakeScreenMessageZil:

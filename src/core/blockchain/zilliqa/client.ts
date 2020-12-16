@@ -244,7 +244,8 @@ export class Client extends BlockchainGenericClient {
                 };
             }
 
-            const errorMessage: string = res.error.message;
+            const errorMessage: string = res?.error?.message || '';
+
             if (errorMessage.includes('transaction underpriced')) {
                 return Promise.reject({
                     error: TransactionMessageText.TR_UNDERPRICED,

@@ -784,7 +784,7 @@ export const sendTransaction = (
             throw new Error('GENERIC_ERROR');
         }
     } catch (res) {
-        const errorMessage = res.error || 'GENERIC_ERROR';
+        const errorMessage = res?.error || 'GENERIC_ERROR';
 
         if (appWallet.type === WalletType.HD) {
             await LoadingModal.close();

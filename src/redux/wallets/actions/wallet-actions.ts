@@ -692,6 +692,7 @@ export const sendTransaction = (
     const state = getState();
     const account = getAccounts(state, tx.blockchain)?.find(acc => acc.address === tx.address);
     const chainId = getChainId(state, account.blockchain);
+    const blockchainInstance = getBlockchain(account.blockchain);
 
     const appWallet = getSelectedWallet(state);
     let password = '';
@@ -726,8 +727,6 @@ export const sendTransaction = (
                       deviceId: appWallet.hwOptions?.deviceId,
                       connectionType: appWallet.hwOptions?.connectionType
                   }); // encrypted string: pass)
-
-        const blockchainInstance = getBlockchain(account.blockchain);
 
         const client = blockchainInstance.getClient(chainId);
         const currentBlockchainNonce = await client.getNonce(account.address, account.publicKey);
@@ -807,7 +806,8 @@ export const sendTransaction = (
         const message =
             translate('LoadingModal.' + errorMessage, {
                 app: account.blockchain,
-                address: formatAddress(tx.toAddress, account.blockchain)
+                address: formatAddress(tx.toAddress, account.blockchain),
+                coin: blockchainInstance.config.coin
             }) || translate('LoadingModal.GENERIC_ERROR');
 
         Dialog.info(translate('LoadingModal.txFailed'), message);

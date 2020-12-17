@@ -74,6 +74,12 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         let primaryText = '';
 
+        if (tx.type === TransactionType.CONTRACT_DEPLOY) {
+            primaryText = translate('App.labels.contractDeploy');
+        } else if (tx.type === TransactionType.CONTRACT_CALL) {
+            primaryText = translate('App.labels.contractCall');
+        }
+
         switch (tx.additionalInfo?.posAction) {
             case PosBasicActionType.DELEGATE: {
                 formattedAmount = translate('App.labels.to').toLowerCase();
@@ -114,12 +120,6 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
             default:
                 primaryText = ` ${formattedAmount} ${toAddress}`;
-        }
-
-        if (tx.type === TransactionType.CONTRACT_DEPLOY) {
-            primaryText = translate('App.labels.contractDeploy');
-        } else if (tx.type === TransactionType.CONTRACT_CALL) {
-            primaryText = translate('App.labels.contractCall');
         }
 
         return primaryText;

@@ -23,3 +23,26 @@ export const getInputBalanceFormat = (
 
     return `${balance} ${blockchainInstance.config.coin}`;
 };
+
+export const getStakeAmountPerValidator = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: { flowId: string; screenKey: string },
+    params?: any[]
+) => {
+    const blockchainInstance = getBlockchain(getSelectedBlockchain(state));
+
+    const validatorId = params && params[0] && params[0]?.validatorId;
+
+    const nodeAmount =
+        options?.screenKey &&
+        state.ui.screens.inputData &&
+        state.ui.screens.inputData[options.screenKey]?.data &&
+        state.ui.screens.inputData[options.screenKey]?.data[validatorId];
+
+    if (nodeAmount) {
+        return `${nodeAmount.amount} ${blockchainInstance.config.coin}`;
+    }
+
+    return `0 ${blockchainInstance.config.coin}`;
+};

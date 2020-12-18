@@ -20,7 +20,8 @@ export const navigateToEnterAmountStep = (
     actionText: string,
     screen: string,
     actionType: string,
-    fromValidator?: IValidator
+    fromValidator?: IValidator,
+    screenKey?: string
 ) => (dispatch: Dispatch<any>) => {
     dispatch({
         type: actionType,
@@ -34,7 +35,7 @@ export const navigateToEnterAmountStep = (
         }
     });
 
-    NavigationService.navigate(screen, {});
+    NavigationService.navigate(screen, {}, screenKey);
 };
 
 export const navigateToConfirmationStep = (

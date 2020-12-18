@@ -172,31 +172,35 @@ class AmountInputComponent extends React.Component<
 
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
-                <View style={[styles.inputBox, formatStyles(data?.input?.style)]}>
-                    <TextInput
-                        testID="enter-amount"
-                        style={[styles.inputText, formatStyles(data?.input?.textStyle)]}
-                        autoCapitalize={'none'}
-                        autoCorrect={false}
-                        selectionColor={theme.colors.accent}
-                        placeholder={data?.placeholder?.value}
-                        placeholderTextColor={data?.placeholder?.color || theme.colors.textTertiary}
-                        value={amount}
-                        onChangeText={text => {
-                            text = text.replace(/,/g, '.');
-                            this.props.setScreenAmount(text, {
-                                screenKey: this.props.screenKey,
-                                context: this.props.context
-                            });
-                        }}
-                        keyboardType={Platform.select({
-                            default: 'number-pad',
-                            ios: 'decimal-pad'
-                        })}
-                        returnKeyType="done"
-                        // TODO: maxLength - max 8 decimals: 0.00000000
-                    />
-                </View>
+                {data?.input && (
+                    <View style={[styles.inputBox, formatStyles(data?.input?.style)]}>
+                        <TextInput
+                            testID="enter-amount"
+                            style={[styles.inputText, formatStyles(data?.input?.textStyle)]}
+                            autoCapitalize={'none'}
+                            autoCorrect={false}
+                            selectionColor={theme.colors.accent}
+                            placeholder={data?.placeholder?.value}
+                            placeholderTextColor={
+                                data?.placeholder?.color || theme.colors.textTertiary
+                            }
+                            value={amount}
+                            onChangeText={text => {
+                                text = text.replace(/,/g, '.');
+                                this.props.setScreenAmount(text, {
+                                    screenKey: this.props.screenKey,
+                                    context: this.props.context
+                                });
+                            }}
+                            keyboardType={Platform.select({
+                                default: 'number-pad',
+                                ios: 'decimal-pad'
+                            })}
+                            returnKeyType="done"
+                            // TODO: maxLength - max 8 decimals: 0.00000000
+                        />
+                    </View>
+                )}
 
                 {data?.labels && (
                     <View style={styles.row}>

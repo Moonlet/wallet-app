@@ -156,6 +156,7 @@ export interface IScreenModule {
     style?: IDataStyle;
     type:
         | ModuleTypes.AMOUNT_INPUT
+        | ModuleTypes.AMOUNT_SELECTABLE_BOX
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.CTA
         | ModuleTypes.GRADIENT_WRAPPER
@@ -181,6 +182,7 @@ export interface IScreenModule {
         | I2LinesTextBannerData
         | I3LinesCtaData
         | IAmountInputData
+        | IAmountSelectableBoxData
         | IBalanceGridData
         | IBalanceGridData[]
         | IGradientWrapperData
@@ -220,6 +222,7 @@ export interface IStateSelector {
 
 export enum ModuleTypes {
     AMOUNT_INPUT = 'amount-input',
+    AMOUNT_SELECTABLE_BOX = 'amount-selectable-box',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     CTA = 'cta',
     GRADIENT_WRAPPER = 'gradient-wrapper',
@@ -407,6 +410,10 @@ export interface IAmountInputData {
         value: string;
         color?: string;
     };
+}
+
+export interface IAmountSelectableBoxData {
+    amounts: IAmountInputAmountBox[];
 }
 
 export interface IIconOneLineData {

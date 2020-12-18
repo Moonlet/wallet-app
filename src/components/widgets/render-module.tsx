@@ -31,6 +31,7 @@ import { AmountInput } from './components/amount-input/amount-input';
 import { IconOneLine } from './components/icon-one-line/icon-one-line';
 import { InputModule } from './components/input/input';
 import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper';
+import { AmountSelectableBox } from './components/amount-selectable-box/amount-selectable-box';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -207,6 +208,18 @@ export const renderModule = (
         case ModuleTypes.AMOUNT_INPUT:
             moduleJSX = (
                 <AmountInput
+                    module={module}
+                    context={context}
+                    screenKey={options?.screenKey}
+                    actions={actions}
+                    screenValidation={options?.validation}
+                />
+            );
+            break;
+
+        case ModuleTypes.AMOUNT_SELECTABLE_BOX:
+            moduleJSX = (
+                <AmountSelectableBox
                     module={module}
                     context={context}
                     screenKey={options?.screenKey}

@@ -539,7 +539,8 @@ export const buildDummyValidator = (
     id: string,
     name?: string,
     icon?: string,
-    website?: string
+    website?: string,
+    inputAmount?: string
 ): IValidator => {
     return {
         id,
@@ -554,6 +555,7 @@ export const buildDummyValidator = (
         website: website || '',
         topStats: [],
         secondaryStats: [],
-        chartStats: []
+        chartStats: [],
+        inputAmount
     };
 };

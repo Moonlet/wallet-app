@@ -10,7 +10,7 @@ import {
     getSwitchNodeEnterAvailableBalance,
     getSwitchNodeEnterAvailableBalanceFormat
 } from './switch-node-enter-available-balance';
-import { getInputBalanceFormat } from './input-balance-format';
+import { getInputBalanceFormat, getStakeAmountPerValidator } from './input-balance-format';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
@@ -22,7 +22,9 @@ const uiStateSelectors = {
     getSwitchNodeSelectedValidatorName,
     getSwitchNodeSelectedToValidatorName,
 
-    getInputBalanceFormat
+    getInputBalanceFormat,
+
+    getStakeAmountPerValidator
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {
@@ -34,7 +36,8 @@ export const getStateSelectors = (state: IReduxState, module: IScreenModule, opt
                 uiState[selector] = uiStateSelectors[module.state.selectors[selector].fn](
                     state,
                     module,
-                    options
+                    options,
+                    module.state.selectors[selector]?.params
                 );
             }
         }

@@ -132,9 +132,6 @@ export class TransactionDetailsComponent extends React.Component<
         openURL(url);
     }
 
-    public capitalizeString = (word: string) =>
-        `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
-
     public render() {
         const styles = this.props.styles;
         const transaction = this.props.transaction;
@@ -277,7 +274,7 @@ export class TransactionDetailsComponent extends React.Component<
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>
                             {translate(
-                                `Transaction.statusValue.${this.capitalizeString(
+                                `Transaction.statusValue.${Capitalize(
                                     transaction.status.toString()
                                 )}`
                             )}

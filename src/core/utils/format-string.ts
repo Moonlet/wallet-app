@@ -2,7 +2,7 @@ import { IValidator } from '../blockchain/types/stats';
 import { translate } from '../i18n';
 
 export const Capitalize = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLocaleLowerCase();
+    return (str || '').charAt(0).toUpperCase() + (str || '').slice(1).toLowerCase();
 };
 
 export const valuePrimaryCtaField = (validators: IValidator[]): string => {

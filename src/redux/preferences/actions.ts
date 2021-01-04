@@ -22,6 +22,7 @@ export const PREF_SET_BLOCKCHAIN_ACTIVE_STATE = 'PREF_SET_BLOCKCHAIN_ACTIVE_STAT
 export const PREF_SET_BLOCKCHAIN_ORDER = 'PREF_SET_BLOCKCHAIN_ORDER';
 export const PREF_SET_NETWORK_TEST_NET_CHAIN_ID = 'PREF_SET_NETWORK_TEST_NET_CHAIN_ID';
 export const PREF_SET_DEVICE_ID = 'PREF_SET_DEVICE_ID';
+export const TOGGLE_CUMULATIVE_BALANCE = 'TOGGLE_CUMULATIVE_BALANCE';
 
 export const setBlockchainActive = (blockchain: Blockchain, active: boolean) => (
     dispatch: Dispatch<IAction>,
@@ -138,3 +139,9 @@ export const setDeviceId = (deviceId: string) => {
         data: { deviceId }
     };
 };
+
+export function toggleCumulativeBalance() {
+    return {
+        type: TOGGLE_CUMULATIVE_BALANCE
+    };
+}

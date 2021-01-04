@@ -36,6 +36,7 @@ interface IReduxProps {
     removeAccount: typeof removeAccount;
     setSelectedAccount: typeof setSelectedAccount;
     getBalance: typeof getBalance;
+    cumulativeBalance: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -46,7 +47,8 @@ const mapStateToProps = (state: IReduxState) => {
         accounts: selectedAccount ? getAccounts(state, selectedAccount.blockchain) : [],
         exchangeRates: state.market.exchangeRates,
         chainId: getChainId(state, selectedAccount.blockchain),
-        selectedWallet: getSelectedWallet(state)
+        selectedWallet: getSelectedWallet(state),
+        cumulativeBalance: state.preferences.cumulativeBalance
     };
 };
 
@@ -146,7 +148,13 @@ export class ManageAccountsComponent extends React.Component<
         const tokenConfig = getTokenConfig(account.blockchain, blockchainConfig.coin);
         const balance =
             account &&
-            calculateBalance(account, this.props.chainId, this.props.exchangeRates, tokenConfig);
+            calculateBalance(
+                account,
+                this.props.chainId,
+                this.props.exchangeRates,
+                tokenConfig,
+                this.props.cumulativeBalance
+            );
 
         const swipeIndex = `account-${index}`;
 

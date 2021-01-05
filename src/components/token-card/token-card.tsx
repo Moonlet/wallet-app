@@ -26,41 +26,41 @@ export interface IProps {
 export const TokenCardComponent = (
     props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const styles = props.styles;
+    const { account, blockchain, index, token, styles, theme } = props;
 
-    const tokenConfig = getTokenConfig(props.account.blockchain, props.token.symbol);
+    const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
     if (tokenConfig) {
         return (
             <TouchableHighlight
-                testID={`token-card-${props.token.symbol.toLocaleLowerCase()}`}
-                style={{ marginTop: props.index === 0 ? 0 : BASE_DIMENSION }}
-                underlayColor={props.theme.colors.appBackground}
+                testID={`token-card-${token.symbol.toLocaleLowerCase()}`}
+                style={{ marginTop: index === 0 ? 0 : BASE_DIMENSION }}
+                underlayColor={theme.colors.appBackground}
                 onPress={() => {
                     NavigationService.navigate('Token', {
-                        accountIndex: props.account.index,
-                        blockchain: props.account.blockchain,
-                        token: props.token
+                        accountIndex: account.index,
+                        blockchain: account.blockchain,
+                        token
                     });
                 }}
             >
-                <View style={props.styles.container}>
-                    <SmartImage source={tokenConfig.icon} style={props.styles.imageStyle} />
+                <View style={styles.container}>
+                    <SmartImage source={tokenConfig.icon} style={styles.imageStyle} />
                     <View style={styles.accountInfoContainer}>
                         <Amount
                             style={styles.firstAmount}
-                            token={props.token.symbol}
+                            token={token.symbol}
                             tokenDecimals={tokenConfig.decimals}
                             uiDecimals={tokenConfig.ui.decimals}
-                            amount={props.token.balance?.value}
-                            blockchain={props.blockchain}
+                            amount={token.balance?.total || token.balance?.value}
+                            blockchain={blockchain}
                         />
                         <Amount
                             style={styles.secondAmount}
-                            token={props.token.symbol}
+                            token={token.symbol}
                             tokenDecimals={tokenConfig.decimals}
-                            amount={props.token.balance?.value}
-                            blockchain={props.blockchain}
+                            amount={token.balance?.total || token.balance?.value}
+                            blockchain={blockchain}
                             convert
                         />
                     </View>

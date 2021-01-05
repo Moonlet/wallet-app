@@ -3,8 +3,9 @@ import v3 from './003';
 import v4 from './004';
 import v5 from './005';
 import v6 from './006';
+import v7 from './007';
 
-export const migrations = {
+export const migrations: any = {
     /**
      * Update removable key in tokens state
      */
@@ -24,5 +25,9 @@ export const migrations = {
     /**
      * Add gZil Token to all users - 12 September 2020
      */
-    6: v6
+    6: v6,
+    /**
+     * Add Cumulative Balance - 4 January 2021
+     */
+    7: v7
 };

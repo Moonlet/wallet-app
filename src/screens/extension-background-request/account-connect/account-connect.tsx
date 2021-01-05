@@ -33,6 +33,7 @@ interface IReduxProps {
     wallets: IWalletsState;
     exchangeRates: IExchangeRates;
     chainId: ChainIdType;
+    cumulativeBalance: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -41,7 +42,8 @@ const mapStateToProps = (state: IReduxState) => {
     return {
         wallets: state.wallets,
         exchangeRates: state.market.exchangeRates,
-        chainId: getChainId(state, blockchain)
+        chainId: getChainId(state, blockchain),
+        cumulativeBalance: state.preferences.cumulativeBalance
     };
 };
 
@@ -176,7 +178,8 @@ export class AccountConnectComp extends React.Component<
                                         account,
                                         this.props.chainId,
                                         this.props.exchangeRates,
-                                        getTokenConfig(account.blockchain, blockchainConfig.coin)
+                                        getTokenConfig(account.blockchain, blockchainConfig.coin),
+                                        this.props.cumulativeBalance
                                     );
 
                                     const label = (

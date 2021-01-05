@@ -12,10 +12,13 @@ export const calculateBalance = (
     account: IAccountState,
     chainId: ChainIdType,
     exchangeRates: IExchangeRates,
-    blockchainCoinTokenConfig: ITokenConfigState
+    blockchainCoinTokenConfig: ITokenConfigState,
+    cumulativeBalance: boolean
 ) => {
     const tokenKeys = Object.keys((account?.tokens || {})[chainId] || {});
     let balance = new BigNumber(0);
+
+    const blockchainInstance = getBlockchain(account.blockchain);
 
     for (const tokenSymbol of tokenKeys) {
         const token = account.tokens[chainId][tokenSymbol];
@@ -24,10 +27,12 @@ export const calculateBalance = (
         const tokenBalanceValue = new BigNumber(token.balance?.total);
 
         if (tokenConfig && token.active) {
+            let amount = new BigNumber(0);
+
             if (tokenConfig.removable === false) {
-                balance = balance.plus(tokenBalanceValue);
+                amount = tokenBalanceValue;
             } else {
-                const amount = convertAmount(
+                const amountConverted = convertAmount(
                     account.blockchain,
                     exchangeRates,
                     tokenBalanceValue.toFixed(),
@@ -35,11 +40,24 @@ export const calculateBalance = (
                     blockchainCoinTokenConfig.symbol,
                     tokenConfig.decimals
                 );
-                const amountStd = getBlockchain(account.blockchain).account.amountToStd(
-                    new BigNumber(amount),
+                amount = blockchainInstance.account.amountToStd(
+                    new BigNumber(amountConverted),
                     blockchainCoinTokenConfig.decimals
                 );
-                balance = balance.plus(amountStd);
+            }
+
+            if (cumulativeBalance === true) {
+                // Cumulative Balance
+                // balance of all portfolio
+                balance = balance.plus(amount);
+            } else {
+                // No Cumulative Balance
+                // add only the balance of the native coin
+                if (tokenSymbol === blockchainInstance.config.coin) {
+                    balance = balance.plus(amount);
+                } else {
+                    // skip, do not add the balance of non native coins
+                }
             }
         }
     }

@@ -74,6 +74,7 @@ interface IReduxProps {
     unseenNotifications: number;
     getUnseenNotifications: typeof getUnseenNotifications;
     fetchScreenData: typeof fetchScreenData;
+    cumulativeBalance: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -90,7 +91,8 @@ const mapStateToProps = (state: IReduxState) => {
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
         deviceId: state.preferences.deviceId,
-        unseenNotifications: state.notifications.unseenNotifications
+        unseenNotifications: state.notifications.unseenNotifications,
+        cumulativeBalance: state.preferences.cumulativeBalance
     };
 };
 
@@ -278,7 +280,13 @@ export class DashboardScreenComponent extends React.Component<
 
         const balance =
             selectedAccount &&
-            calculateBalance(selectedAccount, chainId, this.props.exchangeRates, tokenConfig);
+            calculateBalance(
+                selectedAccount,
+                chainId,
+                this.props.exchangeRates,
+                tokenConfig,
+                this.props.cumulativeBalance
+            );
 
         const animatePrimaryAmountFontSize = this.animationValue.interpolate({
             inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],

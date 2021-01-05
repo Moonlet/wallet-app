@@ -7,7 +7,8 @@ import {
     PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
     PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
     PREF_SET_BLOCKCHAIN_ORDER,
-    PREF_SET_DEVICE_ID
+    PREF_SET_DEVICE_ID,
+    TOGGLE_CUMULATIVE_BALANCE
 } from './actions';
 import { RESET_ALL_DATA, EXTENSION_UPDATE_STATE } from '../app/actions';
 
@@ -17,7 +18,8 @@ const initialState: IPrefState = {
     biometricActive: false,
     networks: {},
     blockchains: {},
-    deviceId: ''
+    deviceId: '',
+    cumulativeBalance: false
 };
 
 export default (state: IPrefState = initialState, action: IAction): IPrefState => {
@@ -62,6 +64,12 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
             return {
                 ...state,
                 biometricActive: !state.biometricActive
+            };
+
+        case TOGGLE_CUMULATIVE_BALANCE:
+            return {
+                ...state,
+                cumulativeBalance: !state.cumulativeBalance
             };
 
         case PREF_SET_CURRENCY:

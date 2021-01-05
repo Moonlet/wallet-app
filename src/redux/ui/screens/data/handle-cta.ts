@@ -478,23 +478,26 @@ const handleCtaAction = async (
             break;
 
         case 'navigateTo': {
-            const screen = action.params?.params?.screen || action.params?.screen;
-            const screenKey = action.params?.params?.context?.key;
-
             const account = getSelectedAccount(state);
-            const chainId = getChainId(state, account.blockchain);
+
+            const blockchain = account?.blockchain;
+
+            const chainId = blockchain && getChainId(state, blockchain);
 
             let token: ITokenState;
-            if (action?.params?.params?.token === true) {
-                const blockchainConfig = getBlockchain(account.blockchain);
+            if (blockchain && action?.params?.params?.token === true) {
+                const blockchainConfig = getBlockchain(blockchain);
                 token = account.tokens[chainId][blockchainConfig.config.coin];
             }
+
+            const screen = action.params?.params?.screen || action.params?.screen;
+            const screenKey = action.params?.params?.context?.key;
 
             NavigationService.navigate(
                 screen,
                 {
                     ...action.params?.params,
-                    blockchain: account?.blockchain,
+                    blockchain,
                     accountIndex: account?.index,
                     token
                 },

@@ -37,6 +37,7 @@ import {
 } from '../../../redux/wallets/actions';
 import { HeaderLeft } from '../../../components/header-left/header-left';
 import { Dialog } from '../../../components/dialog/dialog';
+import { availableAmount } from '../../../core/utils/available-funds';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -83,6 +84,8 @@ const mapDispatchToProps = {
 interface IState {
     cardHeight: number;
     txContainerHeight: number;
+    insufficientFundsFees: boolean;
+    amountNeededToPassTxs: string;
 }
 
 export class ProcessTransactionsComponent extends React.Component<
@@ -98,12 +101,14 @@ export class ProcessTransactionsComponent extends React.Component<
         super(props);
         this.state = {
             cardHeight: undefined,
-            txContainerHeight: undefined
+            txContainerHeight: undefined,
+            insufficientFundsFees: false,
+            amountNeededToPassTxs: ''
         };
         this.scrollViewRef = React.createRef();
     }
 
-    public componentDidUpdate(prevProps: IReduxProps) {
+    public async componentDidUpdate(prevProps: IReduxProps) {
         if (
             this.props.signingInProgress === true &&
             this.props.currentTxIndex !== prevProps.currentTxIndex
@@ -118,6 +123,50 @@ export class ProcessTransactionsComponent extends React.Component<
                         this.state.cardHeight,
                     animated: true
                 });
+        }
+
+        if (this.props.transactions !== prevProps.transactions) {
+            if (this.props.transactions.length) {
+                let insufficientFundsFees = false;
+                let amountNeededToPassTxs = '';
+
+                const token = this.props.selectedAccount.tokens[this.props.chainId][
+                    this.props.transactions[0].token.symbol
+                ];
+
+                const amount = await availableAmount(
+                    this.props.selectedAccount,
+                    token,
+                    this.props.chainId,
+                    undefined,
+                    undefined
+                );
+
+                let txsValue = new BigNumber(0);
+                this.props.transactions.map(transaction => {
+                    txsValue = txsValue
+                        .plus(transaction.amount)
+                        .plus(transaction.feeOptions.feeTotal || '0');
+                });
+
+                // if (txsValue.isGreaterThan(amount)) {
+                insufficientFundsFees = true;
+
+                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
+                const tokenConfig = getTokenConfig(
+                    this.props.selectedAccount.blockchain,
+                    token.symbol
+                );
+
+                amountNeededToPassTxs = blockchainInstance.account
+                    .amountFromStd(
+                        new BigNumber(txsValue.minus(amount).plus(5)),
+                        tokenConfig.decimals
+                    )
+                    .toFixed(0);
+
+                this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+            }
         }
     }
 
@@ -475,7 +524,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         primary
                         onPress={this.signAllTransactions}
                         wrapperStyle={styles.continueButton}
-                        disabled={this.props.signingInProgress}
+                        disabled={this.props.signingInProgress || this.state.insufficientFundsFees}
                     >
                         {translate('Transaction.signAll')}
                     </Button>
@@ -491,7 +540,7 @@ export class ProcessTransactionsComponent extends React.Component<
                                 ()
                         }
                         wrapperStyle={styles.continueButton}
-                        disabled={false}
+                        disabled={this.state.insufficientFundsFees}
                     >
                         {translate(
                             'ProcessTransactions.ledgerSignButton',
@@ -528,10 +577,19 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        const title =
+        let title =
             this.props.selectedWallet?.type === WalletType.HW
                 ? translate('Transaction.processTitleTextLedger')
                 : translate('Transaction.processTitleText');
+
+        if (this.state.insufficientFundsFees) {
+            title = translate('Validator.disableSignMessage', {
+                amount: this.state.amountNeededToPassTxs,
+                token: this.props.transactions.length
+                    ? this.props.transactions[0].token.symbol
+                    : 'Token'
+            });
+        }
 
         if (this.props.isVisible) {
             return (
@@ -554,7 +612,13 @@ export class ProcessTransactionsComponent extends React.Component<
                         <View style={styles.defaultHeaderContainer} />
                     </View>
 
-                    <Text style={styles.title}>{title}</Text>
+                    <Text
+                        style={
+                            this.state.insufficientFundsFees ? styles.errorFundsTitle : styles.title
+                        }
+                    >
+                        {title}
+                    </Text>
 
                     {this.props.transactions.length ? (
                         <ScrollView

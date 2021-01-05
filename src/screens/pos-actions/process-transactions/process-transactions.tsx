@@ -149,23 +149,24 @@ export class ProcessTransactionsComponent extends React.Component<
                         .plus(transaction.feeOptions.feeTotal || '0');
                 });
 
-                // if (txsValue.isGreaterThan(amount)) {
-                insufficientFundsFees = true;
+                if (txsValue.isGreaterThan(amount)) {
+                    insufficientFundsFees = true;
 
-                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
-                const tokenConfig = getTokenConfig(
-                    this.props.selectedAccount.blockchain,
-                    token.symbol
-                );
+                    const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
+                    const tokenConfig = getTokenConfig(
+                        this.props.selectedAccount.blockchain,
+                        token.symbol
+                    );
 
-                amountNeededToPassTxs = blockchainInstance.account
-                    .amountFromStd(
-                        new BigNumber(txsValue.minus(amount).plus(5)),
-                        tokenConfig.decimals
-                    )
-                    .toFixed(0);
+                    amountNeededToPassTxs = blockchainInstance.account
+                        .amountFromStd(
+                            new BigNumber(txsValue.minus(amount).plus(5)),
+                            tokenConfig.decimals
+                        )
+                        .toFixed(0);
 
-                this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                    this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                }
             }
         }
     }

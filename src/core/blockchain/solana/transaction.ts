@@ -67,15 +67,12 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         const client = Solana.getClient(tx.chainId);
 
         const transactions: IBlockchainTransaction[] = [];
+        const allStakeAccounts = tx.account.tokens[client.chainId][config.coin].balance?.detailed;
+        const usedStakedAccounts: string[] = [];
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE:
-                const allStakeAccounts =
-                    tx.account.tokens[client.chainId][config.coin].balance?.detailed;
-
                 const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
-
-                const usedStakedAccounts: string[] = [];
 
                 for (const validator of tx.validators) {
                     const stakeAccounts = selectStakeAccounts(
@@ -140,20 +137,39 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     allStakeAccounts,
                     PosBasicActionType.UNSTAKE,
                     tx.amount,
-                    usedStakedAccounts
+                    usedStakedAccounts,
+                    tx.validators[0].id
                 );
+
                 for (const key in selectedStakeAccounts) {
                     if (selectedStakeAccounts[key]) {
                         const stakeAccount = selectedStakeAccounts[key];
-                        const transactionUnstake: IBlockchainTransaction = await client.contracts[
-                            Contracts.STAKING
-                        ].unStake(cloneDeep(tx), tx.validators[0]);
 
-                        transactionUnstake.amount = new BigNumber(stakeAccount.amount).toFixed(
+                        if (stakeAccount.options?.shouldSplit) {
+                            const txSplit: IPosTransaction = cloneDeep(tx);
+                            txSplit.amount = new BigNumber(stakeAccount.amount).toFixed(
+                                0,
+                                BigNumber.ROUND_DOWN
+                            );
+                            txSplit.extraFields.stakeAccountKey = stakeAccount.options.splitFrom;
+                            txSplit.extraFields.stakeAccountIndex = stakeAccount.options.index;
+                            const transactionSplit: IBlockchainTransaction = await client.contracts[
+                                Contracts.STAKING
+                            ].split(txSplit, key);
+                            transactions.push(transactionSplit);
+                        }
+
+                        const txUnstake = cloneDeep(tx);
+                        txUnstake.amount = new BigNumber(stakeAccount.amount).toFixed(
                             0,
                             BigNumber.ROUND_DOWN
                         );
+                        txUnstake.extraFields.stakeAccountKey = key;
+                        const transactionUnstake: IBlockchainTransaction = await client.contracts[
+                            Contracts.STAKING
+                        ].unStake(txUnstake, tx.validators[0]);
                         transactions.push(transactionUnstake);
+                        usedStakedAccounts.push(key);
                     }
                 }
 

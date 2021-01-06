@@ -167,7 +167,7 @@ export class ProcessTransactionsComponent extends React.Component<
 
                     amountNeededToPassTxs = blockchainInstance.account
                         .amountFromStd(new BigNumber(txsValue.minus(amount)), tokenConfig.decimals)
-                        .toFixed(0);
+                        .toFixed(2);
 
                     this.setState({ amountNeededToPassTxs, insufficientFundsFees });
                 }

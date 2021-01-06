@@ -5,6 +5,7 @@ import { IAction } from '../../../types';
 import {
     getNrPendingTransactions,
     getSelectedAccount,
+    getSelectedBlockchain,
     getSelectedWallet
 } from '../../../wallets/selectors';
 import { getChainId } from '../../../preferences/selectors';
@@ -441,29 +442,62 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'canPerformAction': {
+                    const blockchain = getSelectedBlockchain(state);
+                    const blockchainInstance = getBlockchain(blockchain);
+                    const chainId = getChainId(state, blockchain);
+                    const { opAction, validatorAddress } = action?.params?.params;
+
+                    if (opAction && validatorAddress && Array.isArray(validatorAddress)) {
+                        const performAction: {
+                            value: boolean;
+                            message: string;
+                        } = await blockchainInstance.getClient(chainId).canPerformAction(opAction, {
+                            account: getSelectedAccount(state),
+                            validatorAddress
+                        });
+
+                        if (performAction && performAction.value === false) {
+                            Dialog.alert(
+                                translate('Validator.operationNotAvailable'),
+                                performAction.message,
+                                undefined,
+                                {
+                                    text: translate('App.labels.ok'),
+                                    onPress: () => NavigationService.goBack()
+                                }
+                            );
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
             break;
 
         case 'navigateTo': {
-            const screen = action.params?.params?.screen || action.params?.screen;
-            const screenKey = action.params?.params?.context?.key;
-
             const account = getSelectedAccount(state);
-            const chainId = getChainId(state, account.blockchain);
+
+            const blockchain = account?.blockchain;
+
+            const chainId = blockchain && getChainId(state, blockchain);
 
             let token: ITokenState;
-            if (action?.params?.params?.token === true) {
-                const blockchainConfig = getBlockchain(account.blockchain);
+            if (blockchain && action?.params?.params?.token === true) {
+                const blockchainConfig = getBlockchain(blockchain);
                 token = account.tokens[chainId][blockchainConfig.config.coin];
             }
+
+            const screen = action.params?.params?.screen || action.params?.screen;
+            const screenKey = action.params?.params?.context?.key;
 
             NavigationService.navigate(
                 screen,
                 {
                     ...action.params?.params,
-                    blockchain: account?.blockchain,
+                    blockchain,
                     accountIndex: account?.index,
                     token
                 },

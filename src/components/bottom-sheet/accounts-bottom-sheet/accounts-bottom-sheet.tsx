@@ -46,6 +46,7 @@ interface IReduxProps {
     accounts: IAccountState[];
     chainId: ChainIdType;
     removeAccount: typeof removeAccount;
+    cumulativeBalance: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -55,7 +56,8 @@ const mapStateToProps = (state: IReduxState) => {
         exchangeRates: state.market.exchangeRates,
         accounts: selectedAccount ? getAccounts(state, selectedAccount.blockchain) : [],
         chainId: getChainId(state, selectedAccount.blockchain),
-        selectedWallet: getSelectedWallet(state)
+        selectedWallet: getSelectedWallet(state),
+        cumulativeBalance: state.preferences.cumulativeBalance
     };
 };
 
@@ -181,7 +183,8 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 account,
                                 this.props.chainId,
                                 this.props.exchangeRates,
-                                tokenConfig
+                                tokenConfig,
+                                this.props.cumulativeBalance
                             );
 
                         const swipeIndex = `account-${index}`;

@@ -26,7 +26,8 @@ describe('preferences reducer', () => {
             biometricActive: true,
             networks: {},
             blockchains: {},
-            deviceId: ''
+            deviceId: '',
+            cumulativeBalance: false
         });
     });
 });

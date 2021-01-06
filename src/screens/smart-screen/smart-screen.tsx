@@ -128,9 +128,9 @@ class SmartScreenComponent extends React.Component<
             this.props.walletPublicKey !== prevProps.walletPublicKey ||
             this.props.account?.blockchain !== prevProps.account?.blockchain ||
             this.props.chainId !== prevProps.chainId ||
-            this.props.account.address !== prevProps.account.address ||
-            this.props.context.step !== prevProps.context.step ||
-            this.props.context.tab !== prevProps.context.tab
+            this.props.account?.address !== prevProps.account?.address ||
+            this.props.context?.step !== prevProps.context?.step ||
+            this.props.context?.tab !== prevProps.context?.tab
         ) {
             this.props.fetchScreenData(this.state.context);
         }

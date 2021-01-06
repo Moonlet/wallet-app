@@ -7,6 +7,7 @@ export interface IPrefState {
     networks: INetworksOptions;
     blockchains: IBlockchainsOptions;
     deviceId: string;
+    cumulativeBalance: boolean;
 }
 
 export interface INetworksOptions {

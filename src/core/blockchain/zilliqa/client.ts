@@ -220,7 +220,10 @@ export class Client extends BlockchainGenericClient {
                     return Promise.resolve({
                         value: false,
                         message: translate('Validator.operationNotAvailableMessage', {
-                            operation: Capitalize(action.toLowerCase())
+                            operation:
+                                action === PosBasicActionType.REDELEGATE
+                                    ? translate('App.labels.switchNode')
+                                    : Capitalize(action.toLowerCase())
                         })
                     });
                 else
@@ -244,7 +247,8 @@ export class Client extends BlockchainGenericClient {
                 };
             }
 
-            const errorMessage: string = res.error.message;
+            const errorMessage: string = res?.error?.message || '';
+
             if (errorMessage.includes('transaction underpriced')) {
                 return Promise.reject({
                     error: TransactionMessageText.TR_UNDERPRICED,

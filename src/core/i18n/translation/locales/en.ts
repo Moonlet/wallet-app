@@ -619,6 +619,8 @@ export const translation: ITranslations = {
             allBalanceNotice:
                 'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
             cannotInitiateTxTitle: 'You have pending transactions',
+            disableSignMessage:
+                'Your {{token}} available balance is low. Transactions will fail. Top-up at least {{amount}} {{token}} amount to be able to pay for network fees.',
             cannotInitiateTxMessage:
                 'Please make sure all transactions are finalised before initiating a new one.',
             lowFundsWarning: 'Low balance warning!',

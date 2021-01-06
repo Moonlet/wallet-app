@@ -45,7 +45,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     blockchain: Blockchain;
     chainId: ChainIdType;
     type: TransactionType;
-    token?: ITokenConfigState;
+    token: ITokenConfigState;
     address: string;
     publicKey: string;
     toAddress: string;

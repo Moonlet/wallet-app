@@ -215,6 +215,10 @@ export class TransactionsHistoryListComponent extends React.Component<
             }
         }
 
+        if (tx.type === TransactionType.TRANSFER) {
+            transactionType = translate('App.labels.transfer') + ' ';
+        }
+
         if (tx.type === TransactionType.CONTRACT_DEPLOY) {
             transactionType = ' ';
         }

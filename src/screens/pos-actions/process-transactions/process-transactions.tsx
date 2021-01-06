@@ -150,24 +150,23 @@ export class ProcessTransactionsComponent extends React.Component<
 
                 let txsValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {
-                    txsValue = txsValue
-                        .plus(transaction.amount)
-                        .plus(transaction.feeOptions.feeTotal || '0');
+                    if (
+                        transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
+                        transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
+                    )
+                        txsValue = txsValue.plus(transaction.amount);
+                    txsValue = txsValue.plus(transaction.feeOptions.feeTotal || '0');
                 });
 
                 const txAmount = blockchainInstance.account.amountFromStd(
-                    new BigNumber(txsValue.minus(txsValue).plus(5)),
+                    txsValue,
                     tokenConfig.decimals
                 );
-
                 if (txAmount.isGreaterThan(amount)) {
                     insufficientFundsFees = true;
 
                     amountNeededToPassTxs = blockchainInstance.account
-                        .amountFromStd(
-                            new BigNumber(txsValue.minus(amount).plus(5)),
-                            tokenConfig.decimals
-                        )
+                        .amountFromStd(new BigNumber(txsValue.minus(amount)), tokenConfig.decimals)
                         .toFixed(0);
 
                     this.setState({ amountNeededToPassTxs, insufficientFundsFees });

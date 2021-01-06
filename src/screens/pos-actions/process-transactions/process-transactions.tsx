@@ -142,6 +142,12 @@ export class ProcessTransactionsComponent extends React.Component<
                     undefined
                 );
 
+                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
+                const tokenConfig = getTokenConfig(
+                    this.props.selectedAccount.blockchain,
+                    token.symbol
+                );
+
                 let txsValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {
                     txsValue = txsValue
@@ -149,14 +155,13 @@ export class ProcessTransactionsComponent extends React.Component<
                         .plus(transaction.feeOptions.feeTotal || '0');
                 });
 
-                if (txsValue.isGreaterThan(amount)) {
-                    insufficientFundsFees = true;
+                const txAmount = blockchainInstance.account.amountFromStd(
+                    new BigNumber(txsValue.minus(txsValue).plus(5)),
+                    tokenConfig.decimals
+                );
 
-                    const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
-                    const tokenConfig = getTokenConfig(
-                        this.props.selectedAccount.blockchain,
-                        token.symbol
-                    );
+                if (txAmount.isGreaterThan(amount)) {
+                    insufficientFundsFees = true;
 
                     amountNeededToPassTxs = blockchainInstance.account
                         .amountFromStd(

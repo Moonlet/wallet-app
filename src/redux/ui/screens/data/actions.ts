@@ -20,6 +20,7 @@ import {
 export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
 export const LOAD_MORE_VALIDATORS = 'LOAD_MORE_VALIDATORS';
+export const LOAD_MORE_VALIDATORS_V2 = 'LOAD_MORE_VALIDATORS_V2';
 
 export const fetchScreenData = (context: IScreenContext) => async (
     dispatch: Dispatch<

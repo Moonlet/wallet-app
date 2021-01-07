@@ -11,6 +11,7 @@ import {
     getSwitchNodeEnterAvailableBalanceFormat
 } from './switch-node-enter-available-balance';
 import { getInputBalanceFormat, getStakeAmountPerValidator } from './input-balance-format';
+import { getStakeNowSelectValidators } from './stake-now';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
@@ -24,7 +25,9 @@ const uiStateSelectors = {
 
     getInputBalanceFormat,
 
-    getStakeAmountPerValidator
+    getStakeAmountPerValidator,
+
+    getStakeNowSelectValidators
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

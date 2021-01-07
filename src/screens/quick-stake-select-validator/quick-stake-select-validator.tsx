@@ -127,6 +127,7 @@ class QuickStakeSelectValidatorScreenComponent extends React.Component<
     }
 }
 
+/** @deprecated Use Smart Screen instead */
 export const QuickStakeSelectValidatorScreen = smartConnect(
     QuickStakeSelectValidatorScreenComponent,
     [connect(mapStateToProps, mapDispatchToProps), withTheme(stylesProvider)]

@@ -59,7 +59,7 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS / 2,
             borderWidth: 1,
             borderColor: theme.colors.textTertiary,
-            paddingVertical: BASE_DIMENSION / 2,
+            paddingVertical: BASE_DIMENSION,
             marginHorizontal: BASE_DIMENSION / 2
         },
         amountCompSelected: {

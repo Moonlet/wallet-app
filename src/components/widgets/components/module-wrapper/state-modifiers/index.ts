@@ -7,7 +7,10 @@ import {
 } from './../../../types';
 
 import { updateClaimPending } from './update-claim-pending';
-import { quickStakeSelectedValidator } from './quick-stake-selected-validator';
+import {
+    quickStakeSelectedValidator,
+    stakeNowSelectedValidators
+} from './quick-stake-selected-validator';
 import { stakeEnterAmountStakeNow } from './stake-enter-amount-stake-now';
 import {
     switchNodeSelectValidator,
@@ -21,6 +24,7 @@ import {
 const stateModifiers = {
     updateClaimPending,
     quickStakeSelectedValidator,
+    stakeNowSelectedValidators,
     stakeEnterAmountStakeNow,
     switchNodeSelectValidator,
     switchNodeSelectToValidator,

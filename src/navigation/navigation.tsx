@@ -62,6 +62,7 @@ import { PromoDetailsScreen } from '../screens/promo-details/promo-details';
 import { SmartScreen } from '../screens/smart-screen/smart-screen';
 import { ConnectedWebsitesScreen } from '../screens/connected-websites/connected-websites';
 import { HeaderIcon } from '../components/header-icon/header-icon';
+import { TotalBalanceScreen } from '../screens/total-balance/total-balance';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -283,6 +284,9 @@ export const SettingsNavigation = createStackNavigator(
         },
         SmartScreen: {
             screen: SmartScreen
+        },
+        TotalBalance: {
+            screen: TotalBalanceScreen
         },
 
         // wallet creation

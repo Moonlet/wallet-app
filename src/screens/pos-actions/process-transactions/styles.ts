@@ -38,6 +38,15 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 6,
             textAlign: 'center'
         },
+        errorFundsTitle: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
+            fontWeight: '600',
+            color: 'red',
+            marginBottom: BASE_DIMENSION * 4,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            textAlign: 'center'
+        },
         contentScrollView: {
             flexGrow: 1
         },

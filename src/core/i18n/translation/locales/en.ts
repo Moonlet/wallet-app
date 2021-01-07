@@ -45,6 +45,7 @@ export const translation: ITranslations = {
                 copy: 'Copy',
                 create: 'Create',
                 createTicket: 'Create a ticket',
+                cumulative: 'Cumulative',
                 date: 'Date',
                 dateAndTime: 'Date and time',
                 decimals: 'Decimals',
@@ -141,6 +142,7 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 transfer: 'Transfer',
                 tryAgain: 'Try again',
+                totalBalance: 'Total balance',
                 typeHere: 'Type here',
                 understand: 'I understand',
                 undelegate: 'Undelegate',
@@ -617,6 +619,8 @@ export const translation: ITranslations = {
             allBalanceNotice:
                 'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
             cannotInitiateTxTitle: 'You have pending transactions',
+            disableSignMessage:
+                'Your {{token}} available balance is low. Transactions will fail. Top-up at least {{amount}} {{token}} amount to be able to pay for network fees.',
             cannotInitiateTxMessage:
                 'Please make sure all transactions are finalised before initiating a new one.',
             lowFundsWarning: 'Low balance warning!',
@@ -722,6 +726,10 @@ export const translation: ITranslations = {
             notConnected: 'You are not connected\nto any website',
             disconnectTitle: 'Disconnect website',
             disconnectBody: 'You’re about to disconnect from {{url}}'
+        },
+        TotalBalance: {
+            byCumulativeMessage:
+                'By Cumulative: ON, the total balance will be computed in both FIAT and Main Token taking into account the total value of the portfolio.\n\nBy Cumulative: OFF, the total balance will be computed in both FIAT and Main Token taking into account the total value of the Main Token.'
         }
     },
     plural: (n: number, ord?: boolean) => {

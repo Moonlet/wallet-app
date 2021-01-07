@@ -252,6 +252,11 @@ export class SettingsScreenComponent extends React.Component<
                     this.renderRow(translate('ConnectExtension.title'), () =>
                         navigation.navigate('ConnectExtension')
                     )}
+
+                {Platform.OS !== 'web' &&
+                    this.renderRow(translate('App.labels.totalBalance'), () =>
+                        navigation.navigate('TotalBalance')
+                    )}
             </View>
         );
     }

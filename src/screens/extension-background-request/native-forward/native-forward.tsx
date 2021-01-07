@@ -86,7 +86,7 @@ export class NativeForwardComp extends React.Component<
                                 blockchain: account.blockchain,
                                 chainId: this.props.request?.chainId,
                                 type: TransactionType.CONTRACT_DEPLOY,
-
+                                token: undefined,
                                 address: account.address,
                                 publicKey: account.publicKey,
 
@@ -136,7 +136,7 @@ export class NativeForwardComp extends React.Component<
                                 blockchain: account.blockchain,
                                 chainId: this.props.request?.chainId,
                                 type: TransactionType.CONTRACT_CALL,
-
+                                token: undefined,
                                 address: account.address,
                                 publicKey: account.publicKey,
 

@@ -77,7 +77,7 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         gasPriceToken: 'SOL',
         defaults: {
-            gasPrice: new BigNumber(1000000000),
+            gasPrice: new BigNumber(10000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(1)
             }

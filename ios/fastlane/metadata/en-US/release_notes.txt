@@ -1,6 +1,6 @@
-Team's log. Stardate 2012.16:
+Team's log. Stardate 2101.08:
 
-We fixed some issues here and there. Also we improved the relevance of some error messages to make them more readable, less geeky hopefully.
+We fixed some bugs and added a new feature which will make the cumulative total balance optional. Also we made some optimisation to the insufficient funds error messages to make them more relevant.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
 

@@ -44,7 +44,7 @@ const mapDispatchToProps = {
     updateExchangeRate
 };
 
-export class AmountComponent extends React.Component<
+class AmountComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public componentDidMount() {
@@ -82,11 +82,8 @@ export class AmountComponent extends React.Component<
         }
     }
 
-    public render() {
+    private renderPrimaryAmountComp(convertTo: string) {
         const { style } = this.props;
-
-        const convertTo =
-            this.props.convertTo || this.props.convert ? this.props.userCurrency : this.props.token;
 
         const amount = convertAmount(
             this.props.blockchain,
@@ -97,7 +94,7 @@ export class AmountComponent extends React.Component<
             this.props.tokenDecimals
         );
 
-        const renderPrimaryAmountComp = () => (
+        return (
             <Text
                 testID={this.props.testID}
                 style={style}
@@ -111,16 +108,21 @@ export class AmountComponent extends React.Component<
                 {amount}
             </Text>
         );
+    }
+
+    public render() {
+        const convertTo =
+            this.props.convertTo || this.props.convert ? this.props.userCurrency : this.props.token;
 
         if (this.props.smallFontToken?.visible === true) {
             return (
                 <Text style={this.props.smallFontToken?.wrapperStyle}>
-                    {renderPrimaryAmountComp()}
+                    {this.renderPrimaryAmountComp(convertTo)}
                     {<Text style={this.props.styles.smallToken}>{` ${convertTo}`}</Text>}
                 </Text>
             );
         } else {
-            return renderPrimaryAmountComp();
+            return this.renderPrimaryAmountComp(convertTo);
         }
     }
 }

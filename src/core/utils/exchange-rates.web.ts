@@ -1,8 +1,9 @@
 import { database } from 'firebase/app';
 import 'firebase/database';
 
-export const subscribeExchangeRates = (callback: any) => {
-    const ref = database().ref('/exchange-rates');
-
-    ref.on('value', (snapshot: any) => callback(snapshot.val()?.values));
-};
+export const subscribeExchangeRate = (rate: string, callback: any) =>
+    database()
+        .ref('/exchange-rates')
+        .child('values')
+        .child(rate)
+        .on('value', (snapshot: any) => callback(snapshot));

@@ -2,7 +2,12 @@ export interface IExchangeRates {
     [tokenType: string]: number;
 }
 
+export interface IMarketStateOptions {
+    timestamp: string;
+    isLoading: boolean;
+}
+
 export interface IMarketState {
     exchangeRates: IExchangeRates;
-    change: any;
+    options: IMarketStateOptions;
 }

@@ -1,42 +1,16 @@
 import { IAction } from '../types';
-import { EXCHANGE_RATE_UPDATE, EXCHANGE_RATES_UPDATE } from './actions';
+import {
+    EXCHANGE_RATE_UPDATE,
+    EXCHANGE_RATES_UPDATE,
+    EXCHANGE_RATES_TIME_UPDATED
+} from './actions';
 import { IMarketState } from './state';
 
 const initialState: IMarketState = {
     exchangeRates: {},
-    change: {
-        daily: {
-            USD: {
-                USD: 0,
-                BTC: 0.0045,
-                ETH: -0.0016
-            },
-            BTC: {
-                USD: 0.0043,
-                BTC: 0,
-                ETH: -0.0016
-            },
-            ETH: {
-                USD: 0.0143,
-                BTC: 0.0045,
-                ETH: 0
-            },
-            ZIL: {
-                USD: 0.0002,
-                BTC: 0.0045,
-                ETH: 0.0216
-            },
-            ATOM: {
-                USD: 0.0045,
-                BTC: -0.0045,
-                ETH: -0.0016
-            },
-            XLM: {
-                USD: 0.0045,
-                BTC: 0.0033,
-                ETH: -0.0016
-            }
-        }
+    options: {
+        timestamp: undefined,
+        isLoading: false
     }
 };
 
@@ -55,6 +29,15 @@ export default (state: any = initialState, action: IAction): IMarketState => {
             return {
                 ...state,
                 exchangeRates: action.data
+            };
+
+        case EXCHANGE_RATES_TIME_UPDATED:
+            return {
+                ...state,
+                options: {
+                    ...state.options,
+                    timestamp: action.data
+                }
             };
 
         default:

@@ -36,6 +36,8 @@ import { ContextScreen } from './components/widgets/types';
 import { fetchScreenData } from './redux/ui/screens/data/actions';
 import { InfoModal } from './components/info-modal/info-modal';
 import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
+import { subscribeExchangeRateUpdated } from './core/utils/exchange-rates';
+import { updateExchangeRatesTimeUpdated } from './redux/market/actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -132,6 +134,11 @@ export default class App extends React.Component<{}, IState> {
                     this.reduxStateLoaded = true;
 
                     setTimeout(() => updateTokenContracts()(store.dispatch, store.getState), 3000);
+
+                    subscribeExchangeRateUpdated(
+                        (timestamp: string) =>
+                            timestamp && store.dispatch(updateExchangeRatesTimeUpdated(timestamp))
+                    );
                 }
             }
 

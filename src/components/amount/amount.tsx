@@ -8,7 +8,7 @@ import { convertAmount } from '../../core/utils/balance';
 import { IExchangeRates } from '../../redux/market/state';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
-import { subscribeExchangeRate } from '../../core/utils/exchange-rates';
+import { subscribeExchangeRateValues } from '../../core/utils/exchange-rates';
 import { updateExchangeRate } from '../../redux/market/actions';
 
 interface IExternalProps {
@@ -31,12 +31,14 @@ interface IExternalProps {
 
 interface IReduxProps {
     exchangeRates: IExchangeRates;
+    exchangeRatesTimestamp: string;
     userCurrency: string;
     updateExchangeRate: typeof updateExchangeRate;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
     exchangeRates: state.market.exchangeRates,
+    exchangeRatesTimestamp: state.market.options.timestamp,
     userCurrency: state.preferences.currency
 });
 
@@ -65,14 +67,19 @@ class AmountComponent extends React.Component<
         if (this.props.userCurrency !== prevProps.userCurrency) {
             this.subscribeUpdateExchangeRate(this.props.userCurrency);
         }
+
+        if (this.props.exchangeRatesTimestamp !== prevProps.exchangeRatesTimestamp) {
+            // TODO: trigger updateExchangeRate
+            // but using options.isLoading, otherwise is going to fetch useless multiple times
+            // also should trigger updateExchangeRate the first time when app is opened for the entire list
+        }
     }
 
     private subscribeUpdateExchangeRate(token: string) {
         // Subscribe only if the rate does not exist
         if (token && (!this.props.exchangeRates || !this.props.exchangeRates[token])) {
-            subscribeExchangeRate(token, (exchangeRate: number) => {
+            subscribeExchangeRateValues(token, (exchangeRate: number) => {
                 if (exchangeRate) {
-                    // TODO: maybe add an interval after some time (e.g. 15 min) and fetch again the value
                     this.props.updateExchangeRate({
                         token,
                         value: exchangeRate

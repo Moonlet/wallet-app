@@ -8,7 +8,10 @@ import { convertAmount } from '../../core/utils/balance';
 import { IExchangeRates } from '../../redux/market/state';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
-import { subscribeExchangeRateValues } from '../../core/utils/exchange-rates';
+import {
+    subscribedExchangeRates,
+    subscribeExchangeRateValue
+} from '../../core/utils/exchange-rates';
 import { updateExchangeRate } from '../../redux/market/actions';
 
 interface IExternalProps {
@@ -68,9 +71,13 @@ class AmountComponent extends React.Component<
     }
 
     private subscribeUpdateExchangeRate(token: string) {
-        // Subscribe only if the rate does not exist
-        if (token && (!this.props.exchangeRates || !this.props.exchangeRates[token])) {
-            subscribeExchangeRateValues(token, (exchangeRate: number) => {
+        if (
+            token &&
+            (!this.props.exchangeRates ||
+            !this.props.exchangeRates[token] || // token not saved in redux
+                !subscribedExchangeRates[token]) // token not saved in the global value
+        ) {
+            subscribeExchangeRateValue(token, (exchangeRate: number) => {
                 if (exchangeRate) {
                     this.props.updateExchangeRate({
                         token,

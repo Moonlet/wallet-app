@@ -28,7 +28,7 @@ jest.mock('../core/utils/remote-feature-config', () => ({
 }));
 
 jest.mock('../core/utils/exchange-rates', () => ({
-    subscribeExchangeRateValues: jest.fn(callback => callback({}))
+    subscribeExchangeRateValue: jest.fn(callback => callback({}))
 }));
 
 test('renders correctly', async () => {

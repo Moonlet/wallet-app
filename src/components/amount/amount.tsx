@@ -31,14 +31,12 @@ interface IExternalProps {
 
 interface IReduxProps {
     exchangeRates: IExchangeRates;
-    exchangeRatesTimestamp: string;
     userCurrency: string;
     updateExchangeRate: typeof updateExchangeRate;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
     exchangeRates: state.market.exchangeRates,
-    exchangeRatesTimestamp: state.market.options.timestamp,
     userCurrency: state.preferences.currency
 });
 
@@ -66,12 +64,6 @@ class AmountComponent extends React.Component<
 
         if (this.props.userCurrency !== prevProps.userCurrency) {
             this.subscribeUpdateExchangeRate(this.props.userCurrency);
-        }
-
-        if (this.props.exchangeRatesTimestamp !== prevProps.exchangeRatesTimestamp) {
-            // TODO: trigger updateExchangeRate
-            // but using options.isLoading, otherwise is going to fetch useless multiple times
-            // also should trigger updateExchangeRate the first time when app is opened for the entire list
         }
     }
 

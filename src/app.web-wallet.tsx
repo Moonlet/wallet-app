@@ -8,8 +8,6 @@ import { SplashScreen } from './components/splash-screen/splash-screen';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 import { WebWalletNavigation } from './navigation/navigation.web-wallet';
 import { createAppContainer } from 'react-navigation';
-import { subscribeExchangeRateUpdated } from './core/utils/exchange-rates';
-import { updateExchangeRatesTimeUpdated } from './redux/market/actions';
 
 const AppContainer = createAppContainer(WebWalletNavigation);
 
@@ -60,11 +58,6 @@ export default class App extends React.Component<{}, IState> {
         setTimeout(
             () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),
             1000
-        );
-
-        subscribeExchangeRateUpdated(
-            (timestamp: string) =>
-                timestamp && store.dispatch(updateExchangeRatesTimeUpdated(timestamp))
         );
     }
 

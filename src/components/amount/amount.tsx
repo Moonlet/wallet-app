@@ -77,7 +77,7 @@ class AmountComponent extends React.Component<
             !this.props.exchangeRates[token] || // token not saved in redux
                 !subscribedExchangeRates[token]) // token not saved in the global value
         ) {
-            subscribeExchangeRateValue(token, (exchangeRate: number) => {
+            subscribeExchangeRateValue(token, (exchangeRate: string) => {
                 if (exchangeRate) {
                     this.props.updateExchangeRate({
                         token,

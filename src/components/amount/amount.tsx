@@ -70,21 +70,21 @@ class AmountComponent extends React.Component<
         }
     }
 
-    private subscribeUpdateExchangeRate(token: string) {
+    private async subscribeUpdateExchangeRate(token: string) {
         if (
             token &&
             (!this.props.exchangeRates ||
             !this.props.exchangeRates[token] || // token not saved in market redux
                 !subscribedExchangeRates[token]) // token not saved in the global subscribed rates
         ) {
-            subscribeExchangeRateValue(token, (exchangeRate: string) => {
-                if (exchangeRate) {
-                    this.props.updateExchangeRate({
-                        token,
-                        value: exchangeRate
-                    });
-                }
-            });
+            const exchangeRate: string = await subscribeExchangeRateValue(token);
+
+            if (exchangeRate) {
+                this.props.updateExchangeRate({
+                    token,
+                    value: exchangeRate
+                });
+            }
         }
     }
 

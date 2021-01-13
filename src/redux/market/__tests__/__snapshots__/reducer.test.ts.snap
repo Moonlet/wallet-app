@@ -2,40 +2,6 @@
 
 exports[`market reducer should set initial state 1`] = `
 Object {
-  "change": Object {
-    "daily": Object {
-      "ATOM": Object {
-        "BTC": -0.0045,
-        "ETH": -0.0016,
-        "USD": 0.0045,
-      },
-      "BTC": Object {
-        "BTC": 0,
-        "ETH": -0.0016,
-        "USD": 0.0043,
-      },
-      "ETH": Object {
-        "BTC": 0.0045,
-        "ETH": 0,
-        "USD": 0.0143,
-      },
-      "USD": Object {
-        "BTC": 0.0045,
-        "ETH": -0.0016,
-        "USD": 0,
-      },
-      "XLM": Object {
-        "BTC": 0.0033,
-        "ETH": -0.0016,
-        "USD": 0.0045,
-      },
-      "ZIL": Object {
-        "BTC": 0.0045,
-        "ETH": 0.0216,
-        "USD": 0.0002,
-      },
-    },
-  },
   "exchangeRates": Object {},
 }
 `;

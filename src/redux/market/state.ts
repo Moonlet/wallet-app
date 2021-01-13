@@ -1,8 +1,7 @@
 export interface IExchangeRates {
-    [tokenType: string]: number;
+    [tokenSymbol: string]: string;
 }
 
 export interface IMarketState {
     exchangeRates: IExchangeRates;
-    change: any;
 }

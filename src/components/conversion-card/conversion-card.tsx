@@ -22,6 +22,7 @@ export interface IProps {
 }
 
 const mapStateToProps = (state: any) => ({
+    // TODO: state.market.change.daily does not exist any more, need refactor
     change: state.market.change.daily
 });
 

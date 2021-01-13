@@ -17,11 +17,8 @@ import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 import { ImageCanvas } from './components/image-canvas/image-canvas';
-import { subscribeExchangeRates } from './core/utils/exchange-rates';
-import { updateExchangeRates } from './redux/market/actions';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
 import { LegalModal } from './components/legal/legal-modal/legal-modal';
-import { IExchangeRates } from './redux/market/state';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { AppStateStatus } from './core/constants/app';
@@ -135,12 +132,6 @@ export default class App extends React.Component<{}, IState> {
                     this.reduxStateLoaded = true;
 
                     setTimeout(() => updateTokenContracts()(store.dispatch, store.getState), 3000);
-
-                    subscribeExchangeRates((exchangeRates: IExchangeRates) => {
-                        if (exchangeRates) {
-                            store.dispatch(updateExchangeRates(exchangeRates));
-                        }
-                    });
                 }
             }
 

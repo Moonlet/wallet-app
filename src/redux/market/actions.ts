@@ -1,8 +1,8 @@
-export const EXCHANGE_RATES_UPDATE = 'EXCHANGE_RATES_UPDATE';
+export const EXCHANGE_RATE_UPDATE = 'EXCHANGE_RATE_UPDATE';
 
-export const updateExchangeRates = (exchangeRates: { [tokenType: string]: number }) => {
+export const updateExchangeRate = (exchangeRate: { token: string; value: string }) => {
     return {
-        type: EXCHANGE_RATES_UPDATE,
-        data: exchangeRates
+        type: EXCHANGE_RATE_UPDATE,
+        data: exchangeRate
     };
 };

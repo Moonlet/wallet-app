@@ -668,7 +668,7 @@ const handleCtaAction = async (
                     const selectedValidators = [];
                     for (const v of validators) {
                         selectedValidators.push(
-                            buildDummyValidator(v.address, v.name, v?.icon, v?.website)
+                            buildDummyValidator(v?.address || v?.id, v.name, v?.icon, v?.website)
                         );
                     }
 
@@ -813,7 +813,7 @@ const handleCtaAction = async (
                                 screen: 'StakeNow',
                                 step: 'StakeNowPartToMoonlet',
                                 key: 'switch-node-part-to-moonlet',
-                                screenKey: action.params?.params?.flowId || screenKey,
+                                flowId: action.params?.params?.flowId || screenKey,
                                 params: {
                                     validators,
                                     amount

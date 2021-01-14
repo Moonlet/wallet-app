@@ -56,7 +56,7 @@ export default (theme: ITheme) =>
         },
         amountComp: {
             flex: 1,
-            borderRadius: BORDER_RADIUS / 2,
+            borderRadius: BORDER_RADIUS,
             borderWidth: 1,
             borderColor: theme.colors.textTertiary,
             paddingVertical: BASE_DIMENSION,
@@ -66,9 +66,9 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accent
         },
         amountCompText: {
-            fontSize: normalizeFontAndLineHeight(16),
+            fontSize: normalizeFontAndLineHeight(13),
             textAlign: 'center',
-            color: theme.colors.textTertiary
+            color: theme.colors.textSecondary
         },
         amountCompTextSelected: {
             color: theme.colors.accent

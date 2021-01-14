@@ -1,3 +1,4 @@
+import { translate } from '../../../../core/i18n';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { getScreenDataKey } from '../../../../redux/ui/screens/data/reducer';
@@ -25,7 +26,7 @@ export const getStakeNowSelectValidators = (state: IReduxState, module: IScreenM
         }
 
         if (validators.length > 1) {
-            return `${validators.length} validators`;
+            return `${validators.length} ${translate('App.labels.validators')}`;
         }
     }
 

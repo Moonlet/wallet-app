@@ -580,8 +580,7 @@ const handleCtaAction = async (
                         button1Text,
                         button2Text,
                         flowId,
-                        validators,
-                        token
+                        validators
                     } = action?.params?.params;
 
                     Dialog.alert(
@@ -617,36 +616,46 @@ const handleCtaAction = async (
                             onPress: () => {
                                 // I’ll support you
 
-                                // Open Process Tx
-                                const finalValidators = [];
-                                for (const v of validators) {
-                                    finalValidators.push(
-                                        buildDummyValidator(v.address, v.name, v.icon, v.website)
-                                        // also use inputAmount
-                                    );
-                                }
+                                // Check validations
+                                const account = getSelectedAccount(state);
+                                const chainId = getChainId(state, account.blockchain);
 
-                                // create a new delegate action in which to send amount inside of validators
+                                const screenKey = getScreenDataKey({
+                                    pubKey: getSelectedWallet(state)?.walletPublicKey,
+                                    blockchain: account?.blockchain,
+                                    chainId: String(chainId),
+                                    address: account?.address,
+                                    step: action.params?.params?.step,
+                                    tab: undefined
+                                });
 
-                                for (const v of finalValidators) {
-                                    delegate(
-                                        getSelectedAccount(state),
-                                        '10', // amount,
-                                        [v], // finalValidators,
-                                        token,
-                                        undefined, // feeOptions
-                                        undefined
+                                if (
+                                    state.ui.screens.inputData[screenKey]?.validation?.valid ===
+                                    true
+                                ) {
+                                    // Open process tx and start processing
+                                    handleCta(
+                                        {
+                                            type: 'callAction',
+                                            params: {
+                                                action: 'delegateToValidatorV2',
+                                                params: {
+                                                    step: action?.params?.params?.step,
+                                                    token: action?.params?.params?.token
+                                                }
+                                            }
+                                        },
+                                        options
                                     )(dispatch, getState);
+                                } else {
+                                    const msg =
+                                        (state.ui.screens.inputData[screenKey]?.validation
+                                            ?.fieldsErrors?.amount &&
+                                            state.ui.screens.inputData[screenKey]?.validation
+                                                ?.fieldsErrors?.amount[0]?.message) ||
+                                        translate('App.labels.errorOccured');
+                                    Dialog.info(translate('App.labels.warning'), msg);
                                 }
-
-                                // delegate(
-                                //     getSelectedAccount(state),
-                                //     '0', // amount,
-                                //     finalValidators,
-                                //     token,
-                                //     undefined, // feeOptions
-                                //     undefined
-                                // )(dispatch, getState);
                             }
                         }
                     );

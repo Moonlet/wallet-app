@@ -32,6 +32,7 @@ import { IconOneLine } from './components/icon-one-line/icon-one-line';
 import { InputModule } from './components/input/input';
 import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper';
 import { AmountSelectableBox } from './components/amount-selectable-box/amount-selectable-box';
+import { ValidationsModule } from './components/validations/validations';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -220,6 +221,18 @@ export const renderModule = (
         case ModuleTypes.AMOUNT_SELECTABLE_BOX:
             moduleJSX = (
                 <AmountSelectableBox
+                    module={module}
+                    context={context}
+                    screenKey={options?.screenKey}
+                    actions={actions}
+                    screenValidation={options?.validation}
+                />
+            );
+            break;
+
+        case ModuleTypes.VALIDATIONS:
+            moduleJSX = (
+                <ValidationsModule
                     module={module}
                     context={context}
                     screenKey={options?.screenKey}

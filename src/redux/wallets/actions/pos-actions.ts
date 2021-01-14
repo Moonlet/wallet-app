@@ -124,6 +124,26 @@ export const delegate = (
     )(dispatch, getState);
 };
 
+export const delegateV2 = (
+    account: IAccountState,
+    validators: {
+        validator: IValidator;
+        amount: string;
+    }[],
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posActionV2(
+        account,
+        validators,
+        token,
+        feeOptions,
+        extraFields,
+        PosBasicActionType.DELEGATE_V2
+    )(dispatch, getState);
+};
+
 export const unstake = (
     account: IAccountState,
     amount: string,
@@ -280,6 +300,60 @@ export const posAction = (
                 amount: blockchainInstance.account
                     .amountToStd(amount, tokenConfig.decimals)
                     .toFixed(0, BigNumber.ROUND_DOWN),
+                token,
+                feeOptions:
+                    feeOptions?.gasPrice && feeOptions?.gasLimit
+                        ? {
+                              gasPrice: feeOptions.gasPrice.toString(),
+                              gasLimit: feeOptions.gasLimit.toString()
+                          }
+                        : undefined,
+                extraFields: extra
+            },
+            type
+        );
+        dispatch(
+            setProcessTransactions(
+                cloneDeep(txs).map(tx => {
+                    tx.status = TransactionStatus.CREATED;
+                    return tx;
+                })
+            )
+        );
+    } catch (errorMessage) {
+        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
+    }
+};
+
+export const posActionV2 = (
+    account: IAccountState,
+    validators: {
+        validator: IValidator;
+        amount: string;
+    }[],
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields,
+    type: PosBasicActionType
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const state = getState();
+    const chainId = getChainId(state, account.blockchain);
+
+    try {
+        const extra: ITransactionExtraFields = {
+            ...extraFields,
+            posAction: type
+        };
+        const blockchainInstance = getBlockchain(account.blockchain);
+
+        dispatch(openProcessTransactions());
+
+        const txs = await blockchainInstance.transaction.buildPosTransaction(
+            {
+                chainId,
+                account,
+                validators: validators as any,
+                amount: '0',
                 token,
                 feeOptions:
                     feeOptions?.gasPrice && feeOptions?.gasLimit

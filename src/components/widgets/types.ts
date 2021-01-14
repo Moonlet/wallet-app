@@ -176,7 +176,8 @@ export interface IScreenModule {
         | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.THREE_LINES_ICON
-        | ModuleTypes.TWO_LINES_TEXT_BANNER;
+        | ModuleTypes.TWO_LINES_TEXT_BANNER
+        | ModuleTypes.VALIDATIONS;
     cta?: ICta;
     data:
         | I2LinesTextBannerData
@@ -242,7 +243,8 @@ export enum ModuleTypes {
     STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
     THREE_LINES_CTA = '3-lines-cta',
     THREE_LINES_ICON = 'three-lines-icon',
-    TWO_LINES_TEXT_BANNER = '2-lines-text-banner'
+    TWO_LINES_TEXT_BANNER = '2-lines-text-banner',
+    VALIDATIONS = 'validations'
 }
 
 /// Screen Module Data Types \\\

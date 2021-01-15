@@ -9,6 +9,20 @@ Object {
   "selected": false,
   "tokens": Object {
     "1": Object {
+      "PORT": Object {
+        "active": true,
+        "balance": Object {
+          "available": "0",
+          "detailed": Object {},
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "total": "0",
+          "value": "0",
+        },
+        "order": 999,
+        "symbol": "PORT",
+      },
       "XSGD": Object {
         "active": true,
         "balance": Object {

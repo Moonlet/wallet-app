@@ -4,6 +4,7 @@ import v4 from './004';
 import v5 from './005';
 import v6 from './006';
 import v7 from './007';
+import v8 from './008';
 
 export const migrations: any = {
     /**
@@ -29,5 +30,9 @@ export const migrations: any = {
     /**
      * Add Cumulative Balance - 4 January 2021
      */
-    7: v7
+    7: v7,
+    /**
+     * Add PORT Token to all users - 14 January 2021
+     */
+    8: v8
 };

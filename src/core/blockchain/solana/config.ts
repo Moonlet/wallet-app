@@ -130,8 +130,8 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 0,
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(1000000000),
-        [AccountType.ROOT]: new BigNumber(1000000000)
+        [AccountType.DEFAULT]: new BigNumber(0),
+        [AccountType.ROOT]: new BigNumber(0)
     }
 };
 

@@ -115,11 +115,12 @@ export const selectStakeAccounts = (
     switch (action) {
         case PosBasicActionType.DELEGATE:
             const stakeAccountKey = stakeAccountWithExactAmount(accounts, action, amount);
+
             if (stakeAccountKey) {
                 selectedStakeAccounts[stakeAccountKey] = {
                     amount
                 };
-            } else
+            } else {
                 Object.keys(accounts).map(address => {
                     if (amountForAction.isGreaterThan(0) && !usedStakedAccounts.includes(address)) {
                         const account = accounts[address];
@@ -153,13 +154,14 @@ export const selectStakeAccounts = (
                         }
                     }
                 });
-            if (amountForAction.isGreaterThan(0)) {
-                const newIndex = Object.keys(accounts).length;
-                const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
-                selectedStakeAccounts[newStakeAccountAddress] = {
-                    amount: amountForAction,
-                    options: { shouldCreate: true, index: newIndex }
-                };
+                if (amountForAction.isGreaterThan(0)) {
+                    const newIndex = Object.keys(accounts).length;
+                    const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
+                    selectedStakeAccounts[newStakeAccountAddress] = {
+                        amount: amountForAction,
+                        options: { shouldCreate: true, index: newIndex }
+                    };
+                }
             }
             break;
         case PosBasicActionType.UNSTAKE:

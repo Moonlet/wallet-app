@@ -77,9 +77,11 @@ export interface IBlockchainConfig {
             actionScreenLabels: {};
             accountCTA: {
                 mainCta: IButtonCTA;
+                mainCtaSmartScreen?: IButtonCTA;
             };
             delegationCTA: {
                 mainCta: IButtonCTA;
+                mainCtaSmartScreen?: IButtonCTA;
             };
             validatorCTA: {
                 mainCta: IButtonCTA;

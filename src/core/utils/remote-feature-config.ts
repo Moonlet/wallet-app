@@ -6,6 +6,7 @@ import CONFIG from '../../config';
 export enum RemoteFeature {
     BETA_BADGE = 'beta_badge',
     ZIL = 'feature_zil',
+    ZIL_STAKING_SMART_SCREEN = 'feature_zil_staking_smart_screen',
     SOLANA = 'feature_solana',
     NEAR = 'feature_near',
     NEAR_LEDGER_BLE = 'near_ledger_ble',
@@ -36,7 +37,8 @@ export const getRemoteConfigFeatures = async () => {
                 RemoteFeature.CELO,
                 RemoteFeature.DEV_TOOLS,
                 RemoteFeature.TC_VERSION,
-                RemoteFeature.SOLANA
+                RemoteFeature.SOLANA,
+                RemoteFeature.ZIL_STAKING_SMART_SCREEN
             ]);
 
         // Retrieve values
@@ -52,6 +54,7 @@ export const getRemoteConfigFeatures = async () => {
             [RemoteFeature.COSMOS]: JSON.stringify([]),
             [RemoteFeature.CELO]: JSON.stringify([]),
             [RemoteFeature.SOLANA]: JSON.stringify([]),
+            [RemoteFeature.ZIL_STAKING_SMART_SCREEN]: JSON.stringify([]),
             [RemoteFeature.TC_VERSION]: '0'
         };
     }

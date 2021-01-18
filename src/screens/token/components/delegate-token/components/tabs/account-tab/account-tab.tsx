@@ -21,6 +21,10 @@ import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegate
 import { Dialog } from '../../../../../../../components/dialog/dialog';
 import { SmartScreenComponent } from '../../../../../../../components/smart-screen/smart-screen';
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
+import {
+    isFeatureActive,
+    RemoteFeature
+} from '../../../../../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     accountIndex: number;
@@ -64,7 +68,13 @@ export class AccountTabComponent extends React.Component<
     public render() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
+
         const tokenUiConfig = blockchainInstance.config.ui.token;
+        let mainCta = tokenUiConfig.accountCTA.mainCta;
+        if (isFeatureActive(RemoteFeature.ZIL_STAKING_SMART_SCREEN)) {
+            mainCta =
+                tokenUiConfig.accountCTA?.mainCtaSmartScreen || tokenUiConfig.accountCTA.mainCta;
+        }
 
         return (
             <View style={styles.container}>
@@ -137,7 +147,7 @@ export class AccountTabComponent extends React.Component<
                 </View>
                 <View style={styles.bottomContainer}>
                     <CtaGroup
-                        mainCta={tokenUiConfig.accountCTA.mainCta}
+                        mainCta={mainCta}
                         params={{
                             accountIndex: this.props.account.index,
                             blockchain: this.props.account.blockchain,

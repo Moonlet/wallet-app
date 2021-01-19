@@ -155,7 +155,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
                     )
                         txsValue = txsValue.plus(transaction.amount);
-                    txsValue = txsValue.plus(transaction.feeOptions.feeTotal || '0');
+                    txsValue = txsValue.plus(transaction.feeOptions?.feeTotal || '0');
                 });
 
                 const txAmount = blockchainInstance.account.amountFromStd(

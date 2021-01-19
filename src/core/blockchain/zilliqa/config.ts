@@ -9,6 +9,7 @@ import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
 import { Platform } from 'react-native';
+import { PORT_MAINNET } from './tokens/port';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -124,7 +125,8 @@ export const config: IBlockchainConfig = {
     autoAddedTokensSymbols: {
         '1': {
             gZIL: GZIL_MAINNET,
-            XSGD: XSGD_MAINNET
+            XSGD: XSGD_MAINNET,
+            PORT: PORT_MAINNET
         },
         '333': {
             gZIL: GZIL_TESTNET

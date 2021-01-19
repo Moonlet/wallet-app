@@ -59,6 +59,7 @@ export const translation: ITranslations = {
                 enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
+                errorOccured: 'An error has occurred. Please try again!',
                 extensionNotConnected: 'Connecting to phone',
                 failed: 'Failed',
                 fast: 'Fast',

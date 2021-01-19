@@ -35,13 +35,31 @@ export const ZIL_NATIVE: ITokenConfigState = {
     }
 };
 
-export const accountCTA = {
+const accountCTA = {
     mainCta: {
         title: 'App.labels.stakeNow',
         iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
             params: { actionText: 'App.labels.stakeNow' }
+        }
+    },
+    mainCtaSmartScreen: {
+        title: 'App.labels.stakeNow',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakeNow',
+                    step: 'StakeSelectValidator',
+                    key: 'stake-now-select-validator'
+                },
+                navigationOptions: {
+                    title: 'Stake now'
+                },
+                newFlow: true
+            }
         }
     }
 };

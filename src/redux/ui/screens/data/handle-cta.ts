@@ -14,20 +14,30 @@ import {
     buildDummyValidator,
     claimRewardNoInput,
     delegate,
+    delegateV2,
     redelegate,
     setSelectedBlockchain,
     withdraw
 } from '../../../wallets/actions';
-import { setScreenInputData, toggleValidatorMultiple } from '../input-data/actions';
+import {
+    runScreenValidation,
+    setScreenInputData,
+    toggleValidatorMultiple
+} from '../input-data/actions';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { getScreenDataKey } from './reducer';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { translate } from '../../../../core/i18n';
-import { LOAD_MORE_VALIDATORS } from './actions';
+import { LOAD_MORE_VALIDATORS, LOAD_MORE_VALIDATORS_V2 } from './actions';
 import { ITokenState } from '../../../wallets/state';
 import { HttpClient } from '../../../../core/utils/http-client';
+import { navigateToEnterAmountStep, QUICK_DELEGATE_ENTER_AMOUNT } from '../posActions/actions';
+import BigNumber from 'bignumber.js';
+import { IValidator } from '../../../../core/blockchain/types/stats';
+import { getTokenConfig } from '../../../tokens/static-selectors';
+import { splitStake } from '../../../../core/utils/balance';
 
 export const handleCta = (
     cta: ICta,
@@ -154,11 +164,22 @@ const handleCtaAction = async (
                     })(dispatch, getState);
                     break;
 
+                /** @deprecated */
                 case 'LOAD_MORE_VALIDATORS':
                 case 'loadMoreValidators':
                     dispatch({
                         type: LOAD_MORE_VALIDATORS,
                         data: { screenKey: options.screenKey }
+                    });
+                    break;
+
+                case 'loadMoreValidatorsV2':
+                    dispatch({
+                        type: LOAD_MORE_VALIDATORS_V2,
+                        data: {
+                            screenKey: options.screenKey,
+                            screen: action.params?.params?.screen
+                        }
                     });
                     break;
 
@@ -204,6 +225,86 @@ const handleCtaAction = async (
                             )(dispatch, getState);
                         }
                     }
+                    break;
+                }
+
+                case 'delegateToValidatorV2': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+                    const blockchainInstance = getBlockchain(account.blockchain);
+
+                    const token = action.params?.params?.token;
+                    const tokenConfig = getTokenConfig(account.blockchain, token);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const data = state.ui.screens.inputData[screenKey].data;
+
+                    const validators: {
+                        validator: IValidator;
+                        amount: string;
+                    }[] = [];
+
+                    // Build validators list from redux
+                    for (const dataKey of Object.keys(data || {})) {
+                        if (data[dataKey] && data[dataKey]?.validator && data[dataKey]?.amount) {
+                            const amount = data[dataKey].amount;
+                            const validator = data[dataKey].validator;
+                            if (new BigNumber(amount).isGreaterThan(0)) {
+                                validators.push({
+                                    validator: buildDummyValidator(
+                                        validator?.id || validator?.address,
+                                        validator.name,
+                                        validator.icon,
+                                        validator.website
+                                    ),
+                                    amount: blockchainInstance.account
+                                        .amountToStd(amount, tokenConfig.decimals)
+                                        .toFixed()
+                                });
+                            }
+                        }
+                    }
+
+                    // Build validators list from params
+                    if (
+                        action.params?.params?.validators &&
+                        Array.isArray(action.params.params.validators) &&
+                        state.ui.screens.inputData[screenKey]?.data?.amount
+                    ) {
+                        const amountSplit = splitStake(
+                            state.ui.screens.inputData[screenKey].data.amount,
+                            action.params.params.validators.length
+                        );
+                        for (const validator of action.params.params.validators) {
+                            validators.push({
+                                validator: buildDummyValidator(
+                                    validator?.id || validator?.address,
+                                    validator.name,
+                                    validator.icon,
+                                    validator.website
+                                ),
+                                amount: blockchainInstance.account
+                                    .amountToStd(amountSplit, tokenConfig.decimals)
+                                    .toFixed()
+                            });
+                        }
+                    }
+
+                    delegateV2(
+                        getSelectedAccount(state),
+                        validators,
+                        token,
+                        undefined, // feeOptions
+                        undefined
+                    )(dispatch, getState);
                     break;
                 }
 
@@ -469,6 +570,268 @@ const handleCtaAction = async (
                             );
                         }
                     }
+                    break;
+                }
+
+                case 'stakeNowSupportDialog': {
+                    const {
+                        title,
+                        body,
+                        button1Text,
+                        button2Text,
+                        flowId,
+                        validators
+                    } = action?.params?.params;
+
+                    Dialog.alert(
+                        title,
+                        body,
+                        {
+                            text: button1Text,
+                            onPress: () => {
+                                // I don't care
+
+                                NavigationService.navigate(
+                                    'SmartScreen',
+                                    {
+                                        context: {
+                                            screen: 'StakeNow',
+                                            step: 'StakeNowQuestionnaire',
+                                            key: 'stake-now-questionnaire',
+                                            flowId,
+                                            params: {
+                                                validators
+                                            }
+                                        },
+                                        navigationOptions: {
+                                            title: 'Questionnaire'
+                                        }
+                                    },
+                                    'stake-now-questionnaire'
+                                );
+                            }
+                        },
+                        {
+                            text: button2Text,
+                            onPress: () => {
+                                // I’ll support you
+
+                                // Check validations
+                                const account = getSelectedAccount(state);
+                                const chainId = getChainId(state, account.blockchain);
+
+                                const screenKey = getScreenDataKey({
+                                    pubKey: getSelectedWallet(state)?.walletPublicKey,
+                                    blockchain: account?.blockchain,
+                                    chainId: String(chainId),
+                                    address: account?.address,
+                                    step: action.params?.params?.step,
+                                    tab: undefined
+                                });
+
+                                if (
+                                    state.ui.screens.inputData[screenKey]?.validation?.valid ===
+                                    true
+                                ) {
+                                    // Open process tx and start processing
+                                    handleCta(
+                                        {
+                                            type: 'callAction',
+                                            params: {
+                                                action: 'delegateToValidatorV2',
+                                                params: {
+                                                    step: action?.params?.params?.step,
+                                                    token: action?.params?.params?.token
+                                                }
+                                            }
+                                        },
+                                        options
+                                    )(dispatch, getState);
+                                } else {
+                                    const msg =
+                                        (state.ui.screens.inputData[screenKey]?.validation
+                                            ?.fieldsErrors?.amount &&
+                                            state.ui.screens.inputData[screenKey]?.validation
+                                                ?.fieldsErrors?.amount[0]?.message) ||
+                                        translate('App.labels.errorOccured');
+                                    Dialog.info(translate('App.labels.warning'), msg);
+                                }
+                            }
+                        }
+                    );
+                    break;
+                }
+
+                case 'navigateToEnterAmountStep': {
+                    const validators = action?.params?.params?.validators || [];
+
+                    const selectedValidators = [];
+                    for (const v of validators) {
+                        selectedValidators.push(
+                            buildDummyValidator(v?.address || v?.id, v.name, v?.icon, v?.website)
+                        );
+                    }
+
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+                    const token =
+                        account.tokens[chainId][getBlockchain(account.blockchain).config.coin];
+
+                    // Navigate to enter amount step
+                    navigateToEnterAmountStep(
+                        account.index,
+                        account.blockchain,
+                        token,
+                        selectedValidators,
+                        'App.labels.stakeNow',
+                        'QuickDelegateEnterAmount',
+                        QUICK_DELEGATE_ENTER_AMOUNT,
+                        undefined,
+                        action?.params?.params?.screenKey
+                    )(dispatch);
+
+                    break;
+                }
+
+                case 'amountSelectableBoxPercentageToMoonlet': {
+                    const screenKey = options?.screenKey;
+
+                    const amountBox =
+                        (screenKey &&
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[options.screenKey]?.data?.amountBox) ||
+                        action?.params?.params?.amountBox;
+
+                    if (
+                        action?.params?.params?.amount &&
+                        amountBox &&
+                        amountBox?.type === 'percentage' &&
+                        amountBox?.value &&
+                        action?.params?.params?.validators &&
+                        Array.isArray(action.params.params.validators)
+                    ) {
+                        const inputAmount = action.params.params.amount;
+                        const validators = action.params.params.validators;
+                        const percentage = amountBox.value;
+
+                        const moonletValidator = validators[0];
+                        const moonletValidatorStakedAmount = new BigNumber(percentage)
+                            .multipliedBy(new BigNumber(inputAmount))
+                            .dividedBy(100);
+
+                        setScreenInputData(screenKey, {
+                            [moonletValidator.address]: {
+                                validator: moonletValidator,
+                                amount: moonletValidatorStakedAmount
+                            }
+                        })(dispatch, getState);
+
+                        // (100 - procent) / (validators length - 1) * input * 100
+                        const splitStakePerOtherValidators = new BigNumber(
+                            new BigNumber(100).minus(new BigNumber(percentage))
+                        )
+                            .dividedBy(new BigNumber(validators.length - 1))
+                            .multipliedBy(new BigNumber(inputAmount))
+                            .dividedBy(new BigNumber(100));
+
+                        for (const validator of action.params.params.validators) {
+                            const vId = validator?.address || validator?.id;
+                            if (vId !== moonletValidator.address) {
+                                setScreenInputData(screenKey, {
+                                    [vId]: {
+                                        validator,
+                                        amount: splitStakePerOtherValidators
+                                    }
+                                })(dispatch, getState);
+                            }
+                        }
+
+                        runScreenValidation(
+                            state.ui.screens.data.StakeNow[options.screenKey].response?.validation,
+                            options.screenKey
+                        )(dispatch, getState);
+                    }
+                    break;
+                }
+
+                case 'navigateToStakeNowEnterAmountValidators': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const validators: any = state.ui.screens.inputData[screenKey]?.data?.validators;
+
+                    NavigationService.navigate(
+                        'SmartScreen',
+                        {
+                            context: {
+                                screen: 'StakeNow',
+                                step: 'StakeNowEnterAmountValidators',
+                                key: 'stake-now-enter-amount-validators',
+                                screenKey,
+                                params: {
+                                    validators
+                                }
+                            },
+                            navigationOptions: {
+                                title: 'Stake now'
+                            }
+                        },
+                        screenKey
+                    );
+                    break;
+                }
+
+                case 'navigateToStakeNowPartToMoonlet': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const validators: any = action.params?.params?.validators;
+                    const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+
+                    NavigationService.navigate(
+                        'SmartScreen',
+                        {
+                            context: {
+                                screen: 'StakeNow',
+                                step: 'StakeNowPartToMoonlet',
+                                key: 'switch-node-part-to-moonlet',
+                                flowId: action.params?.params?.flowId || screenKey,
+                                params: {
+                                    validators,
+                                    amount
+                                }
+                            },
+                            navigationOptions: {
+                                title: 'Stake now',
+                                headerStyle: {
+                                    backgroundColor: '#005067',
+                                    borderBottomWidth: 0
+                                }
+                            },
+                            background: {
+                                gradient: ['#005067', '#061529']
+                            }
+                        },
+                        screenKey
+                    );
                     break;
                 }
 

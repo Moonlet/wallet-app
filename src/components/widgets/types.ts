@@ -156,6 +156,7 @@ export interface IScreenModule {
     style?: IDataStyle;
     type:
         | ModuleTypes.AMOUNT_INPUT
+        | ModuleTypes.AMOUNT_SELECTABLE_BOX
         | ModuleTypes.BALANCES_GRID_ICONS
         | ModuleTypes.CTA
         | ModuleTypes.GRADIENT_WRAPPER
@@ -175,12 +176,14 @@ export interface IScreenModule {
         | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.THREE_LINES_ICON
-        | ModuleTypes.TWO_LINES_TEXT_BANNER;
+        | ModuleTypes.TWO_LINES_TEXT_BANNER
+        | ModuleTypes.VALIDATIONS;
     cta?: ICta;
     data:
         | I2LinesTextBannerData
         | I3LinesCtaData
         | IAmountInputData
+        | IAmountSelectableBoxData
         | IBalanceGridData
         | IBalanceGridData[]
         | IGradientWrapperData
@@ -220,6 +223,7 @@ export interface IStateSelector {
 
 export enum ModuleTypes {
     AMOUNT_INPUT = 'amount-input',
+    AMOUNT_SELECTABLE_BOX = 'amount-selectable-box',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
     CTA = 'cta',
     GRADIENT_WRAPPER = 'gradient-wrapper',
@@ -239,7 +243,8 @@ export enum ModuleTypes {
     STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
     THREE_LINES_CTA = '3-lines-cta',
     THREE_LINES_ICON = 'three-lines-icon',
-    TWO_LINES_TEXT_BANNER = '2-lines-text-banner'
+    TWO_LINES_TEXT_BANNER = '2-lines-text-banner',
+    VALIDATIONS = 'validations'
 }
 
 /// Screen Module Data Types \\\
@@ -407,6 +412,10 @@ export interface IAmountInputData {
         value: string;
         color?: string;
     };
+}
+
+export interface IAmountSelectableBoxData {
+    amounts: IAmountInputAmountBox[];
 }
 
 export interface IIconOneLineData {

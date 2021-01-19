@@ -5,6 +5,7 @@ import { IReduxState } from '../../../../state';
 import { getTokenConfig } from '../../../../tokens/static-selectors';
 import { IAction } from '../../../../types';
 import { getSelectedBlockchain } from '../../../../wallets/selectors';
+import { handleCta } from '../../data/handle-cta';
 import { setScreenAmount, setScreenInputData } from '../actions';
 
 const getSwitchNodeValidatorAmount = (
@@ -77,7 +78,18 @@ const setScreenAmountBox = (
     })(dispatch, getState);
 };
 
+const setScreenAmountPercentToMoonlet = (
+    params: any,
+    context: IScreenContext,
+    screenKey: string,
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    handleCta(params[0], { screenKey })(dispatch, getState);
+};
+
 export const screenActions = {
     setScreenAmountAction,
-    setScreenAmountBox
+    setScreenAmountBox,
+    setScreenAmountPercentToMoonlet
 };

@@ -78,6 +78,7 @@ export interface IValidator {
     secondaryStats: IStatValue[];
     actionType?: CardActionType;
     actionTypeSelected?: boolean;
+    inputAmount?: string;
 }
 
 export interface IPosWidget {

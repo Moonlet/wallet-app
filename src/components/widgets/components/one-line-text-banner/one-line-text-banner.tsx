@@ -21,7 +21,8 @@ interface IExternalProps {
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return getStateSelectors(state, ownProps.module, {
-        flowId: ownProps?.options?.flowId
+        flowId: ownProps?.options?.flowId,
+        screenKey: ownProps?.options?.screenKey
     });
 };
 

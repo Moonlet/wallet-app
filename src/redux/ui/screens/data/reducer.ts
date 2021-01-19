@@ -1,6 +1,11 @@
 import { IScreenData, IScreenDataState } from './state';
 import { IAction } from '../../../types';
-import { FETCH_SCREEN_DATA, LOAD_MORE_VALIDATORS, SCREEN_DATA_START_LOADING } from './actions';
+import {
+    FETCH_SCREEN_DATA,
+    LOAD_MORE_VALIDATORS,
+    LOAD_MORE_VALIDATORS_V2,
+    SCREEN_DATA_START_LOADING
+} from './actions';
 import {
     ContextScreen,
     IScreenModule,
@@ -85,6 +90,34 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 ...state,
                 [ContextScreen.QUICK_STAKE_SELECT_VALIDATOR]: {
                     ...state[ContextScreen.QUICK_STAKE_SELECT_VALIDATOR],
+                    screenData
+                }
+            };
+        }
+
+        case LOAD_MORE_VALIDATORS_V2: {
+            const screenData: IScreenData = {
+                ...state[action.data.screen][action.data.screenKey]
+            };
+
+            screenData.response.widgets.map((widget: IScreenWidget) =>
+                widget.modules.map((module: IScreenModule) => {
+                    // Show all the modules
+                    if (module?.hidden === true) {
+                        module.hidden = false;
+                    }
+
+                    // Hide Load More module
+                    if (module?.hidden === undefined) {
+                        module.hidden = true;
+                    }
+                })
+            );
+
+            return {
+                ...state,
+                [action.data.screen]: {
+                    ...state[action.data.screen],
                     screenData
                 }
             };

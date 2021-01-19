@@ -9,32 +9,7 @@ import {
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: 'transparent',
-            paddingHorizontal: BASE_DIMENSION * 2
-        },
-        inputBox: {
-            height: BASE_DIMENSION * 5,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION,
-            flexDirection: 'row'
-        },
-        inputText: {
-            flex: 1,
-            color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2,
-            fontSize: normalizeFontAndLineHeight(15)
-        },
-        row: {
-            flexDirection: 'row'
-        },
-        label: {
-            fontSize: normalizeFontAndLineHeight(14),
-            color: theme.colors.textSecondary
-        },
-        amountText: {
-            fontSize: normalizeFontAndLineHeight(14),
-            color: theme.colors.accent
+            //
         },
         warningText: {
             fontSize: normalizeFontAndLineHeight(15),
@@ -49,14 +24,11 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION / 2
         },
         amountsContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION
+            flexDirection: 'row'
         },
         amountComp: {
             flex: 1,
-            borderRadius: BORDER_RADIUS,
+            borderRadius: BORDER_RADIUS / 2,
             borderWidth: 1,
             borderColor: theme.colors.textTertiary,
             paddingVertical: BASE_DIMENSION,
@@ -66,9 +38,9 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accent
         },
         amountCompText: {
-            fontSize: normalizeFontAndLineHeight(13),
+            fontSize: normalizeFontAndLineHeight(16),
             textAlign: 'center',
-            color: theme.colors.textSecondary
+            color: theme.colors.textTertiary
         },
         amountCompTextSelected: {
             color: theme.colors.accent

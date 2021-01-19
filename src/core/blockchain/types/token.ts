@@ -27,6 +27,7 @@ export interface IButtonCTA {
 
 export enum PosBasicActionType {
     DELEGATE = 'DELEGATE',
+    DELEGATE_V2 = 'DELEGATE_V2',
     REDELEGATE = 'REDELEGATE',
     UNLOCK = 'UNLOCK',
     UNDELEGATE = 'UNDELEGATE',

@@ -33,6 +33,7 @@ import { InputModule } from './components/input/input';
 import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper';
 import { AmountSelectableBox } from './components/amount-selectable-box/amount-selectable-box';
 import { ValidationsModule } from './components/validations/validations';
+import { ProgressBarModule } from './components/progress-bar/progress-bar';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -240,6 +241,10 @@ export const renderModule = (
                     screenValidation={options?.validation}
                 />
             );
+            break;
+
+        case ModuleTypes.PROGRESS_BAR:
+            moduleJSX = <ProgressBarModule module={module} />;
             break;
 
         default:

@@ -170,6 +170,7 @@ export interface IScreenModule {
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
         | ModuleTypes.MODULE_WRAPPER
         | ModuleTypes.ONE_LINE_TEXT_BANNER
+        | ModuleTypes.PROGRESS_BAR
         | ModuleTypes.SEPARATOR
         | ModuleTypes.SINGLE_BALANCE_ICON
         | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
@@ -237,6 +238,7 @@ export enum ModuleTypes {
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
     MODULE_WRAPPER = 'module-wrapper',
     ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
+    PROGRESS_BAR = 'progress-bar',
     SEPARATOR = 'separator',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
     STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
@@ -444,4 +446,10 @@ export interface IInputData {
 export interface IGradientWrapperData {
     gradient: string[];
     submodules: IScreenModule[];
+}
+
+export interface IProgressBarData {
+    percentage: number;
+    backgroundStyle?: IDataStyle;
+    barStyle?: IDataStyle;
 }

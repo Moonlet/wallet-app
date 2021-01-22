@@ -6,7 +6,8 @@ import {
     getNrPendingTransactions,
     getSelectedAccount,
     getSelectedBlockchain,
-    getSelectedWallet
+    getSelectedWallet,
+    getWalletByPubKey
 } from '../../../wallets/selectors';
 import { getChainId } from '../../../preferences/selectors';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
@@ -31,13 +32,25 @@ import { getScreenDataKey } from './reducer';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { translate } from '../../../../core/i18n';
 import { LOAD_MORE_VALIDATORS, LOAD_MORE_VALIDATORS_V2 } from './actions';
-import { ITokenState } from '../../../wallets/state';
+import { AccountType, ITokenState } from '../../../wallets/state';
 import { HttpClient } from '../../../../core/utils/http-client';
 import { navigateToEnterAmountStep, QUICK_DELEGATE_ENTER_AMOUNT } from '../posActions/actions';
 import BigNumber from 'bignumber.js';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { getTokenConfig } from '../../../tokens/static-selectors';
 import { splitStake } from '../../../../core/utils/balance';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
+import { WalletFactory } from '../../../../core/wallet/wallet-factory';
+import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { WalletType } from '../../../../core/wallet/types';
+import { LedgerConnect } from '../../../../screens/ledger/ledger-connect';
+import {
+    Blockchain,
+    TransactionMessageText,
+    TransactionMessageType
+} from '../../../../core/blockchain/types';
+import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export const handleCta = (
     cta: ICta,
@@ -832,6 +845,112 @@ const handleCtaAction = async (
                         },
                         screenKey
                     );
+                    break;
+                }
+
+                case 'govProposalChoice': {
+                    const proposal = action.params?.params?.proposal;
+                    const choice = action.params?.params?.choice;
+                    const sendVoteUrl = action.params?.params?.sendVoteUrl;
+                    const gzilContractAddress = action.params?.params?.gzilContractAddress;
+                    const metadata = action.params?.params?.metadata || {};
+                    const proposalType = action.params?.params?.proposalType || 'vote';
+
+                    const account = getSelectedAccount(state);
+                    const selectedWallet = getSelectedWallet(state);
+                    const appWallet = getWalletByPubKey(state, selectedWallet.walletPublicKey);
+
+                    if (!appWallet) {
+                        throw new Error('GENERIC_ERROR_MSG_SIGN');
+                    }
+
+                    if (!account) {
+                        throw new Error('GENERIC_ERROR_MSG_SIGN');
+                    }
+
+                    let password = '';
+
+                    if (appWallet.type === WalletType.HD) {
+                        password = await PasswordModal.getPassword(
+                            translate('Password.pinTitleUnlock'),
+                            translate('Password.subtitleSignMessage'),
+                            { sensitive: true, showCloseButton: true }
+                        );
+                        await LoadingModal.open({
+                            type: TransactionMessageType.INFO,
+                            text: TransactionMessageText.SIGNING
+                        });
+                    }
+
+                    const wallet: {
+                        signMessage: (
+                            blockchain: Blockchain,
+                            accountIndex: number,
+                            accountType: AccountType,
+                            message: string
+                        ) => Promise<any>;
+                    } =
+                        appWallet.type === WalletType.HW
+                            ? LedgerConnect
+                            : await WalletFactory.get(appWallet.id, appWallet.type, {
+                                  pass: password,
+                                  deviceVendor: appWallet.hwOptions?.deviceVendor,
+                                  deviceModel: appWallet.hwOptions?.deviceModel,
+                                  deviceId: appWallet.hwOptions?.deviceId,
+                                  connectionType: appWallet.hwOptions?.connectionType
+                              });
+
+                    const message = JSON.stringify({
+                        version: proposal.msg.version,
+                        timestamp: String(Math.floor(Date.now() / 1000)),
+                        token: gzilContractAddress,
+                        type: proposalType,
+                        payload: {
+                            proposal: proposal.authorIpfsHash,
+                            choice,
+                            metadata
+                        }
+                    });
+
+                    const signedMessage = await wallet.signMessage(
+                        account.blockchain,
+                        account.index,
+                        account.type,
+                        message
+                    );
+
+                    let sig = signedMessage;
+                    try {
+                        sig = JSON.parse(signedMessage);
+                    } catch {
+                        // no need to handle this
+                    }
+
+                    try {
+                        await LoadingModal.open({
+                            type: TransactionMessageType.INFO,
+                            text: TransactionMessageText.SENDING_VOTE
+                        });
+                        // const res =
+                        await new HttpClient(sendVoteUrl).post('', {
+                            address: fromBech32Address(account.address),
+                            msg: message,
+                            sig
+                        });
+                    } catch (errorMessage) {
+                        // Show an error message to the user
+                        SentryCaptureException(
+                            new Error(
+                                JSON.stringify({
+                                    errorMessage,
+                                    address: fromBech32Address(account.address),
+                                    msg: message,
+                                    sig
+                                })
+                            )
+                        );
+                    }
+                    await LoadingModal.close();
                     break;
                 }
 

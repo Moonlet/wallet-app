@@ -51,6 +51,7 @@ import {
 } from '../../../../core/blockchain/types';
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { ApiClient } from '../../../../core/utils/api-client/api-client';
 
 export const handleCta = (
     cta: ICta,
@@ -851,7 +852,6 @@ const handleCtaAction = async (
                 case 'govProposalChoice': {
                     const proposal = action.params?.params?.proposal;
                     const choice = action.params?.params?.choice;
-                    const sendVoteUrl = action.params?.params?.sendVoteUrl;
                     const gzilContractAddress = action.params?.params?.gzilContractAddress;
                     const metadata = action.params?.params?.metadata || {};
                     const proposalType = action.params?.params?.proposalType || 'vote';
@@ -860,12 +860,8 @@ const handleCtaAction = async (
                     const selectedWallet = getSelectedWallet(state);
                     const appWallet = getWalletByPubKey(state, selectedWallet.walletPublicKey);
 
-                    if (!appWallet) {
-                        throw new Error('GENERIC_ERROR_MSG_SIGN');
-                    }
-
-                    if (!account) {
-                        throw new Error('GENERIC_ERROR_MSG_SIGN');
+                    if (!appWallet || !account) {
+                        break;
                     }
 
                     let password = '';
@@ -919,7 +915,7 @@ const handleCtaAction = async (
                         message
                     );
 
-                    let sig = signedMessage;
+                    let sig: any = signedMessage;
                     try {
                         sig = JSON.parse(signedMessage);
                     } catch {
@@ -931,14 +927,32 @@ const handleCtaAction = async (
                             type: TransactionMessageType.INFO,
                             text: TransactionMessageText.SENDING_VOTE
                         });
-                        // const res =
-                        await new HttpClient(sendVoteUrl).post('', {
-                            address: fromBech32Address(account.address),
-                            msg: message,
-                            sig
-                        });
+
+                        const sendVoteRes = await new ApiClient().governance.sendVote(
+                            {
+                                address: fromBech32Address(account.address),
+                                msg: message,
+                                sig
+                            },
+                            proposal.authorIpfsHash
+                        );
+
+                        if (sendVoteRes?.success === true) {
+                            // success
+                        } else {
+                            Dialog.info(
+                                translate('App.labels.warning'),
+                                translate('App.labels.errorOccured')
+                            );
+                        }
+
+                        // TODO: should trigger fetch data in order to load the new proposal's data
                     } catch (errorMessage) {
-                        // Show an error message to the user
+                        Dialog.info(
+                            translate('App.labels.warning'),
+                            translate('App.labels.errorOccured')
+                        );
+
                         SentryCaptureException(
                             new Error(
                                 JSON.stringify({

@@ -938,7 +938,7 @@ const handleCtaAction = async (
                         );
 
                         if (sendVoteRes?.success === true) {
-                            // success
+                            NavigationService.navigate('Dashboard', {});
                         } else {
                             Dialog.info(
                                 translate('App.labels.warning'),

@@ -175,6 +175,7 @@ export interface IScreenModule {
         | ModuleTypes.SINGLE_BALANCE_ICON
         | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
         | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
+        | ModuleTypes.TEXT_LINE_ICON
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.THREE_LINES_ICON
         | ModuleTypes.TWO_LINES_TEXT_BANNER
@@ -243,6 +244,7 @@ export enum ModuleTypes {
     SINGLE_BALANCE_ICON = 'single-balance-icon',
     STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
     STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
+    TEXT_LINE_ICON = 'text-line-icon',
     THREE_LINES_CTA = '3-lines-cta',
     THREE_LINES_ICON = 'three-lines-icon',
     TWO_LINES_TEXT_BANNER = '2-lines-text-banner',
@@ -452,4 +454,13 @@ export interface IProgressBarData {
     percentage: number;
     backgroundStyle?: IDataStyle;
     barStyle?: IDataStyle;
+}
+
+export interface ITextLineIconData {
+    icon: {
+        value: IconValues;
+        style?: IDataStyle;
+    };
+    line: IData[];
+    lineStyle?: IDataStyle;
 }

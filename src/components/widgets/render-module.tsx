@@ -34,6 +34,7 @@ import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper'
 import { AmountSelectableBox } from './components/amount-selectable-box/amount-selectable-box';
 import { ValidationsModule } from './components/validations/validations';
 import { ProgressBarModule } from './components/progress-bar/progress-bar';
+import { TextLineIcon } from './components/text-line-icon/text-line-icon';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -227,6 +228,16 @@ export const renderModule = (
                     screenKey={options?.screenKey}
                     actions={actions}
                     screenValidation={options?.validation}
+                />
+            );
+            break;
+
+        case ModuleTypes.TEXT_LINE_ICON:
+            moduleJSX = (
+                <TextLineIcon
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
                 />
             );
             break;

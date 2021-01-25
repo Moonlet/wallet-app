@@ -962,11 +962,12 @@ const handleCtaAction = async (
                                 translate('Password.subtitleSignMessage'),
                                 { sensitive: true, showCloseButton: true }
                             );
-                            await LoadingModal.open({
-                                type: TransactionMessageType.INFO,
-                                text: TransactionMessageText.SIGNING
-                            });
                         }
+
+                        await LoadingModal.open({
+                            type: TransactionMessageType.INFO,
+                            text: TransactionMessageText.GOVERNANCE_SIGN
+                        });
 
                         const wallet: {
                             signMessage: (

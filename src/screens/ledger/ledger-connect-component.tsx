@@ -28,6 +28,7 @@ import { ReviewTransaction } from './components/review-transaction/review-transa
 import { delay } from '../../core/utils/time';
 import { AnimatedValue } from 'react-navigation';
 import { SignDeclined } from './components/sign-declined/sign-declined';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 const ANIMATION_TIME = 300;
 
@@ -176,8 +177,26 @@ export class LedgerConnectComponent extends React.Component<
         accountIndex: number,
         accountType: AccountType,
         message: string
-    ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
-        throw new Error('LedgerConnect.signMessage not implemented');
+    ): Promise<string> {
+        this.resultDeferred = new Deferred();
+        const { deviceModel, deviceId, connectionType } = this.props.wallet.hwOptions;
+
+        const wallet = await HWWalletFactory.get(
+            HWVendor.LEDGER,
+            deviceModel,
+            deviceId,
+            connectionType
+        );
+        const walletCredentials = await wallet.getWalletCredentials();
+
+        const signature = await getBlockchain(blockchain).transaction.signMessage(
+            message,
+            walletCredentials.privateKey
+        );
+
+        this.resultDeferred.resolve(signature);
+
+        return this.resultDeferred.promise;
     }
 
     private trySign() {

@@ -6,7 +6,12 @@ import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { IScreenContext, IScreenValidation, IScreenWidget } from '../../components/widgets/types';
+import {
+    IScreenContext,
+    IScreenValidation,
+    IScreenWidget,
+    SmartScreenScrollEvents
+} from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
@@ -27,6 +32,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { v4 as uuidv4 } from 'uuid';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { handleCta } from '../../redux/ui/screens/data/handle-cta';
+import { PubSub } from '../../core/blockchain/common/pub-sub';
 
 interface INavigationParams {
     context: IScreenContext;
@@ -96,6 +102,8 @@ class SmartScreenComponent extends React.Component<
     public static navigationOptions = navigationOptions;
 
     private loadingTimeout: any;
+    private keyboardAwareScrollView: any;
+    private scrollPubSub: PubSub<SmartScreenScrollEvents> = new PubSub();
 
     constructor(
         props: INavigationProps<INavigationParams> &
@@ -121,6 +129,19 @@ class SmartScreenComponent extends React.Component<
             });
 
         this.props.fetchScreenData(this.state.context);
+
+        this.subscribeScrollEvents();
+    }
+
+    private subscribeScrollEvents() {
+        this.scrollPubSub.subscribe(
+            SmartScreenScrollEvents.SCROLL_TO_END,
+            () => {
+                this.keyboardAwareScrollView &&
+                    this.keyboardAwareScrollView.scrollToEnd({ animated: true });
+            },
+            undefined
+        );
     }
 
     public componentDidUpdate(prevProps: IReduxProps & INavigationParams) {
@@ -237,6 +258,7 @@ class SmartScreenComponent extends React.Component<
                 }}
                 blockchain={this.props.account.blockchain}
                 validation={validation}
+                scrollPubSub={this.scrollPubSub}
             />
         );
     }
@@ -300,6 +322,7 @@ class SmartScreenComponent extends React.Component<
                 {/* Widgets */}
                 {screenData && (
                     <KeyboardAwareScrollView
+                        ref={ref => (this.keyboardAwareScrollView = ref)}
                         style={styles.scrollView}
                         showsVerticalScrollIndicator={false}
                         enableOnAndroid

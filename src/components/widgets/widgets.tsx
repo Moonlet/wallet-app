@@ -12,7 +12,8 @@ import {
     IScreenValidation,
     IScreenWidget,
     ISmartScreenActions,
-    ModuleTypes
+    ModuleTypes,
+    SmartScreenScrollEvents
 } from './types';
 import { Text } from '../../library';
 import { Blockchain } from '../../core/blockchain/types';
@@ -20,6 +21,7 @@ import { formatStyles } from './utils';
 import { renderModule } from './render-module';
 import { ModuleSelectableWrapper } from './components/module-selectable-wrapper/module-selectable-wrapper';
 import { InfoModal } from '../info-modal/info-modal';
+import { PubSub } from '../../core/blockchain/common/pub-sub';
 
 interface IExternalProps {
     data: IScreenWidget[];
@@ -28,6 +30,7 @@ interface IExternalProps {
     actions: ISmartScreenActions;
     blockchain: Blockchain;
     validation?: IScreenValidation;
+    scrollPubSub: PubSub<SmartScreenScrollEvents>;
 }
 
 interface IState {
@@ -118,7 +121,8 @@ class WidgetsComponent extends React.Component<
                                 {renderModule(module, context, actions, {
                                     isWidgetExpanded,
                                     moduleColWrapperContainer: styles.moduleColWrapperContainer,
-                                    validation: this.props.validation
+                                    validation: this.props.validation,
+                                    scrollPubSub: this.props.scrollPubSub
                                 })}
                             </View>
                         ))}
@@ -151,7 +155,8 @@ class WidgetsComponent extends React.Component<
                             renderModule(module, context, actions, {
                                 screenKey,
                                 moduleColWrapperContainer: styles.moduleColWrapperContainer,
-                                validation: this.props.validation
+                                validation: this.props.validation,
+                                scrollPubSub: this.props.scrollPubSub
                             })
                         )}
 
@@ -173,7 +178,9 @@ class WidgetsComponent extends React.Component<
                                     InfoModal.open(module.info.data?.cta?.params?.params)
                                 }
                             >
-                                {renderModule(module.info.data, context, actions, undefined)}
+                                {renderModule(module.info.data, context, actions, {
+                                    scrollPubSub: this.props.scrollPubSub
+                                })}
                             </TouchableOpacity>
                         )}
                     </View>

@@ -8,7 +8,8 @@ import {
     IScreenModuleColumnsWrapperData,
     IScreenValidation,
     ISmartScreenActions,
-    ModuleTypes
+    ModuleTypes,
+    SmartScreenScrollEvents
 } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
@@ -35,6 +36,7 @@ import { AmountSelectableBox } from './components/amount-selectable-box/amount-s
 import { ValidationsModule } from './components/validations/validations';
 import { ProgressBarModule } from './components/progress-bar/progress-bar';
 import { TextLineIcon } from './components/text-line-icon/text-line-icon';
+import { PubSub } from '../../core/blockchain/common/pub-sub';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -47,6 +49,7 @@ const renderModules = (
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
         validation?: IScreenValidation;
+        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
@@ -80,6 +83,7 @@ export const renderModule = (
         moduleColWrapperContainer?: any;
         moduleWrapperState?: string;
         validation?: IScreenValidation;
+        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => {
     let moduleJSX = null;
@@ -205,7 +209,8 @@ export const renderModule = (
             break;
 
         case ModuleTypes.CTA:
-            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta);
+            moduleJSX =
+                module?.cta && renderCta(module.cta, actions.handleCta, options?.scrollPubSub);
             break;
 
         case ModuleTypes.AMOUNT_INPUT:
@@ -282,7 +287,11 @@ export const renderModule = (
     }
 };
 
-export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
+export const renderCta = (
+    cta: ICta,
+    handleCTA: typeof handleCta,
+    scrollPubSub: PubSub<SmartScreenScrollEvents>
+) => {
     return (
         <Button
             primary={cta?.buttonProps?.primary}
@@ -299,7 +308,7 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
                 formatStyles(cta?.buttonProps?.buttonStyle)
             ]}
             textStyle={formatStyles(cta?.buttonProps?.textStyle)}
-            onPress={() => handleCTA(cta)}
+            onPress={() => handleCTA(cta, { scrollPubSub })}
         >
             {cta.label}
         </Button>

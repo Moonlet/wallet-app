@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { IReduxState } from '../../../state';
-import { ICta, ICtaAction } from '../../../../components/widgets/types';
+import { ICta, ICtaAction, SmartScreenScrollEvents } from '../../../../components/widgets/types';
 import { IAction } from '../../../types';
 import {
     getNrPendingTransactions,
@@ -52,6 +52,7 @@ import {
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
+import { PubSub } from '../../../../core/blockchain/common/pub-sub';
 
 export const handleCta = (
     cta: ICta,
@@ -63,6 +64,7 @@ export const handleCta = (
             icon?: string;
             website?: string;
         };
+        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     if (!cta) {
@@ -99,6 +101,7 @@ const handleCtaAction = async (
             icon?: string;
             website?: string;
         };
+        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => {
     const state = getState();
@@ -1047,6 +1050,11 @@ const handleCtaAction = async (
                     await LoadingModal.close();
                     break;
                 }
+
+                case 'gzilProposalCheckVotingOptions':
+                    options?.scrollPubSub &&
+                        options.scrollPubSub.emit(SmartScreenScrollEvents.SCROLL_TO_END, undefined);
+                    break;
 
                 default:
                     break;

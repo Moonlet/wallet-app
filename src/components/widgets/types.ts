@@ -42,6 +42,10 @@ export interface ISmartScreenActions {
     setScreenInputData?: typeof setScreenInputData;
 }
 
+export enum SmartScreenScrollEvents {
+    SCROLL_TO_END = 'scrollToEnd'
+}
+
 export interface IScreenUser {
     os: 'android' | 'ios' | 'web';
     deviceId: string;

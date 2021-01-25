@@ -30,7 +30,7 @@ interface IExternalProps {
     actions: ISmartScreenActions;
     blockchain: Blockchain;
     validation?: IScreenValidation;
-    scrollPubSub: PubSub<SmartScreenScrollEvents>;
+    pubSub: PubSub<SmartScreenScrollEvents>;
 }
 
 interface IState {
@@ -122,7 +122,7 @@ class WidgetsComponent extends React.Component<
                                     isWidgetExpanded,
                                     moduleColWrapperContainer: styles.moduleColWrapperContainer,
                                     validation: this.props.validation,
-                                    scrollPubSub: this.props.scrollPubSub
+                                    pubSub: this.props.pubSub
                                 })}
                             </View>
                         ))}
@@ -156,7 +156,7 @@ class WidgetsComponent extends React.Component<
                                 screenKey,
                                 moduleColWrapperContainer: styles.moduleColWrapperContainer,
                                 validation: this.props.validation,
-                                scrollPubSub: this.props.scrollPubSub
+                                pubSub: this.props.pubSub
                             })
                         )}
 
@@ -179,7 +179,7 @@ class WidgetsComponent extends React.Component<
                                 }
                             >
                                 {renderModule(module.info.data, context, actions, {
-                                    scrollPubSub: this.props.scrollPubSub
+                                    pubSub: this.props.pubSub
                                 })}
                             </TouchableOpacity>
                         )}

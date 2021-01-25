@@ -103,7 +103,7 @@ class SmartScreenComponent extends React.Component<
 
     private loadingTimeout: any;
     private keyboardAwareScrollView: any;
-    private scrollPubSub: PubSub<SmartScreenScrollEvents> = new PubSub();
+    private pubSub: PubSub<SmartScreenScrollEvents> = new PubSub();
 
     constructor(
         props: INavigationProps<INavigationParams> &
@@ -134,7 +134,7 @@ class SmartScreenComponent extends React.Component<
     }
 
     private subscribeScrollEvents() {
-        this.scrollPubSub.subscribe(
+        this.pubSub.subscribe(
             SmartScreenScrollEvents.SCROLL_TO_END,
             () => {
                 this.keyboardAwareScrollView &&
@@ -258,7 +258,7 @@ class SmartScreenComponent extends React.Component<
                 }}
                 blockchain={this.props.account.blockchain}
                 validation={validation}
-                scrollPubSub={this.scrollPubSub}
+                pubSub={this.pubSub}
             />
         );
     }

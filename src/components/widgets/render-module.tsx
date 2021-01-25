@@ -49,7 +49,7 @@ const renderModules = (
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
         validation?: IScreenValidation;
-        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
@@ -83,7 +83,7 @@ export const renderModule = (
         moduleColWrapperContainer?: any;
         moduleWrapperState?: string;
         validation?: IScreenValidation;
-        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => {
     let moduleJSX = null;
@@ -209,8 +209,7 @@ export const renderModule = (
             break;
 
         case ModuleTypes.CTA:
-            moduleJSX =
-                module?.cta && renderCta(module.cta, actions.handleCta, options?.scrollPubSub);
+            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta, options?.pubSub);
             break;
 
         case ModuleTypes.AMOUNT_INPUT:
@@ -290,7 +289,7 @@ export const renderModule = (
 export const renderCta = (
     cta: ICta,
     handleCTA: typeof handleCta,
-    scrollPubSub: PubSub<SmartScreenScrollEvents>
+    pubSub: PubSub<SmartScreenScrollEvents>
 ) => {
     return (
         <Button
@@ -308,7 +307,7 @@ export const renderCta = (
                 formatStyles(cta?.buttonProps?.buttonStyle)
             ]}
             textStyle={formatStyles(cta?.buttonProps?.textStyle)}
-            onPress={() => handleCTA(cta, { scrollPubSub })}
+            onPress={() => handleCTA(cta, { pubSub })}
         >
             {cta.label}
         </Button>

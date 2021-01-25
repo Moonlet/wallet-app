@@ -64,7 +64,7 @@ export const handleCta = (
             icon?: string;
             website?: string;
         };
-        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     if (!cta) {
@@ -101,7 +101,7 @@ const handleCtaAction = async (
             icon?: string;
             website?: string;
         };
-        scrollPubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenScrollEvents>;
     }
 ) => {
     const state = getState();
@@ -1052,8 +1052,8 @@ const handleCtaAction = async (
                 }
 
                 case 'gzilProposalCheckVotingOptions':
-                    options?.scrollPubSub &&
-                        options.scrollPubSub.emit(SmartScreenScrollEvents.SCROLL_TO_END, undefined);
+                    options?.pubSub &&
+                        options.pubSub.emit(SmartScreenScrollEvents.SCROLL_TO_END, undefined);
                     break;
 
                 default:

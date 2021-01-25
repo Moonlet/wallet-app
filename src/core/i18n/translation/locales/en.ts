@@ -511,7 +511,7 @@ export const translation: ITranslations = {
             WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',
             WAITING_TX_CONFIRM_CANCEL:
                 'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.',
-            SENDING_VOTE: 'Sending vote'
+            GOVERNANCE_VOTE: 'Sending vote'
         },
         SecurityChecks: {
             title: 'Security Warning!',

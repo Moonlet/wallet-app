@@ -864,68 +864,68 @@ const handleCtaAction = async (
                         break;
                     }
 
-                    let password = '';
+                    let msg;
+                    let sig;
 
-                    if (appWallet.type === WalletType.HD) {
-                        password = await PasswordModal.getPassword(
-                            translate('Password.pinTitleUnlock'),
-                            translate('Password.subtitleSignMessage'),
-                            { sensitive: true, showCloseButton: true }
-                        );
-                        await LoadingModal.open({
-                            type: TransactionMessageType.INFO,
-                            text: TransactionMessageText.SIGNING
-                        });
-                    }
+                    try {
+                        let password = '';
 
-                    const wallet: {
-                        signMessage: (
-                            blockchain: Blockchain,
-                            accountIndex: number,
-                            accountType: AccountType,
-                            message: string
-                        ) => Promise<any>;
-                    } =
-                        appWallet.type === WalletType.HW
-                            ? LedgerConnect
-                            : await WalletFactory.get(appWallet.id, appWallet.type, {
-                                  pass: password,
-                                  deviceVendor: appWallet.hwOptions?.deviceVendor,
-                                  deviceModel: appWallet.hwOptions?.deviceModel,
-                                  deviceId: appWallet.hwOptions?.deviceId,
-                                  connectionType: appWallet.hwOptions?.connectionType
-                              });
-
-                    const message = JSON.stringify({
-                        version: proposal.msg.version,
-                        timestamp: String(Math.floor(Date.now() / 1000)),
-                        token: gzilContractAddress,
-                        type: proposalType,
-                        payload: {
-                            proposal: proposal.authorIpfsHash,
-                            choice,
-                            metadata
+                        if (appWallet.type === WalletType.HD) {
+                            password = await PasswordModal.getPassword(
+                                translate('Password.pinTitleUnlock'),
+                                translate('Password.subtitleSignMessage'),
+                                { sensitive: true, showCloseButton: true }
+                            );
+                            await LoadingModal.open({
+                                type: TransactionMessageType.INFO,
+                                text: TransactionMessageText.SIGNING
+                            });
                         }
-                    });
 
-                    const signedMessage = await wallet.signMessage(
-                        account.blockchain,
-                        account.index,
-                        account.type,
-                        message
-                    );
+                        const wallet: {
+                            signMessage: (
+                                blockchain: Blockchain,
+                                accountIndex: number,
+                                accountType: AccountType,
+                                message: string
+                            ) => Promise<any>;
+                        } =
+                            appWallet.type === WalletType.HW
+                                ? LedgerConnect
+                                : await WalletFactory.get(appWallet.id, appWallet.type, {
+                                      pass: password,
+                                      deviceVendor: appWallet.hwOptions?.deviceVendor,
+                                      deviceModel: appWallet.hwOptions?.deviceModel,
+                                      deviceId: appWallet.hwOptions?.deviceId,
+                                      connectionType: appWallet.hwOptions?.connectionType
+                                  });
 
-                    let sig: any = signedMessage;
-                    try {
+                        const message = JSON.stringify({
+                            version: proposal.msg.version,
+                            timestamp: String(Math.floor(Date.now() / 1000)),
+                            token: gzilContractAddress,
+                            type: proposalType,
+                            payload: {
+                                proposal: proposal.authorIpfsHash,
+                                choice,
+                                metadata
+                            }
+                        });
+
+                        msg = message;
+
+                        const signedMessage = await wallet.signMessage(
+                            account.blockchain,
+                            account.index,
+                            account.type,
+                            message
+                        );
+
                         sig = JSON.parse(signedMessage);
-                    } catch {
-                        // no need to handle this
-                    }
 
-                    try {
                         await LoadingModal.open({
                             type: TransactionMessageType.INFO,
-                            text: TransactionMessageText.SENDING_VOTE
+                            text: TransactionMessageText.GOVERNANCE_VOTE
                         });
 
                         const sendVoteRes = await new ApiClient().governance.sendVote(
@@ -945,8 +945,6 @@ const handleCtaAction = async (
                                 translate('App.labels.errorOccured')
                             );
                         }
-
-                        // TODO: should trigger fetch data in order to load the new proposal's data
                     } catch (errorMessage) {
                         Dialog.info(
                             translate('App.labels.warning'),
@@ -958,7 +956,7 @@ const handleCtaAction = async (
                                 JSON.stringify({
                                     errorMessage,
                                     address: fromBech32Address(account.address),
-                                    msg: message,
+                                    msg,
                                     sig
                                 })
                             )

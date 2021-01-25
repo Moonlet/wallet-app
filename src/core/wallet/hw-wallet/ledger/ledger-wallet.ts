@@ -102,6 +102,7 @@ export class LedgerWallet implements IWallet {
     ): Promise<any> {
         try {
             await this.onAppOpened(blockchain);
+
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);
 

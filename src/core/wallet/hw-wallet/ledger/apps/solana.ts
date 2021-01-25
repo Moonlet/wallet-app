@@ -1,8 +1,10 @@
 import SolanaApp from './solana-interface';
 import { IHardwareWalletApp } from '../types';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
-import { signatureImport } from 'secp256k1';
-import { sortObject } from '../../../../utils/sort-object';
+import { StakeProgram } from '@solana/web3.js/src/stake-program';
+import { Transaction } from 'ethereumjs-tx';
+import { SolanaTransactionInstructionType } from '../../../../blockchain/solana/types';
+import bs58 from 'bs58';
 
 export class Solana implements IHardwareWalletApp {
     private app = null;
@@ -16,12 +18,11 @@ export class Solana implements IHardwareWalletApp {
      * @param {number} path derivation path, values accepted: live, legacy
      */
     public async getAddress(index: number, derivationIndex: number = 0, path: string) {
-        const derivationPath = [44, 118, 0, 0, index];
-        const address = await this.app.getAddressAndPubKey(derivationPath, 'cosmos');
-
+        const pubkeyBytes = await this.app.solana_ledger_get_pubkey();
+        const pubkey = bs58.encode(pubkeyBytes);
         return {
-            address: address.bech32_address,
-            publicKey: address.compressed_pk.toString('hex')
+            address: pubkey,
+            publicKey: pubkey
         };
     }
 
@@ -31,43 +32,44 @@ export class Solana implements IHardwareWalletApp {
         path: string,
         tx: IBlockchainTransaction
     ): Promise<any> => {
-        const derivationPath = [44, 118, 0, 0, index];
-        const response = await this.app.sign(
-            derivationPath,
-            JSON.stringify(sortObject(tx.additionalInfo.stdSignMsg))
-        );
-        const signatureBase64 = Buffer.from(signatureImport(response.signature)).toString('base64');
-        const publicBase64 = Buffer.from(tx.publicKey, 'hex').toString('base64');
+        // const client = Solana.getClient(tx.chainId) as SolanaClient;
 
-        const signedTx = {
-            tx: {
-                msg: tx.additionalInfo.stdSignMsg.msgs,
-                fee: tx.additionalInfo.stdSignMsg.fee,
-                signatures: [
-                    {
-                        signature: signatureBase64,
-                        pub_key: {
-                            type: 'tendermint/PubKeySecp256k1',
-                            value: publicBase64
-                        }
-                    }
-                ],
-                memo: tx.additionalInfo.memo
-            },
-            // The supported return types includes "block"(return after tx commit), "sync"(return afer CheckTx) and "async"(return right away).
-            mode: 'sync'
-        };
+        let transaction;
 
-        return signedTx;
+        switch (tx.additionalInfo.type) {
+            case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
+                transaction = StakeProgram.createAccountWithSeed(tx.additionalInfo.instructions[0]);
+                break;
+            case SolanaTransactionInstructionType.DELEGATE_STAKE:
+                transaction = StakeProgram.delegate(tx.additionalInfo.instructions[0]);
+                break;
+            case SolanaTransactionInstructionType.UNSTAKE:
+                transaction = StakeProgram.deactivate(tx.additionalInfo.instructions[0]);
+                break;
+            case SolanaTransactionInstructionType.SPLIT_STAKE:
+                transaction = tx.additionalInfo.splitTransaction;
+                break;
+            case SolanaTransactionInstructionType.WITHDRAW:
+                transaction = StakeProgram.withdraw(tx.additionalInfo.instructions[0]);
+                break;
+
+            case SolanaTransactionInstructionType.TRANSFER:
+                transaction = new Transaction();
+                transaction.add(tx.additionalInfo.instructions[0]);
+                break;
+        }
+
+        transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+
+        const sigBytes = await this.app.solana_ledger_sign_transaction(transaction);
+
+        const sigString = bs58.encode(sigBytes);
+        transaction.addSignature(tx.address, sigString);
+
+        return transaction.serialize();
     };
 
     public async getInfo() {
-        return new Promise(async (resolve, reject) => {
-            const info = await this.app.solana_ledger_get_version();
-            if (info.error_message !== 'No errors') {
-                return reject();
-            }
-            resolve(info);
-        });
+        return this.app.solana_ledger_get_version();
     }
 }

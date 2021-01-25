@@ -94,8 +94,6 @@ export class SearchLedgerComponent extends React.Component<
                 this.props.onSelect();
             }
 
-            await TransportFactory.connect(this.props.connectionType, item);
-
             this.scannerUnsubscribe.unsubscribe();
             this.props.onConnect(item);
         } catch (error) {

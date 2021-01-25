@@ -11,6 +11,7 @@ export class BLE {
     }
 
     public static async connect(deviceId): Promise<Transport> {
+        // console.log('device id connect ble', deviceId, transportOpenInProgress);
         if (transportOpenInProgress && transportPromise) {
             return transportPromise;
         }
@@ -19,6 +20,7 @@ export class BLE {
             transportPromise = TransportBLE.open(deviceId);
             transportOpenInProgress = false;
         } catch (e) {
+            // console.log('error connect', e);
             transportOpenInProgress = false;
             return Promise.reject(e);
         }

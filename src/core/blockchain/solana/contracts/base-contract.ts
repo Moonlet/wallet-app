@@ -6,7 +6,7 @@ import { Solana } from '..';
 import { IStakeAccountFormat } from '../types';
 import { PosBasicActionType } from '../../types/token';
 import CryptoJS from 'crypto-js';
-import bs58 from 'bs58';
+import { encode as bs58Encode, decode as bs58Decode } from 'bs58';
 import BigNumber from 'bignumber.js';
 
 export const stakeProgramId = 'Stake11111111111111111111111111111111111111';
@@ -55,11 +55,11 @@ function hash(h, v) {
 
 export const generateStakeAccount = (address: string, index: number): string => {
     const sha256 = CryptoJS.algo.SHA256.create();
-    hash(sha256, bs58.decode(address));
+    hash(sha256, bs58Decode(address));
     hash(sha256, `stake:${index}`);
-    hash(sha256, bs58.decode(stakeProgramId));
+    hash(sha256, bs58Decode(stakeProgramId));
     const pub = Buffer.from(sha256.finalize().toString(), 'hex');
-    return bs58.encode(pub);
+    return bs58Encode(pub);
 };
 
 const stakeAccountWithExactAmount = (

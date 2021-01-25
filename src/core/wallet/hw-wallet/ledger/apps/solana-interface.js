@@ -4,7 +4,7 @@ const nacl = require('tweetnacl');
 const assert = require('assert');
 
 const INS_GET_PUBKEY = 0x05;
-const INS_GET_VERSION = 0x04;
+const INS_GET_APP_CONFIGURATION = 0x04;
 const INS_SIGN_MESSAGE = 0x06;
 
 const P1_NON_CONFIRM = 0x00;
@@ -27,7 +27,8 @@ class Solana {
     /*
      * Helper for chunked send of large payloads
      */
-    async solana_send(instruction, p1, payload) {
+    async solana_send(transport, instruction, p1, payload) {
+        // console.log('solana send', instruction, p1, payload);
         var p2 = 0;
         var payload_offset = 0;
 
@@ -35,14 +36,7 @@ class Solana {
             while (payload.length - payload_offset > MAX_PAYLOAD) {
                 const buf = payload.slice(payload_offset, payload_offset + MAX_PAYLOAD);
                 payload_offset += MAX_PAYLOAD;
-                console.log('send', (p2 | P2_MORE).toString(16), buf.length.toString(16), buf);
-                const reply = await this.transport.send(
-                    LEDGER_CLA,
-                    instruction,
-                    p1,
-                    p2 | P2_MORE,
-                    buf
-                );
+                const reply = await transport.send(LEDGER_CLA, instruction, p1, p2 | P2_MORE, buf);
                 if (reply.length != 2) {
                     throw new TransportError(
                         'solana_send: Received unexpected reply payload',
@@ -53,9 +47,8 @@ class Solana {
             }
         }
 
-        const buf = payload ? payload.slice(payload_offset) : Buffer.alloc(4);
-        console.log('send', p2.toString(16), buf.length.toString(16), buf);
-        const reply = await this.transport.send(LEDGER_CLA, instruction, p1, p2, buf);
+        const buf = payload.slice(payload_offset);
+        const reply = await transport.send(LEDGER_CLA, instruction, p1, p2, buf);
 
         return reply.slice(0, reply.length - 2);
     }
@@ -92,29 +85,37 @@ class Solana {
         return derivation_path;
     }
 
-    solana_ledger_get_pubkey(derivation_path) {
-        return solana_send(this.transport, INS_GET_PUBKEY, P1_NON_CONFIRM, derivation_path);
-    }
-
-    solana_ledger_get_version() {
+    solana_ledger_get_pubkey() {
         return this.solana_send(
             this.transport,
             INS_GET_PUBKEY,
-            P1_NON_CONFIRM,
+            P1_CONFIRM,
             this.solana_derivation_path()
         );
     }
 
-    solana_ledger_sign_transaction(derivation_path, transaction) {
+    async solana_ledger_get_version() {
+        // console.log('solana_ledger_get_version');
+        return this.solana_send(
+            this.transport,
+            INS_GET_APP_CONFIGURATION,
+            P1_NON_CONFIRM,
+            Buffer.from('')
+        ).then(info => {
+            return `${info[2]}.${info[3]}.${info[4]}`;
+        });
+    }
+
+    solana_ledger_sign_transaction(transaction) {
         const msg_bytes = transaction.serializeMessage();
 
         // XXX: Ledger app only supports a single derivation_path per call ATM
         var num_paths = Buffer.alloc(1);
         num_paths.writeUInt8(1);
 
-        const payload = Buffer.concat([num_paths, derivation_path, msg_bytes]);
+        const payload = Buffer.concat([num_paths, this.solana_derivation_path(), msg_bytes]);
 
-        return solana_send(transport, INS_SIGN_MESSAGE, P1_CONFIRM, payload);
+        return this.solana_send(this.transport, INS_SIGN_MESSAGE, P1_CONFIRM, payload);
     }
 
     // (async () => {
@@ -178,10 +179,10 @@ class Solana {
     //         ])
     //     );
 
-    //     const sig_bytes = await solana_ledger_sign_transaction(transport, from_derivation_path, tx);
+    // const sig_bytes = await solana_ledger_sign_transaction(transport, from_derivation_path, tx);
 
-    //     const sig_string = bs58.encode(sig_bytes);
-    //     console.log('--- len:', sig_bytes.length, 'sig:', sig_string);
+    // const sig_string = bs58.encode(sig_bytes);
+    // console.log('--- len:', sig_bytes.length, 'sig:', sig_string);
 
     //     tx.addSignature(from_pubkey, sig_bytes);
     //     console.log('--- verifies:', tx.verifySignatures());

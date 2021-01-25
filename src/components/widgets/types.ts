@@ -42,6 +42,10 @@ export interface ISmartScreenActions {
     setScreenInputData?: typeof setScreenInputData;
 }
 
+export enum SmartScreenPubSubEvents {
+    SCROLL_TO_END = 'scrollToEnd'
+}
+
 export interface IScreenUser {
     os: 'android' | 'ios' | 'web';
     deviceId: string;
@@ -170,10 +174,12 @@ export interface IScreenModule {
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
         | ModuleTypes.MODULE_WRAPPER
         | ModuleTypes.ONE_LINE_TEXT_BANNER
+        | ModuleTypes.PROGRESS_BAR
         | ModuleTypes.SEPARATOR
         | ModuleTypes.SINGLE_BALANCE_ICON
         | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
         | ModuleTypes.STATIC_TEXT_COLUMNS_TOP_HEADER
+        | ModuleTypes.TEXT_LINE_ICON
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.THREE_LINES_ICON
         | ModuleTypes.TWO_LINES_TEXT_BANNER
@@ -237,10 +243,12 @@ export enum ModuleTypes {
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
     MODULE_WRAPPER = 'module-wrapper',
     ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
+    PROGRESS_BAR = 'progress-bar',
     SEPARATOR = 'separator',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
     STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
     STATIC_TEXT_COLUMNS_TOP_HEADER = 'static-text-columns-top-header',
+    TEXT_LINE_ICON = 'text-line-icon',
     THREE_LINES_CTA = '3-lines-cta',
     THREE_LINES_ICON = 'three-lines-icon',
     TWO_LINES_TEXT_BANNER = '2-lines-text-banner',
@@ -444,4 +452,19 @@ export interface IInputData {
 export interface IGradientWrapperData {
     gradient: string[];
     submodules: IScreenModule[];
+}
+
+export interface IProgressBarData {
+    percentage: number;
+    backgroundStyle?: IDataStyle;
+    barStyle?: IDataStyle;
+}
+
+export interface ITextLineIconData {
+    icon: {
+        value: IconValues;
+        style?: IDataStyle;
+    };
+    line: IData[];
+    lineStyle?: IDataStyle;
 }

@@ -21,6 +21,7 @@ import { cloneDeep } from 'lodash';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { splitStake } from '../../utils/balance';
 import { IValidator } from '../types/stats';
+import { sha256 } from 'js-sha256';
 
 export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public schnorrSign(msg: Buffer, privateKey: string): string {
@@ -42,7 +43,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
 
     public async signMessage(message: string, privateKey: string): Promise<string> {
         const publicKey = Zilliqa.account.privateToPublic(privateKey);
-        const signature = this.schnorrSign(Buffer.from(message, 'hex'), privateKey);
+        const signature = this.schnorrSign(Buffer.from(sha256(message), 'hex'), privateKey);
         return JSON.stringify({
             signature,
             publicKey,

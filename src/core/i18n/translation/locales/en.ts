@@ -510,7 +510,8 @@ export const translation: ITranslations = {
                 "{{address}} is a smart contract that doesn't accept normal transactions",
             WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',
             WAITING_TX_CONFIRM_CANCEL:
-                'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.'
+                'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.',
+            GOVERNANCE_VOTE: 'Sending vote'
         },
         SecurityChecks: {
             title: 'Security Warning!',

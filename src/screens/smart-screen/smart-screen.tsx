@@ -10,7 +10,7 @@ import {
     IScreenContext,
     IScreenValidation,
     IScreenWidget,
-    SmartScreenScrollEvents
+    SmartScreenPubSubEvents
 } from '../../components/widgets/types';
 import { IReduxState } from '../../redux/state';
 import { IScreenData, IScreensData } from '../../redux/ui/screens/data/state';
@@ -103,7 +103,7 @@ class SmartScreenComponent extends React.Component<
 
     private loadingTimeout: any;
     private keyboardAwareScrollView: any;
-    private pubSub: PubSub<SmartScreenScrollEvents> = new PubSub();
+    private pubSub: PubSub<SmartScreenPubSubEvents> = new PubSub();
 
     constructor(
         props: INavigationProps<INavigationParams> &
@@ -135,7 +135,7 @@ class SmartScreenComponent extends React.Component<
 
     private subscribePubSubEvents() {
         this.pubSub.subscribe(
-            SmartScreenScrollEvents.SCROLL_TO_END,
+            SmartScreenPubSubEvents.SCROLL_TO_END,
             () => {
                 this.keyboardAwareScrollView &&
                     this.keyboardAwareScrollView.scrollToEnd({ animated: true });

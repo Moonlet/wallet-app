@@ -13,7 +13,7 @@ import {
     IScreenWidget,
     ISmartScreenActions,
     ModuleTypes,
-    SmartScreenScrollEvents
+    SmartScreenPubSubEvents
 } from './types';
 import { Text } from '../../library';
 import { Blockchain } from '../../core/blockchain/types';
@@ -30,7 +30,7 @@ interface IExternalProps {
     actions: ISmartScreenActions;
     blockchain: Blockchain;
     validation?: IScreenValidation;
-    pubSub: PubSub<SmartScreenScrollEvents>;
+    pubSub: PubSub<SmartScreenPubSubEvents>;
 }
 
 interface IState {

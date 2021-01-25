@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { IReduxState } from '../../../state';
-import { ICta, ICtaAction, SmartScreenScrollEvents } from '../../../../components/widgets/types';
+import { ICta, ICtaAction, SmartScreenPubSubEvents } from '../../../../components/widgets/types';
 import { IAction } from '../../../types';
 import {
     getNrPendingTransactions,
@@ -64,7 +64,7 @@ export const handleCta = (
             icon?: string;
             website?: string;
         };
-        pubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenPubSubEvents>;
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     if (!cta) {
@@ -101,7 +101,7 @@ const handleCtaAction = async (
             icon?: string;
             website?: string;
         };
-        pubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenPubSubEvents>;
     }
 ) => {
     const state = getState();
@@ -1053,7 +1053,7 @@ const handleCtaAction = async (
 
                 case 'gzilProposalCheckVotingOptions':
                     options?.pubSub &&
-                        options.pubSub.emit(SmartScreenScrollEvents.SCROLL_TO_END, undefined);
+                        options.pubSub.emit(SmartScreenPubSubEvents.SCROLL_TO_END, undefined);
                     break;
 
                 default:

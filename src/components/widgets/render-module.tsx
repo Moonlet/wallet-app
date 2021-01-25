@@ -9,7 +9,7 @@ import {
     IScreenValidation,
     ISmartScreenActions,
     ModuleTypes,
-    SmartScreenScrollEvents
+    SmartScreenPubSubEvents
 } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
@@ -49,7 +49,7 @@ const renderModules = (
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
         validation?: IScreenValidation;
-        pubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenPubSubEvents>;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
@@ -83,7 +83,7 @@ export const renderModule = (
         moduleColWrapperContainer?: any;
         moduleWrapperState?: string;
         validation?: IScreenValidation;
-        pubSub?: PubSub<SmartScreenScrollEvents>;
+        pubSub?: PubSub<SmartScreenPubSubEvents>;
     }
 ) => {
     let moduleJSX = null;
@@ -289,7 +289,7 @@ export const renderModule = (
 export const renderCta = (
     cta: ICta,
     handleCTA: typeof handleCta,
-    pubSub: PubSub<SmartScreenScrollEvents>
+    pubSub: PubSub<SmartScreenPubSubEvents>
 ) => {
     return (
         <Button

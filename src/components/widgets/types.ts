@@ -42,7 +42,7 @@ export interface ISmartScreenActions {
     setScreenInputData?: typeof setScreenInputData;
 }
 
-export enum SmartScreenScrollEvents {
+export enum SmartScreenPubSubEvents {
     SCROLL_TO_END = 'scrollToEnd'
 }
 

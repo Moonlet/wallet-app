@@ -942,6 +942,7 @@ const handleCtaAction = async (
                     const proposalType = action.params?.params?.proposalType || 'vote';
 
                     const account = getSelectedAccount(state);
+                    const blockchain = account?.blockchain;
                     const selectedWallet = getSelectedWallet(state);
                     const appWallet = getWalletByPubKey(state, selectedWallet.walletPublicKey);
 
@@ -1000,7 +1001,7 @@ const handleCtaAction = async (
                         msg = message;
 
                         const signedMessage = await wallet.signMessage(
-                            account.blockchain,
+                            blockchain,
                             account.index,
                             account.type,
                             message
@@ -1019,7 +1020,11 @@ const handleCtaAction = async (
                                 msg: message,
                                 sig
                             },
-                            proposal.authorIpfsHash
+                            proposal.authorIpfsHash,
+                            {
+                                blockchain,
+                                chainId: String(getChainId(state, blockchain))
+                            }
                         );
 
                         if (sendVoteRes?.success === true) {

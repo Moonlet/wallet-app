@@ -1,4 +1,5 @@
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { Blockchain } from '../../blockchain/types';
 import { ApiClient } from './api-client';
 
 export class GovernanceApiClient {
@@ -14,12 +15,17 @@ export class GovernanceApiClient {
                 message: string;
             };
         },
-        authorIpfsHash: string
+        authorIpfsHash: string,
+        user: {
+            blockchain: Blockchain;
+            chainId: string;
+        }
     ) {
         try {
             const response = await this.apiClient.http.post('/governance/sendVote', {
                 ...payload,
-                authorIpfsHash
+                authorIpfsHash,
+                user
             });
 
             return response?.result;

@@ -83,7 +83,7 @@ export const getAccountFilteredTransactions = (
                             tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
                     tx.blockchain === blockchain &&
                     tx.chainId === chainId &&
-                    tx.token?.symbol.toLowerCase() === token.symbol.toLowerCase()
+                    tx.token?.symbol?.toLowerCase() === token?.symbol?.toLowerCase()
             )
             .sort(
                 (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>

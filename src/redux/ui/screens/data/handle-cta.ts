@@ -593,8 +593,11 @@ const handleCtaAction = async (
                         body,
                         button1Text,
                         button2Text,
-                        flowId,
-                        validators
+                        // flowId,
+                        validators,
+                        moonletValidatorId,
+                        amount,
+                        token
                     } = action?.params?.params;
 
                     Dialog.alert(
@@ -605,24 +608,55 @@ const handleCtaAction = async (
                             onPress: () => {
                                 // I don't care
 
-                                NavigationService.navigate(
-                                    'SmartScreen',
-                                    {
-                                        context: {
-                                            screen: 'StakeNow',
-                                            step: 'StakeNowQuestionnaire',
-                                            key: 'stake-now-questionnaire',
-                                            flowId,
-                                            params: {
-                                                validators
-                                            }
-                                        },
-                                        navigationOptions: {
-                                            title: 'Questionnaire'
-                                        }
-                                    },
-                                    'stake-now-questionnaire'
+                                // Remove Moonlet Validator
+
+                                const validatorsWithoutMoonlet = validators.filter(
+                                    vld =>
+                                        vld?.address?.toLowerCase() !==
+                                            moonletValidatorId?.toLowerCase() &&
+                                        vld?.id?.toLowerCase() !== moonletValidatorId?.toLowerCase()
                                 );
+
+                                const selectedValidators = [];
+                                for (const v of validatorsWithoutMoonlet) {
+                                    selectedValidators.push(
+                                        buildDummyValidator(
+                                            v?.address || v?.id,
+                                            v.name,
+                                            v?.icon,
+                                            v?.website
+                                        )
+                                    );
+                                }
+
+                                // Open process tx
+                                delegate(
+                                    getSelectedAccount(state),
+                                    amount,
+                                    selectedValidators,
+                                    token,
+                                    undefined, // feeOptions
+                                    undefined
+                                )(dispatch, getState);
+
+                                // NavigationService.navigate(
+                                //     'SmartScreen',
+                                //     {
+                                //         context: {
+                                //             screen: 'StakeNow',
+                                //             step: 'StakeNowQuestionnaire',
+                                //             key: 'stake-now-questionnaire',
+                                //             flowId,
+                                //             params: {
+                                //                 validators
+                                //             }
+                                //         },
+                                //         navigationOptions: {
+                                //             title: 'Questionnaire'
+                                //         }
+                                //     },
+                                //     'stake-now-questionnaire'
+                                // );
                             }
                         },
                         {
@@ -846,6 +880,54 @@ const handleCtaAction = async (
                         },
                         screenKey
                     );
+                    break;
+                }
+
+                case 'navigateToStakeNowPartToMoonletCheckAmount': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+                    const minAmountToStake = action.params?.params?.minAmountToStake || 100;
+
+                    if (new BigNumber(amount).isGreaterThan(new BigNumber(minAmountToStake))) {
+                        handleCta(
+                            {
+                                type: 'callAction',
+                                params: {
+                                    action: 'navigateToStakeNowPartToMoonlet',
+                                    params: {
+                                        step: action.params?.params?.step,
+                                        validators: action.params?.params?.validators,
+                                        flowId: action.params?.params?.flowId
+                                    }
+                                }
+                            },
+                            options
+                        )(dispatch, getState);
+                    } else {
+                        handleCta({
+                            type: 'callAction',
+                            params: {
+                                action: 'delegateToValidatorV2',
+                                params: {
+                                    step: action.params?.params?.step,
+                                    validators: action.params?.params?.validators,
+                                    flowId: action.params?.params?.flowId,
+                                    token: action.params?.params?.token
+                                }
+                            }
+                        })(dispatch, getState);
+                    }
                     break;
                 }
 

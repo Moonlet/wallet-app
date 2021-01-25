@@ -130,10 +130,10 @@ class SmartScreenComponent extends React.Component<
 
         this.props.fetchScreenData(this.state.context);
 
-        this.subscribeScrollEvents();
+        this.subscribePubSubEvents();
     }
 
-    private subscribeScrollEvents() {
+    private subscribePubSubEvents() {
         this.pubSub.subscribe(
             SmartScreenScrollEvents.SCROLL_TO_END,
             () => {

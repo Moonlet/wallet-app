@@ -53,6 +53,12 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
             NANO_X: {
                 connectionTypes: [HWConnection.BLE, HWConnection.USB]
             }
+        },
+        SOLANA: {
+            NANO_S: nanosConnectionConfig,
+            NANO_X: {
+                connectionTypes: [HWConnection.BLE, HWConnection.USB]
+            }
         }
     },
     ios: {
@@ -66,6 +72,9 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
             NANO_X: nanoXConnectionConfigBLE
         },
         CELO: {
+            NANO_X: nanoXConnectionConfigBLE
+        },
+        SOLANA: {
             NANO_X: nanoXConnectionConfigBLE
         }
     },
@@ -95,6 +104,11 @@ export const ledgerSetupConfig = async (): Promise<ILedgerTransportConfig> => {
         if (!isFeatureActive(RemoteFeature.CELO)) {
             delete ledgerConfigInternal.android.CELO;
             delete ledgerConfigInternal.ios.CELO;
+        }
+
+        if (!isFeatureActive(RemoteFeature.SOLANA)) {
+            delete ledgerConfigInternal.android.SOLANA;
+            delete ledgerConfigInternal.ios.SOLANA;
         }
 
         return resolve(ledgerConfigInternal);

@@ -2,8 +2,9 @@ import SolanaApp from './solana-interface';
 import { IHardwareWalletApp } from '../types';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
 import { StakeProgram } from '@solana/web3.js/src/stake-program';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from '../../../../blockchain/solana/types';
+import { PublicKey } from '@solana/web3.js/src/publickey';
 import bs58 from 'bs58';
 
 export class Solana implements IHardwareWalletApp {
@@ -59,13 +60,13 @@ export class Solana implements IHardwareWalletApp {
                 break;
         }
 
+        const addressPublicKey = new PublicKey(tx.address);
         transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+        transaction.feePayer = addressPublicKey;
 
         const sigBytes = await this.app.solana_ledger_sign_transaction(transaction);
 
-        const sigString = bs58.encode(sigBytes);
-        transaction.addSignature(tx.address, sigString);
-
+        transaction.addSignature(addressPublicKey, sigBytes);
         return transaction.serialize();
     };
 

@@ -1,7 +1,4 @@
 const bs58 = require('bs58');
-const nacl = require('tweetnacl');
-// const solana = require('@solana/web3.js');
-const assert = require('assert');
 
 const INS_GET_PUBKEY = 0x05;
 const INS_GET_APP_CONFIGURATION = 0x04;
@@ -28,7 +25,6 @@ class Solana {
      * Helper for chunked send of large payloads
      */
     async solana_send(transport, instruction, p1, payload) {
-        // console.log('solana send', instruction, p1, payload);
         var p2 = 0;
         var payload_offset = 0;
 
@@ -95,7 +91,6 @@ class Solana {
     }
 
     async solana_ledger_get_version() {
-        // console.log('solana_ledger_get_version');
         return this.solana_send(
             this.transport,
             INS_GET_APP_CONFIGURATION,
@@ -107,86 +102,21 @@ class Solana {
     }
 
     solana_ledger_sign_transaction(transaction) {
-        const msg_bytes = transaction.serializeMessage();
+        let msg_bytes;
+        try {
+            msg_bytes = transaction.serializeMessage();
+            // XXX: Ledger app only supports a single derivation_path per call ATM
+            var num_paths = Buffer.alloc(1);
 
-        // XXX: Ledger app only supports a single derivation_path per call ATM
-        var num_paths = Buffer.alloc(1);
-        num_paths.writeUInt8(1);
+            num_paths.writeUInt8(1);
 
-        const payload = Buffer.concat([num_paths, this.solana_derivation_path(), msg_bytes]);
+            const payload = Buffer.concat([num_paths, this.solana_derivation_path(), msg_bytes]);
 
-        return this.solana_send(this.transport, INS_SIGN_MESSAGE, P1_CONFIRM, payload);
+            return this.solana_send(this.transport, INS_SIGN_MESSAGE, P1_CONFIRM, payload);
+        } catch (e) {
+            return;
+        }
     }
-
-    // (async () => {
-    //     var transport = await Transport.create();
-
-    //     const from_derivation_path = solana_derivation_path();
-    //     const from_pubkey_bytes = await solana_ledger_get_pubkey(transport, from_derivation_path);
-    //     const from_pubkey_string = bs58.encode(from_pubkey_bytes);
-    //     console.log('---', from_pubkey_string);
-
-    //     const to_derivation_path = solana_derivation_path(1);
-    //     const to_pubkey_bytes = await solana_ledger_get_pubkey(transport, to_derivation_path);
-    //     const to_pubkey_string = bs58.encode(to_pubkey_bytes);
-    //     console.log('---', to_pubkey_string);
-
-    //     const from_pubkey = new solana.PublicKey(from_pubkey_string);
-    //     const to_pubkey = new solana.PublicKey(to_pubkey_string);
-    //     var tx = solana.SystemProgram.transfer({
-    //         fromPubkey: from_pubkey,
-    //         toPubkey: to_pubkey,
-    //         lamports: 42
-    //     });
-
-    //     // XXX: Fake blockhash so this example doesn't need a
-    //     // network connection. It should be queried from the
-    //     // cluster in normal use.
-    //     tx.recentBlockhash = bs58.encode(
-    //         Buffer.from([
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3,
-    //             3
-    //         ])
-    //     );
-
-    // const sig_bytes = await solana_ledger_sign_transaction(transport, from_derivation_path, tx);
-
-    // const sig_string = bs58.encode(sig_bytes);
-    // console.log('--- len:', sig_bytes.length, 'sig:', sig_string);
-
-    //     tx.addSignature(from_pubkey, sig_bytes);
-    //     console.log('--- verifies:', tx.verifySignatures());
-    // })().catch(e => console.log(e));
 }
 
 exports.default = Solana;

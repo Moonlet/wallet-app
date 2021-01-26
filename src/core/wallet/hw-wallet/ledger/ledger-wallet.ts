@@ -155,7 +155,9 @@ export class LedgerWallet implements IWallet {
 
             // detect if app is opened
             const appOpenedTimeout = setTimeout(() => cb(LedgerSignEvent.OPEN_APP), 2000);
+
             await this.onAppOpened(blockchain);
+
             terminateIfNeeded();
             clearTimeout(appOpenedTimeout);
             cb(LedgerSignEvent.APP_OPENED);

@@ -692,6 +692,9 @@ export const translation: ITranslations = {
             reviewTransaction: 'Review transaction',
             reviewTransactionDevice:
                 'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.',
+            reviewMessage: 'Review message',
+            reviewMessageDevice:
+                'Review {{blockchain}} message on your {{deviceModel}} and confirm it.',
 
             transactionDeclined: 'Transaction declined',
             transactionDeclinedDetails: 'Either try again or cancel this operation.'

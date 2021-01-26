@@ -16,12 +16,19 @@ export enum LedgerSignEvent {
     DEVICE_CONNECTED = 'DEVICE_CONNECTED',
     OPEN_APP = 'OPEN_APP',
     APP_OPENED = 'APP_OPENED',
+    DONE = 'DONE',
+    ERROR = 'ERROR',
+    TERMINATED = 'TERMINATED',
+
+    // TX
     SIGN_TX = 'SIGN_TX',
     TX_SIGNED = 'TX_SIGNED',
     TX_SIGN_DECLINED = 'TX_SIGN_DECLINED',
-    DONE = 'DONE',
-    ERROR = 'ERROR',
-    TERMINATED = 'TERMINATED'
+
+    // MSG
+    SIGN_MSG = 'SIGN_MSG',
+    MSG_SIGNED = 'MSG_SIGNED',
+    MSG_SIGN_DECLINED = 'MSG_SIGN_DECLINED'
 }
 
 export class LedgerWallet implements IWallet {
@@ -245,7 +252,7 @@ export class LedgerWallet implements IWallet {
             cb(LedgerSignEvent.APP_OPENED);
 
             // review message
-            cb(LedgerSignEvent.SIGN_TX);
+            cb(LedgerSignEvent.SIGN_MSG);
             if (this.connectionType === HWConnection.USB) {
                 transport = await this.getTransport();
             }
@@ -253,7 +260,7 @@ export class LedgerWallet implements IWallet {
             terminateIfNeeded();
             const signature = await app.signMessage(accountIndex, 0, undefined, msg);
             terminateIfNeeded();
-            cb(LedgerSignEvent.TX_SIGNED);
+            cb(LedgerSignEvent.MSG_SIGNED);
 
             cb(LedgerSignEvent.DONE);
             return signature;
@@ -261,7 +268,7 @@ export class LedgerWallet implements IWallet {
             if (e !== 'TERMINATED') {
                 const message = e?.message || '';
                 if (message?.indexOf('denied by the user') >= 0) {
-                    cb(LedgerSignEvent.TX_SIGN_DECLINED);
+                    cb(LedgerSignEvent.MSG_SIGN_DECLINED);
                 } else {
                     cb(LedgerSignEvent.ERROR);
                 }

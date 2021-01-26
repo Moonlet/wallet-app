@@ -29,6 +29,7 @@ import { delay } from '../../core/utils/time';
 import { AnimatedValue } from 'react-navigation';
 import { SignDeclined } from './components/sign-declined/sign-declined';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ReviewMessage } from './components/review-message/review-message';
 
 const ANIMATION_TIME = 300;
 
@@ -48,7 +49,8 @@ enum ScreenStep {
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
     SUCCESS_CONNECT = 'SUCCESS_CONNECT',
     TROUBLESHOOTING = 'TROUBLESHOOTING',
-    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION'
+    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION',
+    REVIEW_MESSAGE = 'REVIEW_MESSAGE'
 }
 
 enum LedgerFlow {
@@ -193,7 +195,7 @@ export class LedgerConnectComponent extends React.Component<
             connectionType,
             visible: true,
             step: ScreenStep.SEARCH_LEDGER,
-            currentFlow: LedgerFlow.SIGN_TRANSACTION, // SIGN_MESSAGE,
+            currentFlow: LedgerFlow.SIGN_MESSAGE,
             stepContainerTranslateAnimation: new Animated.Value(0)
         });
 
@@ -259,10 +261,10 @@ export class LedgerConnectComponent extends React.Component<
                         case LedgerSignEvent.OPEN_APP:
                             this.selectStep(ScreenStep.OPEN_APP);
                             break;
-                        case LedgerSignEvent.SIGN_TX:
-                            this.selectStep(ScreenStep.REVIEW_TRANSACTION);
+                        case LedgerSignEvent.SIGN_MSG:
+                            this.selectStep(ScreenStep.REVIEW_MESSAGE);
                             break;
-                        case LedgerSignEvent.TX_SIGN_DECLINED:
+                        case LedgerSignEvent.MSG_SIGN_DECLINED:
                     }
                 },
                 terminate => (this.ledgerSignTerminate = terminate)
@@ -371,6 +373,10 @@ export class LedgerConnectComponent extends React.Component<
             // Review Transaction Flow
             // todo
             await this.selectStep(ScreenStep.REVIEW_TRANSACTION);
+            this.resultDeferred.resolve();
+        } else if (this.state.currentFlow === LedgerFlow.SIGN_MESSAGE) {
+            // Review Message flow
+            await this.selectStep(ScreenStep.REVIEW_MESSAGE);
             this.resultDeferred.resolve();
         } else {
             // Connect Ledger - default flow
@@ -574,6 +580,14 @@ export class LedgerConnectComponent extends React.Component<
             case ScreenStep.REVIEW_TRANSACTION:
                 return (
                     <ReviewTransaction
+                        blockchain={this.state.blockchain}
+                        deviceModel={this.state.deviceModel}
+                        connectionType={this.state.connectionType}
+                    />
+                );
+            case ScreenStep.REVIEW_MESSAGE:
+                return (
+                    <ReviewMessage
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}

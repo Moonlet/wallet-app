@@ -70,4 +70,13 @@ export class Cosmos implements IHardwareWalletApp {
             resolve(info);
         });
     }
+
+    public signMessage = async (
+        index: number,
+        derivationIndex: number,
+        path: string,
+        message: string
+    ): Promise<any> => {
+        throw new Error('signMessage NOT IMPLEMENTED');
+    };
 }

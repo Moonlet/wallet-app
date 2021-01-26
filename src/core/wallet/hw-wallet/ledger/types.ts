@@ -13,4 +13,10 @@ export interface IHardwareWalletApp {
         txRaw: IBlockchainTransaction
     ): Promise<any>;
     getInfo();
+    signMessage(
+        index: number,
+        derivationIndex: number,
+        path: string,
+        message: string
+    ): Promise<any>;
 }

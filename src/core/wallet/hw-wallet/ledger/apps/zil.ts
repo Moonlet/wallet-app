@@ -61,4 +61,15 @@ export class Zil {
     public getInfo() {
         return this.app.getVersion();
     }
+
+    public signMessage = async (
+        index: number,
+        derivationIndex: number,
+        path: string,
+        message: string
+    ): Promise<string> => {
+        const signature = await this.app.signHash(index, message);
+
+        return signature;
+    };
 }

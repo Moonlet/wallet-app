@@ -53,11 +53,13 @@ enum ScreenStep {
 
 enum LedgerFlow {
     CREATE_WALLET = 'CREATE_WALLET',
-    SIGN_TRANSACTION = 'SIGN_TRANSACTION'
+    SIGN_TRANSACTION = 'SIGN_TRANSACTION',
+    SIGN_MESSAGE = 'SIGN_MESSAGE'
 }
 
 export interface IReduxProps {
     wallet: IWalletState;
+    account: IAccountState;
 }
 
 interface IState {
@@ -67,6 +69,7 @@ interface IState {
     blockchain: Blockchain;
     accountIndex: number;
     transaction: IBlockchainTransaction;
+    message: string;
     deviceModel: HWModel;
     deviceId: string;
     connectionType: HWConnection;
@@ -181,21 +184,20 @@ export class LedgerConnectComponent extends React.Component<
         this.resultDeferred = new Deferred();
         const { deviceModel, deviceId, connectionType } = this.props.wallet.hwOptions;
 
-        const wallet = await HWWalletFactory.get(
-            HWVendor.LEDGER,
+        this.setState({
+            blockchain,
+            accountIndex,
+            message,
             deviceModel,
             deviceId,
-            connectionType
-        );
-        const walletCredentials = await wallet.getWalletCredentials();
+            connectionType,
+            visible: true,
+            step: ScreenStep.SEARCH_LEDGER,
+            currentFlow: LedgerFlow.SIGN_TRANSACTION, // SIGN_MESSAGE,
+            stepContainerTranslateAnimation: new Animated.Value(0)
+        });
 
-        const signature = await getBlockchain(blockchain).transaction.signMessage(
-            message,
-            walletCredentials.privateKey
-        );
-
-        this.resultDeferred.resolve(signature);
-
+        this.trySignMessage();
         return this.resultDeferred.promise;
     }
 
@@ -227,6 +229,53 @@ export class LedgerConnectComponent extends React.Component<
             .then(signature => {
                 this.setState({ visible: false });
                 this.resultDeferred.resolve(signature);
+            })
+            .catch(err => {
+                if (err !== 'TERMINATED') {
+                    const message = err?.message || '';
+                    if (message?.indexOf('denied by the user') >= 0) {
+                        this.selectStep(ScreenStep.SIGN_DECLINED);
+                    } else {
+                        this.selectStep(ScreenStep.ERROR_SCREEN);
+                    }
+                }
+            });
+    }
+
+    private trySignMessage() {
+        this.selectStep(ScreenStep.SEARCH_LEDGER);
+
+        this.getLegderWalletInstance()
+            .smartSignMessage(
+                this.state.blockchain,
+                this.state.accountIndex,
+                this.state.message,
+                (event: LedgerSignEvent) => {
+                    switch (event) {
+                        case LedgerSignEvent.LOADING:
+                        case LedgerSignEvent.CONNECT_DEVICE:
+                            this.selectStep(ScreenStep.SEARCH_LEDGER);
+                            break;
+                        case LedgerSignEvent.OPEN_APP:
+                            this.selectStep(ScreenStep.OPEN_APP);
+                            break;
+                        case LedgerSignEvent.SIGN_TX:
+                            this.selectStep(ScreenStep.REVIEW_TRANSACTION);
+                            break;
+                        case LedgerSignEvent.TX_SIGN_DECLINED:
+                    }
+                },
+                terminate => (this.ledgerSignTerminate = terminate)
+            )
+            .then(signature => {
+                const { account } = this.props;
+
+                const messageSignature = getBlockchain(
+                    account.blockchain
+                ).transaction.getMessageSignature(account, this.state.message, signature);
+
+                this.setState({ visible: false });
+                this.resultDeferred.resolve(messageSignature);
             })
             .catch(err => {
                 if (err !== 'TERMINATED') {
@@ -283,6 +332,7 @@ export class LedgerConnectComponent extends React.Component<
             blockchain: undefined,
             accountIndex: undefined,
             transaction: undefined,
+            message: undefined,
             connectionType: undefined,
             deviceModel: undefined,
             currentFlow: undefined,

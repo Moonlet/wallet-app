@@ -139,4 +139,13 @@ export class Near {
         const [major, minor, patch] = Array.from(response);
         return `${major}.${minor}.${patch}`;
     }
+
+    public signMessage = async (
+        index: number,
+        derivationIndex: number,
+        path: string,
+        message: string
+    ): Promise<any> => {
+        throw new Error('signMessage NOT IMPLEMENTED');
+    };
 }

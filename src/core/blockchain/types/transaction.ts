@@ -30,6 +30,9 @@ export abstract class AbstractBlockchainTransactionUtils {
     ): Promise<IBlockchainTransaction[]> {
         throw new Error('Not Implemented');
     }
+    public getMessageSignature(account: IAccountState, message: string, signature: string): any {
+        throw new Error('Not Implemented');
+    }
 }
 
 // tslint:disable-next-line:no-shadowed-variable

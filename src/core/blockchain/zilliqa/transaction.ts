@@ -22,6 +22,7 @@ import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { splitStake } from '../../utils/balance';
 import { IValidator } from '../types/stats';
 import { sha256 } from 'js-sha256';
+import { IAccountState } from '../../../redux/wallets/state';
 
 export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public schnorrSign(msg: Buffer, privateKey: string): string {
@@ -302,5 +303,21 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
             default:
                 return TransactionStatus.FAILED;
         }
+    }
+
+    public getMessageSignature(
+        account: IAccountState,
+        message: string,
+        signature: string
+    ): {
+        signature: string;
+        publicKey: string;
+        message: string;
+    } {
+        return {
+            signature,
+            publicKey: account.publicKey,
+            message
+        };
     }
 }

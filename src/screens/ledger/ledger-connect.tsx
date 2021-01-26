@@ -3,12 +3,13 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { LedgerConnectComponent, IReduxProps } from './ledger-connect-component';
 import stylesProvider from './styles';
 import { IReduxState } from '../../redux/state';
-import { getSelectedWallet } from '../../redux/wallets/selectors';
+import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state: IReduxState): IReduxProps => {
     return {
-        wallet: getSelectedWallet(state)
+        wallet: getSelectedWallet(state),
+        account: getSelectedAccount(state)
     };
 };
 

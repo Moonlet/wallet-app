@@ -8,7 +8,8 @@ import {
     IScreenModuleColumnsWrapperData,
     IScreenValidation,
     ISmartScreenActions,
-    ModuleTypes
+    ModuleTypes,
+    SmartScreenPubSubEvents
 } from './types';
 import { ImageBanner } from './components/image-banner/image-banner';
 import { StaticTextColTopHeader } from './components/static-text-col-top-header/static-text-col-top-header';
@@ -33,6 +34,9 @@ import { InputModule } from './components/input/input';
 import { GradientWrapper } from './components/gradient-wrapper/gradient-wrapper';
 import { AmountSelectableBox } from './components/amount-selectable-box/amount-selectable-box';
 import { ValidationsModule } from './components/validations/validations';
+import { ProgressBarModule } from './components/progress-bar/progress-bar';
+import { TextLineIcon } from './components/text-line-icon/text-line-icon';
+import { PubSub } from '../../core/blockchain/common/pub-sub';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -45,6 +49,7 @@ const renderModules = (
         colWrapperStyle?: any;
         moduleColWrapperContainer?: any;
         validation?: IScreenValidation;
+        pubSub?: PubSub<SmartScreenPubSubEvents>;
     }
 ) => {
     const renderedModulesJSX = modules.map((m: IScreenModule, i: number) => (
@@ -78,6 +83,7 @@ export const renderModule = (
         moduleColWrapperContainer?: any;
         moduleWrapperState?: string;
         validation?: IScreenValidation;
+        pubSub?: PubSub<SmartScreenPubSubEvents>;
     }
 ) => {
     let moduleJSX = null;
@@ -203,7 +209,7 @@ export const renderModule = (
             break;
 
         case ModuleTypes.CTA:
-            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta);
+            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta, options?.pubSub);
             break;
 
         case ModuleTypes.AMOUNT_INPUT:
@@ -230,6 +236,16 @@ export const renderModule = (
             );
             break;
 
+        case ModuleTypes.TEXT_LINE_ICON:
+            moduleJSX = (
+                <TextLineIcon
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
+            break;
+
         case ModuleTypes.VALIDATIONS:
             moduleJSX = (
                 <ValidationsModule
@@ -240,6 +256,10 @@ export const renderModule = (
                     screenValidation={options?.validation}
                 />
             );
+            break;
+
+        case ModuleTypes.PROGRESS_BAR:
+            moduleJSX = <ProgressBarModule module={module} />;
             break;
 
         default:
@@ -266,7 +286,11 @@ export const renderModule = (
     }
 };
 
-export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
+export const renderCta = (
+    cta: ICta,
+    handleCTA: typeof handleCta,
+    pubSub: PubSub<SmartScreenPubSubEvents>
+) => {
     return (
         <Button
             primary={cta?.buttonProps?.primary}
@@ -283,7 +307,7 @@ export const renderCta = (cta: ICta, handleCTA: typeof handleCta) => {
                 formatStyles(cta?.buttonProps?.buttonStyle)
             ]}
             textStyle={formatStyles(cta?.buttonProps?.textStyle)}
-            onPress={() => handleCTA(cta)}
+            onPress={() => handleCTA(cta, { pubSub })}
         >
             {cta.label}
         </Button>

@@ -158,6 +158,7 @@ class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, ISta
                     setScreenInputData: this.props.setScreenInputData
                 }}
                 blockchain={this.props.account.blockchain}
+                pubSub={undefined}
             />
         );
     }

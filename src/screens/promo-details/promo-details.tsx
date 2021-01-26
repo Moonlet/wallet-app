@@ -45,7 +45,7 @@ class PromoDetailsScreenComponent extends React.Component<
                         handleCta: this.props.handleCta
                     })}
                 </ScrollView>
-                {this.props?.cta && renderCta(this.props.cta, this.props.handleCta)}
+                {this.props?.cta && renderCta(this.props.cta, this.props.handleCta, undefined)}
             </View>
         );
     }

@@ -3,8 +3,7 @@ import { Blockchain, ChainIdType, IBlockchainAccountUtils } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
-
-import bs58 from 'bs58';
+import { encode as bs58Encode, decode as bs58Decode } from 'bs58';
 import * as nacl from 'tweetnacl';
 import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
@@ -20,7 +19,7 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
 
     public getPrivateKeyFromDerived(derivedKey: HDKeyEd25519): string {
         const keyPair = nacl.sign.keyPair.fromSeed(derivedKey.key);
-        return bs58.encode(Buffer.from(keyPair.secretKey));
+        return bs58Encode(Buffer.from(keyPair.secretKey));
     }
 
     public isValidChecksumAddress(address: string): boolean {
@@ -36,8 +35,8 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
     }
 
     public privateToPublic(privateKey: string): string {
-        const keyPair = nacl.sign.keyPair.fromSecretKey(bs58.decode(privateKey));
-        return 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey));
+        const keyPair = nacl.sign.keyPair.fromSecretKey(bs58Decode(privateKey));
+        return 'ed25519:' + bs58Encode(Buffer.from(keyPair.publicKey));
     }
 
     public privateToAddress(privateKey: string): string {
@@ -45,9 +44,9 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
     }
 
     public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
-        const keyPair = nacl.sign.keyPair.fromSecretKey(bs58.decode(privateKey));
-        const pk = bs58.encode(Buffer.from(keyPair.publicKey));
-        const address = Buffer.from(bs58.decode(pk)).toString('hex');
+        const keyPair = nacl.sign.keyPair.fromSecretKey(bs58Decode(privateKey));
+        const pk = bs58Encode(Buffer.from(keyPair.publicKey));
+        const address = Buffer.from(bs58Decode(pk)).toString('hex');
 
         return {
             index: 0,

@@ -17,6 +17,7 @@ export enum IconValues {
     CHECK_BOX_THICKED = 'check-box-thicked',
     CHECK_BOX = 'check-box',
     CHECK = 'check',
+    CHECKMARK_CIRCLE = 'checkmark-circle',
     CHEVRON_DOWN = 'chevron-down',
     CHEVRON_DOWN_BIGGER = 'chevron-down-2',
     CHEVRON_RIGHT = 'chevron-right',

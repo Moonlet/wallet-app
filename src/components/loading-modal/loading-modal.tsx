@@ -15,4 +15,6 @@ export class LoadingModal {
     public static close = LoadingModalComponent.close;
 
     public static showMessage = LoadingModalComponent.showMessage;
+
+    public static showMessageWithIcon = LoadingModalComponent.showMessageWithIcon;
 }

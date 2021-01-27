@@ -512,7 +512,8 @@ export const translation: ITranslations = {
             WAITING_TX_CONFIRM_CANCEL:
                 'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.',
             GOVERNANCE_SIGN: 'Signing vote',
-            GOVERNANCE_VOTE: 'Sending vote'
+            GOVERNANCE_VOTING: 'Sending vote',
+            GOVERNANCE_VOTED: 'Voted successfully'
         },
         SecurityChecks: {
             title: 'Security Warning!',

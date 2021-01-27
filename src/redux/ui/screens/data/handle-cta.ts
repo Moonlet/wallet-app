@@ -53,6 +53,8 @@ import { LoadingModal } from '../../../../components/loading-modal/loading-modal
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { PubSub } from '../../../../core/blockchain/common/pub-sub';
+import { IconValues } from '../../../../components/icon/values';
+import { delay } from '../../../../core/utils/time';
 
 export const handleCta = (
     cta: ICta,
@@ -1014,7 +1016,7 @@ const handleCtaAction = async (
 
                         await LoadingModal.open({
                             type: TransactionMessageType.INFO,
-                            text: TransactionMessageText.GOVERNANCE_VOTE
+                            text: TransactionMessageText.GOVERNANCE_VOTING
                         });
 
                         const sendVoteRes = await new ApiClient().governance.sendVote(
@@ -1031,6 +1033,17 @@ const handleCtaAction = async (
                         );
 
                         if (sendVoteRes?.success === true) {
+                            await LoadingModal.showMessageWithIcon(
+                                {
+                                    type: TransactionMessageType.INFO,
+                                    text: TransactionMessageText.GOVERNANCE_VOTED
+                                },
+                                IconValues.CHECKMARK_CIRCLE
+                            );
+
+                            // Wait 2 seconds in order to display Success message
+                            await delay(2000);
+
                             NavigationService.navigate('Dashboard', {});
                         } else {
                             Dialog.info(

@@ -10,8 +10,11 @@ import { Blockchain, TransactionMessageType } from '../../core/blockchain/types'
 import { Deferred } from '../../core/utils/deferred';
 import { ILoadingModalMessage } from './types';
 import { setInstance, waitForInstance } from '../../core/utils/class-registry';
+import { IconValues } from '../icon/values';
+import Icon from '../icon/icon';
+import { normalize } from '../../styles/dimensions';
 
-export interface IReduxProps {
+interface IReduxProps {
     blockchain: Blockchain;
 }
 
@@ -21,9 +24,10 @@ export const mapStateToProps = (state: IReduxState) => {
     };
 };
 
-export interface IState {
+interface IState {
     isVisible: boolean;
     message: ILoadingModalMessage;
+    icon: IconValues;
 }
 
 export class LoadingModalComponent extends React.Component<
@@ -37,7 +41,8 @@ export class LoadingModalComponent extends React.Component<
         setInstance(LoadingModalComponent, this);
         this.state = {
             isVisible: false,
-            message: undefined
+            message: undefined,
+            icon: undefined
         };
     }
 
@@ -59,32 +64,64 @@ export class LoadingModalComponent extends React.Component<
         );
     }
 
+    public static async showMessageWithIcon(message: ILoadingModalMessage, icon: IconValues) {
+        return waitForInstance<LoadingModalComponent>(LoadingModalComponent).then(ref =>
+            ref.showMessageWithIcon(message, icon)
+        );
+    }
+
     private open(message: ILoadingModalMessage) {
         this.resultDeferred = new Deferred();
-        this.setState({ isVisible: true, message }, () => {
-            this.resultDeferred?.resolve();
-        });
+        this.setState(
+            {
+                isVisible: true,
+                message
+            },
+            () => this.resultDeferred?.resolve()
+        );
         return this.resultDeferred.promise;
     }
 
     private close() {
         this.resultDeferred = new Deferred();
-        this.setState({ isVisible: false, message: undefined }, () => {
-            this.resultDeferred?.resolve();
-        });
+        this.setState(
+            {
+                isVisible: false,
+                message: undefined,
+                icon: undefined
+            },
+            () => this.resultDeferred?.resolve()
+        );
         return this.resultDeferred.promise;
     }
 
     private showMessage(message: ILoadingModalMessage) {
         this.resultDeferred = new Deferred();
-        this.setState({ message }, () => {
-            this.resultDeferred?.resolve();
-        });
+        this.setState(
+            {
+                message
+            },
+            () => this.resultDeferred?.resolve()
+        );
+        return this.resultDeferred.promise;
+    }
+
+    private showMessageWithIcon(message: ILoadingModalMessage, icon: IconValues) {
+        this.resultDeferred = new Deferred();
+        this.setState(
+            {
+                message,
+                icon
+            },
+            () => this.resultDeferred?.resolve()
+        );
         return this.resultDeferred.promise;
     }
 
     public render() {
+        const { styles } = this.props;
         const { message } = this.state;
+
         let Component;
 
         if (message?.type === TransactionMessageType.COMPONENT) {
@@ -97,10 +134,14 @@ export class LoadingModalComponent extends React.Component<
 
         if (this.state.isVisible) {
             return (
-                <View style={this.props.styles.container}>
-                    <ActivityIndicator size="large" color={this.props.theme.colors.accent} />
+                <View style={styles.container}>
+                    {this.state.icon ? (
+                        <Icon name={this.state.icon} size={normalize(80)} style={styles.icon} />
+                    ) : (
+                        <ActivityIndicator size="large" color={this.props.theme.colors.accent} />
+                    )}
                     {msg ? (
-                        <Text style={this.props.styles.message}>{msg}</Text>
+                        <Text style={styles.message}>{msg}</Text>
                     ) : message?.component ? (
                         Component
                     ) : null}

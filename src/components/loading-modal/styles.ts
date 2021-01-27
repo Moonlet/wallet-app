@@ -9,8 +9,7 @@ export default (theme: ITheme) =>
             display: 'flex',
             width: '100%',
             height: '100%',
-            backgroundColor: theme.colors.gradientDark,
-            opacity: 0.75,
+            backgroundColor: theme.colors.gradientDark + 'BF', // 75%
             justifyContent: 'center'
         },
         message: {
@@ -19,5 +18,9 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             marginTop: BASE_DIMENSION,
             paddingHorizontal: BASE_DIMENSION * 4
+        },
+        icon: {
+            color: theme.colors.accent,
+            alignSelf: 'center'
         }
     });

@@ -16,12 +16,19 @@ export enum LedgerSignEvent {
     DEVICE_CONNECTED = 'DEVICE_CONNECTED',
     OPEN_APP = 'OPEN_APP',
     APP_OPENED = 'APP_OPENED',
+    DONE = 'DONE',
+    ERROR = 'ERROR',
+    TERMINATED = 'TERMINATED',
+
+    // TX
     SIGN_TX = 'SIGN_TX',
     TX_SIGNED = 'TX_SIGNED',
     TX_SIGN_DECLINED = 'TX_SIGN_DECLINED',
-    DONE = 'DONE',
-    ERROR = 'ERROR',
-    TERMINATED = 'TERMINATED'
+
+    // MSG
+    SIGN_MSG = 'SIGN_MSG',
+    MSG_SIGNED = 'MSG_SIGNED',
+    MSG_SIGN_DECLINED = 'MSG_SIGN_DECLINED'
 }
 
 export class LedgerWallet implements IWallet {
@@ -197,6 +204,82 @@ export class LedgerWallet implements IWallet {
         message: string
     ): Promise<string> {
         throw new Error('Method not implemented.');
+    }
+
+    public async smartSignMessage(
+        blockchain: Blockchain,
+        accountIndex: number,
+        msg: string,
+        cb: (event: LedgerSignEvent) => any,
+        setTerminate?: (terminate: () => any) => any
+    ): Promise<any> {
+        let shouldTerminate = false;
+        const terminate = () => {
+            shouldTerminate = true;
+        };
+
+        const terminateIfNeeded = () => {
+            if (shouldTerminate) {
+                throw new Error('TERMINATED');
+            }
+        };
+
+        if (typeof setTerminate === 'function') {
+            setTerminate(terminate);
+        }
+
+        try {
+            terminateIfNeeded();
+            // return loading
+            cb(LedgerSignEvent.LOADING);
+
+            // detect device, if device is not connected or not found within 300ms, trigger connect device event
+            // const connectTimeout = setTimeout(() => cb(LedgerSignEvent.CONNECT_DEVICE), 1000);
+            cb(LedgerSignEvent.CONNECT_DEVICE);
+            let transport;
+            try {
+                transport = await this.getTransport();
+            } catch (e) {
+                // add some delay for the cases of instant fails, CONNECT_DEVICE and ERROR events are too quick triggerd
+                await delay(2000);
+                throw e;
+            }
+            terminateIfNeeded();
+            cb(LedgerSignEvent.DEVICE_CONNECTED);
+
+            // detect if app is opened
+            const appOpenedTimeout = setTimeout(() => cb(LedgerSignEvent.OPEN_APP), 2000);
+            await this.onAppOpened(blockchain);
+            terminateIfNeeded();
+            clearTimeout(appOpenedTimeout);
+            cb(LedgerSignEvent.APP_OPENED);
+
+            // review message
+            cb(LedgerSignEvent.SIGN_MSG);
+            if (this.connectionType === HWConnection.USB) {
+                transport = await this.getTransport();
+            }
+            const app = await AppFactory.get(blockchain, transport);
+            terminateIfNeeded();
+            const signature = await app.signMessage(accountIndex, 0, undefined, msg);
+            terminateIfNeeded();
+            cb(LedgerSignEvent.MSG_SIGNED);
+
+            cb(LedgerSignEvent.DONE);
+            return signature;
+        } catch (e) {
+            if (e !== 'TERMINATED') {
+                const message = e?.message || '';
+                if (message?.indexOf('denied by the user') >= 0) {
+                    cb(LedgerSignEvent.MSG_SIGN_DECLINED);
+                } else {
+                    cb(LedgerSignEvent.ERROR);
+                }
+            } else {
+                cb(LedgerSignEvent.TERMINATED);
+            }
+            return Promise.reject(e);
+        }
     }
 
     public getTransport() {

@@ -30,6 +30,9 @@ export abstract class AbstractBlockchainTransactionUtils {
     ): Promise<IBlockchainTransaction[]> {
         throw new Error('Not Implemented');
     }
+    public getMessageSignature(account: IAccountState, message: string, signature: string): any {
+        throw new Error('Not Implemented');
+    }
 }
 
 // tslint:disable-next-line:no-shadowed-variable
@@ -138,5 +141,6 @@ export enum TransactionMessageText {
     WAITING_TX_CONFIRM = 'WAITING_TX_CONFIRM',
     WAITING_TX_CONFIRM_CANCEL = 'WAITING_TX_CONFIRM_CANCEL',
     INSUFFICIENT_FUNDS_SOURCE_ACCOUNT = 'INSUFFICIENT_FUNDS_SOURCE_ACCOUNT',
+    GOVERNANCE_SIGN = 'GOVERNANCE_SIGN',
     GOVERNANCE_VOTE = 'GOVERNANCE_VOTE'
 }

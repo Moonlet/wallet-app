@@ -2,13 +2,15 @@ const txnEncoder = require('@zilliqa-js/account/dist/util').encodeTransactionPro
 const { BN, Long } = require('@zilliqa-js/util');
 const { compressPublicKey } = require('@zilliqa-js/crypto/dist/util');
 const chalk = require('chalk');
+const { sha256 } = require('js-sha256');
 
 const CLA = 0xe0;
 const INS = {
     getVersion: 0x01,
     getPublickKey: 0x02,
     getPublicAddress: 0x02,
-    signTxn: 0x04
+    signTxn: 0x04,
+    signHash: 0x08
 };
 
 const PubKeyByteLen = 33;
@@ -167,6 +169,26 @@ class Zilliqa {
                     sig: result.toString('hex').slice(0, SigByteLen * 2)
                 };
             });
+    }
+
+    signHash(keyIndex, message) {
+        const P1 = 0x00;
+        const P2 = 0x00;
+        const hashStr = sha256(message);
+        let indexBytes = Buffer.alloc(4);
+        indexBytes.writeInt32LE(keyIndex);
+        const hashBytes = Buffer.from(hashStr, 'hex');
+        let hashLen = hashBytes.length;
+        if (hashLen <= 0) {
+            throw Error(`Hash length ${hashLen} is invalid`);
+        }
+        if (hashLen > HashByteLen) {
+            hashBytes.slice(0, HashByteLen);
+        }
+        const payload = Buffer.concat([indexBytes, hashBytes]);
+        return this.transport.send(CLA, INS.signHash, P1, P2, payload).then(result => {
+            return result.toString('hex').slice(0, SigByteLen * 2);
+        });
     }
 }
 

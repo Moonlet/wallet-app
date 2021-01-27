@@ -964,7 +964,7 @@ const handleCtaAction = async (
                             );
                             await LoadingModal.open({
                                 type: TransactionMessageType.INFO,
-                                text: TransactionMessageText.SIGNING
+                                text: TransactionMessageText.GOVERNANCE_SIGN
                             });
                         }
 
@@ -1007,7 +1007,10 @@ const handleCtaAction = async (
                             message
                         );
 
-                        sig = JSON.parse(signedMessage);
+                        sig =
+                            typeof signedMessage === 'string'
+                                ? JSON.parse(signedMessage)
+                                : signedMessage;
 
                         await LoadingModal.open({
                             type: TransactionMessageType.INFO,

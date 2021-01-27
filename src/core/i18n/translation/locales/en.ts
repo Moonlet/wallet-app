@@ -511,6 +511,7 @@ export const translation: ITranslations = {
             WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',
             WAITING_TX_CONFIRM_CANCEL:
                 'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.',
+            GOVERNANCE_SIGN: 'Signing vote',
             GOVERNANCE_VOTE: 'Sending vote'
         },
         SecurityChecks: {
@@ -691,6 +692,9 @@ export const translation: ITranslations = {
             reviewTransaction: 'Review transaction',
             reviewTransactionDevice:
                 'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.',
+            reviewMessage: 'Review message',
+            reviewMessageDevice:
+                'Review {{blockchain}} message on your {{deviceModel}} and confirm it.',
 
             transactionDeclined: 'Transaction declined',
             transactionDeclinedDetails: 'Either try again or cancel this operation.'

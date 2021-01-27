@@ -28,6 +28,8 @@ import { ReviewTransaction } from './components/review-transaction/review-transa
 import { delay } from '../../core/utils/time';
 import { AnimatedValue } from 'react-navigation';
 import { SignDeclined } from './components/sign-declined/sign-declined';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ReviewMessage } from './components/review-message/review-message';
 
 const ANIMATION_TIME = 300;
 
@@ -47,16 +49,19 @@ enum ScreenStep {
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
     SUCCESS_CONNECT = 'SUCCESS_CONNECT',
     TROUBLESHOOTING = 'TROUBLESHOOTING',
-    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION'
+    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION',
+    REVIEW_MESSAGE = 'REVIEW_MESSAGE'
 }
 
 enum LedgerFlow {
     CREATE_WALLET = 'CREATE_WALLET',
-    SIGN_TRANSACTION = 'SIGN_TRANSACTION'
+    SIGN_TRANSACTION = 'SIGN_TRANSACTION',
+    SIGN_MESSAGE = 'SIGN_MESSAGE'
 }
 
 export interface IReduxProps {
     wallet: IWalletState;
+    account: IAccountState;
 }
 
 interface IState {
@@ -66,6 +71,7 @@ interface IState {
     blockchain: Blockchain;
     accountIndex: number;
     transaction: IBlockchainTransaction;
+    message: string;
     deviceModel: HWModel;
     deviceId: string;
     connectionType: HWConnection;
@@ -176,8 +182,25 @@ export class LedgerConnectComponent extends React.Component<
         accountIndex: number,
         accountType: AccountType,
         message: string
-    ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
-        throw new Error('LedgerConnect.signMessage not implemented');
+    ): Promise<string> {
+        this.resultDeferred = new Deferred();
+        const { deviceModel, deviceId, connectionType } = this.props.wallet.hwOptions;
+
+        this.setState({
+            blockchain,
+            accountIndex,
+            message,
+            deviceModel,
+            deviceId,
+            connectionType,
+            visible: true,
+            step: ScreenStep.SEARCH_LEDGER,
+            currentFlow: LedgerFlow.SIGN_MESSAGE,
+            stepContainerTranslateAnimation: new Animated.Value(0)
+        });
+
+        this.trySignMessage();
+        return this.resultDeferred.promise;
     }
 
     private trySign() {
@@ -208,6 +231,53 @@ export class LedgerConnectComponent extends React.Component<
             .then(signature => {
                 this.setState({ visible: false });
                 this.resultDeferred.resolve(signature);
+            })
+            .catch(err => {
+                if (err !== 'TERMINATED') {
+                    const message = err?.message || '';
+                    if (message?.indexOf('denied by the user') >= 0) {
+                        this.selectStep(ScreenStep.SIGN_DECLINED);
+                    } else {
+                        this.selectStep(ScreenStep.ERROR_SCREEN);
+                    }
+                }
+            });
+    }
+
+    private trySignMessage() {
+        this.selectStep(ScreenStep.SEARCH_LEDGER);
+
+        this.getLegderWalletInstance()
+            .smartSignMessage(
+                this.state.blockchain,
+                this.state.accountIndex,
+                this.state.message,
+                (event: LedgerSignEvent) => {
+                    switch (event) {
+                        case LedgerSignEvent.LOADING:
+                        case LedgerSignEvent.CONNECT_DEVICE:
+                            this.selectStep(ScreenStep.SEARCH_LEDGER);
+                            break;
+                        case LedgerSignEvent.OPEN_APP:
+                            this.selectStep(ScreenStep.OPEN_APP);
+                            break;
+                        case LedgerSignEvent.SIGN_MSG:
+                            this.selectStep(ScreenStep.REVIEW_MESSAGE);
+                            break;
+                        case LedgerSignEvent.MSG_SIGN_DECLINED:
+                    }
+                },
+                terminate => (this.ledgerSignTerminate = terminate)
+            )
+            .then(signature => {
+                const { account } = this.props;
+
+                const messageSignature = getBlockchain(
+                    account.blockchain
+                ).transaction.getMessageSignature(account, this.state.message, signature);
+
+                this.setState({ visible: false });
+                this.resultDeferred.resolve(messageSignature);
             })
             .catch(err => {
                 if (err !== 'TERMINATED') {
@@ -264,6 +334,7 @@ export class LedgerConnectComponent extends React.Component<
             blockchain: undefined,
             accountIndex: undefined,
             transaction: undefined,
+            message: undefined,
             connectionType: undefined,
             deviceModel: undefined,
             currentFlow: undefined,
@@ -302,6 +373,10 @@ export class LedgerConnectComponent extends React.Component<
             // Review Transaction Flow
             // todo
             await this.selectStep(ScreenStep.REVIEW_TRANSACTION);
+            this.resultDeferred.resolve();
+        } else if (this.state.currentFlow === LedgerFlow.SIGN_MESSAGE) {
+            // Review Message flow
+            await this.selectStep(ScreenStep.REVIEW_MESSAGE);
             this.resultDeferred.resolve();
         } else {
             // Connect Ledger - default flow
@@ -505,6 +580,14 @@ export class LedgerConnectComponent extends React.Component<
             case ScreenStep.REVIEW_TRANSACTION:
                 return (
                     <ReviewTransaction
+                        blockchain={this.state.blockchain}
+                        deviceModel={this.state.deviceModel}
+                        connectionType={this.state.connectionType}
+                    />
+                );
+            case ScreenStep.REVIEW_MESSAGE:
+                return (
+                    <ReviewMessage
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}

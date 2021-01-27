@@ -67,4 +67,13 @@ export class Eth implements IHardwareWalletApp {
     public getInfo() {
         return this.app.getAppConfiguration();
     }
+
+    public signMessage = async (
+        index: number,
+        derivationIndex: number,
+        path: string,
+        message: string
+    ): Promise<any> => {
+        throw new Error('signMessage NOT IMPLEMENTED');
+    };
 }

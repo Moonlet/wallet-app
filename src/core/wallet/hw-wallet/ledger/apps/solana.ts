@@ -73,4 +73,13 @@ export class Solana implements IHardwareWalletApp {
     public async getInfo() {
         return this.app.solana_ledger_get_version();
     }
+
+    public signMessage = async (
+        index: number,
+        derivationIndex: number,
+        path: string,
+        message: string
+    ): Promise<any> => {
+        throw new Error('signMessage NOT IMPLEMENTED');
+    };
 }

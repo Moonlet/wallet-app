@@ -169,12 +169,15 @@ export class DelegateEnterAmountComponent extends React.Component<
                     bottomButtonText={'App.labels.next'}
                     showSteps={false}
                     minimumDelegateAmount={this.state.minimumDelegateAmount}
-                    allBalanceNotice={translate('Validator.allBalanceNotice', {
-                        amount: this.state.minimumAmountToKeep
-                            ? this.state.minimumAmountToKeep?.toFixed()
-                            : '0',
-                        token: this.state.tokenSymbol
-                    })}
+                    allBalanceNotice={translate(
+                        `Validator.allBalanceNotice.${this.props.blockchain}`,
+                        {
+                            amount: this.state.minimumAmountToKeep
+                                ? this.state.minimumAmountToKeep?.toFixed()
+                                : '0',
+                            token: this.state.tokenSymbol
+                        }
+                    )}
                     onPressNext={this.onPressNext}
                 />
             );

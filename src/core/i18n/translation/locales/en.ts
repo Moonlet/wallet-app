@@ -620,8 +620,16 @@ export const translation: ITranslations = {
             multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,
             selectStakingPool: 'Selecting staking pool',
             unselectStakingPool: 'Unselecting staking pool',
-            allBalanceNotice:
-                'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
+            allBalanceNotice: {
+                ZILLIQA:
+                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
+                NEAR:
+                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Unstake or Withdraw.',
+                SOLANA:
+                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Unstake or Withdraw.',
+                CELO:
+                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.'
+            },
             cannotInitiateTxTitle: 'You have pending transactions',
             disableSignMessage:
                 'Your {{token}} available balance is low. Transactions will fail. Top-up at least {{amount}} {{token}} amount to be able to pay for network fees.',

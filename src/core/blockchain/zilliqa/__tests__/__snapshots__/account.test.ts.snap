@@ -51,6 +51,20 @@ Object {
         "order": 0,
         "symbol": "ZIL",
       },
+      "ZWAP": Object {
+        "active": true,
+        "balance": Object {
+          "available": "0",
+          "detailed": Object {},
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "total": "0",
+          "value": "0",
+        },
+        "order": 999,
+        "symbol": "ZWAP",
+      },
       "gZIL": Object {
         "active": true,
         "balance": Object {

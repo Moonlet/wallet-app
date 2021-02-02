@@ -36,5 +36,18 @@ export const networks: IBlockchainNetwork[] = [
             getAccountUrl: addr => `https://explorer.solana.com/address/${addr}?cluster=testnet`,
             getTransactionUrl: txn => `https://explorer.solana.com/tx/${txn}?cluster=testnet`
         }
+    },
+
+    {
+        name: 'Moonlet dev',
+        chainId: '4',
+        mainNet: false,
+        url: 'http://116.202.172.216:8899/',
+        wsUrl: 'wss://testnet.solana.com/',
+        explorer: {
+            name: 'Explorer',
+            getAccountUrl: addr => `https://116.202.172.216:8899/address/${addr}?cluster=testnet`,
+            getTransactionUrl: txn => `https://116.202.172.216:8899/tx/${txn}?cluster=testnet`
+        }
     }
 ];

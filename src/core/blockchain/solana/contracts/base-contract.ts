@@ -77,12 +77,14 @@ const stakeAccountWithExactAmount = (
         switch (action) {
             case PosBasicActionType.DELEGATE:
                 if (amountForAction.isEqualTo(account.unstaked)) stakeAccountAddress = address;
+                break;
             case PosBasicActionType.UNSTAKE:
                 if (
                     amountForAction.isEqualTo(new BigNumber(account.staked)) ||
                     amountForAction.isEqualTo(new BigNumber(account.activating))
                 )
                     stakeAccountAddress = address;
+                break;
         }
     });
 

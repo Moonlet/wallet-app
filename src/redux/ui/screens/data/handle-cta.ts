@@ -327,6 +327,54 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'delegateToValidators': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    // Open Process Tx
+                    if (
+                        action.params?.params?.validators &&
+                        action.params?.params?.token &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data?.amount
+                    ) {
+                        const { token, validators } = action.params.params;
+
+                        const amount = state.ui.screens.inputData[screenKey].data.amount;
+
+                        const v = [];
+                        for (const val of validators) {
+                            v.push(
+                                buildDummyValidator(
+                                    val?.id || val?.address,
+                                    val.name,
+                                    val?.icon,
+                                    val?.website
+                                )
+                            );
+                        }
+
+                        delegate(
+                            getSelectedAccount(state),
+                            amount,
+                            v,
+                            token,
+                            undefined, // feeOptions
+                            undefined
+                        )(dispatch, getState);
+                    }
+                    break;
+                }
+
                 case 'switchNodeDelegateToValidator': {
                     // Run Screen Validations
 

@@ -5,6 +5,7 @@ import v5 from './005';
 import v6 from './006';
 import v7 from './007';
 import v8 from './008';
+import v9 from './009';
 
 export const migrations: any = {
     /**
@@ -34,5 +35,9 @@ export const migrations: any = {
     /**
      * Add PORT Token to all users - 14 January 2021
      */
-    8: v8
+    8: v8,
+    /**
+     * Add ZWAP Token to all users - 2 Feb 2021
+     */
+    9: v9
 };

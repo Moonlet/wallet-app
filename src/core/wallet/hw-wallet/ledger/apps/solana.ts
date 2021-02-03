@@ -6,6 +6,8 @@ import { Transaction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from '../../../../blockchain/solana/types';
 import { PublicKey } from '@solana/web3.js/src/publickey';
 import bs58 from 'bs58';
+import { Solana as SolanaBlockchain } from '../.././../../blockchain/solana/index';
+import { Client as SolanaClient } from '../.././../../blockchain/solana/client';
 
 export class Solana implements IHardwareWalletApp {
     private app = null;
@@ -33,7 +35,7 @@ export class Solana implements IHardwareWalletApp {
         path: string,
         tx: IBlockchainTransaction
     ): Promise<any> => {
-        // const client = Solana.getClient(tx.chainId) as SolanaClient;
+        const client = SolanaBlockchain.getClient(tx.chainId) as SolanaClient;
 
         let transaction;
 
@@ -61,7 +63,8 @@ export class Solana implements IHardwareWalletApp {
         }
 
         const addressPublicKey = new PublicKey(tx.address);
-        transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+
+        transaction.recentBlockhash = await client.getCurrentBlockHash();
         transaction.feePayer = addressPublicKey;
 
         const sigBytes = await this.app.solana_ledger_sign_transaction(transaction);

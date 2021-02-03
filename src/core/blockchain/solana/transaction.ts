@@ -27,7 +27,7 @@ import { selectStakeAccounts } from './contracts/base-contract';
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const account = new Account(bs58Decode(privateKey));
-        // const client = Solana.getClient(tx.chainId) as SolanaClient;
+        const client = Solana.getClient(tx.chainId) as SolanaClient;
         let transaction;
 
         switch (tx.additionalInfo.type) {
@@ -53,7 +53,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
         }
 
-        transaction.recentBlockhash = tx.additionalInfo.currentBlockHash;
+        transaction.recentBlockhash = await client.getCurrentBlockHash();
 
         transaction.sign(...[account]);
 

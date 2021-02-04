@@ -142,7 +142,7 @@ jobs:
       - name: Generate fonts and icons
         run: npm run generate-icons
       - name: Run fastlane beta
-        run: xcversion select 12.0.1 && cd ios/fastlane && bundle exec fastlane beta
+        run: xcversion select 12.0.1 && cd ios/fastlane && SPACESHIP_SKIP_2FA_UPGRADE=1 bundle exec fastlane beta
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

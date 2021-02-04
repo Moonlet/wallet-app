@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "fastlane", ">= 2.150.rc1"
+gem "fastlane", :git => "https://github.com/fastlane/fastlane.git", :branch => "joshdholtz-skip-2fa-upgrade"
 gem 'cocoapods', ">= 1.10.0.rc.1"
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')

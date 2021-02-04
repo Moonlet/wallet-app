@@ -157,14 +157,29 @@ export const selectStakeAccounts = (
                     }
                 });
                 if (amountForAction.isGreaterThan(0)) {
-                    const newIndex = Object.keys(accounts).length;
-                    const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
-                    selectedStakeAccounts[newStakeAccountAddress] = {
-                        amount: amountForAction,
-                        options: { shouldCreate: true, index: newIndex }
-                    };
+                    let newIndex;
+                    let prevKey;
+                    Object.keys(accounts).map(key => {
+                        const currentObject = accounts[key];
+                        if (prevKey) {
+                            const prevObject = accounts[prevKey];
+                            if (currentObject.index - prevObject.index !== 1) {
+                                newIndex = currentObject.index - 1;
+                            }
+                        }
+                        prevKey = key;
+                    });
+
+                    if (newIndex) {
+                        const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
+                        selectedStakeAccounts[newStakeAccountAddress] = {
+                            amount: amountForAction,
+                            options: { shouldCreate: true, index: newIndex }
+                        };
+                    }
                 }
             }
+
             break;
         case PosBasicActionType.UNSTAKE:
             const stakeAccountAddress = stakeAccountWithExactAmount(accounts, action, amount);

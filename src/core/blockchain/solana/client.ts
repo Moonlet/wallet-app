@@ -54,7 +54,10 @@ export class Client extends BlockchainGenericClient {
 
     public async getCurrentBlock(): Promise<IBlockInfo> {
         return this.http.jsonRpc('getSlot', []).then(res => {
-            return res.result;
+            return {
+                hash: res.result,
+                number: res.result
+            };
         });
     }
 

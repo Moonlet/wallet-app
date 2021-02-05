@@ -170,7 +170,7 @@ export const selectStakeAccounts = (
                         prevKey = key;
                     });
 
-                    if (newIndex === undefined && Object.keys(accounts).length === 0) newIndex = 0;
+                    if (newIndex === undefined) newIndex = Object.keys(accounts).length;
 
                     const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
                     selectedStakeAccounts[newStakeAccountAddress] = {

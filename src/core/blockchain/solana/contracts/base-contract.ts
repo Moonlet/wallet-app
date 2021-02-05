@@ -170,13 +170,13 @@ export const selectStakeAccounts = (
                         prevKey = key;
                     });
 
-                    if (newIndex) {
-                        const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
-                        selectedStakeAccounts[newStakeAccountAddress] = {
-                            amount: amountForAction,
-                            options: { shouldCreate: true, index: newIndex }
-                        };
-                    }
+                    if (newIndex === undefined) newIndex = Object.keys(accounts).length;
+
+                    const newStakeAccountAddress = generateStakeAccount(baseAddress, newIndex);
+                    selectedStakeAccounts[newStakeAccountAddress] = {
+                        amount: amountForAction,
+                        options: { shouldCreate: true, index: newIndex }
+                    };
                 }
             }
 

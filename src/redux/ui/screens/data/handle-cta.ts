@@ -19,10 +19,9 @@ import {
     redelegate,
     setSelectedBlockchain,
     withdraw,
-    solanaDelegate
-    // solanaCreate,
-
-    // solanaSplit,
+    solanaDelegateStakeAccount,
+    solanaCreateStakeAccount
+    // solanaSplitStakeAccount
     // solanaUnstake,
     // solanaWithdraw
 } from '../../../wallets/actions';
@@ -1131,7 +1130,7 @@ const handleCtaAction = async (
                         options.pubSub.emit(SmartScreenPubSubEvents.SCROLL_TO_END, undefined);
                     break;
 
-                case 'solanaDelegate': {
+                case 'solanaDelegateStakeAccount': {
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);
                     const blockchainInstance = getBlockchain(account.blockchain);
@@ -1201,9 +1200,20 @@ const handleCtaAction = async (
                         }
                     }
 
-                    solanaDelegate(
+                    solanaDelegateStakeAccount(
                         getSelectedAccount(state),
                         validators,
+                        token,
+                        undefined, // feeOptions
+                        { stakeAccountKey: action.params.params.stakeAccountKey }
+                    )(dispatch, getState);
+                    break;
+                }
+                case 'solanaCreateStakeAccount': {
+                    const token = action.params?.params?.token;
+
+                    solanaCreateStakeAccount(
+                        getSelectedAccount(state),
                         token,
                         undefined, // feeOptions
                         { stakeAccountKey: action.params.params.stakeAccountKey }

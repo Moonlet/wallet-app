@@ -42,7 +42,7 @@ import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
 import { NavigationService } from '../../../navigation/navigation-service';
 import BigNumber from 'bignumber.js';
 
-export const solanaDelegate = (
+export const solanaDelegateStakeAccount = (
     account: IAccountState,
     validators: {
         validator: IValidator;
@@ -62,19 +62,16 @@ export const solanaDelegate = (
     )(dispatch, getState);
 };
 
-export const solanaCreate = (
+export const solanaCreateStakeAccount = (
     account: IAccountState,
-    validators: {
-        validator: IValidator;
-        amount: string;
-    }[],
+
     token: string,
     feeOptions: IFeeOptions,
     extraFields: ITransactionExtraFields
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     posActionV2(
         account,
-        validators,
+        undefined,
         token,
         feeOptions,
         extraFields,
@@ -82,7 +79,7 @@ export const solanaCreate = (
     )(dispatch, getState);
 };
 
-export const solanaSplit = (
+export const solanaSplitStakeAccount = (
     account: IAccountState,
     validators: {
         validator: IValidator;

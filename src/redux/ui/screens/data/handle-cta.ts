@@ -1244,8 +1244,11 @@ const handleCtaAction = async (
                 }
                 case 'solanaWithdraw': {
                     const token = action.params?.params?.token;
+                    const amount = action.params?.params?.amount;
+
                     solanaWithdraw(
                         getSelectedAccount(state),
+                        amount,
                         token,
                         undefined, // feeOptions
                         { stakeAccountKey: action.params.params.stakeAccountKey }

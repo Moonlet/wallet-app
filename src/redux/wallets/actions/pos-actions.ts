@@ -101,17 +101,14 @@ export const solanaSplitStakeAccount = (
 
 export const solanaWithdraw = (
     account: IAccountState,
-    validators: {
-        validator: IValidator;
-        amount: string;
-    }[],
+
     token: string,
     feeOptions: IFeeOptions,
     extraFields: ITransactionExtraFields
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     posActionV2(
         account,
-        validators,
+        undefined,
         token,
         feeOptions,
         extraFields,

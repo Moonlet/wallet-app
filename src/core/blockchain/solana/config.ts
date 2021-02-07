@@ -33,8 +33,19 @@ const accountCTA = {
         title: 'App.labels.stakeNow',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
-            params: { actionText: 'App.labels.stakeNow' }
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakingAccount',
+                    key: 'solana-staking-account'
+                },
+                navigationOptions: {
+                    title: 'Staking accounts'
+                },
+                newFlow: true
+            }
+            // screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
+            // params: { actionText: 'App.labels.stakeNow' }
         }
     }
 };

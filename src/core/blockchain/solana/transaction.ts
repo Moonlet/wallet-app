@@ -196,9 +196,10 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
             case PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE:
                 const solanaTxStake: IPosTransaction = cloneDeep(tx);
+                solanaTxStake.amount = new BigNumber((tx.validators as any)[0].amount).toFixed();
                 const solanaTransactionDelegate: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
-                ].delegateStake(solanaTxStake, tx.validators[0]);
+                ].delegateStake(solanaTxStake, (tx.validators as any)[0].validator);
                 transactions.push(solanaTransactionDelegate);
                 break;
             case PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT:

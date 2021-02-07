@@ -1143,10 +1143,8 @@ const handleCtaAction = async (
                 case 'solanaDelegateStakeAccount': {
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);
-                    const blockchainInstance = getBlockchain(account.blockchain);
 
                     const token = action.params?.params?.token;
-                    const tokenConfig = getTokenConfig(account.blockchain, token);
 
                     const screenKey = getScreenDataKey({
                         pubKey: getSelectedWallet(state)?.walletPublicKey,
@@ -1159,55 +1157,24 @@ const handleCtaAction = async (
 
                     const data = state.ui.screens.inputData[screenKey].data;
 
+                    const amount = action.params.params.amount;
+
                     const validators: {
                         validator: IValidator;
                         amount: string;
                     }[] = [];
 
                     // Build validators list from redux
-                    for (const dataKey of Object.keys(data || {})) {
-                        if (data[dataKey] && data[dataKey]?.validator && data[dataKey]?.amount) {
-                            const amount = data[dataKey].amount;
-                            const validator = data[dataKey].validator;
-                            if (new BigNumber(amount).isGreaterThan(0)) {
-                                validators.push({
-                                    validator: buildDummyValidator(
-                                        validator?.id || validator?.address,
-                                        validator.name,
-                                        validator.icon,
-                                        validator.website
-                                    ),
-                                    amount: blockchainInstance.account
-                                        .amountToStd(amount, tokenConfig.decimals)
-                                        .toFixed()
-                                });
-                            }
-                        }
-                    }
-
-                    // Build validators list from params
-                    if (
-                        action.params?.params?.validators &&
-                        Array.isArray(action.params.params.validators) &&
-                        state.ui.screens.inputData[screenKey]?.data?.amount
-                    ) {
-                        const amountSplit = splitStake(
-                            state.ui.screens.inputData[screenKey].data.amount,
-                            action.params.params.validators.length
-                        );
-                        for (const validator of action.params.params.validators) {
-                            validators.push({
-                                validator: buildDummyValidator(
-                                    validator?.id || validator?.address,
-                                    validator.name,
-                                    validator.icon,
-                                    validator.website
-                                ),
-                                amount: blockchainInstance.account
-                                    .amountToStd(amountSplit, tokenConfig.decimals)
-                                    .toFixed()
-                            });
-                        }
+                    for (const v of data?.validators || []) {
+                        validators.push({
+                            validator: buildDummyValidator(
+                                v?.id || v?.address,
+                                v.name,
+                                v.icon,
+                                v.website
+                            ),
+                            amount
+                        });
                     }
 
                     solanaDelegateStakeAccount(

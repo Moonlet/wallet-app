@@ -243,6 +243,7 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('App.labels.locking') + ' ' + amount;
                 break;
             }
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE:
             case PosBasicActionType.DELEGATE: {
                 middleText =
                     translate('App.labels.to').toLowerCase() +

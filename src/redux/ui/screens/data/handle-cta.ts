@@ -1224,6 +1224,7 @@ const handleCtaAction = async (
 
                     solanaCreateStakeAccount(
                         getSelectedAccount(state),
+                        action.params.params.amount,
                         token,
                         undefined, // feeOptions
                         {

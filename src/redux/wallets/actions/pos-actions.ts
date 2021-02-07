@@ -64,17 +64,19 @@ export const solanaDelegateStakeAccount = (
 
 export const solanaCreateStakeAccount = (
     account: IAccountState,
-
+    amount: string,
     token: string,
     feeOptions: IFeeOptions,
     extraFields: ITransactionExtraFields
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    posActionV2(
+    posAction(
         account,
+        amount,
         undefined,
         token,
         feeOptions,
         extraFields,
+        undefined,
         PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE
     )(dispatch, getState);
 };

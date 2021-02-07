@@ -57,6 +57,8 @@ export enum IconValues {
     REVOTE = 'revote',
     SATURN_ICON = 'saturn-icon',
     SEARCH = 'search',
+    SETTINGS_OFF = 'settings-off',
+    SETTINGS_ON = 'settings-on',
     SETTINGS = 'settings',
     SIGNED = 'signed-icon',
     SINGLE_MAN_HIERACHY = 'single-man-hierachy',

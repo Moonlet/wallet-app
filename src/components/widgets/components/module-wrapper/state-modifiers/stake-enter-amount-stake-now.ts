@@ -29,10 +29,10 @@ export const stakeEnterAmountStakeNow = (state: IReduxState, module: IScreenModu
         state.ui.screens.inputData &&
         state.ui.screens.inputData[screenKey] &&
         state.ui.screens.inputData[screenKey]?.validation &&
-        state.ui.screens.inputData[screenKey]?.validation?.valid === false
+        state.ui.screens.inputData[screenKey]?.validation?.valid === true
     ) {
-        return 'DISABLED';
+        return 'DEFAULT';
     }
 
-    return 'DEFAULT';
+    return 'DISABLED';
 };

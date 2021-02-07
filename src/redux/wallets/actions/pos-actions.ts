@@ -41,7 +41,102 @@ import { delay } from '../../../core/utils/time';
 import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
 import { NavigationService } from '../../../navigation/navigation-service';
 import BigNumber from 'bignumber.js';
-import { SolanaTransactionInstructionType } from '../../../core/blockchain/solana/types';
+
+export const solanaDelegateStakeAccount = (
+    account: IAccountState,
+    validators: {
+        validator: IValidator;
+        amount: string;
+    }[],
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posActionV2(
+        account,
+        validators,
+        token,
+        feeOptions,
+        extraFields,
+        PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE
+    )(dispatch, getState);
+};
+
+export const solanaCreateStakeAccount = (
+    account: IAccountState,
+    amount: string,
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posAction(
+        account,
+        amount,
+        undefined,
+        token,
+        feeOptions,
+        extraFields,
+        undefined,
+        PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE
+    )(dispatch, getState);
+};
+
+export const solanaSplitStakeAccount = (
+    account: IAccountState,
+    validators: {
+        validator: IValidator;
+        amount: string;
+    }[],
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posActionV2(
+        account,
+        validators,
+        token,
+        feeOptions,
+        extraFields,
+        PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT
+    )(dispatch, getState);
+};
+
+export const solanaWithdraw = (
+    account: IAccountState,
+
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posActionV2(
+        account,
+        undefined,
+        token,
+        feeOptions,
+        extraFields,
+        PosBasicActionType.SOLANA_STAKEACCOUNT_WITHDRAW
+    )(dispatch, getState);
+};
+
+export const solanaUnstake = (
+    account: IAccountState,
+    validators: {
+        validator: IValidator;
+        amount: string;
+    }[],
+    token: string,
+    feeOptions: IFeeOptions,
+    extraFields: ITransactionExtraFields
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posActionV2(
+        account,
+        validators,
+        token,
+        feeOptions,
+        extraFields,
+        PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE
+    )(dispatch, getState);
+};
 
 export const redelegate = (
     account: IAccountState,
@@ -472,23 +567,6 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         if (action?.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL) {
                             await delay(2000);
                         }
-                    }
-                }
-
-                // CREATE_ACCOUNT_WITH_SEED: delay 20 seconds for now
-                // The creation of account takes a lot of time and if not completed the stake transaction after will not work
-                // Need to tell this to user
-                if (
-                    account.blockchain === Blockchain.SOLANA &&
-                    additionalInfo &&
-                    transactions.length > 1
-                ) {
-                    if (
-                        additionalInfo.type ===
-                            SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED ||
-                        additionalInfo.type === SolanaTransactionInstructionType.SPLIT_STAKE
-                    ) {
-                        await delay(30000);
                     }
                 }
 

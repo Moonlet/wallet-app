@@ -45,6 +45,7 @@ export const translation: ITranslations = {
                 copy: 'Copy',
                 create: 'Create',
                 createTicket: 'Create a ticket',
+                createStakeAccount: 'Create stake account',
                 cumulative: 'Cumulative',
                 date: 'Date',
                 dateAndTime: 'Date and time',

@@ -81,6 +81,7 @@ export class TransactionsHistoryListComponent extends React.Component<
         }
 
         switch (tx.additionalInfo?.posAction) {
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE:
             case PosBasicActionType.DELEGATE: {
                 formattedAmount = translate('App.labels.to').toLowerCase();
                 primaryText = ` ${formattedAmount} ${toAddress}`;
@@ -96,6 +97,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 primaryText = ` ${formattedAmount} ${toAddress}`;
                 break;
             }
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE:
             case PosBasicActionType.UNSTAKE: {
                 formattedAmount = translate('App.labels.from').toLowerCase();
                 primaryText = ` ${formattedAmount} ${toAddress}`;
@@ -117,6 +119,10 @@ export class TransactionsHistoryListComponent extends React.Component<
                 primaryText = Capitalize(tx.additionalInfo.posAction)
                     .split('_')
                     .join(' ');
+                break;
+            case PosBasicActionType.CREATE_STAKE_ACCOUNT:
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE:
+                primaryText = undefined;
                 break;
             default:
                 primaryText = ` ${formattedAmount} ${toAddress}`;
@@ -246,6 +252,13 @@ export class TransactionsHistoryListComponent extends React.Component<
                 posAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT
             ) {
                 transactionType = translate('App.labels.claimingRewards');
+            }
+
+            if (
+                posAction === PosBasicActionType.CREATE_STAKE_ACCOUNT ||
+                posAction === PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE
+            ) {
+                transactionType = translate('App.labels.createStakeAccount') + ' ';
             }
         }
 

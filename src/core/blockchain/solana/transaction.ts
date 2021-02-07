@@ -186,6 +186,43 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 transactions.push(transactionWithdraW);
 
                 break;
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE:
+                const solanaTxCreate: IPosTransaction = cloneDeep(tx);
+                const solanaTransactionCreate: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].createStakeAccountWithSeed(solanaTxCreate);
+                transactions.push(solanaTransactionCreate);
+
+                break;
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE:
+                const solanaTxStake: IPosTransaction = cloneDeep(tx);
+                solanaTxStake.amount = new BigNumber((tx.validators as any)[0].amount).toFixed();
+                const solanaTransactionDelegate: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].delegateStake(solanaTxStake, (tx.validators as any)[0].validator);
+                transactions.push(solanaTransactionDelegate);
+                break;
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT:
+                const solanaTxSplit: IPosTransaction = cloneDeep(tx);
+                const solanaTransactionSplit: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].split(solanaTxSplit, solanaTxSplit.extraFields.splitFrom);
+                transactions.push(solanaTransactionSplit);
+                break;
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE:
+                const solanaTxUnstake: IPosTransaction = cloneDeep(tx);
+                const solanaTransactionUnstake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].unStake(solanaTxUnstake, tx.validators[0]);
+                transactions.push(solanaTransactionUnstake);
+                break;
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_WITHDRAW:
+                const solanaTxWithdraw: IPosTransaction = cloneDeep(tx);
+                const solanaTransactionWithdraw: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdraw(solanaTxWithdraw);
+                transactions.push(solanaTransactionWithdraw);
+                break;
         }
 
         return transactions;

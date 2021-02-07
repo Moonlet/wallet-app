@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
+import { TokenType, TokenScreenComponentType } from '../types/token';
 import SolIcon from '../../../assets/icons/blockchains/sol.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
@@ -55,8 +55,19 @@ const validatorCTA = {
         title: 'App.labels.stake',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'PosDelegate',
-            params: { actionText: 'App.labels.stake' }
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakingAccount',
+                    key: 'solana-staking-account'
+                },
+                navigationOptions: {
+                    title: 'Staking accounts'
+                },
+                newFlow: true
+            }
+            // screen: 'PosDelegate',
+            // params: { actionText: 'App.labels.stake' }
         }
     },
     otherCtas: [
@@ -64,11 +75,22 @@ const validatorCTA = {
             title: 'App.labels.unstake',
             iconName: IconValues.UNVOTE,
             navigateTo: {
-                screen: 'PosBasicAction',
+                screen: 'SmartScreen',
                 params: {
-                    actionText: 'App.labels.unstake',
-                    basicAction: PosBasicActionType.UNSTAKE
+                    context: {
+                        screen: 'StakingAccount',
+                        key: 'solana-staking-account'
+                    },
+                    navigationOptions: {
+                        title: 'Staking accounts'
+                    },
+                    newFlow: true
                 }
+                // screen: 'PosBasicAction',
+                // params: {
+                //     actionText: 'App.labels.unstake',
+                //     basicAction: PosBasicActionType.UNSTAKE
+                // }
             }
         }
     ]

@@ -122,20 +122,20 @@ export const solanaWithdraw = (
 
 export const solanaUnstake = (
     account: IAccountState,
-    validators: {
-        validator: IValidator;
-        amount: string;
-    }[],
+    amount: string,
+    validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
     extraFields: ITransactionExtraFields
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    posActionV2(
+    posAction(
         account,
+        amount,
         validators,
         token,
         feeOptions,
         extraFields,
+        undefined,
         PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE
     )(dispatch, getState);
 };

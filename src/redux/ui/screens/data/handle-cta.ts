@@ -1232,10 +1232,15 @@ const handleCtaAction = async (
                 }
                 case 'solanaUnstake': {
                     const token = action.params?.params?.token;
+                    const amount = action.params?.params?.amount;
+                    const validator = action.params?.params?.validator;
+
+                    const validators = [buildDummyValidator(validator.address, validator.name)];
 
                     solanaUnstake(
                         getSelectedAccount(state),
-                        buildValidators(state, action),
+                        amount,
+                        validators,
                         token,
                         undefined, // feeOptions
                         { stakeAccountKey: action.params.params.stakeAccountKey }

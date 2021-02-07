@@ -130,8 +130,8 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 0,
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(0),
-        [AccountType.ROOT]: new BigNumber(0)
+        [AccountType.DEFAULT]: new BigNumber(10).pow(9).dividedBy(100), // 0.01 SOL
+        [AccountType.ROOT]: new BigNumber(10).pow(9).dividedBy(100) // 0.01 SOL
     }
 };
 

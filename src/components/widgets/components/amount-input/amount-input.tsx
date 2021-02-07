@@ -170,6 +170,9 @@ class AmountInputComponent extends React.Component<
 
         const data = module.data as IAmountInputData;
 
+        let editable = true;
+        if (data?.editable !== undefined) editable = data.editable;
+
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
                 {data?.input && (
@@ -198,6 +201,7 @@ class AmountInputComponent extends React.Component<
                             })}
                             returnKeyType="done"
                             // TODO: maxLength - max 8 decimals: 0.00000000
+                            editable={editable}
                         />
                     </View>
                 )}

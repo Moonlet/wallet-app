@@ -420,6 +420,7 @@ export interface IAmountInputData {
         value: string;
         color?: string;
     };
+    editable?: boolean;
 }
 
 export interface IAmountSelectableBoxData {

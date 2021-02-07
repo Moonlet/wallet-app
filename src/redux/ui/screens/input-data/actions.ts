@@ -104,7 +104,7 @@ export const runScreenValidation = (validation: IScreenValidation, flowId: strin
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    const validators = validation.validators;
+    const validators = validation?.validators || {};
 
     for (const field of Object.keys(validators)) {
         for (const val of validators[field]) {

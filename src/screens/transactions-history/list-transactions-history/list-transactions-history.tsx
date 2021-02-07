@@ -115,6 +115,15 @@ export class TransactionsHistoryListComponent extends React.Component<
                         .split('_')
                         .join(' ') + ` - ${toAddress}`;
                 break;
+            case PosBasicActionType.WITHDRAW:
+                if (tx.additionalInfo.stakeAccountKey) {
+                    primaryText =
+                        ' ' +
+                        translate('App.labels.from').toLowerCase() +
+                        ' ' +
+                        formatAddress(tx.additionalInfo.stakeAccountKey, account.blockchain);
+                }
+                break;
             case PosBasicActionType.UNSELECT_STAKING_POOL:
                 primaryText = Capitalize(tx.additionalInfo.posAction)
                     .split('_')
@@ -180,7 +189,8 @@ export class TransactionsHistoryListComponent extends React.Component<
 
                 if (
                     tx.data?.method ||
-                    (tx.additionalInfo?.actions && tx.additionalInfo.actions[0]?.params)
+                    (tx.additionalInfo?.actions && tx.additionalInfo.actions[0]?.params) ||
+                    tx.additionalInfo?.posAction
                 ) {
                     txIcon = IconValues.VOTE;
                     txColor = theme.colors.accent;

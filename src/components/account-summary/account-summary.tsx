@@ -3,11 +3,11 @@ import { FlatList, View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { normalize } from '../../styles/dimensions';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
-import { AccountStats, IStatValue } from '../../core/blockchain/types/stats';
+import { AccountStats } from '../../core/blockchain/types/stats';
 import BigNumber from 'bignumber.js';
 import Icon from '../icon/icon';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
@@ -204,35 +204,35 @@ export class AccountSummaryComponent extends React.Component<
         );
     }
 
-    private renderPercengateSkeleton() {
-        return (
-            <View
-                style={[
-                    this.props.styles.percengateSkeleton,
-                    {
-                        width: this.state.barWidth
-                            ? normalize(this.state.barWidth / 4) - BASE_DIMENSION * 2
-                            : normalize(40)
-                    }
-                ]}
-            />
-        );
-    }
+    // private renderPercengateSkeleton() {
+    //     return (
+    //         <View
+    //             style={[
+    //                 this.props.styles.percengateSkeleton,
+    //                 {
+    //                     width: this.state.barWidth
+    //                         ? normalize(this.state.barWidth / 4) - BASE_DIMENSION * 2
+    //                         : normalize(40)
+    //                 }
+    //             ]}
+    //         />
+    //     );
+    // }
 
     public render() {
-        const { data, isLoading, styles } = this.props;
-        const { accountStats } = data;
+        const { styles } = this.props;
+        // const { accountStats } = data;
 
         if (this.state.hideComponent) {
             return null;
         }
 
-        const totalCount =
-            !isLoading &&
-            accountStats?.chartStats.reduce(
-                (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
-                new BigNumber(0)
-            );
+        // const totalCount =
+        //     !isLoading &&
+        //     accountStats?.chartStats.reduce(
+        //         (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
+        //         new BigNumber(0)
+        //     );
 
         return (
             <View style={[styles.container, this.props?.style]}>
@@ -267,7 +267,7 @@ export class AccountSummaryComponent extends React.Component<
                         )}
                     </View>
 
-                    {isLoading ? (
+                    {/* {isLoading ? (
                         <SkeletonPlaceholder>
                             <View style={styles.barContainer} />
                         </SkeletonPlaceholder>
@@ -301,9 +301,9 @@ export class AccountSummaryComponent extends React.Component<
                                 />
                             ))}
                         </View>
-                    )}
+                    )} */}
 
-                    <View style={styles.topStatsContainer}>
+                    {/* <View style={styles.topStatsContainer}>
                         {isLoading ? (
                             <View
                                 style={styles.percengateSkeletonContainer}
@@ -341,7 +341,7 @@ export class AccountSummaryComponent extends React.Component<
                                 </View>
                             ))
                         )}
-                    </View>
+                    </View> */}
 
                     {this.props.enableExpand ? (
                         <ExpandableContainer isExpanded={this.state.expanded}>

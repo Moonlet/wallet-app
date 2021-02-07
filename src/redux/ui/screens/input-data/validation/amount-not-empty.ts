@@ -17,7 +17,14 @@ export const inputAmountNotEmpty = (
 
     const amount = inputData?.amount || inputData?.input;
 
-    if (!amount || isNaN(amount) || amount === '' || amount === ' ') {
+    if (
+        !amount ||
+        isNaN(amount) ||
+        amount === '' ||
+        amount === ' ' ||
+        amount === undefined ||
+        amount === null
+    ) {
         // Show error
 
         const fieldsErrors = [];

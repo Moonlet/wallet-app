@@ -1222,9 +1222,23 @@ const handleCtaAction = async (
                 case 'solanaCreateStakeAccount': {
                     const token = action.params?.params?.token;
 
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const amount = state.ui.screens.inputData[screenKey].data?.amount;
+
                     solanaCreateStakeAccount(
                         getSelectedAccount(state),
-                        action.params.params.amount,
+                        amount,
                         token,
                         undefined, // feeOptions
                         {

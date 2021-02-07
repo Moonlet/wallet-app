@@ -135,7 +135,8 @@ export class Staking {
             posAction: PosBasicActionType.WITHDRAW,
             type: SolanaTransactionInstructionType.WITHDRAW,
             instructions: [instruction.instruction],
-            currentBlockHash: blockHash
+            currentBlockHash: blockHash,
+            stakeAccountKey: tx.extraFields.stakeAccountKey
         };
 
         return transaction;

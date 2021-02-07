@@ -1,9 +1,11 @@
-import { IPosTransaction } from '../../types';
+import { Blockchain, IPosTransaction } from '../../types';
 import { IValidator } from '../../types/stats';
 
 import { Authorized, Lockup } from '@solana/web3.js/src/stake-program';
 import { PublicKey } from '@solana/web3.js/src/publickey';
 import { ISolanaTransactionInstruction, SolanaTransactionInstructionType } from '../types';
+import { getBlockchain } from '../../blockchain-factory';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export const createAccountWithSeedInstruction = (
     tx: IPosTransaction
@@ -79,13 +81,21 @@ export const withdrawInstruction = async (
 ): Promise<ISolanaTransactionInstruction> => {
     const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
     const baseAccountKey = new PublicKey(tx.account.address);
+
+    const blockchainInstance = getBlockchain(Blockchain.SOLANA);
+    const tokenConfig = getTokenConfig(Blockchain.SOLANA, 'SOL');
+
+    const amount = blockchainInstance.account
+        .amountToStd(tx.extraFields.amount, tokenConfig.decimals)
+        .toFixed();
+
     return {
-        type: SolanaTransactionInstructionType.UNSTAKE,
+        type: SolanaTransactionInstructionType.WITHDRAW,
         instruction: {
             stakePubkey,
             authorizedPubkey: baseAccountKey,
             toPubkey: baseAccountKey,
-            lamports: tx.extraFields.amount
+            lamports: amount
         }
     };
 };

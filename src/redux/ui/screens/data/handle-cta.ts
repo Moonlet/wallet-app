@@ -1256,7 +1256,7 @@ const handleCtaAction = async (
                         amount,
                         token,
                         undefined, // feeOptions
-                        { stakeAccountKey: action.params.params.stakeAccountKey }
+                        { stakeAccountKey: action.params.params.stakeAccountKey, amount }
                     )(dispatch, getState);
                     break;
                 }

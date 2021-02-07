@@ -143,6 +143,8 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
         if (selectedAccount.tokens && selectedAccount.tokens[chainId] === undefined) {
             generateTokensForChainId(blockchain, chainId)(dispatch, getState);
         }
+    } else {
+        // there are no accounts - lets generate some
     }
 };
 
@@ -1223,4 +1225,37 @@ export const updateTransactionsStatus = (transactions: []) => (
             }
         }
     });
+};
+
+export const generateAccounts = (password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        try {
+            if (wallet.type === WalletType.HD) {
+                const storageHDWallet = await HDWallet.loadFromStorage(wallet.id, password);
+
+                if (getAccounts(state, Blockchain.SOLANA).length === 0) {
+                    Promise.all([
+                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, -1),
+                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 0),
+                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 1),
+                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 2),
+                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 3)
+                    ]).then(async data => {
+                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[0][0]));
+                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[1][0]));
+                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[2][0]));
+                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[3][0]));
+                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[4][0]));
+                    });
+                }
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
 };

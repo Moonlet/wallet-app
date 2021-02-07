@@ -27,7 +27,7 @@ import { LoadingModal } from './components/loading-modal/loading-modal';
 import { addBreadcrumb, captureException as SentryCaptureException } from '@sentry/react-native';
 import { isEqual } from 'lodash';
 import { filterObjectProps } from './core/utils/object-sanitise';
-import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
+import { generateAccounts, setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
 import { ProcessTransactions } from './screens/pos-actions/process-transactions/process-transactions';
 import { LedgerConnect } from './screens/ledger/ledger-connect';
 import { updateTokenContracts } from './redux/tokens/actions';
@@ -154,6 +154,7 @@ export default class App extends React.Component<{}, IState> {
         try {
             const password = await PasswordModal.getPassword();
             store.dispatch(setWalletsCredentials(password) as any);
+            store.dispatch(generateAccounts(password) as any);
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));
         }

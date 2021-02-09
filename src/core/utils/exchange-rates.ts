@@ -1,18 +1,28 @@
 import { database } from 'react-native-firebase';
+import { store } from '../../redux/config';
+import { EXCHANGE_RATE_UPDATE } from '../../redux/market/actions';
 
-export const subscribedExchangeRates = {};
+const subscribedExchangeRates = [];
 
-export const subscribeExchangeRateValue = (rate: string): Promise<string> => {
-    subscribedExchangeRates[rate] = 'N/A';
-    return new Promise((resolve, reject) => {
-        return database()
+export const subscribeExchangeRateValue = (token: string): void => {
+    if (token && subscribedExchangeRates.indexOf(token) < 0) {
+        subscribedExchangeRates.push(token);
+
+        database()
             .ref('/exchange-rates')
             .child('values')
-            .child(rate)
+            .child(token)
             .on('value', (snapshot: any) => {
                 const value = String(snapshot.val());
-                subscribedExchangeRates[rate] = value;
-                return resolve(value);
+                if (store) {
+                    store.dispatch({
+                        type: EXCHANGE_RATE_UPDATE,
+                        data: {
+                            token,
+                            value
+                        }
+                    });
+                }
             });
-    });
+    }
 };

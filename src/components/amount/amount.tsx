@@ -8,11 +8,7 @@ import { convertAmount } from '../../core/utils/balance';
 import { IExchangeRates } from '../../redux/market/state';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
-import {
-    subscribedExchangeRates,
-    subscribeExchangeRateValue
-} from '../../core/utils/exchange-rates';
-import { updateExchangeRate } from '../../redux/market/actions';
+import { subscribeExchangeRateValue } from '../../core/utils/exchange-rates';
 
 interface IExternalProps {
     testID?: string;
@@ -35,7 +31,6 @@ interface IExternalProps {
 interface IReduxProps {
     exchangeRates: IExchangeRates;
     userCurrency: string;
-    updateExchangeRate: typeof updateExchangeRate;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -43,48 +38,26 @@ const mapStateToProps = (state: IReduxState) => ({
     userCurrency: state.preferences.currency
 });
 
-const mapDispatchToProps = {
-    updateExchangeRate
-};
-
 class AmountComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public componentDidMount() {
-        this.subscribeUpdateExchangeRate(this.props.token);
-        this.subscribeUpdateExchangeRate(this.props.convertTo);
-        this.subscribeUpdateExchangeRate(this.props.userCurrency);
+        subscribeExchangeRateValue(this.props.token);
+        subscribeExchangeRateValue(this.props.convertTo);
+        subscribeExchangeRateValue(this.props.userCurrency);
     }
 
     public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
         if (this.props.token !== prevProps.token) {
-            this.subscribeUpdateExchangeRate(this.props.token);
+            subscribeExchangeRateValue(this.props.token);
         }
 
         if (this.props.convertTo !== prevProps.convertTo) {
-            this.subscribeUpdateExchangeRate(this.props.convertTo);
+            subscribeExchangeRateValue(this.props.convertTo);
         }
 
         if (this.props.userCurrency !== prevProps.userCurrency) {
-            this.subscribeUpdateExchangeRate(this.props.userCurrency);
-        }
-    }
-
-    private async subscribeUpdateExchangeRate(token: string) {
-        if (
-            token &&
-            (!this.props.exchangeRates ||
-            !this.props.exchangeRates[token] || // token not saved in market redux
-                !subscribedExchangeRates[token]) // token not saved in the global subscribed rates
-        ) {
-            const exchangeRate: string = await subscribeExchangeRateValue(token);
-
-            if (exchangeRate) {
-                this.props.updateExchangeRate({
-                    token,
-                    value: exchangeRate
-                });
-            }
+            subscribeExchangeRateValue(this.props.userCurrency);
         }
     }
 
@@ -134,6 +107,6 @@ class AmountComponent extends React.Component<
 }
 
 export const Amount = smartConnect<IExternalProps>(AmountComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps),
     withTheme(stylesProvider)
 ]);

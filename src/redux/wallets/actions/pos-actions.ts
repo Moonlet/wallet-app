@@ -83,20 +83,19 @@ export const solanaCreateStakeAccount = (
 
 export const solanaSplitStakeAccount = (
     account: IAccountState,
-    validators: {
-        validator: IValidator;
-        amount: string;
-    }[],
+    amount: string,
     token: string,
     feeOptions: IFeeOptions,
     extraFields: ITransactionExtraFields
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    posActionV2(
+    posAction(
         account,
-        validators,
+        amount,
+        undefined,
         token,
         feeOptions,
         extraFields,
+        undefined,
         PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT
     )(dispatch, getState);
 };

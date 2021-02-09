@@ -7,7 +7,7 @@ import { EXCHANGE_RATE_UPDATE } from '../../redux/market/actions';
 const subscribedExchangeRates = [];
 
 export const subscribeExchangeRateValue = (token: string): void => {
-    if (subscribedExchangeRates.indexOf(token) < 0) {
+    if (token && subscribedExchangeRates.indexOf(token) < 0) {
         subscribedExchangeRates.push(token);
 
         database()

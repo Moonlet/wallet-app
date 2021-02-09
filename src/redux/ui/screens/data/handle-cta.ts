@@ -1218,9 +1218,23 @@ const handleCtaAction = async (
                 case 'solanaSplitStakeAccount': {
                     const token = action.params?.params?.token;
 
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const amount = state.ui.screens.inputData[screenKey].data?.amount;
+
                     solanaSplitStakeAccount(
                         getSelectedAccount(state),
-                        buildValidators(state, action),
+                        amount,
                         token,
                         undefined, // feeOptions
                         {

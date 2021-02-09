@@ -1238,19 +1238,38 @@ export const generateAccounts = (password: string) => async (
             if (wallet.type === WalletType.HD) {
                 const storageHDWallet = await HDWallet.loadFromStorage(wallet.id, password);
 
-                if (getAccounts(state, Blockchain.SOLANA).length === 0) {
-                    Promise.all([
-                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, -1),
-                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 0),
-                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 1),
-                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 2),
-                        storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.DEFAULT, 3)
-                    ]).then(async data => {
-                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[0][0]));
-                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[1][0]));
-                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[2][0]));
-                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[3][0]));
-                        dispatch(addAccount(wallet.id, Blockchain.SOLANA, data[4][0]));
+                const accounts = getAccounts(state, Blockchain.SOLANA);
+                if (accounts.length < 5) {
+                    const data = [];
+
+                    if (accounts.length === 0) {
+                        data.push(
+                            storageHDWallet.getAccounts(Blockchain.SOLANA, AccountType.ROOT, -1)
+                        );
+
+                        for (let index = 0; index <= 3; index++)
+                            data.push(
+                                storageHDWallet.getAccounts(
+                                    Blockchain.SOLANA,
+                                    AccountType.DEFAULT,
+                                    index
+                                )
+                            );
+                    } else {
+                        for (let index = accounts.length - 1; index <= 3; index++)
+                            data.push(
+                                storageHDWallet.getAccounts(
+                                    Blockchain.SOLANA,
+                                    AccountType.DEFAULT,
+                                    index
+                                )
+                            );
+                    }
+
+                    Promise.all(data).then(response => {
+                        response.map(value => {
+                            dispatch(addAccount(wallet.id, Blockchain.SOLANA, value[0]));
+                        });
                     });
                 }
             }

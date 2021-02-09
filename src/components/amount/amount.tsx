@@ -9,7 +9,6 @@ import { IExchangeRates } from '../../redux/market/state';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import { subscribeExchangeRateValue } from '../../core/utils/exchange-rates';
-import { updateExchangeRate } from '../../redux/market/actions';
 
 interface IExternalProps {
     testID?: string;

@@ -318,10 +318,14 @@ export class TransactionDetailsComponent extends React.Component<
                         />
                     </TouchableOpacity>
 
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>{transaction.nonce}</Text>
-                        <Text style={styles.textSecondary}>{translate('Transaction.nonce')}</Text>
-                    </View>
+                    {account.blockchain !== Blockchain.SOLANA && (
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.textPrimary}>{transaction.nonce}</Text>
+                            <Text style={styles.textSecondary}>
+                                {translate('Transaction.nonce')}
+                            </Text>
+                        </View>
+                    )}
                 </ScrollView>
             </View>
         );

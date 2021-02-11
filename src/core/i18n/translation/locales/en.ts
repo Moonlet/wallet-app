@@ -43,6 +43,7 @@ export const translation: ITranslations = {
                 contractDeploy: 'Contract deploy',
                 contractInit: 'Contract init',
                 copy: 'Copy',
+                copied: 'Copied',
                 create: 'Create',
                 createTicket: 'Create a ticket',
                 createStakeAccount: 'Create stake account',

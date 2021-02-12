@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Clipboard } from 'react-native';
 import { Icon } from '../../components/icon/icon';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
@@ -34,6 +34,7 @@ import { Client as ZilliqaClient } from '../../core/blockchain/zilliqa/client';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
+import { Dialog } from '../../components/dialog/dialog';
 
 interface IReduxProps {
     account: IAccountState;
@@ -318,10 +319,40 @@ export class TransactionDetailsComponent extends React.Component<
                         />
                     </TouchableOpacity>
 
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>{transaction.nonce}</Text>
-                        <Text style={styles.textSecondary}>{translate('Transaction.nonce')}</Text>
-                    </View>
+                    {account.blockchain !== Blockchain.SOLANA && (
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.textPrimary}>{transaction.nonce}</Text>
+                            <Text style={styles.textSecondary}>
+                                {translate('Transaction.nonce')}
+                            </Text>
+                        </View>
+                    )}
+
+                    {account.blockchain === Blockchain.SOLANA &&
+                        transaction?.additionalInfo?.currentBlockHash && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Clipboard.setString(
+                                        transaction.additionalInfo.currentBlockHash
+                                    );
+                                    Dialog.info(
+                                        translate('App.labels.copied'),
+                                        String(transaction.additionalInfo.currentBlockHash)
+                                    );
+                                }}
+                            >
+                                <View style={styles.rowContainer}>
+                                    <Text
+                                        numberOfLines={1}
+                                        ellipsizeMode="middle"
+                                        style={styles.textPrimary}
+                                    >
+                                        {transaction.additionalInfo.currentBlockHash}
+                                    </Text>
+                                    <Text style={styles.textSecondary}>{`Block Hash`}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
                 </ScrollView>
             </View>
         );

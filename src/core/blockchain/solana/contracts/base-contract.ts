@@ -42,7 +42,9 @@ export const buildBaseTransaction = async (
         broadcastedOnBlock: blockInfo?.number,
         nonce,
         status: TransactionStatus.PENDING,
-        data: {},
+        data: {
+            params: ['', tx.extraFields.amount]
+        },
         additionalInfo: {
             currentBlockHash: blockHash
         }

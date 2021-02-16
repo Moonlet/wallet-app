@@ -1,11 +1,13 @@
-import { AccountType, IAccountState } from '../../../redux/wallets/state';
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { AccountType, IAccountState, ITokenState } from '../../../redux/wallets/state';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils, IFeeOptions } from '../types';
 import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
 import { convert } from '../common/account';
 import { config } from './config';
 import HDNode from 'hdkey';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../types/token';
+import { availableAmount } from '../../utils/available-funds';
 
 export class EthereumAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex: number): string {
@@ -62,5 +64,15 @@ export class EthereumAccountUtils implements IBlockchainAccountUtils {
 
     public convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
+    }
+
+    public async availableAmount(
+        account: IAccountState,
+        value: string,
+        token: ITokenState,
+        chainId: ChainIdType,
+        options: { feeOptions?: IFeeOptions; action?: PosBasicActionType | 'transfer' }
+    ): Promise<string> {
+        return availableAmount(account, token, chainId, options.feeOptions, value);
     }
 }

@@ -37,7 +37,6 @@ import {
 } from '../../../redux/wallets/actions';
 import { HeaderLeft } from '../../../components/header-left/header-left';
 import { Dialog } from '../../../components/dialog/dialog';
-import { availableAmount } from '../../../core/utils/available-funds';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -134,15 +133,15 @@ export class ProcessTransactionsComponent extends React.Component<
                     this.props.transactions[0].token.symbol
                 ];
 
-                const amount = await availableAmount(
+                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
+                const amount = await blockchainInstance.account.availableAmount(
                     this.props.selectedAccount,
+                    undefined,
                     token,
                     this.props.chainId,
-                    undefined,
-                    undefined
+                    {}
                 );
 
-                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
                 const tokenConfig = getTokenConfig(
                     this.props.selectedAccount.blockchain,
                     token.symbol

@@ -1,5 +1,7 @@
-import { IAccountState } from '../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { BigNumber } from 'bignumber.js';
+import { ChainIdType, IFeeOptions } from '.';
+import { PosBasicActionType } from './token';
 
 export interface IBlockchainAccountUtils {
     getAccountDerivationPath(accountIndex: number): string;
@@ -16,4 +18,12 @@ export interface IBlockchainAccountUtils {
     amountToStd(value: BigNumber | number | string, decimals: number): BigNumber;
     amountFromStd(value: BigNumber, decimals: number): BigNumber;
     convertUnit(value: BigNumber, from: string, to: string): BigNumber;
+
+    availableAmount(
+        account: IAccountState,
+        value: string,
+        token: ITokenState,
+        chainId: ChainIdType,
+        options: { feeOptions?: IFeeOptions; action?: PosBasicActionType | 'transfer' }
+    ): Promise<string>;
 }

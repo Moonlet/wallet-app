@@ -1,6 +1,6 @@
-import { AccountType, IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState, ITokenState } from '../../../redux/wallets/state';
 
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils, IFeeOptions } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -8,6 +8,8 @@ import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 import { encode as bs58Encode, decode as bs58Decode } from 'bs58';
 import * as nacl from 'tweetnacl';
 import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
+import { PosBasicActionType } from '../types/token';
+import { availableAmount } from '../../utils/available-funds';
 
 export class SolanaAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex): string {
@@ -68,5 +70,15 @@ export class SolanaAccountUtils implements IBlockchainAccountUtils {
 
     convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
+    }
+
+    public availableAmount(
+        account: IAccountState,
+        value: string,
+        token: ITokenState,
+        chainId: ChainIdType,
+        options: { feeOptions?: IFeeOptions; action?: PosBasicActionType | 'transfer' }
+    ): Promise<string> {
+        return availableAmount(account, token, chainId, options.feeOptions, value);
     }
 }

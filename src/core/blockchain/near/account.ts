@@ -1,5 +1,5 @@
-import { AccountType, IAccountState } from '../../../redux/wallets/state';
-import { Blockchain, ChainIdType, IBlockchainAccountUtils } from '../types';
+import { AccountType, IAccountState, ITokenState } from '../../../redux/wallets/state';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils, IFeeOptions } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -9,6 +9,8 @@ import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 import { sha256 } from 'js-sha256';
 import { NEAR_LOCKUP_SUFFIX } from '../../constants/app';
+import { PosBasicActionType } from '../types/token';
+import { availableAmount } from '../../utils/available-funds';
 
 export class NearAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex: number): string {
@@ -73,5 +75,15 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
 
     public getLockupContract(accountId: string, chainId: ChainIdType): string {
         return sha256(Buffer.from(accountId)).substring(0, 40) + NEAR_LOCKUP_SUFFIX[chainId];
+    }
+
+    public availableAmount(
+        account: IAccountState,
+        value: string,
+        token: ITokenState,
+        chainId: ChainIdType,
+        options: { feeOptions?: IFeeOptions; action?: PosBasicActionType | 'transfer' }
+    ): Promise<string> {
+        return availableAmount(account, token, chainId, options.feeOptions, value);
     }
 }

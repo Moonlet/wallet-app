@@ -1,4 +1,4 @@
-import { AccountType, IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState, ITokenState } from '../../../redux/wallets/state';
 import {
     getPubKeyFromPrivateKey,
     getAddressFromPrivateKey,
@@ -6,12 +6,14 @@ import {
 } from '@zilliqa-js/crypto/dist/util'; // import like this to optimize imports
 import { toBech32Address, fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils, IFeeOptions } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
 import HDNode from 'hdkey';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../types/token';
+import { availableAmount } from '../../utils/available-funds';
 
 export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex: number): string {
@@ -64,5 +66,15 @@ export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
 
     public convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
+    }
+
+    public availableAmount(
+        account: IAccountState,
+        value: string,
+        token: ITokenState,
+        chainId: ChainIdType,
+        options: { feeOptions?: IFeeOptions; action?: PosBasicActionType | 'transfer' }
+    ): Promise<string> {
+        return availableAmount(account, token, chainId, options.feeOptions, value);
     }
 }

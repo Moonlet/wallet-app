@@ -143,8 +143,7 @@ export class PosBasicActionComponent extends React.Component<
             this.props.account,
             this.props.token,
             this.props.chainId,
-            undefined,
-            activeBalance
+            { balanceAvailable: activeBalance, posAction: this.props.basicAction }
         );
 
         this.setState({ availableAmount: amount });
@@ -306,6 +305,7 @@ export class PosBasicActionComponent extends React.Component<
                 tokenConfig.decimals
             )
             .toFixed();
+
         this.setState({ amount }, () => {
             const { insufficientFunds, insufficientFundsFees } = availableFunds(
                 amount,

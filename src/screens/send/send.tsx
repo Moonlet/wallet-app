@@ -148,7 +148,7 @@ export class SendScreenComponent extends React.Component<
             this.props.account,
             this.props.token,
             this.props.chainId,
-            this.state.feeOptions
+            { feeOptions: this.state.feeOptions }
         );
 
         this.setState({ availableAmount: amount });

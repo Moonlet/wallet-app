@@ -15,6 +15,7 @@ import { ClientUtils } from './client-utils';
 import { Connection } from '@solana/web3.js/src/connection';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
+import DeviceInfo from 'react-native-device-info';
 
 export class Client extends BlockchainGenericClient {
     private connection;
@@ -32,7 +33,8 @@ export class Client extends BlockchainGenericClient {
             const data = await new ApiClient().validators.getBalance(
                 address,
                 Blockchain.SOLANA,
-                this.chainId.toString()
+                this.chainId.toString(),
+                DeviceInfo.getVersion()
             );
             return {
                 total: data?.balance.total || new BigNumber(0),

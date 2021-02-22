@@ -72,6 +72,7 @@ export class ValidatorsApiClient {
         address: string,
         blockchain: Blockchain,
         chainId: string,
+        appVersion?: string,
         validatorId?: string
     ) {
         try {
@@ -79,6 +80,7 @@ export class ValidatorsApiClient {
                 blockchain,
                 address,
                 chainId,
+                appVersion,
                 validatorId
             });
 

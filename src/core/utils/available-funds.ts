@@ -78,7 +78,7 @@ export const minBalanceNear = async (address: string, chainId: ChainIdType): Pro
     });
     return new BigNumber(viewAccountRes?.result?.storage_usage || 500)
         .dividedBy(new BigNumber('10000')) // min balance = storage_used / 10^4
-        .plus(new BigNumber(0.1)); // keep 2 NEAR in account
+        .plus(new BigNumber(0.1)); // keep 0.1 NEAR in account
 };
 
 export const availableAmount = async (

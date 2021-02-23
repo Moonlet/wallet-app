@@ -138,8 +138,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     this.props.selectedAccount,
                     token,
                     this.props.chainId,
-                    undefined,
-                    undefined
+                    { balanceAvailable: this.props.transactions[0].amount }
                 );
 
                 const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);

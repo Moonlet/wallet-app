@@ -1,6 +1,6 @@
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
-import { TokenType } from '../blockchain/types/token';
+import { PosBasicActionType, TokenType } from '../blockchain/types/token';
 import { getBlockchain } from '../blockchain/blockchain-factory';
 import { AccountType, IAccountState, ITokenState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType, IFeeOptions } from '../blockchain/types';
@@ -67,34 +67,50 @@ export const availableFunds = (
     return result;
 };
 
+export const minBalanceNear = async (address: string, chainId: ChainIdType): Promise<BigNumber> => {
+    const blockchainInstance = getBlockchain(Blockchain.NEAR);
+    const client = blockchainInstance.getClient(chainId);
+
+    const viewAccountRes = await client.http.jsonRpc('query', {
+        request_type: 'view_account',
+        finality: 'final',
+        account_id: address
+    });
+    return new BigNumber(viewAccountRes?.result?.storage_usage || 500)
+        .dividedBy(new BigNumber('10000')) // min balance = storage_used / 10^4
+        .plus(new BigNumber(0.1)); // keep 0.1 NEAR in account
+};
+
 export const availableAmount = async (
     account: IAccountState,
     token: ITokenState,
     chainId: ChainIdType,
-    feeOptions?: IFeeOptions,
-    balanceAvailable?: string
+    options: { feeOptions?: IFeeOptions; balanceAvailable?: string; posAction?: PosBasicActionType }
 ): Promise<string> => {
     const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
-    let balance: BigNumber = balanceAvailable
-        ? getInputAmountToStd(account, token, balanceAvailable)
+    let balance: BigNumber = options.balanceAvailable
+        ? getInputAmountToStd(account, token, options.balanceAvailable)
         : new BigNumber(token.balance?.value);
 
     const blockchainInstance = getBlockchain(account.blockchain);
 
     // TODO: find a better place to handle this
     if (account.blockchain === Blockchain.NEAR && account.type === AccountType.DEFAULT) {
-        const client = blockchainInstance.getClient(chainId);
+        let minBalance;
 
-        const viewAccountRes = await client.http.jsonRpc('query', {
-            request_type: 'view_account',
-            finality: 'final',
-            account_id: account.address
-        });
-
-        const minBalance = new BigNumber(viewAccountRes?.result?.storage_usage || 500)
-            .dividedBy(new BigNumber('10000')) // min balance = storage_used / 10^4
-            .plus(new BigNumber(2)); // keep 2 NEAR in account
+        if (options.posAction) {
+            switch (options.posAction) {
+                case PosBasicActionType.UNSTAKE:
+                case PosBasicActionType.WITHDRAW:
+                    minBalance = new BigNumber(0);
+                    break;
+                default:
+                    minBalance = await minBalanceNear(account.address, chainId);
+            }
+        } else {
+            minBalance = await minBalanceNear(account.address, chainId);
+        }
 
         const amountToStd = blockchainInstance.account.amountToStd(
             minBalance,
@@ -103,8 +119,8 @@ export const availableAmount = async (
 
         balance = balance.minus(amountToStd);
     } else {
-        if (feeOptions && tokenConfig.type === TokenType.NATIVE) {
-            balance = balance.minus(feeOptions?.feeTotal);
+        if (options.feeOptions && tokenConfig.type === TokenType.NATIVE) {
+            balance = balance.minus(options.feeOptions?.feeTotal);
         }
     }
 

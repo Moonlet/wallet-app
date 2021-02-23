@@ -93,8 +93,7 @@ export class EnterAmountComponentComponent extends React.Component<
             this.props.account,
             this.props.token,
             this.props.chainId,
-            undefined, // removed fee options, we have a minimum amount that we keep in account, for future transactions
-            this.props.balanceForDelegate
+            { balanceAvailable: this.props.balanceForDelegate }
         );
 
         const { insufficientFunds, insufficientFundsFees } = availableFunds(

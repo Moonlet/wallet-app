@@ -238,7 +238,7 @@ export class Staking {
             raw
         };
 
-        transaction.additionalInfo.posAction = PosBasicActionType.STAKE;
+        transaction.additionalInfo.posAction = PosBasicActionType.REDELEGATE;
         transaction.additionalInfo.validatorName = toValidator.name;
 
         return transaction;

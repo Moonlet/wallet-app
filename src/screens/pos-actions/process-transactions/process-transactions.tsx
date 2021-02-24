@@ -134,11 +134,16 @@ export class ProcessTransactionsComponent extends React.Component<
                     this.props.transactions[0].token.symbol
                 ];
 
+                const balanceAvailable =
+                    this.props.transactions[0].amount === '0'
+                        ? undefined
+                        : this.props.transactions[0].amount;
+
                 const amount = await availableAmount(
                     this.props.selectedAccount,
                     token,
                     this.props.chainId,
-                    { balanceAvailable: this.props.transactions[0].amount }
+                    { balanceAvailable }
                 );
 
                 const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
@@ -263,7 +268,8 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('App.labels.unvoting') + ' ' + amount;
                 break;
             }
-            case PosBasicActionType.STAKE: {
+            case PosBasicActionType.STAKE:
+            case PosBasicActionType.REDELEGATE: {
                 topText = translate('App.labels.stake') + ' ' + amount;
                 middleText =
                     translate('App.labels.to').toLowerCase() +

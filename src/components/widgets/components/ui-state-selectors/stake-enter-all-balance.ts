@@ -48,3 +48,45 @@ export const getStakeEnterAllBalance = (state: IReduxState, module: IScreenModul
 
     return blockchainInstance.account.amountFromStd(balance, tokenConfig.decimals);
 };
+
+export const getAvailableBalanceFormatParams = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const blockchain = account.blockchain;
+    const blockchainInstance = getBlockchain(blockchain);
+    const chainId = getChainId(state, blockchain);
+    const token = account.tokens[chainId][blockchainInstance.config.coin];
+
+    const balance = (params && params[0] && new BigNumber(params[0])) || new BigNumber(0);
+
+    const tokenConfig = getTokenConfig(blockchain, token.symbol);
+
+    const amountFromStd = blockchainInstance.account.amountFromStd(balance, tokenConfig.decimals);
+
+    return formatNumber(amountFromStd, {
+        currency: tokenConfig.symbol
+    });
+};
+
+export const getAvailableBalanceParams = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const blockchain = account.blockchain;
+    const blockchainInstance = getBlockchain(blockchain);
+    const chainId = getChainId(state, blockchain);
+    const token = account.tokens[chainId][blockchainInstance.config.coin];
+
+    const balance = (params && params[0] && new BigNumber(params[0])) || new BigNumber(0);
+
+    const tokenConfig = getTokenConfig(blockchain, token.symbol);
+
+    return blockchainInstance.account.amountFromStd(balance, tokenConfig.decimals);
+};

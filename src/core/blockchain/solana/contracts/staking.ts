@@ -58,22 +58,19 @@ export class Staking {
         return transaction;
     }
 
-    public async split(
-        tx: IPosTransaction,
-        splitStakePubKey: string
-    ): Promise<IBlockchainTransaction> {
+    public async split(tx: IPosTransaction): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
 
         const blockHash = await this.client.getCurrentBlockHash();
         const stakePubkey = new PublicKey(tx.extraFields.stakeAccountKey);
         const baseAccountKey = new PublicKey(tx.account.address);
-        const newStakeAccountKey = new PublicKey(splitStakePubKey);
+        const splitFromKey = new PublicKey(tx.extraFields.splitFrom);
 
         const solanaTransaction = new Transaction();
         solanaTransaction.add(
             SystemProgram.createAccountWithSeed({
                 fromPubkey: baseAccountKey,
-                newAccountPubkey: newStakeAccountKey,
+                newAccountPubkey: stakePubkey,
                 basePubkey: baseAccountKey,
                 seed: `stake:${tx.extraFields.stakeAccountIndex}`,
                 lamports: tx.amount,
@@ -87,8 +84,8 @@ export class Staking {
 
         solanaTransaction.add({
             keys: [
+                { pubkey: splitFromKey, isSigner: false, isWritable: true },
                 { pubkey: stakePubkey, isSigner: false, isWritable: true },
-                { pubkey: newStakeAccountKey, isSigner: false, isWritable: true },
                 { pubkey: baseAccountKey, isSigner: true, isWritable: false }
             ],
             programId: StakeProgram.programId,

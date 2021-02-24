@@ -209,7 +209,8 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 solanaTxSplit.amount = new BigNumber(tx.amount).toFixed();
                 const solanaTransactionSplit: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
-                ].split(solanaTxSplit, solanaTxSplit.extraFields.splitFrom);
+                ].split(solanaTxSplit);
+
                 transactions.push(solanaTransactionSplit);
                 break;
             case PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE:

@@ -5,7 +5,12 @@ import {
     getSwitchNodeSelectedValidatorName,
     getSwitchNodeSelectedToValidatorName
 } from './switch-node-selected-validator';
-import { getStakeEnterAllBalance, getStakeEnterAllBalanceFormat } from './stake-enter-all-balance';
+import {
+    getStakeEnterAllBalance,
+    getStakeEnterAllBalanceFormat,
+    getAvailableBalanceParams,
+    getAvailableBalanceFormatParams
+} from './stake-enter-all-balance';
 import {
     getSwitchNodeEnterAvailableBalance,
     getSwitchNodeEnterAvailableBalanceFormat
@@ -21,6 +26,8 @@ import { getStakeNowSelectValidators } from './stake-now';
 const uiStateSelectors = {
     getStakeEnterAllBalance,
     getStakeEnterAllBalanceFormat,
+    getAvailableBalanceParams,
+    getAvailableBalanceFormatParams,
 
     getSwitchNodeEnterAvailableBalance,
     getSwitchNodeEnterAvailableBalanceFormat,

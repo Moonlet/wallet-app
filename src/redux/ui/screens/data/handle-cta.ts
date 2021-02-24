@@ -1239,7 +1239,8 @@ const handleCtaAction = async (
                         undefined, // feeOptions
                         {
                             stakeAccountKey: action.params.params.stakeAccountKey,
-                            splitFrom: action.params.params.splitFrom
+                            splitFrom: action.params.params.splitFrom,
+                            stakeAccountIndex: action.params.params.stakeAccountIndex
                         }
                     )(dispatch, getState);
                     break;

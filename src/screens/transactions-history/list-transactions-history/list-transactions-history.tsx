@@ -131,6 +131,8 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
             case PosBasicActionType.CREATE_STAKE_ACCOUNT:
             case PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE:
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT:
+            case PosBasicActionType.SPLIT_STAKE:
                 primaryText = undefined;
                 break;
             default:
@@ -266,7 +268,9 @@ export class TransactionsHistoryListComponent extends React.Component<
 
             if (
                 posAction === PosBasicActionType.CREATE_STAKE_ACCOUNT ||
-                posAction === PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE
+                posAction === PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE ||
+                posAction === PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT ||
+                posAction === PosBasicActionType.SPLIT_STAKE
             ) {
                 transactionType = translate('App.labels.createStakeAccount') + ' ';
             }

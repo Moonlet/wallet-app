@@ -1,7 +1,7 @@
-Team's log. Stardate 2102.09:
+Team's log. Stardate 2102.24:
 
-We've completely integrated the Solana network and we are happy to let you know that you are now able to securely stake your SOL directly from Moonlet wallet or connected through your Ledger X or S device.
+We fixed some bugs on NEAR related to pending transactions and unstake available balance. We also made some optimisation here and there. 
 
-As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app. Just go to Settings > Report issue.
+As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 
 Moonlet Team

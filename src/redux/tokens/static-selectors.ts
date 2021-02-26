@@ -5,6 +5,7 @@ import { ITokenConfigState } from './state';
 import { IAccountState, ITokensAccountState, ITokenState } from '../wallets/state';
 import { getChainId } from '../preferences/selectors';
 import { addTokenForBlockchain } from './actions';
+import { pickInsensitiveKey } from '../../core/utils/pick';
 
 export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenConfigState => {
     const blockchainTokens = getBlockchain(blockchain).config.tokens;
@@ -12,16 +13,14 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
     const chainId = getChainId(state, blockchain);
 
     const reduxToken = state.tokens;
-    if (
-        reduxToken[blockchain] &&
-        reduxToken[blockchain][chainId] &&
-        reduxToken[blockchain][chainId][symbol]
-    ) {
-        return reduxToken[blockchain][chainId][symbol];
+    if (reduxToken[blockchain] && reduxToken[blockchain][chainId]) {
+        const token = pickInsensitiveKey(reduxToken[blockchain][chainId], symbol);
+        if (token) return token;
     }
 
-    if (blockchainTokens[symbol]) {
-        return blockchainTokens[symbol];
+    const blockchainToken = pickInsensitiveKey(blockchainTokens, symbol);
+    if (blockchainToken) {
+        return blockchainToken;
     }
 };
 

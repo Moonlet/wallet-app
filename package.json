@@ -1,6 +1,6 @@
 {
     "name": "moonlet",
-    "version": "1.4.28",
+    "version": "1.4.29",
     "private": true,
     "scripts": {
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",

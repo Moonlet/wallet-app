@@ -1,7 +1,6 @@
-Team's log. Stardate 2102.24:
+Team's log. Stardate 2103.08:
 
-We fixed some bugs on NEAR related to pending transactions and unstake available balance. We also made some optimisation here and there. 
-
+We fixed some bugs which impacted gZIL transfers. That's it for now. 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 
 Moonlet Team

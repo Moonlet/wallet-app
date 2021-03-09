@@ -145,9 +145,9 @@ jobs:
       - name: Run fastlane beta
         run: xcversion select 12.0.1 && cd ios/fastlane && SPACESHIP_SKIP_2FA_UPGRADE=1 bundle exec fastlane beta
         env:
-          MATCH_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
           NODE_ENV: production

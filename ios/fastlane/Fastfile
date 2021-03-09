@@ -66,7 +66,8 @@ platform :ios do
       beta_app_description: "Moonlet Beta App " + get_version_number(target:"Moonlet_beta"),
       beta_app_feedback_email: "tibi@moonlet.xyz",
       skip_waiting_for_build_processing: true,
-      distribute_external: false
+      distribute_external: false,
+      verbose: true
     )
 
   end

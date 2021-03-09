@@ -63,7 +63,6 @@ platform :ios do
     
     pilot(
       changelog: changelog,
-      apple_id: "publishers@moonlet.xyz",
       beta_app_description: "Moonlet Beta App " + get_version_number(target:"Moonlet_beta"),
       beta_app_feedback_email: "tibi@moonlet.xyz",
       skip_waiting_for_build_processing: true,

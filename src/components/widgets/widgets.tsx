@@ -51,31 +51,52 @@ class WidgetsComponent extends React.Component<
     public componentDidMount() {
         const widgetsExpandedState = {};
 
-        for (const widget of this.props.data) {
+        for (const [index, widget] of this.props.data.entries()) {
+            const key = widget?.title && this.getWidgetKey(widget.title, index);
+
             if (widget?.title && widget?.expandable) {
-                widgetsExpandedState[this.getWidgetKey(widget.title)] = false;
+                widgetsExpandedState[key] = false;
+            }
+
+            if (widget?.initialState === 'expanded') {
+                widgetsExpandedState[key] = true;
             }
         }
 
         this.setState({ widgetsExpandedState });
+
+        this.subscribePubSubEvents();
+    }
+
+    private subscribePubSubEvents() {
+        this.props.pubSub &&
+            this.props.pubSub.subscribe(
+                SmartScreenPubSubEvents.COLLAPSE_ALL,
+                () => this.collapseAllWidgets(),
+                undefined
+            );
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
         if (this.props.blockchain !== prevProps.blockchain) {
-            // Widgets Expanded States set on false
-            const widgetsExpandedState = this.state.widgetsExpandedState;
-            Object.keys(widgetsExpandedState).map(widget => (widgetsExpandedState[widget] = false));
-            this.setState({ widgetsExpandedState });
+            this.collapseAllWidgets();
         }
     }
 
-    private getWidgetKey(title: string) {
+    private collapseAllWidgets() {
+        const widgetsExpandedState = this.state.widgetsExpandedState;
+        Object.keys(widgetsExpandedState).map(widget => (widgetsExpandedState[widget] = false));
+        this.setState({ widgetsExpandedState });
+    }
+
+    private getWidgetKey(title: string, index: number) {
         return (
             'widget-' +
             title
                 .split(' ')
                 .join('-')
-                .toLocaleLowerCase()
+                .toLocaleLowerCase() +
+            `-${index}`
         );
     }
 
@@ -84,12 +105,9 @@ class WidgetsComponent extends React.Component<
         const { widgetsExpandedState } = this.state;
 
         if (widget?.expandable) {
-            const widgetKey = this.getWidgetKey(widget.title);
+            const widgetKey = this.getWidgetKey(widget.title, index);
 
-            let isWidgetExpanded = widgetsExpandedState[widgetKey] || false;
-            if (widget?.initialState === 'expanded') {
-                isWidgetExpanded = true;
-            }
+            const isWidgetExpanded = widgetsExpandedState[widgetKey] || false;
 
             return (
                 <TouchableOpacity

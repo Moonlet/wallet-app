@@ -43,7 +43,8 @@ export interface ISmartScreenActions {
 }
 
 export enum SmartScreenPubSubEvents {
-    SCROLL_TO_END = 'scrollToEnd'
+    SCROLL_TO_END = 'scrollToEnd',
+    COLLAPSE_ALL = 'collapseAll'
 }
 
 export interface IScreenUser {

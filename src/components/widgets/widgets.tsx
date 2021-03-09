@@ -115,6 +115,12 @@ class WidgetsComponent extends React.Component<
                     style={[styles.widgetContainer, widget?.style && formatStyles(widget.style)]}
                     activeOpacity={0.9}
                     onPress={() => {
+                        widget?.cta &&
+                            actions?.handleCta(widget.cta, {
+                                screenKey,
+                                pubSub: this.props.pubSub
+                            });
+
                         const wigetsState = widgetsExpandedState;
                         wigetsState[widgetKey] = !wigetsState[widgetKey];
                         this.setState({ widgetsExpandedState: wigetsState });

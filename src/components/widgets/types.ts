@@ -153,6 +153,7 @@ export interface IScreenWidget {
     initialState?: 'collapsed' | 'expanded';
     style?: IDataStyle;
     modules: IScreenModule[];
+    cta?: ICta;
 }
 
 export interface IScreenModule {

@@ -22,6 +22,7 @@ import {
     getStakeAmountValidatorSplit
 } from './input-balance-format';
 import { getStakeNowSelectValidators } from './stake-now';
+import { getTokenAvailableBalanceFormat, getTokenAvailableBalance } from './token-balance';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
@@ -41,7 +42,10 @@ const uiStateSelectors = {
 
     getStakeAmountPerValidator,
 
-    getStakeNowSelectValidators
+    getStakeNowSelectValidators,
+
+    getTokenAvailableBalanceFormat,
+    getTokenAvailableBalance
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

@@ -133,6 +133,24 @@ export class AccountTabComponent extends React.Component<
                             >
                                 {translate('App.labels.receive')}
                             </Button>
+                            <Button
+                                style={styles.button}
+                                wrapperStyle={{ flex: 1 }}
+                                onPress={() =>
+                                    NavigationService.navigate('SmartScreen', {
+                                        context: {
+                                            screen: 'Swap',
+                                            step: 'SwapEnterAmount',
+                                            key: 'swap-enter-amount'
+                                        },
+                                        navigationOptions: {
+                                            title: 'Swap' //
+                                        }
+                                    })
+                                }
+                            >
+                                {'Swap'}
+                            </Button>
                         </View>
 
                         {Platform.OS !== 'web' && (

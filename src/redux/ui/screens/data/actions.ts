@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import DeviceInfo from 'react-native-device-info';
+// import DeviceInfo from 'react-native-device-info';
 import { IReduxState } from '../../../state';
 import {
     IScreenContext,
@@ -57,7 +57,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',
             deviceId: state.preferences.deviceId,
-            appVersion: DeviceInfo.getVersion(),
+            appVersion: '1.4.28', // DeviceInfo.getVersion(),
             theme: 'dark',
             lang: 'en',
 

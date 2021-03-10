@@ -63,6 +63,8 @@ const mapDispatchToProps = {
 class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
+    private textInputRef: any;
+
     public componentDidMount() {
         this.props.actions.clearScreenInputData(this.props.screenKey, {
             amount: undefined
@@ -74,6 +76,10 @@ class AmountInputComponent extends React.Component<
                 context: this.props.context,
                 screenKey: this.props.screenKey
             });
+        }
+
+        if ((this.props.module.data as IAmountInputData)?.focus) {
+            this.textInputRef?.focus();
         }
     }
 
@@ -179,6 +185,7 @@ class AmountInputComponent extends React.Component<
                     <View style={[styles.inputBox, formatStyles(data?.input?.style)]}>
                         <TextInput
                             testID="enter-amount"
+                            ref={ref => (this.textInputRef = ref)}
                             style={[styles.inputText, formatStyles(data?.input?.textStyle)]}
                             autoCapitalize={'none'}
                             autoCorrect={false}

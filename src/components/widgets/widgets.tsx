@@ -90,24 +90,19 @@ class WidgetsComponent extends React.Component<
     }
 
     private getWidgetKey(title: string, index: number) {
-        return (
-            'widget-' +
-            title
-                .split(' ')
-                .join('-')
-                .toLocaleLowerCase() +
-            `-${index}`
-        );
+        return `widget-${index}-${title
+            .split(' ')
+            .join('-')
+            .toLocaleLowerCase()}`;
     }
 
     private renderWidget(widget: IScreenWidget, index: number) {
         const { actions, context, screenKey, styles } = this.props;
-        const { widgetsExpandedState } = this.state;
 
         if (widget?.expandable) {
             const widgetKey = this.getWidgetKey(widget.title, index);
 
-            const isWidgetExpanded = widgetsExpandedState[widgetKey] || false;
+            const isWidgetExpanded = this.state.widgetsExpandedState[widgetKey] || false;
 
             return (
                 <TouchableOpacity
@@ -121,9 +116,12 @@ class WidgetsComponent extends React.Component<
                                 pubSub: this.props.pubSub
                             });
 
-                        const wigetsState = widgetsExpandedState;
-                        wigetsState[widgetKey] = !wigetsState[widgetKey];
-                        this.setState({ widgetsExpandedState: wigetsState });
+                        this.setState({
+                            widgetsExpandedState: {
+                                ...this.state.widgetsExpandedState,
+                                [widgetKey]: !this.state.widgetsExpandedState[widgetKey]
+                            }
+                        });
                     }}
                 >
                     <View>

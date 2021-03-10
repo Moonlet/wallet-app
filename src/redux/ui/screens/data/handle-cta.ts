@@ -1140,6 +1140,11 @@ const handleCtaAction = async (
                         options.pubSub.emit(SmartScreenPubSubEvents.SCROLL_TO_END, undefined);
                     break;
 
+                case 'widgetsCollapseAll':
+                    options?.pubSub &&
+                        options.pubSub.emit(SmartScreenPubSubEvents.COLLAPSE_ALL, undefined);
+                    break;
+
                 case 'solanaDelegateStakeAccount': {
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);

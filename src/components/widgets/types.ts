@@ -43,7 +43,8 @@ export interface ISmartScreenActions {
 }
 
 export enum SmartScreenPubSubEvents {
-    SCROLL_TO_END = 'scrollToEnd'
+    SCROLL_TO_END = 'scrollToEnd',
+    COLLAPSE_ALL = 'collapseAll'
 }
 
 export interface IScreenUser {
@@ -152,6 +153,7 @@ export interface IScreenWidget {
     initialState?: 'collapsed' | 'expanded';
     style?: IDataStyle;
     modules: IScreenModule[];
+    cta?: ICta;
 }
 
 export interface IScreenModule {

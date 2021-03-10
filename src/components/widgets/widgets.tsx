@@ -107,9 +107,11 @@ class WidgetsComponent extends React.Component<
             return (
                 <TouchableOpacity
                     key={`widget-${index}`}
-                    style={[styles.widgetContainer, widget?.style && formatStyles(widget.style)]}
+                    style={[styles.widgetContainer, formatStyles(widget?.style)]}
                     activeOpacity={0.9}
                     onPress={() => {
+                        const widgetExpandedValue = !this.state.widgetsExpandedState[widgetKey];
+
                         widget?.cta &&
                             actions?.handleCta(widget.cta, {
                                 screenKey,
@@ -119,7 +121,7 @@ class WidgetsComponent extends React.Component<
                         this.setState({
                             widgetsExpandedState: {
                                 ...this.state.widgetsExpandedState,
-                                [widgetKey]: !this.state.widgetsExpandedState[widgetKey]
+                                [widgetKey]: widgetExpandedValue
                             }
                         });
                     }}

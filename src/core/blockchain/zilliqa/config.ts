@@ -11,6 +11,8 @@ import { AccountType } from '../../../redux/wallets/state';
 import { Platform } from 'react-native';
 import { PORT_MAINNET } from './tokens/port';
 import { ZWAP_MAINNET } from './tokens/zwap';
+import { REDC_MAINNET } from './tokens/redc';
+
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -128,7 +130,8 @@ export const config: IBlockchainConfig = {
             gZIL: GZIL_MAINNET,
             XSGD: XSGD_MAINNET,
             PORT: PORT_MAINNET,
-            ZWAP: ZWAP_MAINNET
+            ZWAP: ZWAP_MAINNET,
+            REDC: REDC_MAINNET
         },
         '333': {
             gZIL: GZIL_TESTNET

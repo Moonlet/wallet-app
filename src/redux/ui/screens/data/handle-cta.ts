@@ -809,6 +809,23 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'swap': {
+                    handleCta({
+                        type: 'callAction',
+                        params: {
+                            action: 'delegateToValidatorV2',
+                            params: {
+                                step: action.params?.params?.step,
+                                validators: action.params?.params?.validators,
+                                flowId: action.params?.params?.flowId,
+                                token: action.params?.params?.token
+                            }
+                        }
+                    })(dispatch, getState);
+
+                    break;
+                }
+
                 case 'amountSelectableBoxPercentageSwap': {
                     break;
                 }

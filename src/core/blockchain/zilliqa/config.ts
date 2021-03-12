@@ -214,5 +214,6 @@ export const config: IBlockchainConfig = {
 };
 
 export enum Contracts {
-    STAKING = 'STAKING'
+    STAKING = 'STAKING',
+    SWAP = 'SWAP'
 }

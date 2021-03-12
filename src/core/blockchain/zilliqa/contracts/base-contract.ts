@@ -21,12 +21,14 @@ export enum ContractFields {
 export const fetchContracts = async (chainId: ChainIdType) => {
     // TODO - fetch from blockchain
 
-    const key = `zilliqa.${chainId}.staking.contract`;
+    const keyStaking = `zilliqa.${chainId}.staking.contract`;
+    const keySwap = `zilliqa.${chainId}.swap.contract`;
     try {
-        const configs = await new ApiClient().configs.getConfigs([key]);
+        const configs = await new ApiClient().configs.getConfigs([keyStaking, keySwap]);
         const values = {
             ...contracts[chainId],
-            [Contracts.STAKING]: configs.result[key]
+            [Contracts.STAKING]: configs.result[keyStaking],
+            [Contracts.SWAP]: configs.result[keySwap]
         };
         return values;
     } catch (error) {

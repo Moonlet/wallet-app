@@ -809,6 +809,10 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'amountSelectableBoxPercentageSwap': {
+                    break;
+                }
+
                 case 'amountSelectableBoxPercentageToMoonlet': {
                     const screenKey = options?.screenKey;
 

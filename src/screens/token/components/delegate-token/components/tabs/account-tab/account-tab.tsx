@@ -142,9 +142,6 @@ export class AccountTabComponent extends React.Component<
                                             screen: 'Swap',
                                             step: 'SwapEnterAmount',
                                             key: 'swap-enter-amount'
-                                        },
-                                        navigationOptions: {
-                                            title: 'Swap' //
                                         }
                                     })
                                 }

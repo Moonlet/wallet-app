@@ -6,12 +6,20 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getSelectedAccount } from '../../../../redux/wallets/selectors';
+import { IScreenModule } from '../../types';
 
-export const getTokenAvailableBalanceFormat = (state: IReduxState, tokenSymbol: string) => {
+export const getTokenAvailableBalanceFormat = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
     const account = getSelectedAccount(state);
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
+
+    const tokenSymbol = params && params[0];
 
     const token = pickInsensitiveKey(account.tokens[chainId], tokenSymbol);
 
@@ -26,11 +34,18 @@ export const getTokenAvailableBalanceFormat = (state: IReduxState, tokenSymbol: 
     });
 };
 
-export const getTokenAvailableBalance = (state: IReduxState, tokenSymbol: string) => {
+export const getTokenAvailableBalance = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
     const account = getSelectedAccount(state);
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
+
+    const tokenSymbol = params && params[0];
 
     const token = pickInsensitiveKey(account.tokens[chainId], tokenSymbol);
 

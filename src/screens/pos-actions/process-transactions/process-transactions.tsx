@@ -30,14 +30,11 @@ import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { bind } from 'bind-decorator';
-import {
-    addAccount,
-    setSelectedAccount,
-    signAndSendTransactions
-} from '../../../redux/wallets/actions';
+import { addAccount, setSelectedAccount } from '../../../redux/wallets/actions';
 import { HeaderLeft } from '../../../components/header-left/header-left';
 import { Dialog } from '../../../components/dialog/dialog';
 import { availableAmount } from '../../../core/utils/available-funds';
+import { signAndSendTransactions } from '../../../redux/wallets/actions/util-actions';
 
 interface IReduxProps {
     isVisible: boolean;

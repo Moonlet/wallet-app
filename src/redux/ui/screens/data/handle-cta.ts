@@ -12,7 +12,6 @@ import {
 import { getChainId } from '../../../preferences/selectors';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import {
-    buildDummyValidator,
     claimRewardNoInput,
     delegate,
     delegateV2,
@@ -60,6 +59,7 @@ import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { PubSub } from '../../../../core/blockchain/common/pub-sub';
 import { IconValues } from '../../../../components/icon/values';
 import { delay } from '../../../../core/utils/time';
+import { buildDummyValidator } from '../../../wallets/actions/util-actions';
 
 export const handleCta = (
     cta: ICta,

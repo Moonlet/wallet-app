@@ -5,7 +5,9 @@ import { IReduxState } from '../../../../../state';
 
 interface ISwapTokenParams {
     fromToken: string;
+    fromAmount: string;
     toToken: string;
+    toAmount: string;
 }
 
 export const swapToken = (context: IHandleCtaActionContext<ISwapTokenParams>) => async (

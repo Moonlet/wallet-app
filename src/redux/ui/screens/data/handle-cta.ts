@@ -60,7 +60,7 @@ import { PubSub } from '../../../../core/blockchain/common/pub-sub';
 import { IconValues } from '../../../../components/icon/values';
 import { delay } from '../../../../core/utils/time';
 import { buildDummyValidator } from '../../../wallets/actions/util-actions';
-import { supportedActions } from './actions/';
+import { supportedActions } from './actions/index';
 
 export const handleCta = (
     cta: ICta,
@@ -1304,8 +1304,25 @@ const handleCtaAction = async (
                 }
 
                 default:
-                    // TODO error handling
-                    supportedActions[action.params.action]({ action, options })(dispatch, getState);
+                    if (action.params?.action) {
+                        if (supportedActions[action.params.action]) {
+                            try {
+                                supportedActions[action.params.action]({ action, options })(
+                                    dispatch,
+                                    getState
+                                );
+                            } catch {
+                                SentryCaptureException(
+                                    new Error(
+                                        JSON.stringify({
+                                            message: 'Smart screen action not available',
+                                            action: action.params.action
+                                        })
+                                    )
+                                );
+                            }
+                        }
+                    }
 
                     break;
             }

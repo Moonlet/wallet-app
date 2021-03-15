@@ -60,6 +60,7 @@ import { PubSub } from '../../../../core/blockchain/common/pub-sub';
 import { IconValues } from '../../../../components/icon/values';
 import { delay } from '../../../../core/utils/time';
 import { buildDummyValidator } from '../../../wallets/actions/util-actions';
+import { supportedActions } from './actions/';
 
 export const handleCta = (
     cta: ICta,
@@ -1303,6 +1304,9 @@ const handleCtaAction = async (
                 }
 
                 default:
+                    // TODO error handling
+                    supportedActions[action.params.action]({ action, options })(dispatch, getState);
+
                     break;
             }
             break;

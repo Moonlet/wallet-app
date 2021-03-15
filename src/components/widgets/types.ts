@@ -95,13 +95,13 @@ export interface IScreenValidation {
     };
 }
 
-export interface ICtaAction {
+export interface ICtaAction<P = any> {
     type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
     params: {
         action?: string;
         url?: string;
         screen?: string;
-        params?: any;
+        params?: P;
     };
 }
 

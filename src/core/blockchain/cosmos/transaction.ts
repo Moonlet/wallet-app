@@ -1,6 +1,6 @@
 import {
     IBlockchainTransaction,
-    ITransferTransaction,
+    IBasicTransaction,
     TransactionType,
     AbstractBlockchainTransactionUtils
 } from '../types';
@@ -47,9 +47,7 @@ export class CosmosTransactionUtils extends AbstractBlockchainTransactionUtils {
         return signedTx;
     }
 
-    public async buildTransferTransaction(
-        tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
         const client = Cosmos.getClient(tx.chainId) as CosmosClient;
         const accountInfo = await client.getAccountInfo(tx.account.address);
         const blockInfo = await client.getCurrentBlock();

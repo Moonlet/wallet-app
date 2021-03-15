@@ -13,9 +13,7 @@ export abstract class AbstractBlockchainTransactionUtils {
     public async signMessage(message: string, privateKey: string): Promise<string> {
         throw new Error('Not Implemented');
     }
-    public async buildTransferTransaction(
-        tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
         throw new Error('Not Implemented');
     }
     public getTransactionAmount(tx: IBlockchainTransaction): string {
@@ -96,7 +94,7 @@ export interface IPosTransaction {
     extraFields?: ITransactionExtraFields;
 }
 
-export interface ITransferTransaction {
+export interface IBasicTransaction {
     account: IAccountState;
     chainId: ChainIdType;
     toAddress: string;

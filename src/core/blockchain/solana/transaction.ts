@@ -2,7 +2,7 @@ import {
     AbstractBlockchainTransactionUtils,
     IBlockchainTransaction,
     IPosTransaction,
-    ITransferTransaction,
+    IBasicTransaction,
     TransactionType
 } from '../types';
 
@@ -232,9 +232,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         return transactions;
     }
 
-    public async buildTransferTransaction(
-        tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
         const client = Solana.getClient(tx.chainId) as SolanaClient;
 
         const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);

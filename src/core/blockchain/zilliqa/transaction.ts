@@ -1,6 +1,6 @@
 import {
     IBlockchainTransaction,
-    ITransferTransaction,
+    IBasicTransaction,
     TransactionType,
     AbstractBlockchainTransactionUtils,
     IPosTransaction
@@ -200,9 +200,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         return transactions;
     }
 
-    public async buildTransferTransaction(
-        tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
         const client = Zilliqa.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 

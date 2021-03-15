@@ -1,4 +1,10 @@
-import { ChainIdType, IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
+import {
+    ChainIdType,
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    IBasicTransaction
+} from '../../types';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { TransactionStatus } from '../../../wallet/types';
@@ -53,7 +59,7 @@ export const getContract = async (
 };
 
 export const buildBaseTransaction = async (
-    tx: IPosTransaction
+    tx: IPosTransaction | IBasicTransaction
 ): Promise<IBlockchainTransaction> => {
     const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 

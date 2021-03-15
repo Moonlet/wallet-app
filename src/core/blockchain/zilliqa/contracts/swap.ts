@@ -1,4 +1,4 @@
-import { IBlockchainTransaction, IPosTransaction, TransactionType } from '../../types';
+import { IBlockchainTransaction, IBasicTransaction, TransactionType } from '../../types';
 import { TokenType } from '../../types/token';
 import { Client } from '../client';
 import { Contracts } from '../config';
@@ -24,7 +24,7 @@ export class Swap {
     }
 
     public async swapZilForTokens(
-        tx: IPosTransaction,
+        tx: IBasicTransaction,
         token: string
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
@@ -82,7 +82,7 @@ export class Swap {
     }
 
     public async swapTokensForZil(
-        tx: IPosTransaction,
+        tx: IBasicTransaction,
         token: string,
         minZilAmount: string
     ): Promise<IBlockchainTransaction> {

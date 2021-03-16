@@ -13,17 +13,15 @@ class IntervalDataModuleComponent extends React.Component<IExternalProps> {
     private interval: any;
 
     public componentDidMount() {
-        const details = this.props.module?.details;
-
+        // const data = this.props.module?.data;
         // Take data from here: details
-
         // this.props.actions.setScreenInputData
-
-        if (details?.interval) {
-            this.interval = setInterval(async () => {
-                //
-            }, details.interval);
-        }
+        // TODO add navigationEvents
+        // if (data?.) {
+        //     this.interval = setInterval(async () => {
+        //         //
+        //     }, details.interval);
+        // }
     }
 
     public componentWillUnmount() {

@@ -15,7 +15,7 @@ import { TransactionStatus } from '../../wallet/types';
 import { TokenType, PosBasicActionType } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-import { Contracts } from './config';
+import { Contracts, config } from './config';
 import BigNumber from 'bignumber.js';
 import { cloneDeep } from 'lodash';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
@@ -87,115 +87,18 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         return transaction;
     }
 
-    public async buildPosTransaction(
-        tx: IPosTransaction,
-        transactionType: PosBasicActionType
-    ): Promise<IBlockchainTransaction[]> {
-        const client = Zilliqa.getClient(tx.chainId);
+    public async buildSwapTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction[]> {
+        // const client = Zilliqa.getClient(tx.chainId);
+
+        const params = tx.extraFields?.swapParams;
+
+        const txSwap: IBasicTransaction = cloneDeep(tx);
+
+        if (params.fromToken.toLowerCase() === config.coin) {
+            txSwap.amount = params.fromAmount;
+        }
 
         const transactions: IBlockchainTransaction[] = [];
-
-        switch (transactionType) {
-            case PosBasicActionType.DELEGATE: {
-                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
-                for (const validator of tx.validators) {
-                    const txStake: IPosTransaction = cloneDeep(tx);
-                    txStake.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].delegateStake(txStake, validator);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-                    transactions.push(transaction);
-                }
-                break;
-            }
-            case PosBasicActionType.DELEGATE_V2: {
-                const validators: {
-                    validator: IValidator;
-                    amount: string;
-                }[] = tx.validators as any;
-
-                for (const v of validators) {
-                    const txStake: IPosTransaction = cloneDeep(tx);
-                    txStake.amount = new BigNumber(v.amount).toFixed(0, BigNumber.ROUND_DOWN);
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].delegateStake(txStake, v.validator);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-                    transactions.push(transaction);
-                }
-                break;
-            }
-            case PosBasicActionType.REDELEGATE: {
-                const txUnvote = cloneDeep(tx);
-                txUnvote.validators = [tx.extraFields.fromValidator];
-
-                const shouldWithdraw = await client.contracts[
-                    Contracts.STAKING
-                ].canWithdrawStakeRewardsFromSsn(
-                    tx.account.address,
-                    tx.extraFields.fromValidator.id
-                );
-
-                if (shouldWithdraw) {
-                    const txClaimReward: IPosTransaction = cloneDeep(tx);
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].withdrawStakRewards(txClaimReward, tx.extraFields.fromValidator);
-                    transactions.push(transaction);
-                }
-                const txUnStake: IPosTransaction = cloneDeep(tx);
-                const transactionUnStake: IBlockchainTransaction = await client.contracts[
-                    Contracts.STAKING
-                ].reDelegateStake(txUnStake, tx.extraFields.fromValidator, tx.validators[0]);
-                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
-                transactions.push(transactionUnStake);
-
-                break;
-            }
-            case PosBasicActionType.UNSTAKE: {
-                const ssnAddress = tx.validators[0].id;
-                const shouldWithdraw = await client.contracts[
-                    Contracts.STAKING
-                ].canWithdrawStakeRewardsFromSsn(tx.account.address, ssnAddress);
-
-                if (shouldWithdraw) {
-                    const txClaimReward: IPosTransaction = cloneDeep(tx);
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].withdrawStakRewards(txClaimReward, tx.validators[0]);
-                    transactions.push(transaction);
-                }
-
-                const txUnStake: IPosTransaction = cloneDeep(tx);
-                const transactionUnStake: IBlockchainTransaction = await client.contracts[
-                    Contracts.STAKING
-                ].withdrawStakAmt(txUnStake, tx.validators[0]);
-                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
-                transactions.push(transactionUnStake);
-                break;
-            }
-            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
-                for (const validator of tx.validators) {
-                    const txClaimReward: IPosTransaction = cloneDeep(tx);
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].withdrawStakRewards(txClaimReward, validator);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-                    transactions.push(transaction);
-                }
-                break;
-            }
-            case PosBasicActionType.WITHDRAW: {
-                const txWithdraw = cloneDeep(tx);
-                const transaction = await client.contracts[Contracts.STAKING].completeWithdrawal(
-                    txWithdraw
-                );
-                if (transaction) transactions.push(transaction);
-
-                break;
-            }
-        }
 
         return transactions;
     }
@@ -317,5 +220,118 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
             publicKey: account.publicKey,
             message
         };
+    }
+
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Zilliqa.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.DELEGATE: {
+                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
+                for (const validator of tx.validators) {
+                    const txStake: IPosTransaction = cloneDeep(tx);
+                    txStake.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].delegateStake(txStake, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+                break;
+            }
+            case PosBasicActionType.DELEGATE_V2: {
+                const validators: {
+                    validator: IValidator;
+                    amount: string;
+                }[] = tx.validators as any;
+
+                for (const v of validators) {
+                    const txStake: IPosTransaction = cloneDeep(tx);
+                    txStake.amount = new BigNumber(v.amount).toFixed(0, BigNumber.ROUND_DOWN);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].delegateStake(txStake, v.validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+                break;
+            }
+            case PosBasicActionType.REDELEGATE: {
+                const txUnvote = cloneDeep(tx);
+                txUnvote.validators = [tx.extraFields.fromValidator];
+
+                const shouldWithdraw = await client.contracts[
+                    Contracts.STAKING
+                ].canWithdrawStakeRewardsFromSsn(
+                    tx.account.address,
+                    tx.extraFields.fromValidator.id
+                );
+
+                if (shouldWithdraw) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, tx.extraFields.fromValidator);
+                    transactions.push(transaction);
+                }
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].reDelegateStake(txUnStake, tx.extraFields.fromValidator, tx.validators[0]);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                const ssnAddress = tx.validators[0].id;
+                const shouldWithdraw = await client.contracts[
+                    Contracts.STAKING
+                ].canWithdrawStakeRewardsFromSsn(tx.account.address, ssnAddress);
+
+                if (shouldWithdraw) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, tx.validators[0]);
+                    transactions.push(transaction);
+                }
+
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdrawStakAmt(txUnStake, tx.validators[0]);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                for (const validator of tx.validators) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+                break;
+            }
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
+                const transaction = await client.contracts[Contracts.STAKING].completeWithdrawal(
+                    txWithdraw
+                );
+                if (transaction) transactions.push(transaction);
+
+                break;
+            }
+        }
+
+        return transactions;
     }
 }

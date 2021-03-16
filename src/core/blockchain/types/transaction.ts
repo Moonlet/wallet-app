@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { PosBasicActionType } from './token';
 import { IValidator } from './stats';
+import { ISwapTokenParams } from '../../../redux/ui/screens/data/actions/transactions';
 
 export abstract class AbstractBlockchainTransactionUtils {
     public async sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string> {
@@ -14,6 +15,9 @@ export abstract class AbstractBlockchainTransactionUtils {
         throw new Error('Not Implemented');
     }
     public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
+        throw new Error('Not Implemented');
+    }
+    public async buildSwapTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction[]> {
         throw new Error('Not Implemented');
     }
     public getTransactionAmount(tx: IBlockchainTransaction): string {
@@ -118,6 +122,7 @@ export interface ITransactionExtraFields {
     stakeAccountKey?: string;
     stakeAccountIndex?: number;
     splitFrom?: string;
+    swapParams?: ISwapTokenParams;
     //
 }
 

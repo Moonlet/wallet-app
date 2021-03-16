@@ -171,6 +171,7 @@ export interface IScreenModule {
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
         | ModuleTypes.INPUT
+        | ModuleTypes.INTERVAL_DATA
         | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
@@ -240,6 +241,7 @@ export enum ModuleTypes {
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
     INPUT = 'input',
+    INTERVAL_DATA = 'interval-data',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',

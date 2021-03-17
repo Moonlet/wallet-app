@@ -37,7 +37,7 @@ import { ValidationsModule } from './components/validations/validations';
 import { ProgressBarModule } from './components/progress-bar/progress-bar';
 import { TextLineIcon } from './components/text-line-icon/text-line-icon';
 import { PubSub } from '../../core/blockchain/common/pub-sub';
-import { IntervalDataModule } from './components/interval-data/interval-data';
+import { UrlPoolingModule } from './components/url-pooling/url-pooling';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -263,8 +263,8 @@ export const renderModule = (
             moduleJSX = <ProgressBarModule module={module} />;
             break;
 
-        case ModuleTypes.INTERVAL_DATA:
-            moduleJSX = <IntervalDataModule module={module} context={context} actions={actions} />;
+        case ModuleTypes.URL_POOLING:
+            moduleJSX = <UrlPoolingModule module={module} context={context} actions={actions} />;
             break;
 
         default:

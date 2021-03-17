@@ -171,7 +171,6 @@ export interface IScreenModule {
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
         | ModuleTypes.INPUT
-        | ModuleTypes.INTERVAL_DATA
         | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
@@ -185,6 +184,7 @@ export interface IScreenModule {
         | ModuleTypes.TEXT_LINE_ICON
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.THREE_LINES_ICON
+        | ModuleTypes.URL_POOLING
         | ModuleTypes.TWO_LINES_TEXT_BANNER
         | ModuleTypes.VALIDATIONS;
     cta?: ICta;
@@ -241,7 +241,7 @@ export enum ModuleTypes {
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
     INPUT = 'input',
-    INTERVAL_DATA = 'interval-data',
+    URL_POOLING = 'url-pooling',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
@@ -386,6 +386,16 @@ export interface IIconTwoLinesData {
 
 export interface IIconData {
     icon: IconValues;
+}
+
+export interface IUrlPoolingData {
+    endpoint: {
+        url: string;
+        method: 'POST' | 'GET';
+        data: any;
+    };
+    reduxKey: string;
+    interval: number; // miliseconds
 }
 
 export interface IThreeLinesIconData {

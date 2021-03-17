@@ -10,6 +10,7 @@ export enum IconValues {
     ARROW_LEFT = 'arrow-left',
     ARROW_RIGHT_DASH = 'arrow-right-dash',
     ARROW_RIGHT = 'arrow-right',
+    ARROWS_UP = 'arrows-up',
     BIN = 'bin',
     BLE = 'ble',
     BUG = 'bug',

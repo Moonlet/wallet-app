@@ -186,6 +186,9 @@ class AmountInputComponent extends React.Component<
 
         const inputKey = module?.details?.inputKey;
 
+        let showValidations = true;
+        if (data?.showValidations !== undefined) showValidations = data.showValidations;
+
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
                 {data?.input && (
@@ -239,23 +242,30 @@ class AmountInputComponent extends React.Component<
                     </View>
                 )}
 
-                {(inputValidation?.fieldsErrors?.amount || []).map((fieldError, index: number) => {
-                    if (fieldError.type === 'ERROR_MSG') {
-                        return (
-                            <Text key={`error-${index}`} style={styles.errorText}>
-                                {fieldError.message}
-                            </Text>
-                        );
-                    }
+                {showValidations &&
+                    (
+                        (inputValidation?.fieldsErrors &&
+                            inputKey &&
+                            inputValidation?.fieldsErrors[inputKey]) ||
+                        inputValidation?.fieldsErrors?.amount ||
+                        []
+                    ).map((fieldError, index: number) => {
+                        if (fieldError.type === 'ERROR_MSG') {
+                            return (
+                                <Text key={`error-${index}`} style={styles.errorText}>
+                                    {fieldError.message}
+                                </Text>
+                            );
+                        }
 
-                    if (fieldError.type === 'WARN_MSG') {
-                        return (
-                            <Text key={`error-${index}`} style={styles.warningText}>
-                                {fieldError.message}
-                            </Text>
-                        );
-                    }
-                })}
+                        if (fieldError.type === 'WARN_MSG') {
+                            return (
+                                <Text key={`error-${index}`} style={styles.warningText}>
+                                    {fieldError.message}
+                                </Text>
+                            );
+                        }
+                    })}
             </View>
         );
     }

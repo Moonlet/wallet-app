@@ -43,8 +43,13 @@ interface IReduxProps {
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    const inputKey = ownProps.module?.details?.inputKey;
+
     return {
-        amount: state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
+        amount:
+            (inputKey && state.ui.screens.inputData[ownProps.screenKey]?.data?.inputKey) ||
+            state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
+
         inputValidation: state.ui.screens.inputData[ownProps.screenKey]?.validation,
         amountBox: state.ui.screens.inputData[ownProps.screenKey]?.data?.amountBox,
 
@@ -179,6 +184,8 @@ class AmountInputComponent extends React.Component<
         let editable = true;
         if (data?.editable !== undefined) editable = data.editable;
 
+        const inputKey = module?.details?.inputKey;
+
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
                 {data?.input && (
@@ -199,7 +206,8 @@ class AmountInputComponent extends React.Component<
                                 text = text.replace(/,/g, '.');
                                 this.props.setScreenAmount(text, {
                                     screenKey: this.props.screenKey,
-                                    context: this.props.context
+                                    context: this.props.context,
+                                    inputKey
                                 });
                             }}
                             keyboardType={Platform.select({

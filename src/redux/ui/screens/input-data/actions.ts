@@ -77,11 +77,16 @@ export const setScreenAmount = (
     options: {
         screenKey: string;
         context: IScreenContext;
+        inputKey?: string;
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    setScreenInputData(options.screenKey, {
-        amount: balance
-    })(dispatch, getState);
+    const data = options?.inputKey
+        ? {
+              [options?.inputKey]: balance
+          }
+        : { amount: balance };
+
+    setScreenInputData(options.screenKey, data)(dispatch, getState);
 
     const state = getState();
 

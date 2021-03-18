@@ -183,7 +183,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.ICON:
-            moduleJSX = <IconModule module={module} />;
+            moduleJSX = (
+                <IconModule
+                    module={module}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.MD_TEXT:

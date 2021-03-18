@@ -28,7 +28,8 @@ export const swapToggleSelector = (state: IReduxState, module: IScreenModule): s
         state.ui.screens.inputData[screenKey]?.data &&
         state.ui.screens.inputData[screenKey]?.data.swapType
     ) {
-        return state.ui.screens.inputData[screenKey]?.data.swapType;
+        if (state.ui.screens.inputData[screenKey]?.data.swapType === 'SELL') return 'BUY';
+        else return 'SELL';
     }
 
     return 'SELL';

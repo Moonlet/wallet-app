@@ -28,7 +28,7 @@ export class Swap {
         token: string
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
-        const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
+        const contractAddress = await getContract(this.client.chainId, Contracts.SWAP);
         const blockInfo = await this.client.getCurrentBlock();
 
         transaction.toAddress = contractAddress;
@@ -87,7 +87,7 @@ export class Swap {
         minZilAmount: string
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
-        const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
+        const contractAddress = await getContract(this.client.chainId, Contracts.SWAP);
         const blockInfo = await this.client.getCurrentBlock();
 
         transaction.toAddress = contractAddress;

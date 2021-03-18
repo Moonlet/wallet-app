@@ -1,21 +1,35 @@
+import { getChainId } from '../../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../../redux/state';
-import { IScreenModule } from '../../../types';
+import { getScreenDataKey } from '../../../../../redux/ui/screens/data/reducer';
+import { getSelectedAccount, getSelectedWallet } from '../../../../../redux/wallets/selectors';
+import { IScreenModule, IScreenModuleWrapperData } from '../../../types';
 
-export const swapToggleAction = (state: IReduxState, module: IScreenModule): string => {
-    // const flowId = module?.details?.flowId;
-    // const infoText = module?.details?.infoText;
+export const swapToggleSelector = (state: IReduxState, module: IScreenModule): string => {
+    const wrapper = module.data as IScreenModuleWrapperData;
 
-    // if (
-    //     flowId &&
-    //     state.ui.screens.inputData &&
-    //     (state.ui.screens.inputData[flowId]?.data?.selectReasons || []).findIndex(
-    //         reason => reason === infoText
-    //     ) !== -1
-    // ) {
-    //     return 'SELECTED';
-    // }
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
 
-    // 'BUY' 'SELL'
+    const step = wrapper?.data?.DEFAULT?.details?.step;
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step,
+        tab: undefined
+    });
+
+    if (
+        screenKey &&
+        state.ui.screens.inputData &&
+        state.ui.screens.inputData[screenKey] &&
+        state.ui.screens.inputData[screenKey]?.data &&
+        state.ui.screens.inputData[screenKey]?.data.swapType
+    ) {
+        return state.ui.screens.inputData[screenKey]?.data.swapType;
+    }
 
     return 'SELL';
 };

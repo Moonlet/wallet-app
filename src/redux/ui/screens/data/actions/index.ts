@@ -10,7 +10,11 @@ import { IAction } from '../../../../types';
 export const setReduxScreenInputData = (
     context: IHandleCtaActionContext<transactions.ISwapTokenParams>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    setScreenInputData(context.options.screenKey, context.action.params)(dispatch, getState);
+    // console.log('value', context.action.params?.params);
+    setScreenInputData(context.options.screenKey, context.action.params?.params)(
+        dispatch,
+        getState
+    );
 };
 
 export const supportedActions = flattenObject({

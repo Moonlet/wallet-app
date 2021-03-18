@@ -86,6 +86,9 @@ const formatCurrencyData = (data: ICurrencyData): string => {
     if (data?.beautify) {
         const out = beautify(value);
         text = new BigNumber(out.value).toFixed(data.beautify.decimals) + out.unit;
+        if (data?.beautify?.symbol) {
+            text += ` ${data.beautify.symbol}`;
+        }
     }
 
     return text;

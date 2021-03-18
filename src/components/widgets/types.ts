@@ -304,6 +304,7 @@ export interface ICurrencyData {
     beautify?: {
         fromValue?: number;
         decimals: number;
+        symbol?: string;
     };
 }
 

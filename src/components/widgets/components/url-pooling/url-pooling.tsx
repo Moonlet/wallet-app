@@ -1,30 +1,69 @@
 import React from 'react';
 import { View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
+import { connect } from 'react-redux';
+// import { HttpClient } from '../../../../core/utils/http-client';
 import { smartConnect } from '../../../../core/utils/smart-connect';
-import { IScreenContext, IScreenModule, ISmartScreenActions } from '../../types';
+import { IReduxState } from '../../../../redux/state';
+import { IScreenContext, IScreenModule, ISmartScreenActions, IUrlPoolingData } from '../../types';
+import { getStateSelectors } from '../ui-state-selectors';
 
 interface IExternalProps {
     module: IScreenModule;
     context: IScreenContext;
     actions: ISmartScreenActions;
+    options?: {
+        screenKey?: string;
+        flowId?: string;
+    };
 }
+
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return getStateSelectors(state, ownProps.module, {
+        flowId: ownProps?.options?.flowId,
+        screenKey: ownProps?.options?.screenKey
+    });
+};
 
 class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
     private interval: any;
+    // private httpClient: HttpClient;
 
     public componentWillUnmount() {
         this.interval && clearInterval(this.interval);
     }
 
-    public onFocus() {
-        // const data = this.props.module?.data as IUrlPoolingData;
+    public fetchData() {
+        const data = this.props.module?.data as IUrlPoolingData;
+
+        const selector = this.props.module?.state?.selectors;
+
+        // this.httpClient = new HttpClient(data.endpoint.url);
+
+        if (data.interval) {
+            Object.keys(data.endpoint.data).map(key => {
+                if (selector.hasOwnProperty(key)) {
+                    this.props[key];
+                }
+            });
+        }
+
+        // call fecth(dataEndpoind)
+
         // this.props.actions.setScreenInputData
         // if (data?.) {
         //     this.interval = setInterval(async () => {
         //         //
         //     }, details.interval);
         // }
+    }
+
+    public componentDidMount() {
+        this.fetchData();
+    }
+
+    public onFocus() {
+        this.fetchData();
     }
 
     public onWillBlur() {
@@ -43,4 +82,6 @@ class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
     }
 }
 
-export const UrlPoolingModule = smartConnect<IExternalProps>(UrlPoolingModuleComponent);
+export const UrlPoolingModule = smartConnect<IExternalProps>(UrlPoolingModuleComponent, [
+    connect(mapStateToProps, null)
+]);

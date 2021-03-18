@@ -192,6 +192,8 @@ const handleCtaAction = async (
 ) => {
     const state = getState();
 
+    // console.log('handlecta');
+
     switch (action.type) {
         case 'callAction':
             switch (action.params.action) {

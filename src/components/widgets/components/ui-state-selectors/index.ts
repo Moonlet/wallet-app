@@ -22,12 +22,8 @@ import {
     getStakeAmountValidatorSplit
 } from './input-balance-format';
 import { getStakeNowSelectValidators } from './stake-now';
-import {
-    getTokenAvailableBalanceFormat,
-    getTokenAvailableBalance,
-    getFromToken,
-    getToToken
-} from './token-balance';
+import { getTokenAvailableBalanceFormat, getTokenAvailableBalance } from './token-balance';
+import { getFromToken, getToToken } from './swap';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,

@@ -10,7 +10,7 @@ export const swapToggleSelector = (state: IReduxState, module: IScreenModule): s
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = wrapper?.data?.DEFAULT?.details?.step;
+    const step = wrapper?.data?.SELL?.details?.step;
 
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
@@ -28,8 +28,7 @@ export const swapToggleSelector = (state: IReduxState, module: IScreenModule): s
         state.ui.screens.inputData[screenKey]?.data &&
         state.ui.screens.inputData[screenKey]?.data.swapType
     ) {
-        if (state.ui.screens.inputData[screenKey]?.data.swapType === 'SELL') return 'BUY';
-        else return 'SELL';
+        return state.ui.screens.inputData[screenKey]?.data.swapType;
     }
 
     return 'SELL';

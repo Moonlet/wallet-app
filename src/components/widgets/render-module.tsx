@@ -186,6 +186,8 @@ export const renderModule = (
             moduleJSX = (
                 <IconModule
                     module={module}
+                    context={context}
+                    screenKey={options?.screenKey}
                     actions={actions}
                     options={{ ...options, flowId: context?.flowId }}
                 />

@@ -6,6 +6,7 @@ import v6 from './006';
 import v7 from './007';
 import v8 from './008';
 import v9 from './009';
+import v10 from './010';
 
 export const migrations: any = {
     /**
@@ -39,5 +40,9 @@ export const migrations: any = {
     /**
      * Add ZWAP Token to all users - 2 Feb 2021
      */
-    9: v9
+    9: v9,
+    /**
+     * Add ZRC-2 Tokens to all users - 19 Mar 2021
+     */
+    10: v10
 };

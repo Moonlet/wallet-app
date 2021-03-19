@@ -2,7 +2,7 @@ import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
 
 export const BOLT_MAINNET: ITokenConfigState = {
-    name: 'Bolt Toke',
+    name: 'Bolt Token',
     symbol: 'BOLT',
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/bolt.png'

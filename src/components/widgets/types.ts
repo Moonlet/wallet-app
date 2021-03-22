@@ -50,6 +50,7 @@ export enum SmartScreenPubSubEvents {
 export interface IScreenUser {
     os: 'android' | 'ios' | 'web';
     deviceId: string;
+    preferedCurrency: string;
     appVersion: string;
     theme: 'dark' | 'light';
     country?: string;

@@ -74,22 +74,15 @@ const formatCurrencyData = (data: ICurrencyData): string => {
 
         text = formatNumber(new BigNumber(rounded), {
             currency: data.symbol,
-            maximumFractionDigits: data?.round?.decimals
+            maximumFractionDigits: data?.round?.decimals,
+            beautify: data?.beautify
         });
     } else {
         text = formatNumber(Number(value), {
             currency: data.symbol,
-            maximumFractionDigits: data?.round?.decimals
+            maximumFractionDigits: data?.round?.decimals,
+            beautify: data?.beautify
         });
-    }
-
-    if (data?.beautify) {
-        const out = beautify(value);
-        // Use Number in order to Remove insignificant trailing zeros from the value
-        text = Number(new BigNumber(out.value).toFixed(data.beautify.decimals)) + out.unit;
-        if (data?.beautify?.symbol) {
-            text += ` ${data.beautify.symbol}`;
-        }
     }
 
     return text;
@@ -125,7 +118,7 @@ export const formatStyles = (style: IDataStyle): { [key: string]: string | numbe
     return finalStyle;
 };
 
-const beautify = (
+export const beautify = (
     value: BigNumber | string | number,
     fromValue?: number
 ): {

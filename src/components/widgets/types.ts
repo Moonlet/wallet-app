@@ -301,11 +301,14 @@ export interface ICurrencyData {
         decimals: number;
         type?: 'UP' | 'DOWN';
     };
-    beautify?: {
-        fromValue?: number;
-        decimals: number;
-        symbol?: string;
-    };
+    beautify?: IBeautify;
+}
+
+export interface IBeautify {
+    fromValue?: number;
+    decimals: number;
+    symbol?: string;
+    notation: 'compact';
 }
 
 export interface IDataStyle {

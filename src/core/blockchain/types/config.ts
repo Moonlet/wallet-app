@@ -33,6 +33,11 @@ export interface IBlockchainConfig {
             [symbol: string]: ITokenConfigState;
         };
     };
+    autoAddedHiddenTokensSymbols?: {
+        [chainId: string]: {
+            [symbol: string]: ITokenConfigState;
+        };
+    };
     tokens: {
         [symbol: string]: ITokenConfigState;
     };

@@ -27,21 +27,26 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {
     const blockchainConfig = getBlockchain(blockchain).config;
 
-    // generate tokens
+    // Generate tokens
 
     const tokenList: ITokensAccountState = {};
-    Object.values(blockchainConfig.networks).map(chainId => {
+    for (const chainId of Object.values(blockchainConfig.networks)) {
         const tokenValue = {};
-        Object.keys(blockchainConfig.tokens).map(symbolKey => {
+
+        for (const symbolKey of Object.keys(blockchainConfig.tokens)) {
             const order = blockchainConfig.tokens[symbolKey].defaultOrder || 0;
             tokenValue[symbolKey] = accountToken(symbolKey, order);
-        });
+        }
+
         tokenList[chainId] = tokenValue;
-    });
+    }
+
+    // Add Auto Added Visible Tokens
 
     const tokens = blockchainConfig.autoAddedTokensSymbols;
-    Object.keys(tokens).map(chainId => {
-        Object.keys(tokens[chainId]).map(symbolKey => {
+
+    for (const chainId of Object.keys(tokens)) {
+        for (const symbolKey of Object.keys(tokens[chainId])) {
             store.dispatch(
                 addTokenForBlockchain(blockchain, tokens[chainId][symbolKey], chainId) as any
             );
@@ -51,17 +56,45 @@ export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountStat
                 ...tokenList[chainId],
                 [symbolKey]: accountToken(symbolKey, order)
             };
-        });
-    });
+        }
+    }
+
+    // Add Auto Added Hidden Tokens
+
+    const invisibleTokens = blockchainConfig?.autoAddedHiddenTokensSymbols || {};
+
+    for (const chainId of Object.keys(invisibleTokens)) {
+        for (const symbolKey of Object.keys(invisibleTokens[chainId])) {
+            store.dispatch(
+                addTokenForBlockchain(
+                    blockchain,
+                    invisibleTokens[chainId][symbolKey],
+                    chainId
+                ) as any
+            );
+
+            const order = invisibleTokens[chainId][symbolKey].defaultOrder || 999;
+            tokenList[chainId] = {
+                ...tokenList[chainId],
+                [symbolKey]: accountToken(symbolKey, order, {
+                    active: false
+                })
+            };
+        }
+    }
 
     return tokenList;
 };
 
-export const accountToken = (symbolKey: string, order: number): ITokenState => {
+export const accountToken = (
+    symbolKey: string,
+    order: number,
+    options?: { active?: boolean }
+): ITokenState => {
     return {
         symbol: symbolKey,
         order,
-        active: true,
+        active: options?.active !== undefined ? options.active : true,
         balance: {
             value: '0',
             inProgress: false,

@@ -1,16 +1,30 @@
-import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
+import { Platform } from 'react-native';
 import { BigNumber } from 'bignumber.js';
+
+import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
-import { XSGD_MAINNET } from './tokens/xsgd';
 import { IconValues } from '../../../components/icon/values';
-import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
-import { Platform } from 'react-native';
+
+import { XSGD_MAINNET } from './tokens/xsgd';
+import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
 import { PORT_MAINNET } from './tokens/port';
 import { ZWAP_MAINNET } from './tokens/zwap';
+import { BARTER_MAINNET } from './tokens/barter';
+import { BOLT_MAINNET } from './tokens/bolt';
+import { CARB_MAINNET } from './tokens/carb';
+import { KKZ_MAINNET } from './tokens/kkz';
+import { REDC_MAINNET } from './tokens/redc';
+import { SERGS_MAINNET } from './tokens/sergs';
+import { SHRK_MAINNET } from './tokens/shrk';
+import { ZCH_MAINNET } from './tokens/zch';
+import { ZLF_MAINNET } from './tokens/zlf';
+import { ZLP_MAINNET } from './tokens/zlp';
+import { ZYF_MAINNET } from './tokens/zyf';
+import { ZYRO_MAINNET } from './tokens/zyro';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -132,6 +146,22 @@ export const config: IBlockchainConfig = {
         },
         '333': {
             gZIL: GZIL_TESTNET
+        }
+    },
+    autoAddedHiddenTokensSymbols: {
+        '1': {
+            ZLP: ZLP_MAINNET,
+            BARTER: BARTER_MAINNET,
+            BOLT: BOLT_MAINNET,
+            REDC: REDC_MAINNET,
+            SERGS: SERGS_MAINNET,
+            SHRK: SHRK_MAINNET,
+            KKZ: KKZ_MAINNET,
+            ZCH: ZCH_MAINNET,
+            ZLF: ZLF_MAINNET,
+            ZYF: ZYF_MAINNET,
+            ZYRO: ZYRO_MAINNET,
+            CARB: CARB_MAINNET
         }
     },
     tokens: {

@@ -58,15 +58,22 @@ export const formatNumber = (amount: number | BigNumber, options: INumberFormatO
             maximumFractionDigits = options.beautify.decimals;
         }
 
+        const isPercent = options?.beautify?.notation === 'percent';
+
         let formattedNumber = new Intl.NumberFormat(options.locale || getLocale() || 'en-US', {
-            style: displayFormatCurrency ? 'currency' : 'decimal',
-            currency: displayFormatCurrency ? options.currency : undefined,
+            style: isPercent ? 'percent' : displayFormatCurrency ? 'currency' : 'decimal',
+            currency: isPercent ? undefined : displayFormatCurrency ? options.currency : undefined,
             minimumFractionDigits,
             maximumFractionDigits
         }).format(amount);
 
         if (options?.beautify?.notation === 'compact') {
             formattedNumber += beautyNumber.unit;
+        }
+
+        if (options?.beautify?.notation === 'percent') {
+            // remove spaces
+            formattedNumber = formattedNumber.replace(/\s/g, '');
         }
 
         return options.currency && !displayFormatCurrency

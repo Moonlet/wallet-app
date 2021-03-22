@@ -306,9 +306,9 @@ export interface ICurrencyData {
 
 export interface IBeautify {
     fromValue?: number;
-    decimals: number;
+    decimals?: number;
     symbol?: string;
-    notation: 'compact';
+    notation?: 'compact' | 'percent';
 }
 
 export interface IDataStyle {

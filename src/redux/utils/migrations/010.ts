@@ -3,7 +3,9 @@
  */
 
 import { addToken } from './utils';
+import { Blockchain } from '../../../core/blockchain/types';
 
+// Zilliqa
 import { ZLP_MAINNET } from '../../../core/blockchain/zilliqa/tokens/zlp';
 import { BARTER_MAINNET } from '../../../core/blockchain/zilliqa/tokens/barter';
 import { BOLT_MAINNET } from '../../../core/blockchain/zilliqa/tokens/bolt';
@@ -16,7 +18,9 @@ import { ZLF_MAINNET } from '../../../core/blockchain/zilliqa/tokens/zlf';
 import { ZYF_MAINNET } from '../../../core/blockchain/zilliqa/tokens/zyf';
 import { ZYRO_MAINNET } from '../../../core/blockchain/zilliqa/tokens/zyro';
 import { CARB_MAINNET } from '../../../core/blockchain/zilliqa/tokens/carb';
-import { Blockchain } from '../../../core/blockchain/types';
+
+// Ethereum
+import { IDRT_MAINNET } from '../../../core/blockchain/ethereum/tokens/idrt';
 
 export default (state: any) => {
     const data = {
@@ -25,6 +29,7 @@ export default (state: any) => {
         tokenActive: false
     };
 
+    // Zilliqa
     state = addToken(state, ZLP_MAINNET, data);
     state = addToken(state, BARTER_MAINNET, data);
     state = addToken(state, BOLT_MAINNET, data);
@@ -37,6 +42,13 @@ export default (state: any) => {
     state = addToken(state, ZYF_MAINNET, data);
     state = addToken(state, ZYRO_MAINNET, data);
     state = addToken(state, CARB_MAINNET, data);
+
+    // Ethereum
+    state = addToken(state, IDRT_MAINNET, {
+        blockchain: Blockchain.ETHEREUM,
+        chainId: '1',
+        tokenActive: true
+    });
 
     return {
         ...state

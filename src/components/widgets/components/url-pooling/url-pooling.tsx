@@ -43,7 +43,8 @@ class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
         if (data.interval) {
             Object.keys(data.endpoint.data).map(key => {
                 if (selector.hasOwnProperty(key)) {
-                    this.props[key];
+                    // console.log('herr', this.props[key]);
+                    // this.props[key];
                 }
             });
         }

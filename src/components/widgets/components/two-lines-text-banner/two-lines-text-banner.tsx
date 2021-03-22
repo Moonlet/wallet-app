@@ -7,11 +7,25 @@ import { I2LinesTextBannerData, IScreenModule, ISmartScreenActions } from '../..
 import { normalize } from '../../../../styles/dimensions';
 import Icon from '../../../icon/icon';
 import { formatDataJSXElements, formatStyles } from '../../utils';
+import { connect } from 'react-redux';
+import { getStateSelectors } from '../ui-state-selectors';
+import { IReduxState } from '../../../../redux/state';
 
 interface IExternalProps {
     module: IScreenModule;
     actions: ISmartScreenActions;
+    options?: {
+        screenKey?: string;
+        flowId?: string;
+    };
 }
+
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return getStateSelectors(state, ownProps.module, {
+        flowId: ownProps?.options?.flowId,
+        screenKey: ownProps?.options?.screenKey
+    });
+};
 
 const TwoLinesStakeBannerComponent = (
     props: IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
@@ -29,10 +43,18 @@ const TwoLinesStakeBannerComponent = (
         >
             <View style={styles.textContainer}>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data.firstLine, styles.mainText)}
+                    {formatDataJSXElements(
+                        data.firstLine,
+                        styles.mainText,
+                        module?.state && { translateKeys: props as any }
+                    )}
                 </View>
                 <View style={styles.row}>
-                    {formatDataJSXElements(data.secondLine, styles.secondaryText)}
+                    {formatDataJSXElements(
+                        data.secondLine,
+                        styles.secondaryText,
+                        module?.state && { translateKeys: props as any }
+                    )}
                 </View>
             </View>
 
@@ -57,5 +79,6 @@ const TwoLinesStakeBannerComponent = (
 };
 
 export const TwoLinesStakeBanner = smartConnect<IExternalProps>(TwoLinesStakeBannerComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

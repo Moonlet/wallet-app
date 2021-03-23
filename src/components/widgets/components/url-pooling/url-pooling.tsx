@@ -41,22 +41,23 @@ class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
         // this.httpClient = new HttpClient(data.endpoint.url);
 
         if (data.interval) {
+            const endpointData = data.endpoint.data;
             Object.keys(data.endpoint.data).map(key => {
                 if (selector.hasOwnProperty(key)) {
-                    // console.log('herr', this.props[key]);
-                    // this.props[key];
+                    endpointData[key] = this.props[key];
                 }
             });
+            // this.httpClient = new HttpClient(data.endpoint.url);
+
+            this.interval = setInterval(async () => {
+                //
+            }, data.interval);
         }
 
         // call fecth(dataEndpoind)
 
         // this.props.actions.setScreenInputData
         // if (data?.) {
-        //     this.interval = setInterval(async () => {
-        //         //
-        //     }, details.interval);
-        // }
     }
 
     public componentDidMount() {

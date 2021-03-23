@@ -29,7 +29,7 @@ export const getSwapParamsForPrice = (state: IReduxState, module: IScreenModule)
     };
 };
 
-export const getFromToken = (
+export const getFromTokenSymbol = (
     state: IReduxState,
     module: IScreenModule,
     options: any,
@@ -49,10 +49,15 @@ export const getFromToken = (
         tab: undefined
     });
 
-    return state.ui.screens.inputData[screenKey]?.data?.swapFromToken || '';
+    const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
+    const fromTokenSymbol: string =
+        state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.symbol;
+    const toTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.symbol;
+
+    return type === 'SELL' ? fromTokenSymbol : toTokenSymbol;
 };
 
-export const getToToken = (
+export const getToTokenSymbol = (
     state: IReduxState,
     module: IScreenModule,
     options: any,
@@ -72,5 +77,64 @@ export const getToToken = (
         tab: undefined
     });
 
-    return state.ui.screens.inputData[screenKey]?.data?.swapToToken || '';
+    const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
+    const fromTokenSymbol: string =
+        state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.symbol;
+    const toTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.symbol;
+
+    return type === 'BUY' ? fromTokenSymbol : toTokenSymbol;
+};
+
+export const getFromTokenId = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const step = params && params[0];
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step,
+        tab: undefined
+    });
+
+    const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
+    const fromTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.id;
+    const toTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.id;
+
+    return type === 'SELL' ? fromTokenSymbol : toTokenSymbol;
+};
+
+export const getToTokenId = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const step = params && params[0];
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step,
+        tab: undefined
+    });
+
+    const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
+    const fromTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.id;
+    const toTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.id;
+
+    return type === 'BUY' ? fromTokenSymbol : toTokenSymbol;
 };

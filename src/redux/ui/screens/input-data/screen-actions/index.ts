@@ -7,7 +7,6 @@ import { IAction } from '../../../../types';
 import { getSelectedBlockchain } from '../../../../wallets/selectors';
 import { handleCta } from '../../data/handle-cta';
 import { setScreenAmount, setScreenInputData } from '../actions';
-// import { setReduxScreenInputData } from '../../../screens/data/actions/index';
 
 const getSwitchNodeValidatorAmount = (
     params: any,
@@ -99,7 +98,7 @@ const setScreenAmountPercentSwap = (
     handleCta(params[0], { screenKey })(dispatch, getState);
 };
 
-const setReduxScreenInputData = (
+export const setReduxScreenInputData = (
     params: any,
     context: IScreenContext,
     screenKey: string,

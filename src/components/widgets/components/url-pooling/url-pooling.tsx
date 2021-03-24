@@ -2,9 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
-// import { HttpClient } from '../../../../core/utils/http-client';
+import { HttpClient } from '../../../../core/utils/http-client';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
+import { setScreenInputData } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenContext, IScreenModule, ISmartScreenActions, IUrlPoolingData } from '../../types';
 import { getStateSelectors } from '../ui-state-selectors';
 
@@ -18,6 +19,10 @@ interface IExternalProps {
     };
 }
 
+interface IReduxProps {
+    setScreenInputData: typeof setScreenInputData;
+}
+
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return getStateSelectors(state, ownProps.module, {
         flowId: ownProps?.options?.flowId,
@@ -25,20 +30,22 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     });
 };
 
-class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
+const mapDispatchToProps = {
+    setScreenInputData
+};
+
+class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalProps> {
     private interval: any;
-    // private httpClient: HttpClient;
+    private httpClient: HttpClient;
 
     public componentWillUnmount() {
         this.interval && clearInterval(this.interval);
     }
 
-    public fetchData() {
+    public async fetchData() {
         const data = this.props.module?.data as IUrlPoolingData;
 
         const selector = this.props.module?.state?.selectors;
-
-        // this.httpClient = new HttpClient(data.endpoint.url);
 
         if (data.interval) {
             const endpointData = data.endpoint.data;
@@ -47,17 +54,26 @@ class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
                     endpointData[key] = this.props[key];
                 }
             });
-            // this.httpClient = new HttpClient(data.endpoint.url);
-
+            this.httpClient = new HttpClient(data.endpoint.url);
             this.interval = setInterval(async () => {
-                //
+                let response;
+                switch (data.endpoint.method) {
+                    case 'POST':
+                        response = await this.httpClient.post('', endpointData);
+                        break;
+                    case 'GET':
+                        response = await this.httpClient.get('');
+                        break;
+                    default:
+                }
+
+                if (response.result) {
+                    this.props.setScreenInputData(this.props.options.screenKey, {
+                        [data.reduxKey]: response.result.data
+                    });
+                }
             }, data.interval);
         }
-
-        // call fecth(dataEndpoind)
-
-        // this.props.actions.setScreenInputData
-        // if (data?.) {
     }
 
     public componentDidMount() {
@@ -85,5 +101,5 @@ class UrlPoolingModuleComponent extends React.Component<IExternalProps> {
 }
 
 export const UrlPoolingModule = smartConnect<IExternalProps>(UrlPoolingModuleComponent, [
-    connect(mapStateToProps, null)
+    connect(mapStateToProps, mapDispatchToProps)
 ]);

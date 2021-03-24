@@ -272,7 +272,14 @@ export const renderModule = (
             break;
 
         case ModuleTypes.URL_POOLING:
-            moduleJSX = <UrlPoolingModule module={module} context={context} actions={actions} />;
+            moduleJSX = (
+                <UrlPoolingModule
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
             break;
 
         default:

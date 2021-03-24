@@ -16,6 +16,7 @@ import { UNI_MAINNET } from './tokens/uniSwap';
 import { USDC_MAINNET } from './tokens/usdCoin';
 import { YFI_MAINNET } from './tokens/yearnFinance';
 import { AccountType } from '../../../redux/wallets/state';
+import { IDRT_MAINNET } from './tokens/idrt';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -57,7 +58,8 @@ export const config: IBlockchainConfig = {
             MKR: MKR_MAINNET,
             OMG: OMG_MAINNET,
             COMP: COMP_MAINNET,
-            SNX: SNX_MAINNET
+            SNX: SNX_MAINNET,
+            IDRT: IDRT_MAINNET
         }
     },
     tokens: {

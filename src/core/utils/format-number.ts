@@ -2,12 +2,15 @@ import { Platform, NativeModules } from 'react-native';
 import 'intl';
 import 'intl/locale-data/jsonp/en-US';
 import BigNumber from 'bignumber.js';
+import { beautify } from '../../components/widgets/utils';
+import { IBeautify } from '../../components/widgets/types';
 
 export interface INumberFormatOptions {
     locale?: string;
     currency?: string;
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
+    beautify?: IBeautify;
 }
 
 const significantDecimalsNumber = (amount: number) => (amount > 1 ? 2 : amount > 0.00001 ? 6 : 8);
@@ -33,20 +36,50 @@ const getLocale = () => {
 
 export const formatNumber = (amount: number | BigNumber, options: INumberFormatOptions = {}) => {
     try {
+        let beautyNumber;
+
+        if (options?.beautify?.notation === 'compact') {
+            beautyNumber = beautify(amount, options?.beautify?.fromValue);
+            amount = beautyNumber.value;
+        }
+
         amount = amount instanceof BigNumber ? amount.toNumber() : Number(amount) || 0;
+
         const displayFormatCurrency =
             options.currency && formattedCurrencies.indexOf(options.currency) !== -1;
 
-        const formattedNumber = new Intl.NumberFormat(options.locale || getLocale() || 'en-US', {
-            style: displayFormatCurrency ? 'currency' : 'decimal',
-            currency: displayFormatCurrency ? options.currency : undefined,
-            minimumFractionDigits: options.minimumFractionDigits || 0,
-            maximumFractionDigits:
-                options.maximumFractionDigits || significantDecimalsNumber(amount)
+        let minimumFractionDigits = 0;
+        if (options?.minimumFractionDigits) minimumFractionDigits = options.minimumFractionDigits;
+        if (options?.beautify?.decimals) minimumFractionDigits = options.beautify.decimals;
+
+        let maximumFractionDigits = significantDecimalsNumber(amount);
+        if (options?.maximumFractionDigits) maximumFractionDigits = options.maximumFractionDigits;
+        if (options?.beautify?.decimals !== undefined) {
+            maximumFractionDigits = options.beautify.decimals;
+        }
+
+        const isPercent = options?.beautify?.notation === 'percent';
+
+        let formattedNumber = new Intl.NumberFormat(options.locale || getLocale() || 'en-US', {
+            style: isPercent ? 'percent' : displayFormatCurrency ? 'currency' : 'decimal',
+            currency: isPercent ? undefined : displayFormatCurrency ? options.currency : undefined,
+            minimumFractionDigits,
+            maximumFractionDigits
         }).format(amount);
 
+        if (options?.beautify?.notation === 'compact') {
+            formattedNumber += beautyNumber.unit;
+        }
+
+        if (options?.beautify?.notation === 'percent') {
+            // remove spaces
+            formattedNumber = formattedNumber.replace(/\s/g, '');
+        }
+
         return options.currency && !displayFormatCurrency
-            ? formattedNumber + ' ' + options.currency
+            ? formattedNumber +
+                  ' ' +
+                  (options?.beautify?.symbol ? options.beautify.symbol : options.currency)
             : formattedNumber;
     } catch {
         // if something fails lets try with en-US locale

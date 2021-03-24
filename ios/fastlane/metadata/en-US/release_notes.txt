@@ -1,6 +1,7 @@
-Team's log. Stardate 2103.08:
+Team's log. Stardate 2103.23:
 
-We fixed some bugs which impacted gZIL transfers. That's it for now. 
+Now we have all ZRC-2 tokens available for Zilliqa. Also you'll be able with this new release to see Rewards Balance + History, Statistics and Annual percentage yield or APY for NEAR.
+
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 
 Moonlet Team

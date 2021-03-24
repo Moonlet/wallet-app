@@ -50,6 +50,7 @@ export enum SmartScreenPubSubEvents {
 export interface IScreenUser {
     os: 'android' | 'ios' | 'web';
     deviceId: string;
+    preferedCurrency: string;
     appVersion: string;
     theme: 'dark' | 'light';
     country?: string;
@@ -303,10 +304,14 @@ export interface ICurrencyData {
         decimals: number;
         type?: 'UP' | 'DOWN';
     };
-    beautify?: {
-        fromValue?: number;
-        decimals: number;
-    };
+    beautify?: IBeautify;
+}
+
+export interface IBeautify {
+    fromValue?: number;
+    decimals?: number;
+    symbol?: string;
+    notation?: 'compact' | 'percent';
 }
 
 export interface IDataStyle {

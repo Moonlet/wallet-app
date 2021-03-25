@@ -113,6 +113,7 @@ export const translation: ITranslations = {
                 switchNode: 'Switch Node',
                 revote: 'Revote',
                 rewards: 'Rewards',
+                rootAccount: 'Root Account',
                 save: 'Save',
                 secure: 'Secure',
                 security: 'Security',

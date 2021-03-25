@@ -632,7 +632,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             blockchain: account.blockchain,
             accountIndex: account.index,
             token: generateAccountTokenState(tokenConfig),
-            tokenLogo: tokenConfig.icon
+            tokenLogo: tokenConfig.icon,
+            accountName: account?.name || `${translate('App.labels.account')} ${account.index + 1}`
         };
         if (atLeastOneTransactionBroadcasted) {
             navigationParams = {

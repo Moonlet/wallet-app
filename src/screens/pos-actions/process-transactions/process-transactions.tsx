@@ -494,7 +494,10 @@ export class ProcessTransactionsComponent extends React.Component<
                     blockchain: this.props.selectedAccount.blockchain,
                     accountIndex: this.props.selectedAccount.index,
                     token,
-                    activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+                    activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions,
+                    accountName:
+                        this.props.selectedAccount?.name ||
+                        `${translate('App.labels.account')} ${this.props.selectedAccount.index + 1}`
                 });
             }
         }

@@ -176,7 +176,8 @@ export class ManageAccountsComponent extends React.Component<
                     mainText={
                         <View style={styles.firstRow}>
                             <Text style={this.props.styles.accountName}>
-                                {`${translate('App.labels.account')} ${account.index + 1}`}
+                                {account?.name ||
+                                    `${translate('App.labels.account')} ${account.index + 1}`}
                             </Text>
                             <Text
                                 numberOfLines={1}

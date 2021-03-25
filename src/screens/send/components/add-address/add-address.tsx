@@ -160,6 +160,8 @@ export class AddAddressComponent extends React.Component<
     }
 
     public async verifyInputText(text: string) {
+        text = text.replace('zilliqa://', ''); // Remove this for ZIL pay addresses
+
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
         try {

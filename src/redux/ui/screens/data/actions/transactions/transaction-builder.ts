@@ -33,14 +33,15 @@ export const buildContractCallTransaction = async (
 
     if (isWhitelistedMethod(account.blockchain, params.contractMethod)) {
         const contractAddress = await getContract(chainId, params.contractType);
-        const tokenConfig = getTokenConfig(account.blockchain, params.tokenSymbol);
+        const tokenConfig = getTokenConfig(account.blockchain, blockchainInstance.config.coin);
         const client = blockchainInstance.getClient(chainId);
+        const blockInfo = await client.getCurrentBlock();
 
         const nonce = await client.getNonce(account.address, account.publicKey);
 
         const raw = JSON.stringify({
             _tag: params.contractMethod, // 'SwapExactTokensForZIL',
-            params: params.rawData
+            params: params.args
         });
 
         // [
@@ -99,11 +100,11 @@ export const buildContractCallTransaction = async (
             toAddress: contractAddress,
             amount: params.amount,
             feeOptions,
-            broadcastedOnBlock: params.blockNumber,
+            broadcastedOnBlock: blockInfo.number,
             nonce: nonce + currentTransactions.length,
             status: TransactionStatus.PENDING,
             data: {
-                method: params.contractType + ' ' + tokenConfig.symbol, // TODO change to somehting relevant
+                method: params.contractMethod,
                 params: [contractAddress, params.amount],
                 raw
             },

@@ -116,7 +116,7 @@ export const getToTokenId = (
     return type === 'BUY' ? fromTokenId : toTokenId;
 };
 
-export const getAmountFromToken = (
+export const getUnitAmount = (
     state: IReduxState,
     module: IScreenModule,
     options: any,
@@ -147,4 +147,58 @@ export const getAmountFromToken = (
         return blockchainInstance.account.amountToStd('1', tokenConfig.decimals).toFixed();
     }
     return '';
+};
+
+export const getFromAmount = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const step = params && params[0];
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step,
+        tab: undefined
+    });
+
+    const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
+    const amountFrom: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountFrom;
+    const amountTo: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountTo;
+
+    return type === 'SELL' ? amountFrom : amountTo;
+};
+
+export const getToAmount = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const step = params && params[0];
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step,
+        tab: undefined
+    });
+
+    const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
+    const amountFrom: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountFrom;
+    const amountTo: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountTo;
+
+    return type === 'BUY' ? amountFrom : amountTo;
 };

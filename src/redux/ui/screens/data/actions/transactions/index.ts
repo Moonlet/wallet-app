@@ -15,9 +15,7 @@ import { buildContractCallTransaction } from './transaction-builder';
 export * from './transaction-builder';
 
 export interface IContractCallParams {
-    rawData: any;
-    blockNumber: number;
-    tokenSymbol: string;
+    args: any;
     amount: string;
     contractMethod: string;
     contractType: Contracts;

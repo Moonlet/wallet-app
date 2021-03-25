@@ -8,9 +8,8 @@ import { setScreenInputData } from '../../input-data/actions';
 import * as transactions from './transactions';
 
 export const setReduxScreenInputData = (
-    context: IHandleCtaActionContext<transactions.ISwapTokenParams>
+    context: IHandleCtaActionContext<transactions.IContractCallParams>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    // console.log('value', context.action.params?.params);
     setScreenInputData(context.options.screenKey, context.action.params?.params)(
         dispatch,
         getState

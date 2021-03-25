@@ -55,6 +55,7 @@ class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalP
                 }
             });
             this.httpClient = new HttpClient(data.endpoint.url);
+            this.interval && clearInterval(this.interval);
             this.interval = setInterval(async () => {
                 let response;
                 switch (data.endpoint.method) {

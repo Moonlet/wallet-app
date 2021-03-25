@@ -1,6 +1,6 @@
 import {
     IBlockchainTransaction,
-    IBasicTransaction,
+    ITransferTransaction,
     TransactionType,
     AbstractBlockchainTransactionUtils,
     IPosTransaction
@@ -15,7 +15,7 @@ import { TransactionStatus } from '../../wallet/types';
 import { TokenType, PosBasicActionType } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-import { Contracts, config } from './config';
+import { Contracts } from './config';
 import BigNumber from 'bignumber.js';
 import { cloneDeep } from 'lodash';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
@@ -87,23 +87,9 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         return transaction;
     }
 
-    public async buildSwapTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction[]> {
-        // const client = Zilliqa.getClient(tx.chainId);
-
-        const params = tx.extraFields?.swapParams;
-
-        const txSwap: IBasicTransaction = cloneDeep(tx);
-
-        if (params.fromToken.toLowerCase() === config.coin) {
-            txSwap.amount = params.fromAmount;
-        }
-
-        const transactions: IBlockchainTransaction[] = [];
-
-        return transactions;
-    }
-
-    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(
+        tx: ITransferTransaction
+    ): Promise<IBlockchainTransaction> {
         const client = Zilliqa.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 

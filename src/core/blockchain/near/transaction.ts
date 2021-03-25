@@ -1,6 +1,6 @@
 import {
     IBlockchainTransaction,
-    IBasicTransaction,
+    ITransferTransaction,
     TransactionType,
     AbstractBlockchainTransactionUtils,
     IPosTransaction
@@ -86,7 +86,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     }
 
     public async buildTransferTransaction(
-        tx: IBasicTransaction
+        tx: ITransferTransaction
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const client = Near.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);

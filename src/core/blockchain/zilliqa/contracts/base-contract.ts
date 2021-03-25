@@ -1,10 +1,4 @@
-import {
-    ChainIdType,
-    IPosTransaction,
-    IBlockchainTransaction,
-    TransactionType,
-    IBasicTransaction
-} from '../../types';
+import { ChainIdType, IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { TransactionStatus } from '../../../wallet/types';
@@ -28,13 +22,13 @@ export const fetchContracts = async (chainId: ChainIdType) => {
     // TODO - fetch from blockchain
 
     const keyStaking = `zilliqa.${chainId}.staking.contract`;
-    const keySwap = `zilliqa.${chainId}.swap.contract`;
+    const keySwap = `zilliqa.${chainId}.zilswap.contract`;
     try {
         const configs = await new ApiClient().configs.getConfigs([keyStaking, keySwap]);
         const values = {
             ...contracts[chainId],
             [Contracts.STAKING]: configs.result[keyStaking],
-            [Contracts.SWAP]: configs.result[keySwap]
+            [Contracts.ZILSWAP]: configs.result[keySwap]
         };
         return values;
     } catch (error) {
@@ -59,7 +53,7 @@ export const getContract = async (
 };
 
 export const buildBaseTransaction = async (
-    tx: IPosTransaction | IBasicTransaction
+    tx: IPosTransaction
 ): Promise<IBlockchainTransaction> => {
     const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 

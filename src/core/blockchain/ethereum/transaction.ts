@@ -1,6 +1,6 @@
 import {
     IBlockchainTransaction,
-    IBasicTransaction,
+    ITransferTransaction,
     TransactionType,
     AbstractBlockchainTransactionUtils
 } from '../types';
@@ -46,7 +46,9 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
         }
     }
 
-    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(
+        tx: ITransferTransaction
+    ): Promise<IBlockchainTransaction> {
         const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
         const client = Ethereum.getClient(tx.chainId);

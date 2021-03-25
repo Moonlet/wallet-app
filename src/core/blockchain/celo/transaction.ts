@@ -1,6 +1,6 @@
 import { EthereumTransactionUtils } from '../ethereum/transaction';
 import {
-    IBasicTransaction,
+    ITransferTransaction,
     IBlockchainTransaction,
     TransactionType,
     IPosTransaction
@@ -259,7 +259,9 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         return transactions;
     }
 
-    public async buildTransferTransaction(tx: IBasicTransaction): Promise<IBlockchainTransaction> {
+    public async buildTransferTransaction(
+        tx: ITransferTransaction
+    ): Promise<IBlockchainTransaction> {
         const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
         const client = Celo.getClient(tx.chainId);

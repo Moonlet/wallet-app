@@ -192,8 +192,6 @@ const handleCtaAction = async (
 ) => {
     const state = getState();
 
-    // console.log('handlecta');
-
     switch (action.type) {
         case 'callAction':
             switch (action.params.action) {
@@ -1292,12 +1290,13 @@ const handleCtaAction = async (
                                     dispatch,
                                     getState
                                 );
-                            } catch {
+                            } catch (error) {
                                 SentryCaptureException(
                                     new Error(
                                         JSON.stringify({
                                             message: 'Smart screen action not available',
-                                            action: action.params.action
+                                            action: action.params.action,
+                                            error
                                         })
                                     )
                                 );

@@ -120,6 +120,6 @@ export const fetchScreenData = (context: IScreenContext) => async (
             })
         });
 
-        SentryCaptureException(new Error('Fetch /walletUi/screen'));
+        SentryCaptureException(new Error('Fetch /walletUi/screen/widgets'));
     }
 };

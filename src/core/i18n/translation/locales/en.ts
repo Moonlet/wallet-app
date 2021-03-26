@@ -137,6 +137,7 @@ export const translation: ITranslations = {
                 summary: 'Summary',
                 support: 'Support',
                 symbol: 'Symbol',
+                swap: 'Swap',
                 tc: 'Terms of Service',
                 to: 'To',
                 tools: 'Tools',

@@ -133,21 +133,26 @@ export class AccountTabComponent extends React.Component<
                             >
                                 {translate('App.labels.receive')}
                             </Button>
-                            <Button
-                                style={styles.button}
-                                wrapperStyle={{ flex: 1 }}
-                                onPress={() =>
-                                    NavigationService.navigate('SmartScreen', {
-                                        context: {
-                                            screen: 'Swap',
-                                            step: 'SwapEnterAmount',
-                                            key: 'swap-enter-amount'
-                                        }
-                                    })
-                                }
-                            >
-                                {'Swap'}
-                            </Button>
+
+                            {/* TODO: maybe find a better way to handle this */}
+                            {this.props.account.blockchain === Blockchain.ZILLIQA && (
+                                <Button
+                                    style={styles.button}
+                                    wrapperStyle={{ flex: 1 }}
+                                    onPress={() =>
+                                        NavigationService.navigate('SmartScreen', {
+                                            context: {
+                                                screen: 'Swap',
+                                                step: 'SwapEnterAmount',
+                                                key: 'swap-enter-amount'
+                                            },
+                                            newFlow: true
+                                        })
+                                    }
+                                >
+                                    {translate('App.labels.swap')}
+                                </Button>
+                            )}
                         </View>
 
                         {Platform.OS !== 'web' && (

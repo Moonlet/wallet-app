@@ -4,6 +4,7 @@ import DeviceInfo from 'react-native-device-info';
 import {
     ICtaAction,
     IScreenContext,
+    IScreenCtaContextParams,
     IScreenCtaResponse,
     IScreenRequest,
     SmartScreenPubSubEvents
@@ -18,6 +19,10 @@ import { getSelectedWallet, getSelectedAccount } from '../../../../wallets/selec
 import { setScreenInputData } from '../../input-data/actions';
 import { handleCta } from '../handle-cta';
 import * as transactions from './transactions';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 export interface IHandleCtaOptions {
     screenKey?: string;
@@ -36,11 +41,11 @@ export interface IHandleCtaActionContext<P = any> {
     options?: IHandleCtaOptions;
 }
 
-export const handleDynamicCta = async (
-    // context: IHandleCtaActionContext<transactions.IContractCallParams>
-    context: IScreenContext,
-    params: any,
-    screenKey: string
+export const handleDynamicCta = (
+    context: IHandleCtaActionContext<{
+        ctaId: string;
+        context: IScreenContext;
+    }>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const wallet = getSelectedWallet(state);
@@ -50,17 +55,17 @@ export const handleDynamicCta = async (
     const chainId = getChainId(state, account.blockchain);
     if (!chainId || chainId === '') return;
 
-    const apiClient = new ApiClient();
-
-    // let param: IScreenCtaContextParams = {};
+    const screenRequestContext = context.action.params.params.context;
+    const screenRequestParams: IScreenCtaContextParams = {
+        ctaId: context.action.params.params.ctaId,
+        flowInputData: undefined, // TODO
+        screenInputData: undefined // TODO
+    };
 
     const body: IScreenRequest = {
         context: {
-            screen: context.screen,
-            step: context?.step,
-            tab: context?.tab,
-            flowId: context?.flowId,
-            params: context.params
+            ...screenRequestContext,
+            params: screenRequestParams
         },
         user: {
             os: Platform.OS as 'ios' | 'android' | 'web',
@@ -83,12 +88,21 @@ export const handleDynamicCta = async (
     };
 
     try {
+        const apiClient = new ApiClient();
         const screenResponse = await apiClient.http.post('/walletUi/screen/cta', body);
         const data: IScreenCtaResponse = screenResponse?.result?.data;
 
         handleCta(data.cta, {})(dispatch, getState);
-    } catch (erorr) {
-        // TODO: handle error
+    } catch (error) {
+        // handle error
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                request: body,
+                error
+            })
+        });
+
+        SentryCaptureException(new Error('Fetch /walletUi/screen/cta'));
     }
 };
 

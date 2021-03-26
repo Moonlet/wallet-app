@@ -22,6 +22,12 @@ export interface IScreenContext<ScreenParams = any> {
     params?: ScreenParams;
 }
 
+export interface IScreenCtaContextParams<F = any, S = any> {
+    ctaId: string;
+    flowInputData: F;
+    screenInputData: S;
+}
+
 /** @deprecated use string instead */
 export enum ContextScreen {
     DASHBOARD = 'dashboard',
@@ -77,12 +83,6 @@ export interface IScreenResponse {
     bottomFixedArea?: IScreenWidget;
     validation?: IScreenValidation;
     navigationOptions?: any;
-}
-
-export interface IScreenCtaContextParams<F = any, S = any> {
-    ctaId: string;
-    flowInputData: F;
-    screenInputData: S;
 }
 
 export interface IScreenCtaResponse {

@@ -79,7 +79,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
 
     try {
         // fetch screen data
-        const screenResponse = await apiClient.http.post('/walletUi/screen', body);
+        const screenResponse = await apiClient.http.post('/walletUi/screen/widgets', body);
         const data: IScreenResponse = screenResponse?.result?.data;
 
         dispatch({
@@ -100,7 +100,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 })
             });
 
-            SentryCaptureException(new Error('Fetch /walletUi/screen'));
+            SentryCaptureException(new Error('Fetch /walletUi/screen/widgets'));
         }
     } catch (error) {
         // handle error

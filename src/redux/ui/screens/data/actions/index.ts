@@ -21,12 +21,10 @@ import { handleCta } from '../handle-cta';
 import * as transactions from './transactions';
 
 export const handleDynamicCta = async (
-    params: any,
     context: IScreenContext,
-    screenKey: string,
-    dispatch: Dispatch<IAction<any>>,
-    getState: () => IReduxState
-) => {
+    params: any,
+    screenKey: string
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const wallet = getSelectedWallet(state);
     if (!wallet) return;

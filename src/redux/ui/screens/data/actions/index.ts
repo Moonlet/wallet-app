@@ -15,12 +15,29 @@ import { IReduxState } from '../../../../state';
 import { IAction } from '../../../../types';
 import { flattenObject } from '../../../../utils/helpers';
 import { getSelectedWallet, getSelectedAccount } from '../../../../wallets/selectors';
-import { AccountType } from '../../../../wallets/state';
 import { setScreenInputData } from '../../input-data/actions';
 import { handleCta } from '../handle-cta';
 import * as transactions from './transactions';
 
+export interface IHandleCtaOptions {
+    screenKey?: string;
+    /** @deprecated - should remove validator */
+    validator?: {
+        id: string;
+        name: string;
+        icon?: string;
+        website?: string;
+    };
+    pubSub?: PubSub<SmartScreenPubSubEvents>;
+}
+
+export interface IHandleCtaActionContext<P = any> {
+    action: ICtaAction<P>;
+    options?: IHandleCtaOptions;
+}
+
 export const handleDynamicCta = async (
+    // context: IHandleCtaActionContext<transactions.IContractCallParams>
     context: IScreenContext,
     params: any,
     screenKey: string
@@ -61,14 +78,18 @@ export const handleDynamicCta = async (
             blockchain: account.blockchain,
             chainId: String(chainId),
             address: account.address,
-            accountType: AccountType.DEFAULT
+            accountType: account.type
         }
     };
 
-    const screenResponse = await apiClient.http.post('/walletUi/screen/cta', body);
-    const data: IScreenCtaResponse = screenResponse?.result?.data;
+    try {
+        const screenResponse = await apiClient.http.post('/walletUi/screen/cta', body);
+        const data: IScreenCtaResponse = screenResponse?.result?.data;
 
-    handleCta(data.cta, {})(dispatch, getState);
+        handleCta(data.cta, {})(dispatch, getState);
+    } catch (erorr) {
+        // TODO: handle error
+    }
 };
 
 export const setReduxScreenInputData = (
@@ -82,21 +103,6 @@ export const setReduxScreenInputData = (
 
 export const supportedActions = flattenObject({
     transactions,
-    setReduxScreenInputData
+    setReduxScreenInputData,
+    handleDynamicCta
 });
-
-export interface IHandleCtaOptions {
-    screenKey?: string;
-    validator?: {
-        id: string;
-        name: string;
-        icon?: string;
-        website?: string;
-    };
-    pubSub?: PubSub<SmartScreenPubSubEvents>;
-}
-
-export interface IHandleCtaActionContext<P = any> {
-    action: ICtaAction<P>;
-    options?: IHandleCtaOptions;
-}

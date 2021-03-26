@@ -7,7 +7,6 @@ import {
     IScreenResponse
 } from '../../../../components/widgets/types';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
-import { AccountType } from '../../../wallets/state';
 import { IAction } from '../../../types';
 import { getSelectedAccount, getSelectedWallet } from '../../../wallets/selectors';
 import { Platform } from 'react-native';
@@ -70,7 +69,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
             blockchain: account.blockchain,
             chainId: String(chainId),
             address: account.address,
-            accountType: AccountType.DEFAULT
+            accountType: account.type
         }
     };
 

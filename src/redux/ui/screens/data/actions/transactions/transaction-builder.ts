@@ -41,7 +41,7 @@ export const buildContractCallTransaction = async (
 
         const raw = JSON.stringify({
             _tag: params.contractMethod, // 'SwapExactTokensForZIL',
-            params: params.args
+            params: JSON.stringify(params.args)
         });
 
         // [

@@ -79,6 +79,16 @@ export interface IScreenResponse {
     navigationOptions?: any;
 }
 
+export interface IScreenCtaContextParams<F = any, S = any> {
+    ctaId: string;
+    flowInputData: F;
+    screenInputData: S;
+}
+
+export interface IScreenCtaResponse {
+    cta: ICta;
+}
+
 export interface IScreenFieldValidation {
     fn: string;
     params?: any[];

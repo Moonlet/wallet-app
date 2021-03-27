@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
 import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { Text } from '../../../library';
 import { IReduxState } from '../../../redux/state';
@@ -14,7 +14,7 @@ import { setCurrency } from '../../../redux/preferences/actions';
 import { normalize } from '../../../styles/dimensions';
 import { IconValues } from '../../../components/icon/values';
 
-export interface IReduxProps {
+interface IReduxProps {
     selectedCurrency: string;
     setCurrency: typeof setCurrency;
 }
@@ -31,7 +31,7 @@ const navigationOptions = () => ({
     title: translate('Settings.defaultCurrency')
 });
 
-export class SetCurrencyComponent extends React.Component<
+class SetCurrencyComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
@@ -40,7 +40,7 @@ export class SetCurrencyComponent extends React.Component<
         const { styles } = this.props;
 
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                 {Object.values(AVAILABLE_CURRENCIES).map((currency: string, index: number) => (
                     <View key={index}>
                         <TouchableOpacity
@@ -60,7 +60,7 @@ export class SetCurrencyComponent extends React.Component<
                         <View style={styles.divider} />
                     </View>
                 ))}
-            </View>
+            </ScrollView>
         );
     }
 }

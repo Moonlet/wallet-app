@@ -8,6 +8,7 @@ import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 import { encode as bs58Encode, decode as bs58Decode } from 'bs58';
 import * as nacl from 'tweetnacl';
 import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
+import { translate } from '../../i18n';
 
 export class SolanaAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex): string {
@@ -48,7 +49,8 @@ export class SolanaAccountUtils implements IBlockchainAccountUtils {
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),
             blockchain: Blockchain.SOLANA,
-            tokens: generateTokensConfig(Blockchain.SOLANA)
+            tokens: generateTokensConfig(Blockchain.SOLANA),
+            name: index === -1 ? translate('App.labels.rootAccount') : undefined
         };
     }
 

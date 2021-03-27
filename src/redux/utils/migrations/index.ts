@@ -7,6 +7,7 @@ import v7 from './007';
 import v8 from './008';
 import v9 from './009';
 import v10 from './010';
+import v11 from './011';
 
 export const migrations: any = {
     /**
@@ -44,5 +45,9 @@ export const migrations: any = {
     /**
      * Add ZRC-2 Tokens to all users - 19 Mar 2021
      */
-    10: v10
+    10: v10,
+    /**
+     * Solana change `Account 0` to `Root Account` - 25 Mar 2021
+     */
+    11: v11
 };

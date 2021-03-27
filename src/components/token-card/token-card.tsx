@@ -13,8 +13,9 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../icon/values';
 import { NavigationService } from '../../navigation/navigation-service';
+import { translate } from '../../core/i18n';
 
-export interface IProps {
+interface IProps {
     blockchain: Blockchain;
     token: ITokenState;
     account: IAccountState;
@@ -23,9 +24,7 @@ export interface IProps {
     index: number;
 }
 
-export const TokenCardComponent = (
-    props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>
-) => {
+const TokenCardComponent = (props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) => {
     const { account, blockchain, index, token, styles, theme } = props;
 
     const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
@@ -40,7 +39,10 @@ export const TokenCardComponent = (
                     NavigationService.navigate('Token', {
                         accountIndex: account.index,
                         blockchain: account.blockchain,
-                        token
+                        token,
+                        accountName:
+                            account?.name ||
+                            `${translate('App.labels.account')} ${account.index + 1}`
                     });
                 }}
             >

@@ -36,12 +36,12 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
 import { IconValues } from '../../components/icon/values';
 
-export interface IProps {
+interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
@@ -50,18 +50,19 @@ export interface IReduxProps {
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
-export interface INavigationParams {
+interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     activeTab?: string;
+    accountName?: string;
 }
 
 interface IState {
     settingsVisible: boolean;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountFilteredTransactions(
@@ -115,8 +116,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         fontWeight: 'bold'
                     }}
                 >
-                    {`${translate('App.labels.account')} ${navigation.state.params.accountIndex +
-                        1}`}
+                    {navigation.state.params?.accountName || navigation.state.params?.accName}
                 </Text>
             </View>
         );
@@ -138,7 +138,15 @@ export class TokenScreenComponent extends React.Component<
         };
     }
     public componentDidMount() {
-        this.props.navigation.setParams({ openSettingsMenu: this.openSettingsMenu });
+        const accName =
+            this.props.account?.name ||
+            `${translate('App.labels.account')} ${this.props.accountIndex + 1}`;
+
+        this.props.navigation.setParams({
+            openSettingsMenu: this.openSettingsMenu,
+            accName
+        });
+
         this.props.getBalance(
             this.props.account.blockchain,
             this.props.account.address,

@@ -377,65 +377,74 @@ export const getBalance = (
     )[0];
 
     if (token) {
-        const balanceInProgress = account?.tokens[chainId][token]?.balance?.inProgress;
-        const balanceTimestamp = account?.tokens[chainId][token]?.balance?.timestamp || 0;
+        const isTokenActive = account?.tokens[chainId][token]?.active === true;
 
-        if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
-            const data = {
-                walletId: wallet.id,
-                address,
-                token,
-                blockchain,
-                chainId
-            };
+        // get balance only for active tokens
+        if (isTokenActive) {
+            const balanceInProgress = account?.tokens[chainId][token]?.balance?.inProgress;
+            const balanceTimestamp = account?.tokens[chainId][token]?.balance?.timestamp || 0;
 
-            dispatch({
-                type: ACCOUNT_GET_BALANCE,
-                data,
-                inProgress: true
-            });
-            try {
-                const tokenConfig = getTokenConfig(account.blockchain, token);
-                const client = getBlockchain(blockchain).getClient(chainId);
+            if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
+                const data = {
+                    walletId: wallet.id,
+                    address,
+                    token,
+                    blockchain,
+                    chainId
+                };
 
-                let balance;
-                switch (tokenConfig.type) {
-                    case TokenType.NATIVE: {
-                        balance = await client.getBalance(address);
-                        break;
-                    }
-                    default:
-                        if (client.tokens[tokenConfig.type]) {
-                            balance = await client.tokens[tokenConfig.type].getBalance(
-                                tokenConfig.contractAddress,
-                                address
-                            );
-                        } else {
-                            throw new Error(
-                                `Token Type (${tokenConfig.type}) not handled for blockchain ${blockchain}.`
-                            );
-                        }
-                }
-
-                dispatch({
-                    type: ACCOUNT_GET_BALANCE,
-                    data: {
-                        ...data,
-                        balance
-                    }
-                });
-            } catch (error) {
                 dispatch({
                     type: ACCOUNT_GET_BALANCE,
                     data,
-                    error
+                    inProgress: true
                 });
+                try {
+                    const tokenConfig = getTokenConfig(account.blockchain, token);
+                    const client = getBlockchain(blockchain).getClient(chainId);
+
+                    let balance;
+                    switch (tokenConfig.type) {
+                        case TokenType.NATIVE: {
+                            balance = await client.getBalance(address);
+                            break;
+                        }
+                        default:
+                            if (client.tokens[tokenConfig.type]) {
+                                balance = await client.tokens[tokenConfig.type].getBalance(
+                                    tokenConfig.contractAddress,
+                                    address
+                                );
+                            } else {
+                                throw new Error(
+                                    `Token Type (${tokenConfig.type}) not handled for blockchain ${blockchain}.`
+                                );
+                            }
+                    }
+
+                    dispatch({
+                        type: ACCOUNT_GET_BALANCE,
+                        data: {
+                            ...data,
+                            balance
+                        }
+                    });
+                } catch (error) {
+                    dispatch({
+                        type: ACCOUNT_GET_BALANCE,
+                        data,
+                        error
+                    });
+                }
             }
         }
     } else {
         // call get balance for all tokens
         Object.keys(account.tokens[chainId] || {}).map(tokenSymbol => {
-            getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
+            const isTokenActive = account?.tokens[chainId][tokenSymbol]?.active === true;
+            if (isTokenActive) {
+                // get balance only for active tokens
+                getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
+            }
         });
     }
 };
@@ -546,7 +555,10 @@ export const updateTransactionFromBlockchain = (
                 accountIndex: transactionAccount.index,
                 token: generateAccountTokenState(tokenConfig),
                 tokenLogo: tokenConfig.icon,
-                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions,
+                accountName:
+                    transactionAccount?.name ||
+                    `${translate('App.labels.account')} ${transactionAccount.index + 1}`
             };
 
             dispatch(setSelectedWallet(wallet.id));

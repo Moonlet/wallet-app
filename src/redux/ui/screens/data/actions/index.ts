@@ -44,7 +44,7 @@ export const handleDynamicCta = (
     const screenRequestContext = context.action.params.params.context;
 
     // TODO: here we should send all screen keys from the flow in order to collect data
-    // I would do something like
+    // I would do something like and here add all screen keys from the flow
     //  screenInputData: {
     //      [screenKey]: data
     //  }

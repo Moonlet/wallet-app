@@ -62,19 +62,22 @@ import { delay } from '../../../../core/utils/time';
 import { buildDummyValidator } from '../../../wallets/actions/util-actions';
 import { supportedActions } from './actions/index';
 
-export const handleCta = (
-    cta: ICta,
-    options?: {
-        screenKey?: string;
-        validator?: {
-            id: string;
-            name: string;
-            icon?: string;
-            website?: string;
-        };
-        pubSub?: PubSub<SmartScreenPubSubEvents>;
-    }
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+export interface IHandleCtaOptions {
+    screenKey?: string;
+    validator?: {
+        id: string;
+        name: string;
+        icon?: string;
+        website?: string;
+    };
+    pubSub?: PubSub<SmartScreenPubSubEvents>;
+    flowId?: string;
+}
+
+export const handleCta = (cta: ICta, options?: IHandleCtaOptions) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
     if (!cta) {
         return;
     }
@@ -179,16 +182,7 @@ const handleCtaAction = async (
     action: ICtaAction,
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState,
-    options?: {
-        screenKey?: string;
-        validator?: {
-            id: string;
-            name: string;
-            icon?: string;
-            website?: string;
-        };
-        pubSub?: PubSub<SmartScreenPubSubEvents>;
-    }
+    options?: IHandleCtaOptions
 ) => {
     const state = getState();
 

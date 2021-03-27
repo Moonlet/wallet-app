@@ -218,7 +218,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.CTA:
-            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta, options?.pubSub);
+            moduleJSX =
+                module?.cta &&
+                renderCta(module.cta, actions.handleCta, {
+                    screenKey: options?.screenKey,
+                    flowId: context?.flowId,
+                    pubSub: options?.pubSub
+                });
             break;
 
         case ModuleTypes.AMOUNT_INPUT:
@@ -309,7 +315,11 @@ export const renderModule = (
 export const renderCta = (
     cta: ICta,
     handleCTA: typeof handleCta,
-    pubSub: PubSub<SmartScreenPubSubEvents>
+    options: {
+        screenKey?: string;
+        flowId?: string;
+        pubSub: PubSub<SmartScreenPubSubEvents>;
+    }
 ) => {
     return (
         <Button
@@ -327,7 +337,7 @@ export const renderCta = (
                 formatStyles(cta?.buttonProps?.buttonStyle)
             ]}
             textStyle={formatStyles(cta?.buttonProps?.textStyle)}
-            onPress={() => handleCTA(cta, { pubSub })}
+            onPress={() => handleCTA(cta, options)}
         >
             {cta.label}
         </Button>

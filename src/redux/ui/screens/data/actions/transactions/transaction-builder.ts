@@ -13,7 +13,7 @@ import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
 
 const contractCallFunctionsWhitelist = {
-    Zilliqa: ['SwapZILForExactTokens', 'SwapZILForExactTokens']
+    Zilliqa: ['SwapExactTokensForZil', 'SwapZILForExactTokens']
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {

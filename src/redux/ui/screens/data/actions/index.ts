@@ -21,6 +21,7 @@ import {
     addBreadcrumb as SentryAddBreadcrumb,
     captureException as SentryCaptureException
 } from '@sentry/react-native';
+import { getScreenDataKey } from '../reducer';
 
 export interface IHandleCtaActionContext<P = any> {
     action: ICtaAction<P>;
@@ -31,6 +32,7 @@ export const handleDynamicCta = (
     context: IHandleCtaActionContext<{
         ctaId: string;
         context: IScreenContext;
+        steps: string[];
     }>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
@@ -42,26 +44,29 @@ export const handleDynamicCta = (
     if (!chainId || chainId === '') return;
 
     const screenRequestContext = context.action.params.params.context;
+    const steps = context.action.params.params?.steps || [];
 
-    // TODO: here we should send all screen keys from the flow in order to collect data
-    // I would do something like and here add all screen keys from the flow
-    //  screenInputData: {
-    //      [screenKey]: data
-    //  }
-    //
+    const screenInputData = {};
 
-    // const screenKey = context?.options?.screenKey;
-    // const flowId = screenRequestContext?.flowId || context?.options?.flowId;
+    for (const step of steps) {
+        const screenKey = getScreenDataKey({
+            pubKey: getSelectedWallet(state)?.walletPublicKey,
+            blockchain: account?.blockchain,
+            chainId: String(chainId),
+            address: account.address,
+            step,
+            tab: undefined
+        });
 
-    // console.log({
-    //     screenKey: state.ui.screens.inputData[screenKey],
-    //     flowId: state.ui.screens.inputData[flowId]
-    // });
+        screenInputData[screenKey] = state.ui.screens.inputData[screenKey]?.data || {};
+    }
+
+    const flowId = screenRequestContext?.flowId || context?.options?.flowId;
 
     const screenRequestParams: IScreenCtaContextParams = {
         ctaId: context.action.params.params.ctaId,
-        flowInputData: undefined, // TODO
-        screenInputData: undefined // TODO
+        flowInputData: state.ui.screens.inputData[flowId]?.data || {},
+        screenInputData
     };
 
     const body: IScreenRequest = {

@@ -8,7 +8,7 @@ import {
 } from './utils';
 import { PushNotifTokenType } from '../../messaging/types';
 import { Notifications } from '../../messaging/notifications/notifications';
-import { IAccountState, IWalletState } from '../../../redux/wallets/state';
+import { IWalletState } from '../../../redux/wallets/state';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { ApiClient } from './api-client';
 import { Blockchain } from '../../blockchain/types';
@@ -115,17 +115,21 @@ export class NotificationsApiClient {
             if (walletPrivateKey) {
                 const myAccounts = [];
 
-                wallet.accounts.map(async (account: IAccountState) => {
+                for (const account of wallet.accounts) {
                     const myTokens = [];
 
                     for (const chainId of Object.keys(account.tokens)) {
                         for (const symbol of Object.keys(account.tokens[chainId])) {
-                            const tokenConfig = getTokenConfig(account.blockchain, symbol);
+                            const isTokenActive = account.tokens[chainId][symbol]?.active === true;
 
-                            myTokens.push({
-                                symbol,
-                                contractAddress: tokenConfig?.contractAddress
-                            });
+                            if (isTokenActive) {
+                                const tokenConfig = getTokenConfig(account.blockchain, symbol);
+
+                                myTokens.push({
+                                    symbol,
+                                    contractAddress: tokenConfig?.contractAddress
+                                });
+                            }
                         }
                     }
 
@@ -134,7 +138,7 @@ export class NotificationsApiClient {
                         address: account.address.toLocaleLowerCase(),
                         tokens: removeDuplicateObjectsFromArray(myTokens)
                     });
-                });
+                }
 
                 const data: any = {
                     walletPublicKey,

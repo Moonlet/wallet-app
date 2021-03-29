@@ -14,8 +14,17 @@ import { buildContractCallTransaction } from './transaction-builder';
 
 export * from './transaction-builder';
 
+export interface IContractCallArg {
+    type: string;
+    data: {
+        type: 'value' | 'selector';
+        value: any;
+    };
+    name?: string;
+}
+
 export interface IContractCallParams {
-    args: any;
+    args: IContractCallArg[];
     amount: string;
     contractMethod: string;
     contractType: Contracts;

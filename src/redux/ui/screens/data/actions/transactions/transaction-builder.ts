@@ -39,38 +39,29 @@ export const buildContractCallTransaction = async (
 
         const nonce = await client.getNonce(account.address, account.publicKey);
 
+        const dataParams = [];
+
+        for (const arg of params.args) {
+            if (arg.data.type === 'value') {
+                const obj = {
+                    type: arg.type,
+                    value: arg.data.value
+                };
+                if (arg.name) {
+                    dataParams.push({
+                        ...obj,
+                        vname: arg.name // TODO key might be needed to be passed from param
+                    });
+                } else {
+                    dataParams.push(obj);
+                }
+            }
+        }
+
         const raw = JSON.stringify({
             _tag: params.contractMethod, // 'SwapExactTokensForZIL',
-            params: JSON.stringify(params.args)
+            params: JSON.stringify(dataParams)
         });
-
-        // [
-        //     {
-        //         vname: 'token_address',
-        //         type: 'ByStr20',
-        //         value: param.fromToken
-        //     },
-        //     {
-        //         vname: 'min_zil_amount',
-        //         type: 'Uint128',
-        //         value: param.toTokenAmount
-        //     },
-        //     {
-        //         vname: 'recipient_address',
-        //         type: 'ByStr20',
-        //         value: param.toToken
-        //     },
-        //     {
-        //         vname: 'token_amount',
-        //         type: 'Uint128',
-        //         value: param.fromTokenAmount
-        //     },
-        //     {
-        //         vname: 'deadline_block',
-        //         type: 'Uint128',
-        //         value: param.blockNumber + 100 // expire after 100 blocks
-        //     }
-        // ]
 
         const feeOptions = await client.getFees(
             TransactionType.CONTRACT_CALL,

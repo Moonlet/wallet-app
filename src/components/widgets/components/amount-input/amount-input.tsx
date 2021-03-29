@@ -47,7 +47,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
     return {
         amount:
-            (inputKey && state.ui.screens.inputData[ownProps.screenKey]?.data?.inputKey) ||
+            (inputKey && state.ui.screens.inputData[ownProps.screenKey]?.data[inputKey]) ||
             state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
 
         inputValidation: state.ui.screens.inputData[ownProps.screenKey]?.validation,

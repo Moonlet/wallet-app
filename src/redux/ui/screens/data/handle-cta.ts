@@ -865,6 +865,43 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'amountSelectableBoxPercentageSwap': {
+                    const screenKey = options?.screenKey;
+
+                    const amountBox =
+                        (screenKey &&
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[screenKey]?.data?.amountBox) ||
+                        action?.params?.params?.amountBox;
+
+                    if (
+                        screenKey &&
+                        amountBox &&
+                        action.params?.params?.amount &&
+                        action.params?.params?.inputKey &&
+                        action.params?.params?.screenValidation
+                    ) {
+                        const amount = action.params.params.amount;
+                        const inputKey = action.params.params.inputKey;
+
+                        const percentage = amountBox.value;
+
+                        const finalAmount = new BigNumber(percentage)
+                            .multipliedBy(new BigNumber(amount))
+                            .dividedBy(100);
+
+                        setScreenInputData(screenKey, {
+                            [inputKey]: finalAmount.toFixed()
+                        })(dispatch, getState);
+
+                        runScreenValidation(action.params.params.screenValidation, screenKey)(
+                            dispatch,
+                            getState
+                        );
+                    }
+                    break;
+                }
+
                 case 'navigateToStakeNowEnterAmountValidators': {
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);

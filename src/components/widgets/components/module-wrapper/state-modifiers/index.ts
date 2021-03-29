@@ -20,7 +20,7 @@ import {
     switchNodeContinueInfo2,
     switchNodeContinueInfo3
 } from './switch-node';
-import { swapToggleSelector } from './swap';
+import { swapToggleSelector, swapToEnterAmount } from './swap';
 
 const stateModifiers = {
     updateClaimPending,
@@ -33,7 +33,8 @@ const stateModifiers = {
     switchNodeSelectReasons,
     switchNodeContinueInfo2,
     switchNodeContinueInfo3,
-    swapToggleSelector
+    swapToggleSelector,
+    swapToEnterAmount
 };
 
 export const getState = (state: IReduxState, module: IScreenModule) => {

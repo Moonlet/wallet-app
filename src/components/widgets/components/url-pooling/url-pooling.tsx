@@ -75,7 +75,7 @@ class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalP
                     break;
             }
 
-            if (response.result) {
+            if (response?.result?.data) {
                 this.props.setScreenInputData(this.props.options.screenKey, {
                     [data.reduxKey]: response.result.data
                 });

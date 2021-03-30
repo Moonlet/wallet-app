@@ -452,6 +452,7 @@ export interface IAmountInputData {
     editable?: boolean;
     focus?: boolean;
     showValidations?: boolean;
+    onChangeTextAction?: boolean;
 }
 
 export interface IAmountSelectableBoxData {

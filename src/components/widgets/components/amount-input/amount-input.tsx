@@ -17,7 +17,8 @@ import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import {
     setScreenInputData,
-    setScreenAmount
+    setScreenAmount,
+    onChangeTextAction
 } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
@@ -40,6 +41,7 @@ interface IReduxProps {
 
     setScreenInputData: typeof setScreenInputData;
     setScreenAmount: typeof setScreenAmount;
+    onChangeTextAction: typeof onChangeTextAction;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -62,7 +64,8 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
 const mapDispatchToProps = {
     setScreenInputData,
-    setScreenAmount
+    setScreenAmount,
+    onChangeTextAction
 };
 
 class AmountInputComponent extends React.Component<
@@ -177,7 +180,7 @@ class AmountInputComponent extends React.Component<
     }
 
     public render() {
-        const { amount, module, inputValidation, styles, theme } = this.props;
+        const { amount, context, module, inputValidation, screenKey, styles, theme } = this.props;
 
         const data = module.data as IAmountInputData;
 
@@ -208,10 +211,13 @@ class AmountInputComponent extends React.Component<
                             onChangeText={text => {
                                 text = text.replace(/,/g, '.');
                                 this.props.setScreenAmount(text, {
-                                    screenKey: this.props.screenKey,
-                                    context: this.props.context,
+                                    screenKey,
+                                    context,
                                     inputKey
                                 });
+                                if (data?.onChangeTextAction) {
+                                    this.props.onChangeTextAction(module, context, screenKey);
+                                }
                             }}
                             keyboardType={Platform.select({
                                 default: 'number-pad',

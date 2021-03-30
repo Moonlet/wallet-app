@@ -1,9 +1,13 @@
+import BigNumber from 'bignumber.js';
 import { Dispatch } from 'react';
 import {
     IScreenContext,
+    IScreenModule,
     IScreenValidation,
     IStateSelector
 } from '../../../../components/widgets/types';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../../../core/blockchain/types';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
 import { screenActions } from './screen-actions';
@@ -135,5 +139,32 @@ export const runScreenStateActions = (options: {
                 getState
             );
         }
+    }
+};
+
+export const onChangeTextAction = (
+    module: IScreenModule,
+    context: IScreenContext,
+    screenKey: string
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const state = getState();
+
+    if (screenKey && module?.details?.inputKey && module?.details?.toInput) {
+        const inputAmount = state.ui.screens.inputData[screenKey].data[module.details.inputKey];
+
+        const swapPrice = state.ui.screens.inputData[screenKey].data?.swapPrice?.price;
+
+        const swapToTokenDecimals = state.ui.screens.inputData[screenKey].data?.swapToTokenDecimals;
+
+        const amountFromStd = getBlockchain(Blockchain.ZILLIQA).account.amountFromStd(
+            new BigNumber(inputAmount).multipliedBy(new BigNumber(swapPrice)),
+            swapToTokenDecimals
+        );
+
+        setScreenAmount(amountFromStd.toFixed(), {
+            screenKey,
+            context,
+            inputKey: module.details.toInput
+        })(dispatch, getState);
     }
 };

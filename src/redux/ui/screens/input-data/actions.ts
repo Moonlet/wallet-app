@@ -152,6 +152,10 @@ const setSwapInputAmount = (
     const state = getState();
     const blockchain = getSelectedBlockchain(state);
 
+    // TODO: this need a little refactor
+    //      1. has to be supported by handle cta callAction
+    //      2. not working properly when enter amount on the second input
+
     if (screenKey && module?.details?.inputKey && module?.details?.toInput) {
         const inputAmount = state.ui.screens.inputData[screenKey].data[module.details.inputKey];
 

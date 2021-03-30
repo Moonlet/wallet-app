@@ -7,9 +7,9 @@ import {
     IStateSelector
 } from '../../../../components/widgets/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { Blockchain } from '../../../../core/blockchain/types';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
+import { getSelectedBlockchain } from '../../../wallets/selectors';
 import { screenActions } from './screen-actions';
 import { IScreenInputDataValidations } from './state';
 import { screenInputValidationActions } from './validation/index';
@@ -148,6 +148,7 @@ export const onChangeTextAction = (
     screenKey: string
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
+    const blockchain = getSelectedBlockchain(state);
 
     if (screenKey && module?.details?.inputKey && module?.details?.toInput) {
         const inputAmount = state.ui.screens.inputData[screenKey].data[module.details.inputKey];
@@ -156,15 +157,21 @@ export const onChangeTextAction = (
 
         const swapToTokenDecimals = state.ui.screens.inputData[screenKey].data?.swapToTokenDecimals;
 
-        const amountFromStd = getBlockchain(Blockchain.ZILLIQA).account.amountFromStd(
+        const amountFromStd = getBlockchain(blockchain).account.amountFromStd(
             new BigNumber(inputAmount).multipliedBy(new BigNumber(swapPrice)),
             swapToTokenDecimals
         );
 
-        setScreenAmount(amountFromStd.toFixed(), {
+        const options = {
             screenKey,
             context,
             inputKey: module.details.toInput
-        })(dispatch, getState);
+        };
+
+        if (isNaN(amountFromStd.toNumber())) {
+            setScreenAmount('', options)(dispatch, getState);
+        } else {
+            setScreenAmount(amountFromStd.toFixed(), options)(dispatch, getState);
+        }
     }
 };

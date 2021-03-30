@@ -1,12 +1,15 @@
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { Blockchain } from '../../../../core/blockchain/types';
 import { formatNumber } from '../../../../core/utils/format-number';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getScreenDataKey } from '../../../../redux/ui/screens/data/reducer';
-import { getSelectedAccount, getSelectedWallet } from '../../../../redux/wallets/selectors';
+import {
+    getSelectedAccount,
+    getSelectedBlockchain,
+    getSelectedWallet
+} from '../../../../redux/wallets/selectors';
 import { IScreenModule } from './../../types';
 
 export const getFromTokenSymbol = (
@@ -209,7 +212,9 @@ export const getSwipePrice = (
 
     if (swapPrice === null || swapPrice === '') return '...';
 
-    const amount = getBlockchain(Blockchain.ZILLIQA).account.amountFromStd(
+    const blockchain = getSelectedBlockchain(state);
+
+    const amount = getBlockchain(blockchain).account.amountFromStd(
         new BigNumber(swapPrice),
         swapToTokenDecimals
     );

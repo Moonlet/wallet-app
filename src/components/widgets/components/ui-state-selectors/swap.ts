@@ -15,14 +15,12 @@ export const getFromTokenSymbol = (
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = params && params[0];
-
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step,
+        step: module?.details?.step,
         tab: undefined
     });
 
@@ -43,14 +41,12 @@ export const getToTokenSymbol = (
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = params && params[0];
-
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step,
+        step: module?.details?.step,
         tab: undefined
     });
 
@@ -71,14 +67,12 @@ export const getFromTokenId = (
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = params && params[0];
-
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step,
+        step: module?.details?.step,
         tab: undefined
     });
 
@@ -98,14 +92,12 @@ export const getToTokenId = (
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = params && params[0];
-
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step,
+        step: module?.details?.step,
         tab: undefined
     });
 
@@ -158,14 +150,12 @@ export const getFromAmount = (
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = params && params[0];
-
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step,
+        step: module?.details?.step,
         tab: undefined
     });
 
@@ -185,14 +175,12 @@ export const getToAmount = (
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
 
-    const step = params && params[0];
-
     const screenKey = getScreenDataKey({
         pubKey: getSelectedWallet(state)?.walletPublicKey,
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step,
+        step: module?.details?.step,
         tab: undefined
     });
 

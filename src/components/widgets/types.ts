@@ -500,3 +500,7 @@ export interface ITextLineIconData {
     line: IData[];
     lineStyle?: IDataStyle;
 }
+
+export interface IValidationData {
+    fieldName?: string;
+}

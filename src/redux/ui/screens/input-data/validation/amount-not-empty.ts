@@ -15,7 +15,7 @@ export const inputAmountNotEmpty = (
 
     const inputData: any = state.ui.screens.inputData[screenKey]?.data;
 
-    const amount = inputData?.amount || inputData?.input;
+    const amount = inputData?.amount || inputData?.input || (inputData && inputData[field]);
 
     if (
         !amount ||

@@ -18,7 +18,7 @@ import { IReduxState } from '../../../../redux/state';
 import {
     setScreenInputData,
     setScreenAmount,
-    onChangeTextAction
+    onAmountChangeTextAction
 } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
@@ -41,7 +41,7 @@ interface IReduxProps {
 
     setScreenInputData: typeof setScreenInputData;
     setScreenAmount: typeof setScreenAmount;
-    onChangeTextAction: typeof onChangeTextAction;
+    onAmountChangeTextAction: typeof onAmountChangeTextAction;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -65,7 +65,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 const mapDispatchToProps = {
     setScreenInputData,
     setScreenAmount,
-    onChangeTextAction
+    onAmountChangeTextAction
 };
 
 class AmountInputComponent extends React.Component<
@@ -216,7 +216,7 @@ class AmountInputComponent extends React.Component<
                                     inputKey
                                 });
                                 if (data?.onChangeTextAction) {
-                                    this.props.onChangeTextAction(module, context, screenKey);
+                                    this.props.onAmountChangeTextAction(module, context, screenKey);
                                 }
                             }}
                             keyboardType={Platform.select({

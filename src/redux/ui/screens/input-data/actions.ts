@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { Dispatch } from 'react';
 import {
+    IAmountInputData,
     IScreenContext,
     IScreenModule,
     IScreenValidation,
@@ -142,10 +143,11 @@ export const runScreenStateActions = (options: {
     }
 };
 
-export const onChangeTextAction = (
+const setSwapInputAmount = (
     module: IScreenModule,
     context: IScreenContext,
-    screenKey: string
+    screenKey: string,
+    params: any[]
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const blockchain = getSelectedBlockchain(state);
@@ -173,5 +175,26 @@ export const onChangeTextAction = (
         } else {
             setScreenAmount(amountFromStd.toFixed(), options)(dispatch, getState);
         }
+    }
+};
+
+const onChangeTextActions = {
+    setSwapInputAmount
+};
+
+export const onAmountChangeTextAction = (
+    module: IScreenModule,
+    context: IScreenContext,
+    screenKey: string
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const data = module.data as IAmountInputData;
+
+    if (typeof onChangeTextActions[data.onChangeTextAction.fn] === 'function') {
+        onChangeTextActions[data.onChangeTextAction.fn](
+            module,
+            context,
+            screenKey,
+            data.onChangeTextAction?.params
+        )(dispatch, getState);
     }
 };

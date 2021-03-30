@@ -1,3 +1,4 @@
+import { SwapType } from '../../../../../core/blockchain/types/token';
 import { getChainId } from '../../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../../redux/state';
 import { getScreenDataKey } from '../../../../../redux/ui/screens/data/reducer';
@@ -31,7 +32,7 @@ export const swapToggleSelector = (state: IReduxState, module: IScreenModule): s
         return state.ui.screens.inputData[screenKey]?.data.swapType;
     }
 
-    return 'SELL';
+    return SwapType.SELL;
 };
 
 export const swapToEnterAmount = (state: IReduxState, module: IScreenModule): string => {

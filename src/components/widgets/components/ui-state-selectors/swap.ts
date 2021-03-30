@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { SwapType } from '../../../../core/blockchain/types/token';
 import { formatNumber } from '../../../../core/utils/format-number';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../redux/state';
@@ -35,7 +36,7 @@ export const getFromTokenSymbol = (
         state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.symbol;
     const toTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.symbol;
 
-    return type === 'SELL' ? fromTokenSymbol : toTokenSymbol;
+    return type === SwapType.SELL ? fromTokenSymbol : toTokenSymbol;
 };
 
 export const getToTokenSymbol = (
@@ -61,7 +62,7 @@ export const getToTokenSymbol = (
         state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.symbol;
     const toTokenSymbol: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.symbol;
 
-    return type === 'BUY' ? fromTokenSymbol : toTokenSymbol;
+    return type === SwapType.BUY ? fromTokenSymbol : toTokenSymbol;
 };
 
 export const getFromTokenId = (
@@ -86,7 +87,7 @@ export const getFromTokenId = (
     const fromTokenId: string = state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.id;
     const toTokenId: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.id;
 
-    return type === 'SELL' ? fromTokenId : toTokenId;
+    return type === SwapType.SELL ? fromTokenId : toTokenId;
 };
 
 export const getToTokenId = (
@@ -111,7 +112,7 @@ export const getToTokenId = (
     const fromTokenId: string = state.ui.screens.inputData[screenKey]?.data?.swapFromToken?.id;
     const toTokenId: string = state.ui.screens.inputData[screenKey]?.data?.swapToToken?.id;
 
-    return type === 'BUY' ? fromTokenId : toTokenId;
+    return type === SwapType.BUY ? fromTokenId : toTokenId;
 };
 
 export const getUnitAmount = (
@@ -135,7 +136,7 @@ export const getUnitAmount = (
     const type: string = state.ui.screens.inputData[screenKey]?.data?.swapType;
 
     const tokenSymbol =
-        type === 'SELL'
+        type === SwapType.SELL
             ? getFromTokenSymbol(state, module, options, params)
             : getToTokenSymbol(state, module, options, params);
 
@@ -169,7 +170,7 @@ export const getFromAmount = (
     const amountFrom: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountFrom;
     const amountTo: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountTo;
 
-    return type === 'SELL' ? amountFrom : amountTo;
+    return type === SwapType.SELL ? amountFrom : amountTo;
 };
 
 export const getToAmount = (
@@ -194,7 +195,7 @@ export const getToAmount = (
     const amountFrom: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountFrom;
     const amountTo: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountTo;
 
-    return type === 'BUY' ? amountFrom : amountTo;
+    return type === SwapType.BUY ? amountFrom : amountTo;
 };
 
 export const getSwipePrice = (

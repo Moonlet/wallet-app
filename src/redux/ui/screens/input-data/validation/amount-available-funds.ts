@@ -91,6 +91,7 @@ export const amountAvailableFundsToken = (
 
     const tokenSymbol = validation.params[0].tokenSymbol;
     const balance = new BigNumber(validation.params[0].balance);
+    const swapType = validation.params[0]?.swapType;
 
     const inputAmount = inputData && inputData[field];
 
@@ -99,6 +100,15 @@ export const amountAvailableFundsToken = (
     const screenValidations = state.ui.screens.inputData[screenKey]?.validation;
     const fieldsErrors = screenValidations?.fieldsErrors;
     let fields = (fieldsErrors && fieldsErrors[field]) || [];
+
+    if (
+        swapType &&
+        state.ui.screens.inputData[screenKey]?.data?.swapType &&
+        swapType !== state.ui.screens.inputData[screenKey]?.data?.swapType
+    ) {
+        // ignore this validations
+        return;
+    }
 
     const inputAmountToStd = blockchainInstance.account.amountToStd(
         new BigNumber(inputAmount),

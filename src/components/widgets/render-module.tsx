@@ -140,7 +140,7 @@ export const renderModule = (
             break;
 
         case ModuleTypes.TWO_LINES_TEXT_BANNER:
-            moduleJSX = <TwoLinesStakeBanner module={module} actions={actions} />;
+            moduleJSX = <TwoLinesStakeBanner module={module} actions={actions} options={options} />;
             break;
 
         case ModuleTypes.ONE_LINE_TEXT_BANNER:

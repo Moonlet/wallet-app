@@ -1,4 +1,7 @@
+import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../../../core/blockchain/types';
+import { formatNumber } from '../../../../core/utils/format-number';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
@@ -189,4 +192,29 @@ export const getToAmount = (
     const amountTo: string = state.ui.screens.inputData[screenKey]?.data?.swapAmountTo;
 
     return type === 'BUY' ? amountFrom : amountTo;
+};
+
+export const getSwipePrice = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: {
+        screenKey: string;
+    },
+    params: any
+) => {
+    const screenKey = options.screenKey;
+
+    const swapPrice = state.ui.screens.inputData[screenKey]?.data?.swapPrice?.price;
+    const swapToTokenDecimals = state.ui.screens.inputData[screenKey]?.data?.swapToTokenDecimals;
+
+    if (swapPrice === null || swapPrice === '') return '...';
+
+    const amount = getBlockchain(Blockchain.ZILLIQA).account.amountFromStd(
+        new BigNumber(swapPrice),
+        swapToTokenDecimals
+    );
+
+    if (isNaN(amount.toNumber())) return '...';
+
+    return formatNumber(amount, { maximumFractionDigits: 2 });
 };

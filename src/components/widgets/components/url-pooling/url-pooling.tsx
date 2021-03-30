@@ -38,55 +38,76 @@ class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalP
     private interval: any;
     private httpClient: HttpClient;
 
+    public componentDidMount() {
+        this.fetchData();
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
+        this.fetchData();
+    }
+
     public componentWillUnmount() {
         this.interval && clearInterval(this.interval);
     }
 
-    public async fetchData() {
+    private onFocus() {
+        this.fetchData();
+    }
+
+    private onWillBlur() {
+        this.interval && clearInterval(this.interval);
+    }
+
+    private async getData(data: IUrlPoolingData, endpointData: any) {
+        try {
+            let response;
+
+            switch (data.endpoint.method) {
+                case 'POST':
+                    response = await this.httpClient.post('', endpointData);
+                    break;
+
+                case 'GET':
+                    response = await this.httpClient.get('');
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (response.result) {
+                this.props.setScreenInputData(this.props.options.screenKey, {
+                    [data.reduxKey]: response.result.data
+                });
+            }
+        } catch (error) {
+            // TODO: maybe do something here
+        }
+    }
+
+    private async fetchData() {
         const data = this.props.module?.data as IUrlPoolingData;
 
         const selector = this.props.module?.state?.selectors;
 
         if (data.interval) {
             const endpointData = data.endpoint.data;
+
             Object.keys(data.endpoint.data).map(key => {
                 if (selector.hasOwnProperty(key)) {
                     endpointData[key] = this.props[key];
                 }
             });
+
             this.httpClient = new HttpClient(data.endpoint.url);
+
+            await this.getData(data, endpointData);
+
             this.interval && clearInterval(this.interval);
             this.interval = setInterval(async () => {
-                let response;
-                switch (data.endpoint.method) {
-                    case 'POST':
-                        response = await this.httpClient.post('', endpointData);
-                        break;
-                    case 'GET':
-                        response = await this.httpClient.get('');
-                        break;
-                    default:
-                }
-
-                if (response.result) {
-                    this.props.setScreenInputData(this.props.options.screenKey, {
-                        [data.reduxKey]: response.result.data
-                    });
-                }
+                await this.getData(data, endpointData);
             }, data.interval);
         }
-    }
-
-    public componentDidMount() {
-        this.fetchData();
-    }
-
-    public onFocus() {
-        this.fetchData();
-    }
-
-    public onWillBlur() {
-        this.interval && clearInterval(this.interval);
     }
 
     public render() {

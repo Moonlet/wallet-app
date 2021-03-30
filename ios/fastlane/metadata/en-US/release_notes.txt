@@ -1,6 +1,6 @@
-Team's log. Stardate 2103.23:
+Team's log. Stardate 2103.27:
 
-Now we have all ZRC-2 tokens available for Zilliqa. Also you'll be able with this new release to see Rewards Balance + History, Statistics and Annual percentage yield or APY for NEAR.
+We solved some lagging issues on ZIL and ETH. Pretty annoying! But everything should work fine with this new update.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

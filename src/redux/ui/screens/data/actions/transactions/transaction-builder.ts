@@ -11,9 +11,10 @@ import { getSelectedAccount } from '../../../../../wallets/selectors';
 import { getContract } from '../../../../../../core/blockchain/zilliqa/contracts/base-contract';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
+import { TokenType } from '../../../../../../core/blockchain/types/token';
 
 const contractCallFunctionsWhitelist = {
-    [Blockchain.ZILLIQA]: ['SwapExactTokensForZil', 'SwapZILForExactTokens', 'IncreaseAllowance']
+    [Blockchain.ZILLIQA]: ['SwapExactTokensForZIL', 'SwapZILForExactTokens', 'IncreaseAllowance']
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -60,23 +61,19 @@ export const buildContractCallTransaction = async (
 
         const raw = JSON.stringify({
             _tag: params.contractMethod, // 'SwapExactTokensForZIL',
-            params: JSON.stringify(dataParams)
+            params: dataParams
         });
-
-        const amount = blockchainInstance.account
-            .amountToStd(params.amount, tokenConfig.decimals)
-            .toFixed();
 
         const feeOptions = await client.getFees(
             TransactionType.CONTRACT_CALL,
             {
                 from: account.address,
                 to: '',
-                amount,
+                amount: params.amount,
                 contractAddress,
                 raw
             },
-            tokenConfig.type
+            TokenType.ZRC2 // TODO change this when implementing other blockchains
         );
 
         return {
@@ -93,7 +90,7 @@ export const buildContractCallTransaction = async (
             address: account.address,
             publicKey: account.publicKey,
             toAddress: contractAddress,
-            amount,
+            amount: params.amount,
             feeOptions,
             broadcastedOnBlock: blockInfo.number,
             nonce: nonce + currentTransactions.length,

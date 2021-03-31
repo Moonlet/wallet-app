@@ -58,7 +58,13 @@ export const handleDynamicCta = (
             tab: undefined
         });
 
-        screenInputData[screenKey] = state.ui.screens.inputData[screenKey]?.data || {};
+        const inputData = state.ui.screens.inputData[screenKey]?.data || {};
+
+        screenInputData[screenKey] = {
+            ...inputData,
+            slippeage: 1,
+            increasedBlocks: 15
+        };
     }
 
     const flowId = screenRequestContext?.flowId || context?.options?.flowId;
@@ -68,7 +74,6 @@ export const handleDynamicCta = (
         flowInputData: state.ui.screens.inputData[flowId]?.data || {},
         screenInputData
     };
-
     const body: IScreenRequest = {
         context: {
             ...screenRequestContext,

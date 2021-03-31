@@ -12,9 +12,10 @@ import { getContract } from '../../../../../../core/blockchain/zilliqa/contracts
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
 import { TokenType } from '../../../../../../core/blockchain/types/token';
+import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
 
 const contractCallFunctionsWhitelist = {
-    [Blockchain.ZILLIQA]: ['SwapExactTokensForZIL', 'SwapZILForExactTokens', 'IncreaseAllowance']
+    [Blockchain.ZILLIQA]: ['SwapExactTokensForZIL', 'SwapExactZILForTokens', 'IncreaseAllowance']
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -33,7 +34,13 @@ export const buildContractCallTransaction = async (
     const blockchainInstance = getBlockchain(account.blockchain);
 
     if (isWhitelistedMethod(account.blockchain, params.contractMethod)) {
-        const contractAddress = await getContract(chainId, params.contractType);
+        let contractAddress: string = '';
+
+        if (params.contractType === Contracts.TOKEN_CONTRACT) {
+            const configToken = getTokenConfig(account.blockchain, params.tokenSymbol);
+            contractAddress = configToken.contractAddress;
+        } else contractAddress = await getContract(chainId, params.contractType);
+
         const tokenConfig = getTokenConfig(account.blockchain, blockchainInstance.config.coin);
         const client = blockchainInstance.getClient(chainId);
         const blockInfo = await client.getCurrentBlock();
@@ -60,7 +67,7 @@ export const buildContractCallTransaction = async (
         }
 
         const raw = JSON.stringify({
-            _tag: params.contractMethod, // 'SwapExactTokensForZIL',
+            _tag: params.contractMethod,
             params: dataParams
         });
 

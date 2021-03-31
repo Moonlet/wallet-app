@@ -28,6 +28,7 @@ export interface IContractCallParams {
     amount: string;
     contractMethod: string;
     contractType: Contracts;
+    tokenSymbol: string;
 }
 
 export const sendTransactions = (context: IHandleCtaActionContext<IContractCallParams[]>) => async (

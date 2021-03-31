@@ -240,7 +240,6 @@ export class Client extends BlockchainGenericClient {
         // return Promise.resolve(`${Math.random()}`); // hack to simulate transactions with success
         // return Promise.reject(); // hack to simulate transactions with fail
         return this.http.jsonRpc('CreateTransaction', [transaction]).then(res => {
-            // console.log('response transactions', res);
             if (res.result) {
                 return {
                     txHash: res.result.TranID,

@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import { Dispatch } from 'react';
 import {
     IAmountInputData,
@@ -143,74 +142,70 @@ export const runScreenStateActions = (options: {
     }
 };
 
-const setSwapInputAmount = (
+export const setSwapInputAmount = (context: IScreenContext, screenKey: string) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+    const blockchain = getSelectedBlockchain(state);
+
+    const screenData =
+        screenKey && state.ui.screens.inputData && state.ui.screens.inputData[screenKey]?.data;
+
+    if (!screenKey || !screenData) return;
+
+    const inputFieldFocus = screenData?.inputFieldFocus;
+
+    const toInput = inputFieldFocus === 'swapAmountFrom' ? 'swapAmountTo' : 'swapAmountFrom';
+
+    const fromTokenAmount = screenData?.swapPrice?.fromTokenAmount;
+    const toTokenAmount = screenData?.swapPrice?.toTokenAmount;
+
+    const blockchainInstance = getBlockchain(blockchain);
+
+    let amount = '';
+
+    if (inputFieldFocus === 'swapAmountFrom') {
+        const decimals = screenData.swapToToken.decimals;
+        amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+    }
+
+    if (inputFieldFocus === 'swapAmountTo') {
+        const decimals = screenData.swapFromToken.decimals;
+        amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+    }
+
+    setScreenAmount(amount, {
+        screenKey,
+        context,
+        inputKey: toInput
+    })(dispatch, getState);
+};
+
+const setAmountInputFieldFocus = (
     module: IScreenModule,
     context: IScreenContext,
     screenKey: string,
     params: any[]
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
-    const blockchain = getSelectedBlockchain(state);
-
-    // TODO: this need a little refactor
-    //      1. has to be supported by handle cta callAction
-    //      2. not working properly when enter amount on the second input
 
     const inputKey = module?.details?.inputKey;
-    const toInput = module?.details?.toInput;
-    const priceKey = module?.details?.priceKey;
 
     const screenData =
         screenKey && state.ui.screens.inputData && state.ui.screens.inputData[screenKey]?.data;
 
-    if (screenKey && screenData && inputKey && toInput) {
-        const inputAmount = screenData[inputKey];
-
-        // console.log('%%% priceKey', priceKey);
-
-        const swapPrice =
-            screenData?.swapPrice?.price && screenData?.swapPrice?.price[priceKey]?.price;
-
-        // console.log('**', screenData?.swapPrice);
-
-        // console.log('>>>>>>> !!!!', swapPrice);
-
-        const swapToTokenDecimals = screenData?.swapToTokenDecimals;
-
-        const blockchainInstance = getBlockchain(blockchain);
-
-        let amountFromStd = new BigNumber(0);
-
-        if (inputKey === 'swapAmountFrom') {
-            // swapAmountFrom
-            amountFromStd = blockchainInstance.account.amountFromStd(
-                new BigNumber(inputAmount).multipliedBy(new BigNumber(swapPrice)),
-                swapToTokenDecimals
-            );
-        } else {
-            // swapAmountTo
-            // console.log('## koko ##');
-            amountFromStd = blockchainInstance.account
-                .amountToStd(inputAmount, swapToTokenDecimals)
-                .dividedBy(new BigNumber(swapPrice));
-        }
-
-        const options = {
-            screenKey,
-            context,
-            inputKey: toInput
-        };
-
-        if (isNaN(amountFromStd.toNumber())) {
-            setScreenAmount('', options)(dispatch, getState);
-        } else {
-            setScreenAmount(amountFromStd.toFixed(), options)(dispatch, getState);
-        }
+    if (screenData && inputKey) {
+        // Update input field focus - the amount input in which the user enters
+        setScreenInputData(screenKey, {
+            ...screenData,
+            inputFieldFocus: inputKey
+        })(dispatch, getState);
     }
 };
 
 const onChangeTextActions = {
-    setSwapInputAmount
+    setAmountInputFieldFocus
 };
 
 export const onAmountChangeTextAction = (

@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import { HttpClient } from '../../../../core/utils/http-client';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
-import { setScreenInputData } from '../../../../redux/ui/screens/input-data/actions';
+import {
+    setScreenInputData,
+    setSwapInputAmount
+} from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenContext, IScreenModule, ISmartScreenActions, IPriceUpdateData } from '../../types';
 import { getStateSelectors } from '../ui-state-selectors';
 
@@ -21,6 +24,7 @@ interface IExternalProps {
 
 interface IReduxProps {
     setScreenInputData: typeof setScreenInputData;
+    setSwapInputAmount: typeof setSwapInputAmount;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -31,7 +35,8 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 const mapDispatchToProps = {
-    setScreenInputData
+    setScreenInputData,
+    setSwapInputAmount
 };
 
 class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternalProps> {
@@ -74,6 +79,8 @@ class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternal
     }
 
     private async getData(data: IPriceUpdateData, endpointData: any) {
+        const screenKey = this.props.options.screenKey;
+
         try {
             let response;
 
@@ -91,9 +98,11 @@ class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternal
             }
 
             if (response?.result?.data) {
-                this.props.setScreenInputData(this.props.options.screenKey, {
+                this.props.setScreenInputData(screenKey, {
                     [data.reduxKey]: response.result.data
                 });
+
+                this.props.setSwapInputAmount(this.props.context, screenKey);
             }
         } catch (error) {
             // TODO: maybe do something here

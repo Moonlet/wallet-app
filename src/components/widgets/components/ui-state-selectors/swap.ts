@@ -154,10 +154,13 @@ export const getSwapFromTokenAmount = (
     const swapType = screenData?.swapType;
     const swapFromToken = screenData?.swapFromToken;
     const swapToToken = screenData?.swapToToken;
+    const inputFieldFocus = screenData?.inputFieldFocus;
+
+    // return '' if it's not the focused input
+    // - used to handle in api
+    if (inputFieldFocus !== 'swapAmountFrom') return '';
 
     const decimals = swapType === SwapType.SELL ? swapFromToken?.decimals : swapToToken?.decimals;
-
-    // check using redux in which input is the user writing
 
     const amount =
         swapType === SwapType.SELL
@@ -209,9 +212,13 @@ export const getSwapToTokenAmount = (
     const swapFromToken = screenData?.swapFromToken;
     const swapToToken = screenData?.swapToToken;
 
-    const decimals = swapType === SwapType.BUY ? swapFromToken?.decimals : swapToToken?.decimals;
+    const inputFieldFocus = screenData?.inputFieldFocus;
 
-    // check using redux in which input is the user writing
+    // return '' if it's not the focused input
+    // - used to handle in api
+    if (inputFieldFocus !== 'swapAmountTo') return '';
+
+    const decimals = swapType === SwapType.BUY ? swapFromToken?.decimals : swapToToken?.decimals;
 
     const amount =
         swapType === SwapType.BUY

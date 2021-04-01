@@ -107,7 +107,7 @@ export const buildContractCallTransaction = async (
                 params: [contractAddress, params.amount],
                 raw
             },
-            additionalInfo: {}
+            additionalInfo: params.aditionalInfo
         };
     }
 

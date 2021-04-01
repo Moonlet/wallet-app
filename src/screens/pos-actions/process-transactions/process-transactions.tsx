@@ -332,6 +332,11 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
+        if (tx.additionalInfo?.swapName) {
+            topText = tx.additionalInfo?.swapName;
+            middleText = '';
+        }
+
         return { topText, middleText, bottomText: fees || bottomText };
     }
 

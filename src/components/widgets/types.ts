@@ -187,6 +187,7 @@ export interface IScreenModule {
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
         | ModuleTypes.MODULE_WRAPPER
         | ModuleTypes.ONE_LINE_TEXT_BANNER
+        | ModuleTypes.PRICE_UPDATE
         | ModuleTypes.PROGRESS_BAR
         | ModuleTypes.SEPARATOR
         | ModuleTypes.SINGLE_BALANCE_ICON
@@ -195,7 +196,6 @@ export interface IScreenModule {
         | ModuleTypes.TEXT_LINE_ICON
         | ModuleTypes.THREE_LINES_CTA
         | ModuleTypes.THREE_LINES_ICON
-        | ModuleTypes.URL_POOLING
         | ModuleTypes.TWO_LINES_TEXT_BANNER
         | ModuleTypes.VALIDATIONS;
     cta?: ICta;
@@ -252,12 +252,12 @@ export enum ModuleTypes {
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
     INPUT = 'input',
-    URL_POOLING = 'url-pooling',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
     MODULE_WRAPPER = 'module-wrapper',
     ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
+    PRICE_UPDATE = 'price-update',
     PROGRESS_BAR = 'progress-bar',
     SEPARATOR = 'separator',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
@@ -403,7 +403,7 @@ export interface IIconData {
     icon: IconValues;
 }
 
-export interface IUrlPoolingData {
+export interface IPriceUpdateData {
     endpoint: {
         url: string;
         method: 'POST' | 'GET';

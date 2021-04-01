@@ -156,22 +156,49 @@ const setSwapInputAmount = (
     //      1. has to be supported by handle cta callAction
     //      2. not working properly when enter amount on the second input
 
-    if (screenKey && module?.details?.inputKey && module?.details?.toInput) {
-        const inputAmount = state.ui.screens.inputData[screenKey].data[module.details.inputKey];
+    const inputKey = module?.details?.inputKey;
+    const toInput = module?.details?.toInput;
+    const priceKey = module?.details?.priceKey;
 
-        const swapPrice = state.ui.screens.inputData[screenKey].data?.swapPrice?.price;
+    const screenData =
+        screenKey && state.ui.screens.inputData && state.ui.screens.inputData[screenKey]?.data;
 
-        const swapToTokenDecimals = state.ui.screens.inputData[screenKey].data?.swapToTokenDecimals;
+    if (screenKey && screenData && inputKey && toInput) {
+        const inputAmount = screenData[inputKey];
 
-        const amountFromStd = getBlockchain(blockchain).account.amountFromStd(
-            new BigNumber(inputAmount).multipliedBy(new BigNumber(swapPrice)),
-            swapToTokenDecimals
-        );
+        // console.log('%%% priceKey', priceKey);
+
+        const swapPrice =
+            screenData?.swapPrice?.price && screenData?.swapPrice?.price[priceKey]?.price;
+
+        // console.log('**', screenData?.swapPrice);
+
+        // console.log('>>>>>>> !!!!', swapPrice);
+
+        const swapToTokenDecimals = screenData?.swapToTokenDecimals;
+
+        const blockchainInstance = getBlockchain(blockchain);
+
+        let amountFromStd = new BigNumber(0);
+
+        if (inputKey === 'swapAmountFrom') {
+            // swapAmountFrom
+            amountFromStd = blockchainInstance.account.amountFromStd(
+                new BigNumber(inputAmount).multipliedBy(new BigNumber(swapPrice)),
+                swapToTokenDecimals
+            );
+        } else {
+            // swapAmountTo
+            // console.log('## koko ##');
+            amountFromStd = blockchainInstance.account
+                .amountToStd(inputAmount, swapToTokenDecimals)
+                .dividedBy(new BigNumber(swapPrice));
+        }
 
         const options = {
             screenKey,
             context,
-            inputKey: module.details.toInput
+            inputKey: toInput
         };
 
         if (isNaN(amountFromStd.toNumber())) {

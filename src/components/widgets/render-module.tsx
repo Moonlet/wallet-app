@@ -37,7 +37,7 @@ import { ValidationsModule } from './components/validations/validations';
 import { ProgressBarModule } from './components/progress-bar/progress-bar';
 import { TextLineIcon } from './components/text-line-icon/text-line-icon';
 import { PubSub } from '../../core/blockchain/common/pub-sub';
-import { UrlPoolingModule } from './components/url-pooling/url-pooling';
+import { PriceUpdateModule } from './components/price-update/price-update';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -277,9 +277,9 @@ export const renderModule = (
             moduleJSX = <ProgressBarModule module={module} />;
             break;
 
-        case ModuleTypes.URL_POOLING:
+        case ModuleTypes.PRICE_UPDATE:
             moduleJSX = (
-                <UrlPoolingModule
+                <PriceUpdateModule
                     module={module}
                     context={context}
                     actions={actions}

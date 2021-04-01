@@ -26,12 +26,13 @@ import { getTokenAvailableBalanceFormat, getTokenAvailableBalance } from './toke
 import {
     getFromAmount,
     getToAmount,
-    getUnitAmount,
     getFromTokenSymbol,
     getToTokenSymbol,
-    getFromTokenId,
-    getToTokenId,
-    getSwipePrice
+    getSwipePrice,
+    getSwapFromToken,
+    getSwapFromTokenAmount,
+    getSwapToToken,
+    getSwapToTokenAmount
 } from './swap';
 
 const uiStateSelectors = {
@@ -56,14 +57,16 @@ const uiStateSelectors = {
 
     getTokenAvailableBalanceFormat,
     getTokenAvailableBalance,
-    getUnitAmount,
     getFromTokenSymbol,
     getToTokenSymbol,
-    getFromTokenId,
-    getToTokenId,
     getFromAmount,
     getToAmount,
-    getSwipePrice
+
+    getSwipePrice,
+    getSwapFromToken,
+    getSwapFromTokenAmount,
+    getSwapToToken,
+    getSwapToTokenAmount
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

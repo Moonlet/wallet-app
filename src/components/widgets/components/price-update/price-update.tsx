@@ -6,7 +6,7 @@ import { HttpClient } from '../../../../core/utils/http-client';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IReduxState } from '../../../../redux/state';
 import { setScreenInputData } from '../../../../redux/ui/screens/input-data/actions';
-import { IScreenContext, IScreenModule, ISmartScreenActions, IUrlPoolingData } from '../../types';
+import { IScreenContext, IScreenModule, ISmartScreenActions, IPriceUpdateData } from '../../types';
 import { getStateSelectors } from '../ui-state-selectors';
 
 interface IExternalProps {
@@ -34,16 +34,31 @@ const mapDispatchToProps = {
     setScreenInputData
 };
 
-class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalProps> {
+class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternalProps> {
     private interval: any;
     private httpClient: HttpClient;
+    private fetchDataTimeout: any;
 
     public componentDidMount() {
         this.fetchData();
     }
 
     public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
-        this.fetchData();
+        const data = this.props.module?.data as IPriceUpdateData;
+
+        const selector = this.props.module?.state?.selectors;
+
+        for (const key of Object.keys(data.endpoint.data)) {
+            if (selector?.hasOwnProperty(key)) {
+                if (
+                    this.props[key] !== undefined &&
+                    JSON.stringify(this.props[key]) !== JSON.stringify(prevProps[key])
+                ) {
+                    this.fetchDataTimeout && clearTimeout(this.fetchDataTimeout);
+                    this.fetchDataTimeout = setTimeout(() => this.fetchData(), 200);
+                }
+            }
+        }
     }
 
     public componentWillUnmount() {
@@ -58,7 +73,7 @@ class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalP
         this.interval && clearInterval(this.interval);
     }
 
-    private async getData(data: IUrlPoolingData, endpointData: any) {
+    private async getData(data: IPriceUpdateData, endpointData: any) {
         try {
             let response;
 
@@ -86,7 +101,7 @@ class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalP
     }
 
     private async fetchData() {
-        const data = this.props.module?.data as IUrlPoolingData;
+        const data = this.props.module?.data as IPriceUpdateData;
 
         const selector = this.props.module?.state?.selectors;
 
@@ -122,6 +137,6 @@ class UrlPoolingModuleComponent extends React.Component<IReduxProps & IExternalP
     }
 }
 
-export const UrlPoolingModule = smartConnect<IExternalProps>(UrlPoolingModuleComponent, [
+export const PriceUpdateModule = smartConnect<IExternalProps>(PriceUpdateModuleComponent, [
     connect(mapStateToProps, mapDispatchToProps)
 ]);

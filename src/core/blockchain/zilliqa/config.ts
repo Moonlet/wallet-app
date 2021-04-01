@@ -246,5 +246,6 @@ export const config: IBlockchainConfig = {
 export enum Contracts {
     STAKING = 'STAKING',
     ZILSWAP = 'ZILSWAP',
+    MOONLETSWAP = 'MOONLETSWAP',
     TOKEN_CONTRACT = 'TOKEN_CONTRACT'
 }

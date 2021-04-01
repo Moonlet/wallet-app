@@ -22,13 +22,13 @@ export const fetchContracts = async (chainId: ChainIdType) => {
     // TODO - fetch from blockchain
 
     const keyStaking = `zilliqa.${chainId}.staking.contract`;
-    const keySwap = `zilliqa.${chainId}.zilswap.contract`;
+    const keySwap = `zilliqa.${chainId}.moonletswap.contract`;
     try {
         const configs = await new ApiClient().configs.getConfigs([keyStaking, keySwap]);
         const values = {
             ...contracts[chainId],
             [Contracts.STAKING]: configs.result[keyStaking],
-            [Contracts.ZILSWAP]: configs.result[keySwap]
+            [Contracts.MOONLETSWAP]: configs.result[keySwap]
         };
         return values;
     } catch (error) {

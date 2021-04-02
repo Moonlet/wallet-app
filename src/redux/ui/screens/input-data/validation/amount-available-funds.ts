@@ -121,24 +121,26 @@ export const amountAvailableFundsToken = (
             const msg = validation.messages[msgKey] as any;
             // Make sure don't duplicate error messages
             let alreadyAdded = false;
-            fields.map(f => {
+            for (const f of fields || []) {
                 if (JSON.stringify(f) === JSON.stringify(msg)) {
                     alreadyAdded = true;
                 }
-            });
-            if (!alreadyAdded) {
-                fields.push(msg);
             }
+            if (!alreadyAdded) fields.push(msg);
         }
     } else {
         // cleanup error messages
         fields = undefined;
     }
 
-    if (
-        (fields === undefined || fields?.length === 0) &&
-        Object.values(fieldsErrors || {}).filter(Boolean).length === 0
-    ) {
+    let foundErrors = false;
+    for (const fieldErrors of Object.values(fieldsErrors || {})) {
+        if (fieldErrors && Array.isArray(fieldErrors) && fieldErrors.length !== 0) {
+            foundErrors = true;
+        }
+    }
+
+    if ((fields === undefined || fields?.length === 0) && foundErrors === false) {
         // All fields are valid => Validate Screen
         setScreenInputValidation(screenKey, {
             fieldsErrors: undefined,

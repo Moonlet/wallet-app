@@ -155,6 +155,13 @@ export const setSwapInputAmount = (context: IScreenContext, screenKey: string) =
 
     if (!screenKey || !screenData) return;
 
+    // don't populate fields if empty input
+    if (
+        (screenData?.swapAmountFrom === '' && screenData?.swapAmountTo === '') ||
+        (screenData?.swapAmountFrom === undefined && screenData?.swapAmountTo === undefined)
+    )
+        return;
+
     const inputFieldFocus = screenData?.inputFieldFocus;
 
     const toInput = inputFieldFocus === 'swapAmountFrom' ? 'swapAmountTo' : 'swapAmountFrom';

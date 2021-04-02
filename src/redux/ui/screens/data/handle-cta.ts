@@ -910,6 +910,31 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'setAmountInputFieldFocus': {
+                    const screenKey = options?.screenKey;
+
+                    const screenData =
+                        screenKey &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data;
+
+                    const swapType = screenData?.swapType;
+
+                    const inputKey =
+                        swapType &&
+                        action.params?.params &&
+                        action.params.params[swapType]?.inputKey;
+
+                    if (screenData && inputKey) {
+                        // Update input field focus - the amount input in which the user enters
+                        setScreenInputData(screenKey, {
+                            ...screenData,
+                            inputFieldFocus: inputKey
+                        })(dispatch, getState);
+                    }
+                    break;
+                }
+
                 case 'navigateToStakeNowEnterAmountValidators': {
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);

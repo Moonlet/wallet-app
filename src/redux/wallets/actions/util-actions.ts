@@ -28,12 +28,18 @@ import {
     setProcessTxCompleted,
     closeProcessTransactions
 } from '../../ui/process-transactions/actions';
-import { getSelectedWallet, getSelectedAccount, getNrPendingTransactions } from '../selectors';
+import {
+    getSelectedWallet,
+    getSelectedAccount,
+    getNrPendingTransactions,
+    getSelectedAccountTransactions
+} from '../selectors';
 import { AccountType } from '../state';
 import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/react-native';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export const signAndSendTransactions = (specificIndex?: number) => async (
     dispatch: Dispatch<IAction<any>>,
@@ -86,7 +92,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             dispatch(setProcessTxIndex(txIndex));
             let signed;
             try {
-                const currentBlockchainNonce = await client.getNonce(
+                let nonce = await client.getNonce(
                     account.type === AccountType.LOCKUP_CONTRACT
                         ? account.meta.owner
                         : account.address,
@@ -95,8 +101,41 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                 const nrPendingTransactions = getNrPendingTransactions(getState());
                 transaction = {
                     ...transaction,
-                    nonce: currentBlockchainNonce + nrPendingTransactions
+                    nonce: nonce + nrPendingTransactions
                 };
+
+                if (isFeatureActive(RemoteFeature.IMPROVED_NONCE)) {
+                    // Adjust nonce
+                    const currentBlockNumber = await client
+                        .getCurrentBlock()
+                        .then(res => res.number);
+                    // getting all outbound tx for current account
+                    const outboundTransactions = getSelectedAccountTransactions(getState()).filter(
+                        tx => tx.address === account.address
+                    );
+                    // checking if there are transactions with same nonce
+                    let outTx: IBlockchainTransaction = outboundTransactions.find(
+                        tx => tx.nonce === nonce
+                    );
+                    while (outTx) {
+                        // found a tx with the same nonce
+                        const txStatus = await client.utils.getTransactionStatus(outTx.id, {
+                            broadcastedOnBlock: outTx.broadcastedOnBlock,
+                            currentBlockNumber
+                        });
+
+                        // if the status oif the tx is DROPPED we can reuse the nonce
+                        if (txStatus === TransactionStatus.DROPPED) {
+                            break;
+                        } else {
+                            // the transactions is not dropped, so it's on the chain, we need to increase the nonce and check again
+                            nonce++;
+                            outTx = outboundTransactions.find(tx => tx.nonce === nonce);
+                        }
+                    }
+                    // updateing the nonce
+                    transaction.nonce = nonce;
+                }
 
                 signed = await wallet.sign(
                     transaction.blockchain,

@@ -99,12 +99,20 @@ export class ClientUtils implements IClientUtils {
             },
             broadcastedOnBlock: txData.slot,
             nonce: undefined,
-            status: this.getTransactionStatus(txData, token),
+            status: await this.getTransactionStatus(txData.transaction.signatures[0], {
+                txData,
+                token
+            }),
             token
         };
     }
 
-    getTransactionStatus(txData, token: ITokenConfigState): TransactionStatus {
-        return txData.meta.err === null ? TransactionStatus.SUCCESS : TransactionStatus.FAILED;
+    async getTransactionStatus(
+        hash: string,
+        context?: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
+    ): Promise<TransactionStatus> {
+        return context.txData.meta.err === null
+            ? TransactionStatus.SUCCESS
+            : TransactionStatus.FAILED;
     }
 }

@@ -91,7 +91,10 @@ export class AccountTabComponent extends React.Component<
                                 style={styles.button}
                                 wrapperStyle={{ flex: 1 }}
                                 onPress={() => {
-                                    if (!this.props.hasPendingTransactions) {
+                                    if (
+                                        isFeatureActive(RemoteFeature.IMPROVED_NONCE) ||
+                                        !this.props.hasPendingTransactions
+                                    ) {
                                         NavigationService.navigate('Send', {
                                             accountIndex: this.props.account.index,
                                             blockchain: this.props.account.blockchain,

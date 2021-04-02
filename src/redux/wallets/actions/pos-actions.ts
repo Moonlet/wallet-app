@@ -20,6 +20,7 @@ import { cloneDeep } from 'lodash';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { NavigationService } from '../../../navigation/navigation-service';
 import BigNumber from 'bignumber.js';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export const solanaDelegateStakeAccount = (
     account: IAccountState,
@@ -149,7 +150,7 @@ export const claimRewardNoInput = (
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    if (getNrPendingTransactions(getState())) {
+    if (!isFeatureActive(RemoteFeature.IMPROVED_NONCE) && getNrPendingTransactions(getState())) {
         const nvServiceFn =
             NavigationService.getCurrentRoute() === 'Dashboard' ? 'navigate' : 'replace';
         Dialog.alert(
@@ -292,7 +293,7 @@ export const withdraw = (
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    if (getNrPendingTransactions(getState())) {
+    if (!isFeatureActive(RemoteFeature.IMPROVED_NONCE) && getNrPendingTransactions(getState())) {
         const nvServiceFn =
             NavigationService.getCurrentRoute() === 'Dashboard' ? 'navigate' : 'replace';
         Dialog.alert(

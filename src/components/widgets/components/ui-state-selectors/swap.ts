@@ -158,7 +158,12 @@ export const getSwapFromTokenAmount = (
 
     // return '' if it's not the focused input
     // - used to handle in api
-    if (inputFieldFocus !== 'swapAmountFrom') return '';
+    if (swapType === SwapType.SELL) {
+        if (inputFieldFocus !== 'swapAmountFrom') return '';
+    }
+    if (swapType === SwapType.BUY) {
+        if (inputFieldFocus === 'swapAmountFrom') return '';
+    }
 
     const decimals = swapType === SwapType.SELL ? swapFromToken?.decimals : swapToToken?.decimals;
 
@@ -216,7 +221,12 @@ export const getSwapToTokenAmount = (
 
     // return '' if it's not the focused input
     // - used to handle in api
-    if (inputFieldFocus !== 'swapAmountTo') return '';
+    if (swapType === SwapType.SELL) {
+        if (inputFieldFocus !== 'swapAmountTo') return '';
+    }
+    if (swapType === SwapType.BUY) {
+        if (inputFieldFocus === 'swapAmountTo') return '';
+    }
 
     const decimals = swapType === SwapType.BUY ? swapFromToken?.decimals : swapToToken?.decimals;
 

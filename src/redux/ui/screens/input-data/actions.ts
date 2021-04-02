@@ -7,6 +7,7 @@ import {
     IStateSelector
 } from '../../../../components/widgets/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { SwapType } from '../../../../core/blockchain/types/token';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
 import { getSelectedBlockchain } from '../../../wallets/selectors';
@@ -163,16 +164,30 @@ export const setSwapInputAmount = (context: IScreenContext, screenKey: string) =
 
     const blockchainInstance = getBlockchain(blockchain);
 
+    const swapType = screenData?.swapType;
+
     let amount = '';
 
-    if (inputFieldFocus === 'swapAmountFrom') {
-        const decimals = screenData.swapToToken.decimals;
-        amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
-    }
-
-    if (inputFieldFocus === 'swapAmountTo') {
-        const decimals = screenData.swapFromToken.decimals;
-        amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+    if (swapType === SwapType.SELL) {
+        // SELL
+        if (inputFieldFocus === 'swapAmountFrom') {
+            const decimals = screenData.swapToToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+        }
+        if (inputFieldFocus === 'swapAmountTo') {
+            const decimals = screenData.swapFromToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+        }
+    } else {
+        // BUY
+        if (inputFieldFocus === 'swapAmountFrom') {
+            const decimals = screenData.swapToToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+        }
+        if (inputFieldFocus === 'swapAmountTo') {
+            const decimals = screenData.swapFromToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+        }
     }
 
     setScreenAmount(amount, {

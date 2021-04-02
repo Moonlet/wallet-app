@@ -99,7 +99,7 @@ export const amountAvailableFundsToken = (
 
     const screenValidations = state.ui.screens.inputData[screenKey]?.validation;
     const fieldsErrors = screenValidations?.fieldsErrors;
-    let fields = (fieldsErrors && fieldsErrors[field]) || [];
+    let errors = (fieldsErrors && fieldsErrors[field]) || [];
 
     if (
         swapType &&
@@ -121,26 +121,19 @@ export const amountAvailableFundsToken = (
             const msg = validation.messages[msgKey] as any;
             // Make sure don't duplicate error messages
             let alreadyAdded = false;
-            for (const f of fields || []) {
-                if (JSON.stringify(f) === JSON.stringify(msg)) {
+            for (const error of errors || []) {
+                if (JSON.stringify(error) === JSON.stringify(msg)) {
                     alreadyAdded = true;
                 }
             }
-            if (!alreadyAdded) fields.push(msg);
+            if (!alreadyAdded) errors.push(msg);
         }
     } else {
         // cleanup error messages
-        fields = undefined;
+        errors = undefined;
     }
 
-    let foundErrors = false;
-    for (const fieldErrors of Object.values(fieldsErrors || {})) {
-        if (fieldErrors && Array.isArray(fieldErrors) && fieldErrors.length !== 0) {
-            foundErrors = true;
-        }
-    }
-
-    if ((fields === undefined || fields?.length === 0) && foundErrors === false) {
+    if (errors === undefined || errors?.length === 0) {
         // All fields are valid => Validate Screen
         setScreenInputValidation(screenKey, {
             fieldsErrors: undefined,
@@ -151,7 +144,7 @@ export const amountAvailableFundsToken = (
         setScreenInputValidation(screenKey, {
             fieldsErrors: {
                 ...fieldsErrors,
-                [field]: fields
+                [field]: errors
             },
             valid: false
         })(dispatch, getState);

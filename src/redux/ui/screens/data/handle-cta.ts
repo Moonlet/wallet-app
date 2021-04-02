@@ -872,21 +872,28 @@ const handleCtaAction = async (
                 case 'amountSelectableBoxPercentageSwap': {
                     const screenKey = options?.screenKey;
 
-                    const amountBox =
-                        (screenKey &&
-                            state.ui.screens.inputData &&
-                            state.ui.screens.inputData[screenKey]?.data?.amountBox) ||
-                        action?.params?.params?.amountBox;
+                    const screenData =
+                        screenKey &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data;
+
+                    const swapType = screenData?.swapType;
+
+                    const amountBox = screenData?.amountBox || action?.params?.params?.amountBox;
 
                     if (
                         screenKey &&
                         amountBox &&
-                        action.params?.params?.amount &&
-                        action.params?.params?.inputKey &&
-                        action.params?.params?.screenValidation
+                        action.params?.params &&
+                        action.params?.params[swapType] &&
+                        action.params?.params[swapType]?.amount &&
+                        action.params?.params[swapType]?.inputKey &&
+                        action.params?.params[swapType]?.screenValidation
                     ) {
-                        const amount = action.params.params.amount;
-                        const inputKey = action.params.params.inputKey;
+                        const params = action.params?.params[swapType];
+
+                        const amount = params.amount;
+                        const inputKey = params.inputKey;
 
                         const percentage = amountBox.value;
 
@@ -898,10 +905,7 @@ const handleCtaAction = async (
                             [inputKey]: finalAmount.toFixed()
                         })(dispatch, getState);
 
-                        runScreenValidation(action.params.params.screenValidation, screenKey)(
-                            dispatch,
-                            getState
-                        );
+                        runScreenValidation(params.screenValidation, screenKey)(dispatch, getState);
                     }
                     break;
                 }

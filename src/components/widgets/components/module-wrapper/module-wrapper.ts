@@ -9,10 +9,13 @@ interface IExternalProps {
     module: IScreenModule;
     renderModule: (m: IScreenModule) => void;
     moduleWrapperState?: string;
+    options: {
+        screenKey: string;
+    };
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
-    const wrapperState = getState(state, ownProps.module);
+    const wrapperState = getState(state, ownProps.module, ownProps.options.screenKey);
     const wrapperData = (ownProps?.module?.data as IScreenModuleWrapperData)?.data;
 
     let module = wrapperData?.DEFAULT;

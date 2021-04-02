@@ -35,22 +35,12 @@ export const swapToggleSelector = (state: IReduxState, module: IScreenModule): s
     return SwapType.SELL;
 };
 
-export const swapToEnterAmount = (state: IReduxState, module: IScreenModule): string => {
+export const swapToEnterAmount = (
+    state: IReduxState,
+    module: IScreenModule,
+    screenKey: string
+): string => {
     const wrapper = module.data as IScreenModuleWrapperData;
-
-    const account = getSelectedAccount(state);
-    const chainId = getChainId(state, account.blockchain);
-
-    const step = wrapper?.data?.DEFAULT?.details?.step;
-
-    const screenKey = getScreenDataKey({
-        pubKey: getSelectedWallet(state)?.walletPublicKey,
-        blockchain: account?.blockchain,
-        chainId: String(chainId),
-        address: account?.address,
-        step,
-        tab: undefined
-    });
 
     if (
         screenKey &&
@@ -62,5 +52,5 @@ export const swapToEnterAmount = (state: IReduxState, module: IScreenModule): st
         return 'DEFAULT';
     }
 
-    return 'DISABLED';
+    return wrapper.state;
 };

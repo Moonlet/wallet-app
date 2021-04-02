@@ -33,7 +33,7 @@ interface IReduxProps {
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
-    const wrapperState = getState(state, ownProps.module);
+    const wrapperState = getState(state, ownProps.module, ownProps.screenKey);
     const wrapperData = ownProps?.module?.data as IScreenModuleSelectableWrapperData;
 
     return {

@@ -204,6 +204,9 @@ export const renderModule = (
                     module={module}
                     renderModule={m => renderModule(m, context, actions, options)}
                     moduleWrapperState={options?.moduleWrapperState}
+                    options={{
+                        screenKey: options?.screenKey
+                    }}
                 />
             );
             break;

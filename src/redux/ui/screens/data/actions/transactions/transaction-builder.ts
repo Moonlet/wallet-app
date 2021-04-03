@@ -15,7 +15,7 @@ import { TokenType } from '../../../../../../core/blockchain/types/token';
 import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
 
 const contractCallFunctionsWhitelist = {
-    [Blockchain.ZILLIQA]: ['SwapExactTokensForZIL', 'SwapExactZILForTokens', 'IncreaseAllowance']
+    [Blockchain.ZILLIQA]: ['SwapExactTokensForZIL', 'SwapExactZilForTokens', 'IncreaseAllowance']
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {

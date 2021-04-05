@@ -63,7 +63,6 @@ export const handleDynamicCta = (
 
         screenInputData[screenKey] = {
             ...inputData,
-            slippeage: 1,
             increasedBlocks: 15
         };
     }

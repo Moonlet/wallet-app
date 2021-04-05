@@ -337,10 +337,8 @@ export class ProcessTransactionsComponent extends React.Component<
             switch (tx.additionalInfo?.swap.contractMethod) {
                 case SwapContractMethod.INCREASEALLOWANCE:
                     topText = `${translate('App.labels.increaseAllowance')} ${translate(
-                        'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountFrom} ${
-                        tx.additionalInfo?.swap.fromSymbol
-                    }`;
+                        'App.labels.for'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.fromSymbol}`;
                     break;
                 case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
                     topText = `${translate('App.labels.swap')} ${

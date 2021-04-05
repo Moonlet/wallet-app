@@ -243,7 +243,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
             case TransactionType.CONTRACT_DEPLOY:
             case TransactionType.CONTRACT_CALL:
-                transactionType = ' ';
+                transactionType = '';
                 break;
         }
 
@@ -289,6 +289,8 @@ export class TransactionsHistoryListComponent extends React.Component<
                 case SwapContractMethod.SWAPEXACTZILFORTOKENS:
                     transactionType = translate('App.labels.swap') + ' ';
                     break;
+                default:
+                    transactionType = '';
             }
         }
 
@@ -324,10 +326,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 </Animated.View>
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
-                        {transactionType && (
-                            <Text style={styles.transactionTextPrimary}>{transactionType}</Text>
-                        )}
-
+                        <Text style={styles.transactionTextPrimary}>{transactionType}</Text>
                         {amount && (
                             <Amount
                                 amount={amount}

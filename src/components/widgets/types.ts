@@ -172,6 +172,7 @@ export interface IScreenModule {
     hidden?: boolean;
     style?: IDataStyle;
     type:
+        | ModuleTypes.ABSOLUTE_MODULES
         | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.AMOUNT_SELECTABLE_BOX
         | ModuleTypes.BALANCES_GRID_ICONS
@@ -242,6 +243,7 @@ export interface IStateSelector {
 }
 
 export enum ModuleTypes {
+    ABSOLUTE_MODULES = 'absolute-modules',
     AMOUNT_INPUT = 'amount-input',
     AMOUNT_SELECTABLE_BOX = 'amount-selectable-box',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
@@ -504,4 +506,15 @@ export interface ITextLineIconData {
 
 export interface IValidationData {
     fieldName?: string;
+}
+
+export interface IAbsoluteModulesData {
+    module1: {
+        module: IScreenModule;
+        style?: IDataStyle;
+    };
+    module2: {
+        module: IScreenModule;
+        style?: IDataStyle;
+    };
 }

@@ -38,6 +38,7 @@ import { ProgressBarModule } from './components/progress-bar/progress-bar';
 import { TextLineIcon } from './components/text-line-icon/text-line-icon';
 import { PubSub } from '../../core/blockchain/common/pub-sub';
 import { PriceUpdateModule } from './components/price-update/price-update';
+import { AbsoluteModules } from './components/absolute-modules/absolute-modules';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -283,6 +284,17 @@ export const renderModule = (
         case ModuleTypes.PRICE_UPDATE:
             moduleJSX = (
                 <PriceUpdateModule
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
+            break;
+
+        case ModuleTypes.ABSOLUTE_MODULES:
+            moduleJSX = (
+                <AbsoluteModules
                     module={module}
                     context={context}
                     actions={actions}

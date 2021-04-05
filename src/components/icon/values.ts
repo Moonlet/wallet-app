@@ -4,6 +4,8 @@ export enum IconValues {
     ADD = 'add',
     ADD_CIRCLE = 'add-circle',
     ALARM_BELL = 'alarm-bell',
+    ARR_DOWN = 'arr-down',
+    ARR_UP = 'arr-up',
     ARCHIVE_LOCKER = 'archive-locker',
     ARROW_BUTTON_DOWN = 'arrow-button-down',
     ARROW_DOWN = 'arrow-down',

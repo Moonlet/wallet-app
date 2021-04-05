@@ -54,3 +54,24 @@ export const swapToEnterAmount = (
 
     return wrapper.state;
 };
+
+export const swapToCustomSlippageBox = (
+    state: IReduxState,
+    module: IScreenModule,
+    screenKey: string
+): string => {
+    const wrapper = module.data as IScreenModuleWrapperData;
+
+    const customSlippage = wrapper?.data?.DEFAULT?.details?.customSlippage;
+
+    if (
+        screenKey &&
+        state.ui.screens.inputData &&
+        state.ui.screens.inputData[screenKey] &&
+        state.ui.screens.inputData[screenKey]?.data?.customSlippage === customSlippage
+    ) {
+        return 'SELECTED';
+    }
+
+    return wrapper.state;
+};

@@ -12,7 +12,7 @@ import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
-import { TokenType, PosBasicActionType } from '../types/token';
+import { TokenType, PosBasicActionType, SwapContractMethod } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { Contracts } from './config';
@@ -172,7 +172,23 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
-        if (tokenInfo?.type === TokenType.ZRC2 || tx?.data?.params) {
+
+        if (tx.additionalInfo?.swap) {
+            let amount = '';
+            switch (tx.additionalInfo?.swap.contractMethod) {
+                case SwapContractMethod.INCREASEALLOWANCE:
+                    amount = tx.additionalInfo?.swap.amountFrom;
+                    break;
+                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
+                    amount = tx.additionalInfo?.swap.amountTo;
+                    break;
+                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
+                    amount = tx.additionalInfo?.swap.amountFrom;
+                    break;
+            }
+
+            return amount;
+        } else if (tokenInfo?.type === TokenType.ZRC2 || tx?.data?.params) {
             return tx?.data?.params[1];
         } else {
             return tx.amount;

@@ -75,6 +75,7 @@ export const translation: ITranslations = {
                 half: 'Half',
                 hideDetails: 'Hide details',
                 holdUnveil: 'Hold to unveil',
+                increaseAllowance: 'Increase Allowance',
                 learnMore: 'Learn more',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',

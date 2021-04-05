@@ -25,7 +25,11 @@ import { IBlockchainTransaction, TransactionType } from '../../../core/blockchai
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
-import { PosBasicActionType, TokenType } from '../../../core/blockchain/types/token';
+import {
+    PosBasicActionType,
+    SwapContractMethod,
+    TokenType
+} from '../../../core/blockchain/types/token';
 import bind from 'bind-decorator';
 import { Capitalize } from '../../../core/utils/format-string';
 
@@ -233,16 +237,14 @@ export class TransactionsHistoryListComponent extends React.Component<
             }
         }
 
-        if (tx.type === TransactionType.TRANSFER) {
-            transactionType = translate('App.labels.transfer') + ' ';
-        }
-
-        if (tx.type === TransactionType.CONTRACT_DEPLOY) {
-            transactionType = ' ';
-        }
-
-        if (tx.type === TransactionType.CONTRACT_CALL) {
-            transactionType = ' ';
+        switch (tx.type) {
+            case TransactionType.TRANSFER:
+                transactionType = translate('App.labels.transfer') + ' ';
+                break;
+            case TransactionType.CONTRACT_DEPLOY:
+            case TransactionType.CONTRACT_CALL:
+                transactionType = ' ';
+                break;
         }
 
         if (tx?.token?.type === TokenType.ZRC2 || tx?.token?.type === TokenType.ERC20) {
@@ -273,6 +275,20 @@ export class TransactionsHistoryListComponent extends React.Component<
                 posAction === PosBasicActionType.SPLIT_STAKE
             ) {
                 transactionType = translate('App.labels.createStakeAccount') + ' ';
+            }
+        }
+
+        if (tx.additionalInfo?.swap) {
+            switch (tx.additionalInfo?.swap.contractMethod) {
+                case SwapContractMethod.INCREASEALLOWANCE:
+                    transactionType = translate('App.labels.increaseAllowance') + ' ';
+                    break;
+                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
+                    transactionType = translate('App.labels.swap') + ' ';
+                    break;
+                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
+                    transactionType = translate('App.labels.swap') + ' ';
+                    break;
             }
         }
 

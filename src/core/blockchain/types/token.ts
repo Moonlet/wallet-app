@@ -58,3 +58,9 @@ export enum SwapType {
     BUY = 'BUY',
     SELL = 'SELL'
 }
+
+export enum SwapContractMethod {
+    SWAPEXACTTOKENSFORZIL = 'SwapExactTokensForZIL',
+    SWAPEXACTZILFORTOKENS = 'SwapExactZilForTokens',
+    INCREASEALLOWANCE = 'IncreaseAllowance'
+}

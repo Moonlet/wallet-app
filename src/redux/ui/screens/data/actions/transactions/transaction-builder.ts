@@ -11,11 +11,15 @@ import { getSelectedAccount } from '../../../../../wallets/selectors';
 import { getContract } from '../../../../../../core/blockchain/zilliqa/contracts/base-contract';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
-import { TokenType } from '../../../../../../core/blockchain/types/token';
+import { SwapContractMethod, TokenType } from '../../../../../../core/blockchain/types/token';
 import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
 
 const contractCallFunctionsWhitelist = {
-    [Blockchain.ZILLIQA]: ['SwapExactTokensForZIL', 'SwapExactZilForTokens', 'IncreaseAllowance']
+    [Blockchain.ZILLIQA]: [
+        SwapContractMethod.SWAPEXACTTOKENSFORZIL,
+        SwapContractMethod.SWAPEXACTZILFORTOKENS,
+        SwapContractMethod.INCREASEALLOWANCE
+    ]
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {

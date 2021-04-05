@@ -170,7 +170,10 @@ class WidgetsComponent extends React.Component<
                                                 ? IconValues.CHEVRON_UP
                                                 : IconValues.CHEVRON_DOWN
                                         }
-                                        size={normalize(16)}
+                                        size={
+                                            (formatStyles(widget.title?.iconStyle)
+                                                ?.size as number) || normalize(18)
+                                        }
                                         style={[
                                             styles.expandingArrow,
                                             formatStyles(widget.title?.iconStyle)

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -25,13 +25,23 @@ interface IExternalProps {
 class AbsoluteModulesComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
+    public componentDidMount() {
+        if (this.props.module?.state?.actions) {
+            this.props.actions.runScreenStateActions({
+                actions: this.props.module.state.actions,
+                context: this.props.context,
+                screenKey: this.props.options?.screenKey
+            });
+        }
+    }
+
     public render() {
         const { module, styles } = this.props;
         const data = module.data as IAbsoluteModulesData;
 
         const { module1, module2 } = data;
 
-        return (
+        const moduleJSX = (
             <View style={[styles.container, formatStyles(module?.style)]}>
                 {/* Module 1 */}
                 <View style={[styles.rowContainer, formatStyles(module1?.style)]}>
@@ -54,6 +64,20 @@ class AbsoluteModulesComponent extends React.Component<
                 </View>
             </View>
         );
+
+        if (module?.cta) {
+            return (
+                <TouchableOpacity
+                    onPress={() => this.props.actions.handleCta(module.cta, this.props?.options)}
+                    activeOpacity={0.9}
+                    style={{ zIndex: 100 }}
+                >
+                    {moduleJSX}
+                </TouchableOpacity>
+            );
+        } else {
+            return moduleJSX;
+        }
     }
 }
 

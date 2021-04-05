@@ -159,7 +159,14 @@ export interface ICta {
 }
 
 export interface IScreenWidget {
-    title?: string;
+    title?:
+        | string
+        | {
+              value: string;
+              containerStyle?: IDataStyle;
+              textStyle?: IDataStyle;
+              iconStyle?: IDataStyle;
+          };
     expandable?: boolean;
     initialState?: 'collapsed' | 'expanded';
     style?: IDataStyle;

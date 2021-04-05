@@ -6,7 +6,8 @@ import {
     IScreenContext,
     IScreenCtaContextParams,
     IScreenCtaResponse,
-    IScreenRequest
+    IScreenRequest,
+    IScreenValidation
 } from '../../../../../components/widgets/types';
 import { ApiClient } from '../../../../../core/utils/api-client/api-client';
 import { getChainId } from '../../../../preferences/selectors';
@@ -14,7 +15,7 @@ import { IReduxState } from '../../../../state';
 import { IAction } from '../../../../types';
 import { flattenObject } from '../../../../utils/helpers';
 import { getSelectedWallet, getSelectedAccount } from '../../../../wallets/selectors';
-import { setScreenInputData } from '../../input-data/actions';
+import { runScreenValidation, setScreenInputData } from '../../input-data/actions';
 import { handleCta, IHandleCtaOptions } from '../handle-cta';
 import * as transactions from './transactions';
 import {
@@ -122,14 +123,28 @@ export const handleDynamicCta = (
 export const setReduxScreenInputData = (
     context: IHandleCtaActionContext<transactions.IContractCallParams>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    setScreenInputData(context.options.screenKey, context.action.params?.params)(
-        dispatch,
-        getState
-    );
+    if (context.action.params?.params && context?.options?.screenKey) {
+        setScreenInputData(context.options.screenKey, context.action.params?.params)(
+            dispatch,
+            getState
+        );
+    }
+};
+
+export const runScreenValidations = (
+    context: IHandleCtaActionContext<{ screenValidation: IScreenValidation }>
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    if (context.action.params?.params?.screenValidation && context?.options?.screenKey) {
+        runScreenValidation(
+            context.action.params?.params?.screenValidation,
+            context.options.screenKey
+        )(dispatch, getState);
+    }
 };
 
 export const supportedActions = flattenObject({
     transactions,
     setReduxScreenInputData,
+    runScreenValidations,
     handleDynamicCta
 });

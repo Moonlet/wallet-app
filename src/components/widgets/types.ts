@@ -22,6 +22,12 @@ export interface IScreenContext<ScreenParams = any> {
     params?: ScreenParams;
 }
 
+export interface IScreenCtaContextParams<F = any, S = any> {
+    ctaId: string;
+    flowInputData: F;
+    screenInputData: S;
+}
+
 /** @deprecated use string instead */
 export enum ContextScreen {
     DASHBOARD = 'dashboard',
@@ -79,6 +85,10 @@ export interface IScreenResponse {
     navigationOptions?: any;
 }
 
+export interface IScreenCtaResponse {
+    cta: ICta;
+}
+
 export interface IScreenFieldValidation {
     fn: string;
     params?: any[];
@@ -96,13 +106,13 @@ export interface IScreenValidation {
     };
 }
 
-export interface ICtaAction {
+export interface ICtaAction<P = any> {
     type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
     params: {
         action?: string;
         url?: string;
         screen?: string;
-        params?: any;
+        params?: P;
     };
 }
 
@@ -149,7 +159,14 @@ export interface ICta {
 }
 
 export interface IScreenWidget {
-    title?: string;
+    title?:
+        | string
+        | {
+              value: string;
+              containerStyle?: IDataStyle;
+              textStyle?: IDataStyle;
+              iconStyle?: IDataStyle;
+          };
     expandable?: boolean;
     initialState?: 'collapsed' | 'expanded';
     style?: IDataStyle;
@@ -162,6 +179,7 @@ export interface IScreenModule {
     hidden?: boolean;
     style?: IDataStyle;
     type:
+        | ModuleTypes.ABSOLUTE_MODULES
         | ModuleTypes.AMOUNT_INPUT
         | ModuleTypes.AMOUNT_SELECTABLE_BOX
         | ModuleTypes.BALANCES_GRID_ICONS
@@ -177,6 +195,7 @@ export interface IScreenModule {
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
         | ModuleTypes.MODULE_WRAPPER
         | ModuleTypes.ONE_LINE_TEXT_BANNER
+        | ModuleTypes.PRICE_UPDATE
         | ModuleTypes.PROGRESS_BAR
         | ModuleTypes.SEPARATOR
         | ModuleTypes.SINGLE_BALANCE_ICON
@@ -231,6 +250,7 @@ export interface IStateSelector {
 }
 
 export enum ModuleTypes {
+    ABSOLUTE_MODULES = 'absolute-modules',
     AMOUNT_INPUT = 'amount-input',
     AMOUNT_SELECTABLE_BOX = 'amount-selectable-box',
     BALANCES_GRID_ICONS = 'balances-grid-icons',
@@ -246,6 +266,7 @@ export enum ModuleTypes {
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
     MODULE_WRAPPER = 'module-wrapper',
     ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
+    PRICE_UPDATE = 'price-update',
     PROGRESS_BAR = 'progress-bar',
     SEPARATOR = 'separator',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
@@ -391,6 +412,16 @@ export interface IIconData {
     icon: IconValues;
 }
 
+export interface IPriceUpdateData {
+    endpoint: {
+        url: string;
+        method: 'POST' | 'GET';
+        data: any;
+    };
+    reduxKey: string;
+    interval: number; // miliseconds
+}
+
 export interface IThreeLinesIconData {
     firstLine: IData[];
     secondLine: IData[];
@@ -428,6 +459,9 @@ export interface IAmountInputData {
         color?: string;
     };
     editable?: boolean;
+    focus?: boolean;
+    showValidations?: boolean;
+    onChangeTextAction?: IStateSelector;
 }
 
 export interface IAmountSelectableBoxData {
@@ -475,4 +509,19 @@ export interface ITextLineIconData {
     };
     line: IData[];
     lineStyle?: IDataStyle;
+}
+
+export interface IValidationData {
+    fieldName?: string;
+}
+
+export interface IAbsoluteModulesData {
+    module1: {
+        module: IScreenModule;
+        style?: IDataStyle;
+    };
+    module2: {
+        module: IScreenModule;
+        style?: IDataStyle;
+    };
 }

@@ -120,6 +120,7 @@ export interface ITransactionExtraFields {
     stakeAccountKey?: string;
     stakeAccountIndex?: number;
     splitFrom?: string;
+
     //
 }
 

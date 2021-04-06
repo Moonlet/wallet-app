@@ -20,6 +20,7 @@ import {
     switchNodeContinueInfo2,
     switchNodeContinueInfo3
 } from './switch-node';
+import { swapToggleSelector, swapToEnterAmount, swapToCustomSlippageBox } from './swap';
 
 const stateModifiers = {
     updateClaimPending,
@@ -31,10 +32,13 @@ const stateModifiers = {
     switchNodeSelectNodeBottomWrapper,
     switchNodeSelectReasons,
     switchNodeContinueInfo2,
-    switchNodeContinueInfo3
+    switchNodeContinueInfo3,
+    swapToggleSelector,
+    swapToEnterAmount,
+    swapToCustomSlippageBox
 };
 
-export const getState = (state: IReduxState, module: IScreenModule) => {
+export const getState = (state: IReduxState, module: IScreenModule, screenKey: string) => {
     let wrapper;
 
     switch (module.type) {
@@ -52,7 +56,7 @@ export const getState = (state: IReduxState, module: IScreenModule) => {
 
     let wrapperState = wrapper.state;
     if (typeof stateModifiers[wrapper?.stateModifierFn] === 'function') {
-        wrapperState = stateModifiers[wrapper?.stateModifierFn](state, module);
+        wrapperState = stateModifiers[wrapper?.stateModifierFn](state, module, screenKey);
     }
 
     return wrapperState;

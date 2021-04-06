@@ -15,15 +15,15 @@ export const inputAmountNotEmpty = (
 
     const inputData: any = state.ui.screens.inputData[screenKey]?.data;
 
-    const amount = inputData?.amount || inputData?.input;
+    const data = inputData?.amount || inputData?.input || (inputData && inputData[field]);
 
     if (
-        !amount ||
-        isNaN(amount) ||
-        amount === '' ||
-        amount === ' ' ||
-        amount === undefined ||
-        amount === null
+        !data ||
+        isNaN(data) ||
+        data === '' ||
+        data === ' ' ||
+        data === undefined ||
+        data === null
     ) {
         // Show error
 

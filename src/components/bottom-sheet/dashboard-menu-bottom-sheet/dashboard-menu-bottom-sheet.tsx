@@ -179,13 +179,6 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 >
                     {Platform.OS !== 'web' &&
                         this.renderRow({
-                            title: translate('DashboardMenu.tokenSwap'),
-                            iconName: IconValues.CLAIM_REWARD,
-                            disabled: true
-                        })}
-
-                    {Platform.OS !== 'web' &&
-                        this.renderRow({
                             title: translate('App.labels.addToken'),
                             iconName: IconValues.CLAIM_REWARD,
                             onPress: () => this.addToken()

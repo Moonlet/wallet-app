@@ -1,11 +1,16 @@
 import { Dispatch } from 'react';
 import {
+    IAmountInputData,
     IScreenContext,
+    IScreenModule,
     IScreenValidation,
     IStateSelector
 } from '../../../../components/widgets/types';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { SwapType } from '../../../../core/blockchain/types/token';
 import { IReduxState } from '../../../state';
 import { IAction } from '../../../types';
+import { getSelectedBlockchain } from '../../../wallets/selectors';
 import { screenActions } from './screen-actions';
 import { IScreenInputDataValidations } from './state';
 import { screenInputValidationActions } from './validation/index';
@@ -77,11 +82,16 @@ export const setScreenAmount = (
     options: {
         screenKey: string;
         context: IScreenContext;
+        inputKey?: string;
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    setScreenInputData(options.screenKey, {
-        amount: balance
-    })(dispatch, getState);
+    const data = options?.inputKey
+        ? {
+              [options?.inputKey]: balance
+          }
+        : { amount: balance };
+
+    setScreenInputData(options.screenKey, data)(dispatch, getState);
 
     const state = getState();
 
@@ -130,5 +140,109 @@ export const runScreenStateActions = (options: {
                 getState
             );
         }
+    }
+};
+
+export const setSwapInputAmount = (context: IScreenContext, screenKey: string) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+    const blockchain = getSelectedBlockchain(state);
+
+    const screenData =
+        screenKey && state.ui.screens.inputData && state.ui.screens.inputData[screenKey]?.data;
+
+    if (!screenKey || !screenData) return;
+
+    // don't populate fields if empty input
+    if (
+        (screenData?.swapAmountFrom === '' && screenData?.swapAmountTo === '') ||
+        (screenData?.swapAmountFrom === undefined && screenData?.swapAmountTo === undefined)
+    )
+        return;
+
+    const inputFieldFocus = screenData?.inputFieldFocus;
+
+    const toInput = inputFieldFocus === 'swapAmountFrom' ? 'swapAmountTo' : 'swapAmountFrom';
+
+    const fromTokenAmount = screenData?.swapPrice?.fromTokenAmount;
+    const toTokenAmount = screenData?.swapPrice?.toTokenAmount;
+
+    const blockchainInstance = getBlockchain(blockchain);
+
+    const swapType = screenData?.swapType;
+
+    let amount = '';
+
+    if (swapType === SwapType.SELL) {
+        // SELL
+        if (inputFieldFocus === 'swapAmountFrom') {
+            const decimals = screenData.swapToToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+        }
+        if (inputFieldFocus === 'swapAmountTo') {
+            const decimals = screenData.swapFromToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+        }
+    } else {
+        // BUY
+        if (inputFieldFocus === 'swapAmountFrom') {
+            const decimals = screenData.swapToToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+        }
+        if (inputFieldFocus === 'swapAmountTo') {
+            const decimals = screenData.swapFromToken.decimals;
+            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+        }
+    }
+
+    setScreenAmount(amount, {
+        screenKey,
+        context,
+        inputKey: toInput
+    })(dispatch, getState);
+};
+
+const setAmountInputFieldFocus = (
+    module: IScreenModule,
+    context: IScreenContext,
+    screenKey: string,
+    params: any[]
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const state = getState();
+
+    const inputKey = module?.details?.inputKey;
+
+    const screenData =
+        screenKey && state.ui.screens.inputData && state.ui.screens.inputData[screenKey]?.data;
+
+    if (screenData && inputKey) {
+        // Update input field focus - the amount input in which the user enters
+        setScreenInputData(screenKey, {
+            ...screenData,
+            inputFieldFocus: inputKey
+        })(dispatch, getState);
+    }
+};
+
+const onChangeTextActions = {
+    setAmountInputFieldFocus
+};
+
+export const onAmountChangeTextAction = (
+    module: IScreenModule,
+    context: IScreenContext,
+    screenKey: string
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const data = module.data as IAmountInputData;
+
+    if (typeof onChangeTextActions[data.onChangeTextAction.fn] === 'function') {
+        onChangeTextActions[data.onChangeTextAction.fn](
+            module,
+            context,
+            screenKey,
+            data.onChangeTextAction?.params
+        )(dispatch, getState);
     }
 };

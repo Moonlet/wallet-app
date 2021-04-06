@@ -1,4 +1,4 @@
-import { amountAvailableFunds } from './amount-available-funds';
+import { amountAvailableFunds, amountAvailableFundsToken } from './amount-available-funds';
 import { amountAvailableFundsToKeep } from './amount-available-funds-to-keep';
 import { minAmountToStake, minAmountToStakePerValidator } from './min-amount-to-stake';
 import { switchNodeMinAmountDelegate } from './switch-node-min-amount-delegate';
@@ -8,6 +8,7 @@ import { inputAmountNotEmpty } from './amount-not-empty';
 
 export const screenInputValidationActions = {
     amountAvailableFunds,
+    amountAvailableFundsToken,
     amountAvailableFundsToKeep,
     minAmountToStake,
     minAmountToStakePerValidator,

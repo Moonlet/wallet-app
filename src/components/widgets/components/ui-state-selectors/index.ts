@@ -22,6 +22,18 @@ import {
     getStakeAmountValidatorSplit
 } from './input-balance-format';
 import { getStakeNowSelectValidators } from './stake-now';
+import { getTokenAvailableBalanceFormat, getTokenAvailableBalance } from './token-balance';
+import {
+    getFromAmount,
+    getToAmount,
+    getFromTokenSymbol,
+    getToTokenSymbol,
+    getSwipePrice,
+    getSwapFromToken,
+    getSwapFromTokenAmount,
+    getSwapToToken,
+    getSwapToTokenAmount
+} from './swap';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
@@ -41,7 +53,20 @@ const uiStateSelectors = {
 
     getStakeAmountPerValidator,
 
-    getStakeNowSelectValidators
+    getStakeNowSelectValidators,
+
+    getTokenAvailableBalanceFormat,
+    getTokenAvailableBalance,
+    getFromTokenSymbol,
+    getToTokenSymbol,
+    getFromAmount,
+    getToAmount,
+
+    getSwipePrice,
+    getSwapFromToken,
+    getSwapFromTokenAmount,
+    getSwapToToken,
+    getSwapToTokenAmount
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

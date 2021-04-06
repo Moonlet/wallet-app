@@ -6,6 +6,7 @@ import { TokenType, TokenScreenComponentType } from '../types/token';
 import { config } from './config';
 import abi from 'ethereumjs-abi';
 import { Celo } from '.';
+import { TransactionStatus } from '../../wallet/types';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -25,6 +26,13 @@ export class ClientUtils implements IClientUtils {
             throw new Error(`Error getting transaction receipt for ${hash}`);
         }
         return this.buildTransactionFromBlockchain(res[0].result, res[1].result);
+    }
+
+    async getTransactionStatus(
+        hash: string,
+        context: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
+    ): Promise<TransactionStatus> {
+        return Promise.reject('Near ClientUtils.getTransactionStatus() not impelmented');
     }
 
     async buildTransactionFromBlockchain(txInfo, txReceipt) {

@@ -53,3 +53,14 @@ export enum PosBasicActionType {
     SOLANA_STAKEACCOUNT_WITHDRAW = 'SOLANA_STAKEACCOUNT_WITHDRAW',
     SOLANA_STAKEACCOUNT_UNSTAKE = 'SOLANA_STAKEACCOUNT_UNSTAKE'
 }
+
+export enum SwapType {
+    BUY = 'BUY',
+    SELL = 'SELL'
+}
+
+export enum SwapContractMethod {
+    SWAPEXACTTOKENSFORZIL = 'SwapExactTokensForZIL',
+    SWAPEXACTZILFORTOKENS = 'SwapExactZILForTokens',
+    INCREASEALLOWANCE = 'IncreaseAllowance'
+}

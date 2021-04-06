@@ -17,7 +17,8 @@ import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
 import {
     setScreenInputData,
-    setScreenAmount
+    setScreenAmount,
+    onAmountChangeTextAction
 } from '../../../../redux/ui/screens/input-data/actions';
 import { IScreenInputDataValidations } from '../../../../redux/ui/screens/input-data/state';
 import { getStateSelectors } from '../ui-state-selectors/index';
@@ -40,11 +41,17 @@ interface IReduxProps {
 
     setScreenInputData: typeof setScreenInputData;
     setScreenAmount: typeof setScreenAmount;
+    onAmountChangeTextAction: typeof onAmountChangeTextAction;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    const inputKey = ownProps.module?.details?.inputKey;
+
     return {
-        amount: state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
+        amount:
+            (inputKey && state.ui.screens.inputData[ownProps.screenKey]?.data[inputKey]) ||
+            state.ui.screens.inputData[ownProps.screenKey]?.data?.amount,
+
         inputValidation: state.ui.screens.inputData[ownProps.screenKey]?.validation,
         amountBox: state.ui.screens.inputData[ownProps.screenKey]?.data?.amountBox,
 
@@ -57,12 +64,15 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
 const mapDispatchToProps = {
     setScreenInputData,
-    setScreenAmount
+    setScreenAmount,
+    onAmountChangeTextAction
 };
 
 class AmountInputComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
+    private textInputRef: any;
+
     public componentDidMount() {
         this.props.actions.clearScreenInputData(this.props.screenKey, {
             amount: undefined
@@ -74,6 +84,10 @@ class AmountInputComponent extends React.Component<
                 context: this.props.context,
                 screenKey: this.props.screenKey
             });
+        }
+
+        if ((this.props.module.data as IAmountInputData)?.focus) {
+            this.textInputRef?.focus();
         }
     }
 
@@ -166,12 +180,17 @@ class AmountInputComponent extends React.Component<
     }
 
     public render() {
-        const { amount, module, inputValidation, styles, theme } = this.props;
+        const { amount, context, module, inputValidation, screenKey, styles, theme } = this.props;
 
         const data = module.data as IAmountInputData;
 
         let editable = true;
         if (data?.editable !== undefined) editable = data.editable;
+
+        const inputKey = module?.details?.inputKey;
+
+        let showValidations = true;
+        if (data?.showValidations !== undefined) showValidations = data.showValidations;
 
         return (
             <View style={[styles.container, formatStyles(module?.style)]}>
@@ -179,6 +198,7 @@ class AmountInputComponent extends React.Component<
                     <View style={[styles.inputBox, formatStyles(data?.input?.style)]}>
                         <TextInput
                             testID="enter-amount"
+                            ref={ref => (this.textInputRef = ref)}
                             style={[styles.inputText, formatStyles(data?.input?.textStyle)]}
                             autoCapitalize={'none'}
                             autoCorrect={false}
@@ -191,9 +211,13 @@ class AmountInputComponent extends React.Component<
                             onChangeText={text => {
                                 text = text.replace(/,/g, '.');
                                 this.props.setScreenAmount(text, {
-                                    screenKey: this.props.screenKey,
-                                    context: this.props.context
+                                    screenKey,
+                                    context,
+                                    inputKey
                                 });
+                                if (data?.onChangeTextAction) {
+                                    this.props.onAmountChangeTextAction(module, context, screenKey);
+                                }
                             }}
                             keyboardType={Platform.select({
                                 default: 'number-pad',
@@ -224,23 +248,30 @@ class AmountInputComponent extends React.Component<
                     </View>
                 )}
 
-                {(inputValidation?.fieldsErrors?.amount || []).map((fieldError, index: number) => {
-                    if (fieldError.type === 'ERROR_MSG') {
-                        return (
-                            <Text key={`error-${index}`} style={styles.errorText}>
-                                {fieldError.message}
-                            </Text>
-                        );
-                    }
+                {showValidations &&
+                    (
+                        (inputValidation?.fieldsErrors &&
+                            inputKey &&
+                            inputValidation?.fieldsErrors[inputKey]) ||
+                        inputValidation?.fieldsErrors?.amount ||
+                        []
+                    ).map((fieldError, index: number) => {
+                        if (fieldError.type === 'ERROR_MSG') {
+                            return (
+                                <Text key={`error-${index}`} style={styles.errorText}>
+                                    {fieldError.message}
+                                </Text>
+                            );
+                        }
 
-                    if (fieldError.type === 'WARN_MSG') {
-                        return (
-                            <Text key={`error-${index}`} style={styles.warningText}>
-                                {fieldError.message}
-                            </Text>
-                        );
-                    }
-                })}
+                        if (fieldError.type === 'WARN_MSG') {
+                            return (
+                                <Text key={`error-${index}`} style={styles.warningText}>
+                                    {fieldError.message}
+                                </Text>
+                            );
+                        }
+                    })}
             </View>
         );
     }

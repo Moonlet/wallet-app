@@ -12,7 +12,6 @@ import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { getChainId } from '../../redux/preferences/selectors';
 import { getScreenDataKey } from '../../redux/ui/screens/data/reducer';
-import { buildDummyValidator } from '../../redux/wallets/actions';
 import {
     navigateToEnterAmountStep,
     QUICK_DELEGATE_ENTER_AMOUNT
@@ -22,6 +21,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { formatValidatorName } from '../../core/utils/format-string';
 import { InputDataValidator } from '../../redux/ui/screens/input-data/state';
+import { buildDummyValidator } from '../../redux/wallets/actions/util-actions';
 
 interface IReduxProps {
     validators: InputDataValidator[];

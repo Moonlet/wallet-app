@@ -4,7 +4,13 @@ import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { IScreenModule, IScreenValidation, IScreenContext, ISmartScreenActions } from '../../types';
+import {
+    IScreenModule,
+    IScreenValidation,
+    IScreenContext,
+    ISmartScreenActions,
+    IValidationData
+} from '../../types';
 import { formatStyles } from '../../utils';
 import { Text } from '../../../../library';
 import { IReduxState } from '../../../../redux/state';
@@ -31,34 +37,62 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 class ValidationsModuleComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
 > {
+    private renderFieldErrorMessage(fieldError, index) {
+        const { styles } = this.props;
+
+        // Error Messages
+        if (fieldError.type === 'ERROR_MSG') {
+            return (
+                <Text key={`error-${index}`} style={styles.errorText}>
+                    {fieldError.message}
+                </Text>
+            );
+        }
+
+        // Warning Messages
+        if (fieldError.type === 'WARN_MSG') {
+            return (
+                <Text key={`error-${index}`} style={styles.warningText}>
+                    {fieldError.message}
+                </Text>
+            );
+        }
+    }
+
     public render() {
         const { inputValidation, module, styles } = this.props;
 
-        return (
-            <View style={[styles.container, formatStyles(module?.style)]}>
-                {Object.keys(inputValidation?.fieldsErrors || []).map((fieldName: string) =>
-                    inputValidation?.fieldsErrors[fieldName].map((fieldError, index: number) => {
-                        // Error Messages
-                        if (fieldError.type === 'ERROR_MSG') {
-                            return (
-                                <Text key={`error-${index}`} style={styles.errorText}>
-                                    {fieldError.message}
-                                </Text>
-                            );
-                        }
+        const data = module.data as IValidationData;
 
-                        // Warning Messages
-                        if (fieldError.type === 'WARN_MSG') {
-                            return (
-                                <Text key={`error-${index}`} style={styles.warningText}>
-                                    {fieldError.message}
-                                </Text>
-                            );
-                        }
-                    })
-                )}
-            </View>
-        );
+        const containerStyle = [styles.container, formatStyles(module?.style)];
+
+        if (data?.fieldName) {
+            if (inputValidation?.fieldsErrors && inputValidation?.fieldsErrors[data.fieldName]) {
+                // Render custom field error
+                return (
+                    <View style={containerStyle}>
+                        {inputValidation?.fieldsErrors[data.fieldName].map(
+                            (fieldError, index: number) => {
+                                return this.renderFieldErrorMessage(fieldError, index);
+                            }
+                        )}
+                    </View>
+                );
+            } else return <View style={containerStyle} />;
+        } else {
+            // Render all field errors
+            return (
+                <View style={containerStyle}>
+                    {Object.keys(inputValidation?.fieldsErrors || []).map((fieldName: string) =>
+                        (inputValidation?.fieldsErrors[fieldName] || []).map(
+                            (fieldError, index: number) => {
+                                return this.renderFieldErrorMessage(fieldError, index);
+                            }
+                        )
+                    )}
+                </View>
+            );
+        }
     }
 }
 

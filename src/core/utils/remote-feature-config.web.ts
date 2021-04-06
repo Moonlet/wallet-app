@@ -8,7 +8,8 @@ export enum RemoteFeature {
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
-    TC_VERSION = 'tcVersion'
+    TC_VERSION = 'tcVersion',
+    IMPROVED_NONCE = 'improvedNonce'
 }
 
 export const getRemoteConfigFeatures = () => {

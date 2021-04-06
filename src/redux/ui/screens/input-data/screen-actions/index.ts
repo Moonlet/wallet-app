@@ -88,8 +88,30 @@ const setScreenAmountPercentToMoonlet = (
     handleCta(params[0], { screenKey })(dispatch, getState);
 };
 
+const setScreenAmountPercentSwap = (
+    params: any,
+    context: IScreenContext,
+    screenKey: string,
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    handleCta(params[0], { screenKey })(dispatch, getState);
+};
+
+export const setReduxScreenInputData = (
+    params: any,
+    context: IScreenContext,
+    screenKey: string,
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    setScreenInputData(screenKey, params)(dispatch, getState);
+};
+
 export const screenActions = {
     setScreenAmountAction,
     setScreenAmountBox,
-    setScreenAmountPercentToMoonlet
+    setScreenAmountPercentToMoonlet,
+    setScreenAmountPercentSwap,
+    setReduxScreenInputData
 };

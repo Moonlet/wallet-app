@@ -37,6 +37,8 @@ import { ValidationsModule } from './components/validations/validations';
 import { ProgressBarModule } from './components/progress-bar/progress-bar';
 import { TextLineIcon } from './components/text-line-icon/text-line-icon';
 import { PubSub } from '../../core/blockchain/common/pub-sub';
+import { PriceUpdateModule } from './components/price-update/price-update';
+import { AbsoluteModules } from './components/absolute-modules/absolute-modules';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -139,7 +141,7 @@ export const renderModule = (
             break;
 
         case ModuleTypes.TWO_LINES_TEXT_BANNER:
-            moduleJSX = <TwoLinesStakeBanner module={module} actions={actions} />;
+            moduleJSX = <TwoLinesStakeBanner module={module} actions={actions} options={options} />;
             break;
 
         case ModuleTypes.ONE_LINE_TEXT_BANNER:
@@ -182,7 +184,15 @@ export const renderModule = (
             break;
 
         case ModuleTypes.ICON:
-            moduleJSX = <IconModule module={module} />;
+            moduleJSX = (
+                <IconModule
+                    module={module}
+                    context={context}
+                    screenKey={options?.screenKey}
+                    actions={actions}
+                    options={{ ...options, flowId: context?.flowId }}
+                />
+            );
             break;
 
         case ModuleTypes.MD_TEXT:
@@ -195,6 +205,9 @@ export const renderModule = (
                     module={module}
                     renderModule={m => renderModule(m, context, actions, options)}
                     moduleWrapperState={options?.moduleWrapperState}
+                    options={{
+                        screenKey: options?.screenKey
+                    }}
                 />
             );
             break;
@@ -209,7 +222,13 @@ export const renderModule = (
             break;
 
         case ModuleTypes.CTA:
-            moduleJSX = module?.cta && renderCta(module.cta, actions.handleCta, options?.pubSub);
+            moduleJSX =
+                module?.cta &&
+                renderCta(module.cta, actions.handleCta, {
+                    screenKey: options?.screenKey,
+                    flowId: context?.flowId,
+                    pubSub: options?.pubSub
+                });
             break;
 
         case ModuleTypes.AMOUNT_INPUT:
@@ -262,6 +281,28 @@ export const renderModule = (
             moduleJSX = <ProgressBarModule module={module} />;
             break;
 
+        case ModuleTypes.PRICE_UPDATE:
+            moduleJSX = (
+                <PriceUpdateModule
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
+            break;
+
+        case ModuleTypes.ABSOLUTE_MODULES:
+            moduleJSX = (
+                <AbsoluteModules
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
+            break;
+
         default:
             return null;
     }
@@ -289,7 +330,11 @@ export const renderModule = (
 export const renderCta = (
     cta: ICta,
     handleCTA: typeof handleCta,
-    pubSub: PubSub<SmartScreenPubSubEvents>
+    options: {
+        screenKey?: string;
+        flowId?: string;
+        pubSub: PubSub<SmartScreenPubSubEvents>;
+    }
 ) => {
     return (
         <Button
@@ -307,7 +352,7 @@ export const renderCta = (
                 formatStyles(cta?.buttonProps?.buttonStyle)
             ]}
             textStyle={formatStyles(cta?.buttonProps?.textStyle)}
-            onPress={() => handleCTA(cta, { pubSub })}
+            onPress={() => handleCTA(cta, options)}
         >
             {cta.label}
         </Button>

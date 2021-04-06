@@ -33,7 +33,7 @@ const OneLineTextBannerComponent = (
     const data = module.data as IOneLineTextBannerData;
 
     const moduleJSX = (
-        <View style={[styles.container, module?.style && formatStyles(module.style)]}>
+        <View style={[styles.container, formatStyles(module?.style)]}>
             <Text>
                 {formatDataJSXElements(
                     data.line,

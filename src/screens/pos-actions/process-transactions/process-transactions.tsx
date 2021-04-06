@@ -24,20 +24,17 @@ import {
     getSelectedAccountTransactions,
     getSelectedAccount
 } from '../../../redux/wallets/selectors';
-import { PosBasicActionType } from '../../../core/blockchain/types/token';
+import { PosBasicActionType, SwapContractMethod } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { bind } from 'bind-decorator';
-import {
-    addAccount,
-    setSelectedAccount,
-    signAndSendTransactions
-} from '../../../redux/wallets/actions';
+import { addAccount, setSelectedAccount } from '../../../redux/wallets/actions';
 import { HeaderLeft } from '../../../components/header-left/header-left';
 import { Dialog } from '../../../components/dialog/dialog';
 import { availableAmount } from '../../../core/utils/available-funds';
+import { signAndSendTransactions } from '../../../redux/wallets/actions/util-actions';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -332,6 +329,35 @@ export class ProcessTransactionsComponent extends React.Component<
             default: {
                 middleText = '';
                 topText = amount;
+            }
+        }
+
+        if (tx.additionalInfo?.swap) {
+            middleText = '';
+            switch (tx.additionalInfo?.swap.contractMethod) {
+                case SwapContractMethod.INCREASEALLOWANCE:
+                    topText = `${translate('App.labels.increaseAllowance')} ${translate(
+                        'App.labels.for'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.fromSymbol}`;
+                    break;
+                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
+                    topText = `${translate('App.labels.swap')} ${
+                        tx.additionalInfo?.swap.amountFrom
+                    } ${tx.additionalInfo?.swap.fromSymbol} ${translate(
+                        'App.labels.to'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountTo} ${
+                        tx.additionalInfo?.swap.toSymbol
+                    }`;
+                    break;
+                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
+                    topText = `${translate('App.labels.swap')} ${
+                        tx.additionalInfo?.swap.amountTo
+                    } ${tx.additionalInfo?.swap.toSymbol} ${translate(
+                        'App.labels.to'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountFrom} ${
+                        tx.additionalInfo?.swap.fromSymbol
+                    }`;
+                    break;
             }
         }
 

@@ -91,7 +91,10 @@ export class AccountTabComponent extends React.Component<
                                 style={styles.button}
                                 wrapperStyle={{ flex: 1 }}
                                 onPress={() => {
-                                    if (!this.props.hasPendingTransactions) {
+                                    if (
+                                        isFeatureActive(RemoteFeature.IMPROVED_NONCE) ||
+                                        !this.props.hasPendingTransactions
+                                    ) {
                                         NavigationService.navigate('Send', {
                                             accountIndex: this.props.account.index,
                                             blockchain: this.props.account.blockchain,
@@ -133,6 +136,26 @@ export class AccountTabComponent extends React.Component<
                             >
                                 {translate('App.labels.receive')}
                             </Button>
+
+                            {/* TODO: maybe find a better way to handle this */}
+                            {this.props.account.blockchain === Blockchain.ZILLIQA && (
+                                <Button
+                                    style={styles.button}
+                                    wrapperStyle={{ flex: 1 }}
+                                    onPress={() =>
+                                        NavigationService.navigate('SmartScreen', {
+                                            context: {
+                                                screen: 'Swap',
+                                                step: 'SwapEnterAmount',
+                                                key: 'swap-enter-amount'
+                                            },
+                                            newFlow: true
+                                        })
+                                    }
+                                >
+                                    {translate('App.labels.swap')}
+                                </Button>
+                            )}
                         </View>
 
                         {Platform.OS !== 'web' && (

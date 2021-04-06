@@ -12,7 +12,7 @@ import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
-import { TokenType, PosBasicActionType } from '../types/token';
+import { TokenType, PosBasicActionType, SwapContractMethod } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { Contracts } from './config';
@@ -85,6 +85,143 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
         return transaction;
+    }
+
+    public async buildTransferTransaction(
+        tx: ITransferTransaction
+    ): Promise<IBlockchainTransaction> {
+        const client = Zilliqa.getClient(tx.chainId);
+        const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
+
+        const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
+        const blockInfo = await client.getCurrentBlock();
+
+        switch (tokenInfo.type) {
+            case TokenType.ZRC2:
+                return {
+                    date: {
+                        created: Date.now(),
+                        signed: Date.now(),
+                        broadcasted: Date.now(),
+                        confirmed: Date.now()
+                    },
+                    blockchain: tx.account.blockchain,
+                    chainId: tx.chainId,
+                    type: TransactionType.TRANSFER,
+                    token: tokenInfo,
+                    address: tx.account.address,
+                    publicKey: tx.account.publicKey,
+
+                    toAddress: tokenInfo.contractAddress,
+
+                    amount: '0',
+                    feeOptions: tx.feeOptions,
+                    broadcastedOnBlock: blockInfo?.number,
+                    nonce,
+                    status: TransactionStatus.PENDING,
+
+                    data: {
+                        method: 'Transfer',
+                        params: [tx.toAddress, tx.amount],
+                        raw: JSON.stringify({
+                            _tag: 'Transfer',
+                            params: [
+                                {
+                                    vname: 'to',
+                                    type: 'ByStr20',
+                                    value: fromBech32Address(tx.toAddress).toLowerCase()
+                                },
+                                {
+                                    vname: 'amount',
+                                    type: 'Uint128',
+                                    value: new BigNumber(tx.amount).toFixed(0, BigNumber.ROUND_DOWN)
+                                }
+                            ]
+                        })
+                    }
+                };
+
+            // case TokenType.NATIVE:
+            default:
+                return {
+                    date: {
+                        created: Date.now(),
+                        signed: Date.now(),
+                        broadcasted: Date.now(),
+                        confirmed: Date.now()
+                    },
+                    blockchain: tx.account.blockchain,
+                    chainId: tx.chainId,
+                    type: TransactionType.TRANSFER,
+                    token: tokenInfo,
+
+                    address: tx.account.address,
+                    publicKey: tx.account.publicKey,
+
+                    toAddress: tx.toAddress,
+                    amount: new BigNumber(tx.amount).toFixed(0, BigNumber.ROUND_DOWN),
+                    feeOptions: tx.feeOptions,
+                    broadcastedOnBlock: blockInfo?.number,
+                    nonce,
+                    status: TransactionStatus.PENDING
+                };
+        }
+
+        // return enrichtransaction(finaltransaction);
+    }
+
+    public getTransactionAmount(tx: IBlockchainTransaction): string {
+        const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
+
+        if (tx.additionalInfo?.swap) {
+            let amount = '';
+            switch (tx.additionalInfo?.swap.contractMethod) {
+                case SwapContractMethod.INCREASEALLOWANCE:
+                    amount = tx.additionalInfo?.swap.amountFrom;
+                    break;
+                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
+                    amount = tx.additionalInfo?.swap.amountTo;
+                    break;
+                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
+                    amount = tx.additionalInfo?.swap.amountFrom;
+                    break;
+            }
+
+            return amount;
+        } else if (tokenInfo?.type === TokenType.ZRC2 || tx?.data?.params) {
+            return tx?.data?.params[1];
+        } else {
+            return tx.amount;
+        }
+    }
+
+    public getTransactionStatusByCode(status: any): TransactionStatus {
+        switch (parseInt(status, 16)) {
+            case 0:
+                return TransactionStatus.FAILED;
+            case 1:
+                return TransactionStatus.SUCCESS;
+            case 2:
+                return TransactionStatus.PENDING;
+            default:
+                return TransactionStatus.FAILED;
+        }
+    }
+
+    public getMessageSignature(
+        account: IAccountState,
+        message: string,
+        signature: string
+    ): {
+        signature: string;
+        publicKey: string;
+        message: string;
+    } {
+        return {
+            signature,
+            publicKey: account.publicKey,
+            message
+        };
     }
 
     public async buildPosTransaction(
@@ -198,126 +335,5 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         }
 
         return transactions;
-    }
-
-    public async buildTransferTransaction(
-        tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> {
-        const client = Zilliqa.getClient(tx.chainId);
-        const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
-
-        const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
-        const blockInfo = await client.getCurrentBlock();
-
-        switch (tokenInfo.type) {
-            case TokenType.ZRC2:
-                return {
-                    date: {
-                        created: Date.now(),
-                        signed: Date.now(),
-                        broadcasted: Date.now(),
-                        confirmed: Date.now()
-                    },
-                    blockchain: tx.account.blockchain,
-                    chainId: tx.chainId,
-                    type: TransactionType.TRANSFER,
-                    token: tokenInfo,
-                    address: tx.account.address,
-                    publicKey: tx.account.publicKey,
-
-                    toAddress: tokenInfo.contractAddress,
-
-                    amount: '0',
-                    feeOptions: tx.feeOptions,
-                    broadcastedOnBlock: blockInfo?.number,
-                    nonce,
-                    status: TransactionStatus.PENDING,
-
-                    data: {
-                        method: 'Transfer',
-                        params: [tx.toAddress, tx.amount],
-                        raw: JSON.stringify({
-                            _tag: 'Transfer',
-                            params: [
-                                {
-                                    vname: 'to',
-                                    type: 'ByStr20',
-                                    value: fromBech32Address(tx.toAddress).toLowerCase()
-                                },
-                                {
-                                    vname: 'amount',
-                                    type: 'Uint128',
-                                    value: new BigNumber(tx.amount).toFixed(0, BigNumber.ROUND_DOWN)
-                                }
-                            ]
-                        })
-                    }
-                };
-
-            // case TokenType.NATIVE:
-            default:
-                return {
-                    date: {
-                        created: Date.now(),
-                        signed: Date.now(),
-                        broadcasted: Date.now(),
-                        confirmed: Date.now()
-                    },
-                    blockchain: tx.account.blockchain,
-                    chainId: tx.chainId,
-                    type: TransactionType.TRANSFER,
-                    token: tokenInfo,
-
-                    address: tx.account.address,
-                    publicKey: tx.account.publicKey,
-
-                    toAddress: tx.toAddress,
-                    amount: new BigNumber(tx.amount).toFixed(0, BigNumber.ROUND_DOWN),
-                    feeOptions: tx.feeOptions,
-                    broadcastedOnBlock: blockInfo?.number,
-                    nonce,
-                    status: TransactionStatus.PENDING
-                };
-        }
-
-        // return enrichtransaction(finaltransaction);
-    }
-
-    public getTransactionAmount(tx: IBlockchainTransaction): string {
-        const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
-        if (tokenInfo?.type === TokenType.ZRC2 || tx?.data?.params) {
-            return tx?.data?.params[1];
-        } else {
-            return tx.amount;
-        }
-    }
-
-    public getTransactionStatusByCode(status: any): TransactionStatus {
-        switch (parseInt(status, 16)) {
-            case 0:
-                return TransactionStatus.FAILED;
-            case 1:
-                return TransactionStatus.SUCCESS;
-            case 2:
-                return TransactionStatus.PENDING;
-            default:
-                return TransactionStatus.FAILED;
-        }
-    }
-
-    public getMessageSignature(
-        account: IAccountState,
-        message: string,
-        signature: string
-    ): {
-        signature: string;
-        publicKey: string;
-        message: string;
-    } {
-        return {
-            signature,
-            publicKey: account.publicKey,
-            message
-        };
     }
 }

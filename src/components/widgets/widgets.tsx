@@ -52,7 +52,11 @@ class WidgetsComponent extends React.Component<
         const widgetsExpandedState = {};
 
         for (const [index, widget] of this.props.data.entries()) {
-            const key = widget?.title && this.getWidgetKey(widget.title, index);
+            const widgetTitle =
+                widget?.title &&
+                (typeof widget?.title === 'string' ? widget.title : widget.title.value);
+
+            const key = widget?.title && this.getWidgetKey(widgetTitle, index);
 
             if (widget?.title && widget?.expandable) {
                 widgetsExpandedState[key] = false;
@@ -100,7 +104,11 @@ class WidgetsComponent extends React.Component<
         const { actions, context, screenKey, styles } = this.props;
 
         if (widget?.expandable) {
-            const widgetKey = this.getWidgetKey(widget.title, index);
+            const widgetTitle =
+                widget?.title &&
+                (typeof widget?.title === 'string' ? widget.title : widget.title.value);
+
+            const widgetKey = this.getWidgetKey(widgetTitle, index);
 
             const isWidgetExpanded = this.state.widgetsExpandedState[widgetKey] || false;
 
@@ -127,22 +135,57 @@ class WidgetsComponent extends React.Component<
                     }}
                 >
                     <View>
-                        <View style={styles.itemHeader}>
-                            <Text style={styles.headerText}>{widget.title}</Text>
-                            <Icon
-                                name={
-                                    isWidgetExpanded
-                                        ? IconValues.CHEVRON_UP
-                                        : IconValues.CHEVRON_DOWN
-                                }
-                                size={normalize(16)}
-                                style={styles.expandingArrow}
-                            />
-                        </View>
+                        {widget?.title &&
+                            (typeof widget.title === 'string' ? (
+                                <View style={styles.itemHeader}>
+                                    <Text style={styles.headerText}>{widget.title}</Text>
+                                    <Icon
+                                        name={
+                                            isWidgetExpanded
+                                                ? IconValues.CHEVRON_UP
+                                                : IconValues.CHEVRON_DOWN
+                                        }
+                                        size={normalize(16)}
+                                        style={styles.expandingArrow}
+                                    />
+                                </View>
+                            ) : (
+                                <View
+                                    style={[
+                                        styles.itemHeader,
+                                        formatStyles(widget.title?.containerStyle)
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.headerText,
+                                            formatStyles(widget.title?.textStyle)
+                                        ]}
+                                    >
+                                        {widget.title.value}
+                                    </Text>
+                                    <Icon
+                                        name={
+                                            isWidgetExpanded
+                                                ? IconValues.CHEVRON_UP
+                                                : IconValues.CHEVRON_DOWN
+                                        }
+                                        size={
+                                            (formatStyles(widget.title?.iconStyle)
+                                                ?.size as number) || normalize(18)
+                                        }
+                                        style={[
+                                            styles.expandingArrow,
+                                            formatStyles(widget.title?.iconStyle)
+                                        ]}
+                                    />
+                                </View>
+                            ))}
 
                         {widget.modules.map((module: IScreenModule, i: number) => (
                             <View key={`module-${i}`}>
                                 {renderModule(module, context, actions, {
+                                    screenKey,
                                     isWidgetExpanded,
                                     moduleColWrapperContainer: styles.moduleColWrapperContainer,
                                     validation: this.props.validation,

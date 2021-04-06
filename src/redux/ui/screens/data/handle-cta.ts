@@ -12,7 +12,6 @@ import {
 import { getChainId } from '../../../preferences/selectors';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import {
-    buildDummyValidator,
     claimRewardNoInput,
     delegate,
     delegateV2,
@@ -60,20 +59,26 @@ import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { PubSub } from '../../../../core/blockchain/common/pub-sub';
 import { IconValues } from '../../../../components/icon/values';
 import { delay } from '../../../../core/utils/time';
+import { buildDummyValidator } from '../../../wallets/actions/util-actions';
+import { supportedActions } from './actions/index';
+import { isFeatureActive, RemoteFeature } from '../../../../core/utils/remote-feature-config';
 
-export const handleCta = (
-    cta: ICta,
-    options?: {
-        screenKey?: string;
-        validator?: {
-            id: string;
-            name: string;
-            icon?: string;
-            website?: string;
-        };
-        pubSub?: PubSub<SmartScreenPubSubEvents>;
-    }
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+export interface IHandleCtaOptions {
+    screenKey?: string;
+    validator?: {
+        id: string;
+        name: string;
+        icon?: string;
+        website?: string;
+    };
+    pubSub?: PubSub<SmartScreenPubSubEvents>;
+    flowId?: string;
+}
+
+export const handleCta = (cta: ICta, options?: IHandleCtaOptions) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
     if (!cta) {
         return;
     }
@@ -178,16 +183,7 @@ const handleCtaAction = async (
     action: ICtaAction,
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState,
-    options?: {
-        screenKey?: string;
-        validator?: {
-            id: string;
-            name: string;
-            icon?: string;
-            website?: string;
-        };
-        pubSub?: PubSub<SmartScreenPubSubEvents>;
-    }
+    options?: IHandleCtaOptions
 ) => {
     const state = getState();
 
@@ -528,7 +524,10 @@ const handleCtaAction = async (
                     break;
 
                 case 'hasPendingTransactions':
-                    if (getNrPendingTransactions(state)) {
+                    if (
+                        !isFeatureActive(RemoteFeature.IMPROVED_NONCE) &&
+                        getNrPendingTransactions(state)
+                    ) {
                         const nvServiceFn =
                             NavigationService.getCurrentRoute() === 'Dashboard'
                                 ? 'navigate'
@@ -866,6 +865,72 @@ const handleCtaAction = async (
                             state.ui.screens.data.StakeNow[options.screenKey].response?.validation,
                             options.screenKey
                         )(dispatch, getState);
+                    }
+                    break;
+                }
+
+                case 'amountSelectableBoxPercentageSwap': {
+                    const screenKey = options?.screenKey;
+
+                    const screenData =
+                        screenKey &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data;
+
+                    const swapType = screenData?.swapType;
+
+                    const amountBox = screenData?.amountBox || action?.params?.params?.amountBox;
+
+                    if (
+                        screenKey &&
+                        amountBox &&
+                        action.params?.params &&
+                        action.params?.params[swapType] &&
+                        action.params?.params[swapType]?.amount &&
+                        action.params?.params[swapType]?.inputKey &&
+                        action.params?.params[swapType]?.screenValidation
+                    ) {
+                        const params = action.params?.params[swapType];
+
+                        const amount = params.amount;
+                        const inputKey = params.inputKey;
+
+                        const percentage = amountBox.value;
+
+                        const finalAmount = new BigNumber(percentage)
+                            .multipliedBy(new BigNumber(amount))
+                            .dividedBy(100);
+
+                        setScreenInputData(screenKey, {
+                            [inputKey]: finalAmount.toFixed()
+                        })(dispatch, getState);
+
+                        runScreenValidation(params.screenValidation, screenKey)(dispatch, getState);
+                    }
+                    break;
+                }
+
+                case 'setAmountInputFieldFocus': {
+                    const screenKey = options?.screenKey;
+
+                    const screenData =
+                        screenKey &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data;
+
+                    const swapType = screenData?.swapType;
+
+                    const inputKey =
+                        swapType &&
+                        action.params?.params &&
+                        action.params.params[swapType]?.inputKey;
+
+                    if (screenData && inputKey) {
+                        // Update input field focus - the amount input in which the user enters
+                        setScreenInputData(screenKey, {
+                            ...screenData,
+                            inputFieldFocus: inputKey
+                        })(dispatch, getState);
                     }
                     break;
                 }
@@ -1282,6 +1347,27 @@ const handleCtaAction = async (
                 }
 
                 default:
+                    if (action.params?.action) {
+                        if (supportedActions[action.params.action]) {
+                            try {
+                                supportedActions[action.params.action]({ action, options })(
+                                    dispatch,
+                                    getState
+                                );
+                            } catch (error) {
+                                SentryCaptureException(
+                                    new Error(
+                                        JSON.stringify({
+                                            message: 'Smart screen action not available',
+                                            action: action.params.action,
+                                            error
+                                        })
+                                    )
+                                );
+                            }
+                        }
+                    }
+
                     break;
             }
             break;

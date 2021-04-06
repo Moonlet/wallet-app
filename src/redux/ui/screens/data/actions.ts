@@ -7,7 +7,6 @@ import {
     IScreenResponse
 } from '../../../../components/widgets/types';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
-import { AccountType } from '../../../wallets/state';
 import { IAction } from '../../../types';
 import { getSelectedAccount, getSelectedWallet } from '../../../wallets/selectors';
 import { Platform } from 'react-native';
@@ -70,7 +69,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
             blockchain: account.blockchain,
             chainId: String(chainId),
             address: account.address,
-            accountType: AccountType.DEFAULT
+            accountType: account.type
         }
     };
 
@@ -79,7 +78,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
 
     try {
         // fetch screen data
-        const screenResponse = await apiClient.http.post('/walletUi/screen', body);
+        const screenResponse = await apiClient.http.post('/walletUi/screen/widgets', body);
         const data: IScreenResponse = screenResponse?.result?.data;
 
         dispatch({
@@ -100,7 +99,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 })
             });
 
-            SentryCaptureException(new Error('Fetch /walletUi/screen'));
+            SentryCaptureException(new Error('Fetch /walletUi/screen/widgets'));
         }
     } catch (error) {
         // handle error
@@ -121,6 +120,6 @@ export const fetchScreenData = (context: IScreenContext) => async (
             })
         });
 
-        SentryCaptureException(new Error('Fetch /walletUi/screen'));
+        SentryCaptureException(new Error('Fetch /walletUi/screen/widgets'));
     }
 };

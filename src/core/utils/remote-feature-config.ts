@@ -13,7 +13,8 @@ export enum RemoteFeature {
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
-    TC_VERSION = 'tcVersion'
+    TC_VERSION = 'tcVersion',
+    IMPROVED_NONCE = 'improvedNonce'
 }
 
 let featuresConfig = {};
@@ -38,6 +39,7 @@ export const getRemoteConfigFeatures = async () => {
                 RemoteFeature.DEV_TOOLS,
                 RemoteFeature.TC_VERSION,
                 RemoteFeature.SOLANA,
+                RemoteFeature.IMPROVED_NONCE,
                 RemoteFeature.ZIL_STAKING_SMART_SCREEN
             ]);
 
@@ -55,6 +57,7 @@ export const getRemoteConfigFeatures = async () => {
             [RemoteFeature.CELO]: JSON.stringify([]),
             [RemoteFeature.SOLANA]: JSON.stringify([]),
             [RemoteFeature.ZIL_STAKING_SMART_SCREEN]: JSON.stringify([]),
+            [RemoteFeature.IMPROVED_NONCE]: JSON.stringify([]),
             [RemoteFeature.TC_VERSION]: '0'
         };
     }

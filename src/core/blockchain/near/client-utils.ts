@@ -3,6 +3,8 @@ import { Client } from './client';
 import { Blockchain, TransactionType, IBlockchainTransaction } from '../types';
 import { Near } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { TransactionStatus } from '../../wallet/types';
+import { ITokenConfigState } from '../../../redux/tokens/state';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -14,6 +16,13 @@ export class ClientUtils implements IClientUtils {
         const res = await this.client.http.jsonRpc('tx', [hash, options.address]);
 
         return this.buildTransactionFromBlockchain(res.result);
+    }
+
+    async getTransactionStatus(
+        hash: string,
+        context: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
+    ): Promise<TransactionStatus> {
+        return Promise.reject('Near ClientUtils.getTransactionStatus() not impelmented');
     }
 
     async buildTransactionFromBlockchain(txData: any): Promise<IBlockchainTransaction> {

@@ -190,6 +190,7 @@ export interface IScreenModule {
         | ModuleTypes.ICON_TWO_LINES
         | ModuleTypes.IMAGE_BANNER
         | ModuleTypes.INPUT
+        | ModuleTypes.TIMER_INTERVAL_PRICE_UPDATE
         | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
@@ -261,6 +262,7 @@ export enum ModuleTypes {
     ICON_TWO_LINES = 'icon-two-lines',
     IMAGE_BANNER = 'image-banner',
     INPUT = 'input',
+    TIMER_INTERVAL_PRICE_UPDATE = 'timer-interval-price-update',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
@@ -420,6 +422,16 @@ export interface IPriceUpdateData {
     };
     reduxKey: string;
     interval: number; // miliseconds
+}
+
+export interface ITimerUpdateData {
+    numberOfSeconds: number;
+    reduxKey: string;
+    endpoint: {
+        url: string;
+        method: 'POST' | 'GET';
+        data: any;
+    };
 }
 
 export interface IThreeLinesIconData {

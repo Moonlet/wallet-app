@@ -60,7 +60,7 @@ class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternal
                     JSON.stringify(this.props[key]) !== JSON.stringify(prevProps[key])
                 ) {
                     this.fetchDataTimeout && clearTimeout(this.fetchDataTimeout);
-                    this.fetchDataTimeout = setTimeout(() => this.fetchData(), 200);
+                    this.fetchDataTimeout = setTimeout(() => this.fetchData(), 300);
                 }
             }
         }

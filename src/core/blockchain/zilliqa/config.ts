@@ -140,9 +140,7 @@ export const config: IBlockchainConfig = {
     autoAddedTokensSymbols: {
         '1': {
             gZIL: GZIL_MAINNET,
-            XSGD: XSGD_MAINNET,
-            PORT: PORT_MAINNET,
-            ZWAP: ZWAP_MAINNET
+            XSGD: XSGD_MAINNET
         },
         '333': {
             gZIL: GZIL_TESTNET
@@ -150,6 +148,8 @@ export const config: IBlockchainConfig = {
     },
     autoAddedHiddenTokensSymbols: {
         '1': {
+            PORT: PORT_MAINNET,
+            ZWAP: ZWAP_MAINNET,
             ZLP: ZLP_MAINNET,
             BARTER: BARTER_MAINNET,
             BOLT: BOLT_MAINNET,

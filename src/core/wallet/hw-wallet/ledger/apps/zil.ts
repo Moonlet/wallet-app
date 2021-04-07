@@ -2,6 +2,7 @@ import ZilApp from './zil-interface';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
 import BigNumber from 'bignumber.js';
+import { isBech32 } from '@zilliqa-js/util/dist/validation';
 // import Long from 'long';
 // import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
 
@@ -31,14 +32,18 @@ export class Zil {
         path: string,
         tx: IBlockchainTransaction
     ): Promise<any> => {
+        const toAddr = isBech32(tx.toAddress)
+            ? zcrypto
+                  .fromBech32Address(tx.toAddress)
+                  .replace('0x', '')
+                  .toLowerCase()
+            : tx.toAddress.toLowerCase();
+
         const transaction: any = {
             // tslint:disable-next-line: no-bitwise
             version: (Number(tx.chainId) << 16) + 1,
             nonce: tx.nonce,
-            toAddr: zcrypto
-                .fromBech32Address(tx.toAddress)
-                .replace('0x', '')
-                .toLowerCase(),
+            toAddr,
             amount: tx.amount ? new BigNumber(tx.amount).toFixed() : '0',
             pubKey: tx.publicKey,
             gasPrice: new BigNumber(tx.feeOptions.gasPrice).toString(),
@@ -48,6 +53,7 @@ export class Zil {
             data: tx.data ? tx.data.raw : '',
             priority: true
         };
+
         const signed = await this.app.signTxn(index, transaction);
 
         transaction.signature = signed.sig;
@@ -55,6 +61,7 @@ export class Zil {
         transaction.gasLimit = transaction.gasLimit.toString();
         transaction.gasPrice = transaction.gasPrice.toString();
         transaction.toAddr = zcrypto.toChecksumAddress(transaction.toAddr).replace('0x', '');
+
         return transaction;
     };
 

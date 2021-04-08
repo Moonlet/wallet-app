@@ -149,6 +149,9 @@ export class AccountTabComponent extends React.Component<
                                                 step: 'SwapEnterAmount',
                                                 key: 'swap-enter-amount'
                                             },
+                                            navigationOptions: {
+                                                title: translate('App.labels.swap')
+                                            },
                                             newFlow: true
                                         })
                                     }

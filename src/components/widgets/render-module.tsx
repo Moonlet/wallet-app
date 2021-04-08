@@ -39,6 +39,7 @@ import { TextLineIcon } from './components/text-line-icon/text-line-icon';
 import { PubSub } from '../../core/blockchain/common/pub-sub';
 import { PriceUpdateModule } from './components/price-update/price-update';
 import { AbsoluteModules } from './components/absolute-modules/absolute-modules';
+import { TimerIntervalPriceUpdateModule } from './components/timer-interval-price-update/timer-interval-price-update';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -284,6 +285,17 @@ export const renderModule = (
         case ModuleTypes.PRICE_UPDATE:
             moduleJSX = (
                 <PriceUpdateModule
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
+            break;
+
+        case ModuleTypes.TIMER_INTERVAL_PRICE_UPDATE:
+            moduleJSX = (
+                <TimerIntervalPriceUpdateModule
                     module={module}
                     context={context}
                     actions={actions}

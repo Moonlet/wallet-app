@@ -11,10 +11,10 @@ interface IExternalProps {
 }
 
 interface IState {
-    percent: any;
-    borderWidth: any;
-    leftTransformerDegree: any;
-    rightTransformerDegree: any;
+    percent: number;
+    borderWidth: number;
+    leftTransformerDegree: string;
+    rightTransformerDegree: string;
 }
 
 class PercentageCircleComponent extends React.Component<

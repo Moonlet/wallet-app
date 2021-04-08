@@ -315,28 +315,20 @@ const waitTransactionConfirmations = async (
                     address
                 });
 
-                if (tx) {
-                    txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
+                txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
 
-                    if (tx.status === TransactionStatus.SUCCESS) {
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(
-                                txIndex,
-                                TransactionStatus.SUCCESS
-                            )
-                        );
-                        return resolve(true);
-                    }
+                if (tx.status === TransactionStatus.SUCCESS) {
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SUCCESS)
+                    );
+                    return resolve(true);
+                }
 
-                    if (tx.status === TransactionStatus.FAILED) {
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(
-                                txIndex,
-                                TransactionStatus.FAILED
-                            )
-                        );
-                        return reject();
-                    }
+                if (tx.status === TransactionStatus.FAILED) {
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED)
+                    );
+                    return reject();
                 }
             }
         }, 1000);

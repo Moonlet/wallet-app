@@ -30,8 +30,6 @@ export class ClientUtils implements IClientUtils {
         let fromAddress = '';
         let amount = '';
 
-        if (!txData?.transaction) return null;
-
         // for transfer - TBD for the rest
         const accountKeys = txData.transaction.message.accountKeys;
         if (accountKeys[0].toLowerCase() === address.toLowerCase()) {

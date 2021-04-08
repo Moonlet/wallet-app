@@ -35,6 +35,7 @@ import { HeaderLeft } from '../../../components/header-left/header-left';
 import { Dialog } from '../../../components/dialog/dialog';
 import { availableAmount } from '../../../core/utils/available-funds';
 import { signAndSendTransactions } from '../../../redux/wallets/actions/util-actions';
+import { PercentageCircle } from '../../../components/widgets/components/progress-circle/progress-circle';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -444,6 +445,19 @@ export class ProcessTransactionsComponent extends React.Component<
             outputRange: ['360deg', '0deg']
         });
 
+        let confirmationsPercent = 0;
+        if (tx?.confirmations) {
+            const { numConfirmations, numConfirmationsNeeded } = tx.confirmations;
+            if (numConfirmations > 0 && numConfirmationsNeeded > 0) {
+                confirmationsPercent = Number(
+                    new BigNumber(numConfirmations)
+                        .multipliedBy(100)
+                        .dividedBy(new BigNumber(numConfirmationsNeeded))
+                        .toFixed(0)
+                );
+            }
+        }
+
         return (
             <View
                 key={index + '-view-key'}
@@ -480,8 +494,11 @@ export class ProcessTransactionsComponent extends React.Component<
                     </View>
 
                     {isPublished ? (
-                        status === TransactionStatus.PENDING ||
-                        status === TransactionStatus.SUCCESS ? (
+                        status === TransactionStatus.PENDING ? (
+                            <View>
+                                <LoadingIndicator />
+                            </View>
+                        ) : status === TransactionStatus.SUCCESS ? (
                             <Icon
                                 name={IconValues.CHECK}
                                 size={normalize(16)}
@@ -502,10 +519,13 @@ export class ProcessTransactionsComponent extends React.Component<
                 {tx?.confirmations && (
                     <View style={styles.confirmationsContainer}>
                         <View style={styles.confirmationsTextContainer}>
-                            <Text style={styles.confirmationsText}>
-                                {`${tx.confirmations.numConfirmations}/${tx.confirmations.numConfirmationsNeeded}`}
-                            </Text>
+                            <PercentageCircle radius={normalize(30)} percent={confirmationsPercent}>
+                                <Text style={styles.confirmationsText}>
+                                    {`${tx.confirmations.numConfirmations}/${tx.confirmations.numConfirmationsNeeded}`}
+                                </Text>
+                            </PercentageCircle>
                         </View>
+
                         <Text style={styles.confirmationsDetails}>
                             {translate('App.labels.txWaitConfirmations', {
                                 blocks: tx.confirmations.numConfirmationsNeeded

@@ -4,8 +4,7 @@ import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
     BORDER_RADIUS,
-    LETTER_SPACING,
-    normalize
+    LETTER_SPACING
 } from '../../../styles/dimensions';
 import { CONTAINER_TOP_PADDING } from '../../transaction-request/styles';
 
@@ -128,13 +127,7 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 2
         },
         confirmationsTextContainer: {
-            width: normalize(50),
-            height: normalize(50),
-            borderRadius: normalize(50),
-            borderWidth: 2,
-            borderColor: theme.colors.accent,
-            marginRight: BASE_DIMENSION,
-            justifyContent: 'center'
+            marginRight: BASE_DIMENSION
         },
         confirmationsText: {
             fontSize: normalizeFontAndLineHeight(13),

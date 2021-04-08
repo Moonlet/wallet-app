@@ -455,44 +455,62 @@ export class ProcessTransactionsComponent extends React.Component<
                     })
                 }
             >
-                <Animated.View
-                    style={[
-                        styles.transactionIconContainer,
-                        enableAnimation && { transform: [{ rotate: iconSpin }] }
-                    ]}
-                >
-                    <Icon
-                        name={leftIcon}
-                        size={normalize(30)}
-                        style={[styles.cardLeftIcon, { color: iconColor }]}
-                    />
-                </Animated.View>
+                <View style={{ flexDirection: 'row' }}>
+                    <Animated.View
+                        style={[
+                            styles.transactionIconContainer,
+                            enableAnimation && { transform: [{ rotate: iconSpin }] }
+                        ]}
+                    >
+                        <Icon
+                            name={leftIcon}
+                            size={normalize(30)}
+                            style={[styles.cardLeftIcon, { color: iconColor }]}
+                        />
+                    </Animated.View>
 
-                <View style={styles.cardTextContainer}>
-                    <Text style={styles.topText}>{topText}</Text>
-                    {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
-                    {bottomText !== '' && (
-                        <Text style={styles.bottomText}>
-                            {translate('App.labels.maxFees') + ': ' + bottomText}
-                        </Text>
+                    <View style={styles.cardTextContainer}>
+                        <Text style={styles.topText}>{topText}</Text>
+                        {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
+                        {bottomText !== '' && (
+                            <Text style={styles.bottomText}>
+                                {translate('App.labels.maxFees') + ': ' + bottomText}
+                            </Text>
+                        )}
+                    </View>
+
+                    {isPublished ? (
+                        status === TransactionStatus.PENDING ||
+                        status === TransactionStatus.SUCCESS ? (
+                            <Icon
+                                name={IconValues.CHECK}
+                                size={normalize(16)}
+                                style={styles.successIcon}
+                            />
+                        ) : (
+                            <Text style={styles.failedText}>{rightText}</Text>
+                        )
+                    ) : !displayActivityIndicator ? (
+                        <View />
+                    ) : (
+                        <View>
+                            <LoadingIndicator />
+                        </View>
                     )}
                 </View>
 
-                {isPublished ? (
-                    status === TransactionStatus.PENDING || status === TransactionStatus.SUCCESS ? (
-                        <Icon
-                            name={IconValues.CHECK}
-                            size={normalize(16)}
-                            style={styles.successIcon}
-                        />
-                    ) : (
-                        <Text style={styles.failedText}>{rightText}</Text>
-                    )
-                ) : !displayActivityIndicator ? (
-                    <View />
-                ) : (
-                    <View>
-                        <LoadingIndicator />
+                {tx?.confirmations && (
+                    <View style={styles.confirmationsContainer}>
+                        <View style={styles.confirmationsTextContainer}>
+                            <Text style={styles.confirmationsText}>
+                                {`${tx.confirmations.numConfirmations}/${tx.confirmations.numConfirmationsNeeded}`}
+                            </Text>
+                        </View>
+                        <Text style={styles.confirmationsDetails}>
+                            {translate('App.labels.txWaitConfirmations', {
+                                blocks: tx.confirmations.numConfirmationsNeeded
+                            })}
+                        </Text>
                     </View>
                 )}
             </View>

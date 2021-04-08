@@ -35,6 +35,11 @@ export class Staking {
             posAction: PosBasicActionType.CREATE_STAKE_ACCOUNT
         };
 
+        transaction.confirmations = {
+            numConfirmations: 0,
+            numConfirmationsNeeded: 32
+        };
+
         return transaction;
     }
 
@@ -97,6 +102,11 @@ export class Staking {
             type: SolanaTransactionInstructionType.SPLIT_STAKE,
             splitTransaction: solanaTransaction,
             currentBlockHash: blockHash
+        };
+
+        transaction.confirmations = {
+            numConfirmations: 0,
+            numConfirmationsNeeded: 32
         };
 
         return transaction;

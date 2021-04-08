@@ -26,7 +26,8 @@ import {
     updateProcessTransactionStatusForIndex,
     updateProcessTransactionIdForIndex,
     setProcessTxCompleted,
-    closeProcessTransactions
+    closeProcessTransactions,
+    updateProcessTransactionConfirmationsForIndex
 } from '../../ui/process-transactions/actions';
 import {
     getSelectedWallet,
@@ -186,6 +187,18 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     dispatch(
                         updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.PENDING)
                     );
+
+                    if (transaction?.confirmations) {
+                        await waitTransactionConfirmations(
+                            txHash,
+                            txIndex,
+                            transaction,
+                            account.address,
+                            client,
+                            dispatch,
+                            getState
+                        );
+                    }
                 } else {
                     SentryAddBreadcrumb({
                         message: JSON.stringify({ transactions: transaction })
@@ -272,6 +285,54 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             }
         }
     }
+};
+
+const waitTransactionConfirmations = async (
+    txHash: string,
+    txIndex: number,
+    transaction: IBlockchainTransaction,
+    address: string,
+    client: any,
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    return new Promise((resolve, reject) => {
+        const txWaitConfirmationsInterval = setInterval(async () => {
+            const resConfirmations = await client.getTransactionConfirmations(txHash);
+
+            dispatch(
+                updateProcessTransactionConfirmationsForIndex(
+                    txIndex,
+                    resConfirmations.confirmations
+                )
+            );
+
+            if (
+                transaction.confirmations.numConfirmations ===
+                transaction.confirmations.numConfirmationsNeeded
+            ) {
+                const tx = await client.utils.getTransaction(txHash, {
+                    address
+                });
+
+                txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
+
+                if (tx.status === TransactionStatus.SUCCESS) {
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SUCCESS)
+                    );
+                    return resolve(true);
+                }
+
+                if (tx.status === TransactionStatus.FAILED) {
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED)
+                    );
+                    return reject();
+                }
+            }
+        }, 1000);
+    });
 };
 
 const transactionsBroadcasted = (txs: IBlockchainTransaction[]): boolean => {

@@ -64,6 +64,10 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     nonce: number;
     status: TransactionStatus;
     additionalInfo?: IAdditionalInfoType;
+    confirmations?: {
+        numConfirmations: number; // current
+        numConfirmationsNeeded: number; // target
+    };
 }
 
 export enum TransactionType {

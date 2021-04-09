@@ -23,22 +23,41 @@ export class ClientUtils implements IClientUtils {
         context: {
             address?: string;
             txData?: any;
+            broadcastedOnBlock?: number;
             currentBlockNumber?: number;
             token?: ITokenConfigState;
         }
     ): Promise<TransactionStatus> {
+        let status = TransactionStatus.PENDING;
+
         try {
             if (context?.txData?.status) {
-                return Near.transaction.getTransactionStatusByCode(context.txData.status);
+                status = Near.transaction.getTransactionStatusByCode(context.txData.status);
             }
 
             if (context?.address) {
                 const tx = await this.getTransaction(hash, { address: context.address });
-                return tx.status;
+                status = tx.status;
             }
         } catch (error) {
-            //
+            // tx is not present on the blockchain
         }
+
+        // tx not present
+        let currentBlockNumber = context?.currentBlockNumber;
+        if (!currentBlockNumber) {
+            currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
+        }
+
+        if (
+            currentBlockNumber &&
+            context?.broadcastedOnBlock &&
+            currentBlockNumber - context?.broadcastedOnBlock > 2
+        ) {
+            status = TransactionStatus.DROPPED;
+        }
+
+        return status;
     }
 
     async buildTransactionFromBlockchain(txData: any): Promise<IBlockchainTransaction> {

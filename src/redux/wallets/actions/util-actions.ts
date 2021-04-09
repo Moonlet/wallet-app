@@ -122,11 +122,12 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         // found a tx with the same nonce
                         const txStatus = await client.utils.getTransactionStatus(outTx.id, {
                             broadcastedOnBlock: outTx.broadcastedOnBlock,
-                            currentBlockNumber
+                            currentBlockNumber,
+                            address: account.address
                         });
 
                         // if the status oif the tx is DROPPED we can reuse the nonce
-                        if (txStatus === TransactionStatus.DROPPED) {
+                        if (txStatus === TransactionStatus.DROPPED || !txStatus) {
                             break;
                         } else {
                             // the transactions is not dropped, so it's on the chain, we need to increase the nonce and check again

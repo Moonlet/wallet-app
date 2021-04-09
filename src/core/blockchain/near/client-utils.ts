@@ -20,9 +20,25 @@ export class ClientUtils implements IClientUtils {
 
     async getTransactionStatus(
         hash: string,
-        context: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
+        context: {
+            address?: string;
+            txData?: any;
+            currentBlockNumber?: number;
+            token?: ITokenConfigState;
+        }
     ): Promise<TransactionStatus> {
-        return Promise.reject('Near ClientUtils.getTransactionStatus() not impelmented');
+        try {
+            if (context?.txData?.status) {
+                return Near.transaction.getTransactionStatusByCode(context.txData.status);
+            }
+
+            if (context?.address) {
+                const tx = await this.getTransaction(hash, { address: context.address });
+                return tx.status;
+            }
+        } catch (error) {
+            //
+        }
     }
 
     async buildTransactionFromBlockchain(txData: any): Promise<IBlockchainTransaction> {

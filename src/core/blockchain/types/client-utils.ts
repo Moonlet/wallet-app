@@ -7,6 +7,7 @@ export interface IClientUtils {
     getTransactionStatus(
         hash: string,
         context?: {
+            address?: string;
             txData?: any;
             broadcastedOnBlock: number;
             currentBlockNumber?: number;

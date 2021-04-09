@@ -60,8 +60,6 @@ export class RecoverWalletScreenComponent extends React.Component<
         super(props);
         this.state = {
             mnemonic: new Array(MNEMONIC_LENGTH).fill(''),
-            // mnemonic24: 'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon'.split(' '),
-            // mnemonic12: 'author tumble model pretty exile little shoulder frost bridge mistake devote mixed'.split(' '),
             suggestions: [],
             errors: [],
             indexForSuggestions: -1,

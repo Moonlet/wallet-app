@@ -8,10 +8,10 @@ export enum WalletType {
 
 export enum TransactionStatus {
     CREATED = 'CREATED',
-    SIGNED = 'SIGNED',
-    PENDING = 'PENDING',
-    FAILED = 'FAILED',
     DROPPED = 'DROPPED',
+    FAILED = 'FAILED',
+    PENDING = 'PENDING',
+    SIGNED = 'SIGNED',
     SUCCESS = 'SUCCESS'
 }
 

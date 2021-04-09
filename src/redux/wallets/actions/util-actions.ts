@@ -127,7 +127,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         });
 
                         // if the status oif the tx is DROPPED we can reuse the nonce
-                        if (txStatus === TransactionStatus.DROPPED || !txStatus) {
+                        if (txStatus === TransactionStatus.DROPPED) {
                             break;
                         } else {
                             // the transactions is not dropped, so it's on the chain, we need to increase the nonce and check again
@@ -135,7 +135,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                             outTx = outboundTransactions.find(tx => tx.nonce === nonce);
                         }
                     }
-                    // updateing the nonce
+                    // updating the nonce
                     transaction.nonce = nonce;
                 }
 

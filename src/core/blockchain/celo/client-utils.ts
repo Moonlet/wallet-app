@@ -28,11 +28,12 @@ export class ClientUtils implements IClientUtils {
         return this.buildTransactionFromBlockchain(res[0].result, res[1].result);
     }
 
+    // TODO: fix this in order to use Sign Transaction(s) Screen
     async getTransactionStatus(
         hash: string,
         context: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
     ): Promise<TransactionStatus> {
-        return Promise.reject('Near ClientUtils.getTransactionStatus() not impelmented');
+        return Promise.reject('CELO ClientUtils.getTransactionStatus() not impelmented');
     }
 
     async buildTransactionFromBlockchain(txInfo, txReceipt) {

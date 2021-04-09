@@ -7,6 +7,7 @@ export class ClientUtils implements IClientUtils {
         throw new Error('Method not implemented.');
     }
 
+    // TODO: fix this in order to use Sign Transaction(s) Screen
     async getTransactionStatus(
         hash: string,
         context: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }

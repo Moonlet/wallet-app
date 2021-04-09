@@ -8,7 +8,8 @@ import {
     UPDATE_PROCESS_TX_STATUS,
     SET_CREATE_ACCOUNT,
     SET_PROCESS_TX_INDEX,
-    SET_PROCESS_TX_SIGNING_COMPLETED
+    SET_PROCESS_TX_SIGNING_COMPLETED,
+    UPDATE_PROCESS_TX_CONFIRMATIONS
 } from './actions';
 
 const intialState: IProcessTransactionsState = {
@@ -94,6 +95,7 @@ export default (
                     createAccount: action.data.account
                 }
             };
+
         case SET_PROCESS_TX_SIGNING_COMPLETED:
             return {
                 ...state,
@@ -102,6 +104,32 @@ export default (
                     ...action.data
                 }
             };
+
+        case UPDATE_PROCESS_TX_CONFIRMATIONS: {
+            const txs = [...state.data.txs];
+            const tx = txs[action.data.index];
+
+            if (tx?.confirmations) {
+                if (action.data.confirmations > tx.confirmations.numConfirmations) {
+                    tx.confirmations.numConfirmations = action.data.confirmations;
+                }
+
+                // has reached max confirmations
+                if (action.data.confirmations === null) {
+                    tx.confirmations.numConfirmations = tx.confirmations.numConfirmationsNeeded;
+                }
+
+                txs[action.data.index] = tx;
+            }
+
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    txs
+                }
+            };
+        }
 
         default:
             break;

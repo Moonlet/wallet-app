@@ -150,6 +150,8 @@ export const translation: ITranslations = {
                 tryAgain: 'Try again',
                 totalBalance: 'Total balance',
                 typeHere: 'Type here',
+                txWaitConfirmations:
+                    'Please wait {{blocks}} blocks to have this transaction confirmed. Do not close the app.',
                 understand: 'I understand',
                 undelegate: 'Undelegate',
                 unknownOp: 'Unknown operation',

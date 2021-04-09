@@ -124,6 +124,7 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
                     tx2.date?.created - tx1.date?.created
             );
     }
+
     return [];
 };
 

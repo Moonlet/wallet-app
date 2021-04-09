@@ -51,7 +51,7 @@ export default (theme: ITheme) =>
             flexGrow: 1
         },
         cardContainer: {
-            flexDirection: 'row',
+            flexDirection: 'column',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION * 2,
@@ -121,5 +121,25 @@ export default (theme: ITheme) =>
             letterSpacing: LETTER_SPACING,
             textAlign: 'center',
             fontWeight: 'bold'
+        },
+        confirmationsContainer: {
+            flexDirection: 'row',
+            marginTop: BASE_DIMENSION * 2
+        },
+        confirmationsTextContainer: {
+            marginRight: BASE_DIMENSION
+        },
+        confirmationsText: {
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(17),
+            fontWeight: 'bold',
+            color: theme.colors.white,
+            textAlign: 'center'
+        },
+        confirmationsDetails: {
+            fontSize: normalizeFontAndLineHeight(14),
+            lineHeight: normalizeFontAndLineHeight(19),
+            color: theme.colors.textTertiary,
+            alignSelf: 'center'
         }
     });

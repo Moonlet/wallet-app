@@ -10,6 +10,7 @@ export const UPDATE_PROCESS_TX_STATUS = 'UPDATE_PROCESS_TX_STATUS';
 export const UPDATE_PROCESS_TX_ID = 'UPDATE_PROCESS_TX_ID';
 export const SET_CREATE_ACCOUNT = 'SET_CREATE_ACCOUNT';
 export const SET_PROCESS_TX_SIGNING_COMPLETED = 'SET_PROCESS_TX_SIGNING_COMPLETED';
+export const UPDATE_PROCESS_TX_CONFIRMATIONS = 'UPDATE_PROCESS_TX_CONFIRMATIONS';
 
 export const openProcessTransactions = () => {
     return {
@@ -46,6 +47,19 @@ export const updateProcessTransactionIdForIndex = (index: number, id: string) =>
         data: {
             index,
             id
+        }
+    };
+};
+
+export const updateProcessTransactionConfirmationsForIndex = (
+    index: number,
+    confirmations: number
+) => {
+    return {
+        type: UPDATE_PROCESS_TX_CONFIRMATIONS,
+        data: {
+            index,
+            confirmations
         }
     };
 };

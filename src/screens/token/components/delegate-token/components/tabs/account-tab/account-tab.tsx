@@ -23,7 +23,8 @@ import { SmartScreenComponent } from '../../../../../../../components/smart-scre
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 import {
     isFeatureActive,
-    RemoteFeature
+    RemoteFeature,
+    remoteFeatureContainsToken
 } from '../../../../../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
@@ -138,7 +139,7 @@ export class AccountTabComponent extends React.Component<
                             </Button>
 
                             {/* TODO: maybe find a better way to handle this */}
-                            {this.props.account.blockchain === Blockchain.ZILLIQA && (
+                            {remoteFeatureContainsToken(this.props.token.symbol) && (
                                 <Button
                                     style={styles.button}
                                     wrapperStyle={{ flex: 1 }}

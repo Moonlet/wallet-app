@@ -64,7 +64,6 @@ export class Zrc2Client {
             name = name || this.findSmartContractSubField(contractInit, 'name');
             decimals = decimals || this.findSmartContractSubField(contractInit, 'decimals');
         }
-        // console.log({contractAddress, smartContractSubState, smartContractInit})
 
         return {
             symbol,

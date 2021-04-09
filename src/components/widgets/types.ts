@@ -107,7 +107,7 @@ export interface IScreenValidation {
 }
 
 export interface ICtaAction<P = any> {
-    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
+    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack' | 'on2Back'; // TODO  - fix navigation
     params: {
         action?: string;
         url?: string;
@@ -432,6 +432,7 @@ export interface ITimerUpdateData {
         method: 'POST' | 'GET';
         data: any;
     };
+    cta: ICta;
 }
 
 export interface IThreeLinesIconData {

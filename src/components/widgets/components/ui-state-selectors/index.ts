@@ -28,11 +28,12 @@ import {
     getToAmount,
     getFromTokenSymbol,
     getToTokenSymbol,
-    getSwipePrice,
+    getSwapPrice,
     getSwapFromToken,
     getSwapFromTokenAmount,
     getSwapToToken,
-    getSwapToTokenAmount
+    getSwapToTokenAmount,
+    getPriceUpdateTimer
 } from './swap';
 
 const uiStateSelectors = {
@@ -62,11 +63,12 @@ const uiStateSelectors = {
     getFromAmount,
     getToAmount,
 
-    getSwipePrice,
+    getSwapPrice,
     getSwapFromToken,
     getSwapFromTokenAmount,
     getSwapToToken,
-    getSwapToTokenAmount
+    getSwapToTokenAmount,
+    getPriceUpdateTimer
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

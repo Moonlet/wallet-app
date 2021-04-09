@@ -25,6 +25,7 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TransactionStatus } from '../../../../core/wallet/types';
 import { NavigationService } from '../../../../navigation/navigation-service';
+import { remoteFeatureContainsToken } from '../../../../core/utils/remote-feature-config';
 
 export interface IProps {
     accountIndex: number;
@@ -119,29 +120,27 @@ export class DefaultTokenScreenComponent extends React.Component<
                         >
                             {translate('App.labels.receive')}
                         </Button>
-                        {/* TODO: maybe find a better way to handle this */}
-                        {this.props.account.blockchain === Blockchain.ZILLIQA &&
-                            token.symbol.toLowerCase() === 'gzil' && (
-                                <Button
-                                    style={styles.button}
-                                    wrapperStyle={{ flex: 1 }}
-                                    onPress={() =>
-                                        NavigationService.navigate('SmartScreen', {
-                                            context: {
-                                                screen: 'Swap',
-                                                step: 'SwapEnterAmount',
-                                                key: 'swap-enter-amount'
-                                            },
-                                            navigationOptions: {
-                                                title: translate('App.labels.swap')
-                                            },
-                                            newFlow: true
-                                        })
-                                    }
-                                >
-                                    {translate('App.labels.swap')}
-                                </Button>
-                            )}
+                        {remoteFeatureContainsToken(this.props.token.symbol) && (
+                            <Button
+                                style={styles.button}
+                                wrapperStyle={{ flex: 1 }}
+                                onPress={() =>
+                                    NavigationService.navigate('SmartScreen', {
+                                        context: {
+                                            screen: 'Swap',
+                                            step: 'SwapEnterAmount',
+                                            key: 'swap-enter-amount'
+                                        },
+                                        navigationOptions: {
+                                            title: translate('App.labels.swap')
+                                        },
+                                        newFlow: true
+                                    })
+                                }
+                            >
+                                {translate('App.labels.swap')}
+                            </Button>
+                        )}
                     </View>
 
                     <View>

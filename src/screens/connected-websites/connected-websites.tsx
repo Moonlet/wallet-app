@@ -79,7 +79,6 @@ export class ConnectedWebsitesScreenComponent extends React.Component<
     }
 
     private async removeConnection(connection: any) {
-        // console.log(connection);
         // if (
         //     await Dialog.confirm(
         //         translate('ConnectedWebsites.disconnectTitle'),

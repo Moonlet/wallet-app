@@ -238,7 +238,36 @@ export const getSwapToTokenAmount = (
     return blockchainInstance.account.amountToStd(amount, decimals).toFixed();
 };
 
-export const getSwipePrice = (
+export const getSwapPrice = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: {
+        screenKey: string;
+    },
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step: module?.details?.step,
+        tab: undefined
+    });
+
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
+
+    const rate = screenData?.swapPrice?.rate;
+
+    if (!rate) return '...';
+
+    return formatNumber(rate, { maximumFractionDigits: 6 });
+};
+
+export const getPriceUpdateTimer = (
     state: IReduxState,
     module: IScreenModule,
     options: {
@@ -250,9 +279,9 @@ export const getSwipePrice = (
 
     const screenData = state.ui.screens.inputData[screenKey]?.data;
 
-    const rate = screenData?.swapPrice?.rate;
+    if (screenData?.priceUpdateTimer === undefined) return '';
 
-    if (!rate) return '...';
+    const timeLeft: number = Number(screenData?.priceUpdateTimer);
 
-    return formatNumber(rate, { maximumFractionDigits: 6 });
+    return `${Math.floor(timeLeft / 60)}:${timeLeft % 60}`;
 };

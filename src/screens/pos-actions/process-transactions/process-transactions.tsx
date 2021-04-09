@@ -35,6 +35,7 @@ import { HeaderLeft } from '../../../components/header-left/header-left';
 import { Dialog } from '../../../components/dialog/dialog';
 import { availableAmount } from '../../../core/utils/available-funds';
 import { signAndSendTransactions } from '../../../redux/wallets/actions/util-actions';
+import { PercentageCircle } from '../../../components/widgets/components/progress-circle/progress-circle';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -444,6 +445,19 @@ export class ProcessTransactionsComponent extends React.Component<
             outputRange: ['360deg', '0deg']
         });
 
+        let confirmationsPercent = 0;
+        if (tx?.confirmations) {
+            const { numConfirmations, numConfirmationsNeeded } = tx.confirmations;
+            if (numConfirmations > 0 && numConfirmationsNeeded > 0) {
+                confirmationsPercent = Number(
+                    new BigNumber(numConfirmations)
+                        .multipliedBy(100)
+                        .dividedBy(new BigNumber(numConfirmationsNeeded))
+                        .toFixed(0)
+                );
+            }
+        }
+
         return (
             <View
                 key={index + '-view-key'}
@@ -455,44 +469,68 @@ export class ProcessTransactionsComponent extends React.Component<
                     })
                 }
             >
-                <Animated.View
-                    style={[
-                        styles.transactionIconContainer,
-                        enableAnimation && { transform: [{ rotate: iconSpin }] }
-                    ]}
-                >
-                    <Icon
-                        name={leftIcon}
-                        size={normalize(30)}
-                        style={[styles.cardLeftIcon, { color: iconColor }]}
-                    />
-                </Animated.View>
+                <View style={{ flexDirection: 'row' }}>
+                    <Animated.View
+                        style={[
+                            styles.transactionIconContainer,
+                            enableAnimation && { transform: [{ rotate: iconSpin }] }
+                        ]}
+                    >
+                        <Icon
+                            name={leftIcon}
+                            size={normalize(30)}
+                            style={[styles.cardLeftIcon, { color: iconColor }]}
+                        />
+                    </Animated.View>
 
-                <View style={styles.cardTextContainer}>
-                    <Text style={styles.topText}>{topText}</Text>
-                    {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
-                    {bottomText !== '' && (
-                        <Text style={styles.bottomText}>
-                            {translate('App.labels.maxFees') + ': ' + bottomText}
-                        </Text>
+                    <View style={styles.cardTextContainer}>
+                        <Text style={styles.topText}>{topText}</Text>
+                        {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
+                        {bottomText !== '' && (
+                            <Text style={styles.bottomText}>
+                                {translate('App.labels.maxFees') + ': ' + bottomText}
+                            </Text>
+                        )}
+                    </View>
+
+                    {isPublished ? (
+                        status === TransactionStatus.PENDING ? (
+                            <View>
+                                <LoadingIndicator />
+                            </View>
+                        ) : status === TransactionStatus.SUCCESS ? (
+                            <Icon
+                                name={IconValues.CHECK}
+                                size={normalize(16)}
+                                style={styles.successIcon}
+                            />
+                        ) : (
+                            <Text style={styles.failedText}>{rightText}</Text>
+                        )
+                    ) : !displayActivityIndicator ? (
+                        <View />
+                    ) : (
+                        <View>
+                            <LoadingIndicator />
+                        </View>
                     )}
                 </View>
 
-                {isPublished ? (
-                    status === TransactionStatus.PENDING || status === TransactionStatus.SUCCESS ? (
-                        <Icon
-                            name={IconValues.CHECK}
-                            size={normalize(16)}
-                            style={styles.successIcon}
-                        />
-                    ) : (
-                        <Text style={styles.failedText}>{rightText}</Text>
-                    )
-                ) : !displayActivityIndicator ? (
-                    <View />
-                ) : (
-                    <View>
-                        <LoadingIndicator />
+                {tx?.confirmations && (
+                    <View style={styles.confirmationsContainer}>
+                        <View style={styles.confirmationsTextContainer}>
+                            <PercentageCircle radius={normalize(30)} percent={confirmationsPercent}>
+                                <Text style={styles.confirmationsText}>
+                                    {`${tx.confirmations.numConfirmations}/${tx.confirmations.numConfirmationsNeeded}`}
+                                </Text>
+                            </PercentageCircle>
+                        </View>
+
+                        <Text style={styles.confirmationsDetails}>
+                            {translate('App.labels.txWaitConfirmations', {
+                                blocks: tx.confirmations.numConfirmationsNeeded
+                            })}
+                        </Text>
                     </View>
                 )}
             </View>

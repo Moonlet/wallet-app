@@ -83,4 +83,10 @@ export abstract class BlockchainGenericClient {
         },
         tokenType?: TokenType
     ): Promise<IFeeOptions>;
+
+    public async getTransactionConfirmations(txsHash: string): Promise<{ confirmations: number }> {
+        return {
+            confirmations: 0
+        };
+    }
 }

@@ -67,7 +67,7 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
+    public async sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         return this.connection.sendRawTransaction(transaction).then(res => {
             if (res) {
                 return {
@@ -76,6 +76,30 @@ export class Client extends BlockchainGenericClient {
                 };
             }
         });
+    }
+
+    public async getTransactionConfirmations(
+        txsHash: string
+    ): Promise<{
+        confirmations: number;
+    }> {
+        const response = await this.http.jsonRpc('getSignatureStatuses', [
+            [txsHash],
+            { searchTransactionHistory: true }
+        ]);
+
+        let confirmations = 0;
+
+        if (response?.result?.value[0]?.confirmations) {
+            confirmations = response.result.value[0].confirmations;
+        }
+
+        // this means confirmations has reached max
+        if (response?.result?.value && response?.result?.value[0]?.confirmations === null) {
+            confirmations = null;
+        }
+
+        return { confirmations };
     }
 
     public async calculateFees(

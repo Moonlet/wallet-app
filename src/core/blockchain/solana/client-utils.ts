@@ -111,7 +111,7 @@ export class ClientUtils implements IClientUtils {
         hash: string,
         context?: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
     ): Promise<TransactionStatus> {
-        return context.txData.meta.err === null
+        return context?.txData?.meta?.err === null
             ? TransactionStatus.SUCCESS
             : TransactionStatus.FAILED;
     }

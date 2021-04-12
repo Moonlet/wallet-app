@@ -27,14 +27,14 @@ import { TransactionStatus } from '../../../../core/wallet/types';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { remoteFeatureContainsToken } from '../../../../core/utils/remote-feature-config';
 
-export interface IProps {
+interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
@@ -44,7 +44,7 @@ export interface IReduxProps {
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountFilteredTransactions(
@@ -64,7 +64,7 @@ const mapDispatchToProps = {
     updateTransactionFromBlockchain
 };
 
-export class DefaultTokenScreenComponent extends React.Component<
+class DefaultTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     private updateTransactionFromBlockchain() {
@@ -106,6 +106,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                         >
                             {translate('App.labels.send')}
                         </Button>
+
                         <Button
                             testID="receive-button"
                             style={styles.button}
@@ -120,7 +121,8 @@ export class DefaultTokenScreenComponent extends React.Component<
                         >
                             {translate('App.labels.receive')}
                         </Button>
-                        {remoteFeatureContainsToken(this.props.token.symbol) && (
+
+                        {token?.symbol && remoteFeatureContainsToken(token.symbol) && (
                             <Button
                                 style={styles.button}
                                 wrapperStyle={{ flex: 1 }}

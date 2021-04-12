@@ -76,11 +76,15 @@ export const getRemoteConfigFeatures = async () => {
 };
 
 export const remoteFeatureContainsToken = (symbol: string): boolean => {
+    if (!symbol) return false;
+
     const feature = RemoteFeature.LIST_SWAP_TOKENS;
 
     return (
+        featuresConfig &&
+        featuresConfig[feature] &&
         featuresConfig[feature]?.length > 0 &&
-        !!featuresConfig[feature].find(element => element.toLowerCase() === symbol.toLowerCase())
+        !!featuresConfig[feature].find((el: any) => el.toLowerCase() === symbol.toLowerCase())
     );
 };
 

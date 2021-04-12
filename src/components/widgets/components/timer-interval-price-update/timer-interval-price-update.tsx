@@ -71,16 +71,6 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
         this.startTimer();
     }
 
-    // public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
-    //     const data = this.props.module?.data as ITimerUpdateData;
-
-    //     const screenKey = this.props.options.screenKey;
-
-    //     this.props.setScreenInputData(screenKey, {
-    //         [data.reduxKey]: 1
-    //     });
-    // }
-
     public componentWillUnmount() {
         this.clearData();
     }
@@ -110,9 +100,9 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
 
         this.httpClient = new HttpClient(data.endpoint.url);
 
-        if (data.numberOfSeconds) {
+        if (data.numSeconds) {
             this.interval && clearInterval(this.interval);
-            this.remainingTime = data.numberOfSeconds;
+            this.remainingTime = data.numSeconds;
             this.interval = setInterval(async () => {
                 if (this.remainingTime !== 0) {
                     this.remainingTime--;
@@ -120,7 +110,7 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
                         [data.reduxKey]: this.remainingTime
                     });
                 } else {
-                    // fetch price;
+                    // fetch price
 
                     this.interval && clearInterval(this.interval);
 

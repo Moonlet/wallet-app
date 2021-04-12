@@ -426,7 +426,7 @@ export interface IPriceUpdateData {
 }
 
 export interface ITimerUpdateData {
-    numberOfSeconds: number;
+    numSeconds: number;
     reduxKey: string;
     endpoint: {
         url: string;

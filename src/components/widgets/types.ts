@@ -107,10 +107,11 @@ export interface IScreenValidation {
 }
 
 export interface ICtaAction<P = any> {
-    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
+    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack' | 'navigationOnPop';
     params: {
         action?: string;
         url?: string;
+        count?: string;
         screen?: string;
         params?: P;
     };

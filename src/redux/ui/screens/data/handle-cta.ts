@@ -1409,6 +1409,11 @@ const handleCtaAction = async (
             NavigationService.goBack();
             break;
 
+        case 'navigationOnPop':
+            const count = Number(action?.params?.count);
+            NavigationService.pop(count);
+            break;
+
         default:
             break;
     }

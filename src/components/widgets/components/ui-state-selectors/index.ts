@@ -33,6 +33,9 @@ import {
     getSwapFromTokenAmount,
     getSwapToToken,
     getSwapToTokenAmount,
+    getSwapCustomSlippage,
+    getSwapAmountTo,
+    getSwapToDecimals,
     getPriceUpdateTimer
 } from './swap';
 
@@ -68,6 +71,10 @@ const uiStateSelectors = {
     getSwapFromTokenAmount,
     getSwapToToken,
     getSwapToTokenAmount,
+    getSwapCustomSlippage,
+    getSwapAmountTo,
+    getSwapToDecimals,
+
     getPriceUpdateTimer
 };
 

@@ -12,7 +12,9 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { getScreenDataKey } from '../../../../redux/ui/screens/data/reducer';
 import { getSelectedAccount, getSelectedWallet } from '../../../../redux/wallets/selectors';
 import BigNumber from 'bignumber.js';
-import { getSwapPrice } from '../ui-state-selectors/swap';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../../../core/blockchain/types';
+
 interface IExternalProps {
     module: IScreenModule;
     context: IScreenContext;
@@ -25,8 +27,10 @@ interface IExternalProps {
 
 interface IReduxProps {
     setScreenInputData: typeof setScreenInputData;
-    swapPrice: string;
-    customSlippage: number;
+    blockchain: Blockchain;
+    swapAmountTo: string;
+    customSlippage: string;
+    toTokenDecimals: number;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -38,21 +42,24 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
         blockchain: account?.blockchain,
         chainId: String(chainId),
         address: account?.address,
-        step: ownProps.module?.details.step,
+        step: ownProps.module?.details?.step,
         tab: undefined
     });
 
     return {
+        blockchain: account.blockchain,
+
+        // Data from Current Screen Key
         ...getStateSelectors(state, ownProps.module, {
             flowId: ownProps?.options?.flowId,
             screenKey: ownProps?.options?.screenKey
         }),
+
+        // Data from Custom Screen Key
         ...getStateSelectors(state, ownProps.module, {
             flowId: ownProps?.options?.flowId,
             screenKey: endpointDataScreenKey
-        }),
-        swapPrice: getSwapPrice(state, ownProps.module, { screenKey: endpointDataScreenKey }, null),
-        customSlippage: state.ui.screens.inputData[endpointDataScreenKey].data.customSlippage
+        })
     };
 };
 
@@ -115,9 +122,24 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
             try {
                 const response = await this.httpClient.post('', endpointData);
                 if (response?.result?.data) {
-                    // TODO: Check this
+                    const newAmountTo = new BigNumber(response.result.data.toTokenAmount);
+                    const oldAmountTo = new BigNumber(this.props.swapAmountTo);
+
+                    const newAmount = getBlockchain(this.props.blockchain).account.amountFromStd(
+                        newAmountTo,
+                        this.props.toTokenDecimals
+                    );
+                    const oldAmount = getBlockchain(this.props.blockchain).account.amountFromStd(
+                        oldAmountTo,
+                        this.props.toTokenDecimals
+                    );
+
+                    const pricesDiff = new BigNumber(newAmount)
+                        .multipliedBy(100)
+                        .dividedBy(oldAmount);
+
                     if (
-                        new BigNumber(response.result.data.rate).isGreaterThan(this.props.swapPrice)
+                        pricesDiff.isLessThan(new BigNumber(100).minus(this.props.customSlippage))
                     ) {
                         this.props.actions.handleCta(data.cta, {
                             screenKey

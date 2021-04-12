@@ -765,7 +765,6 @@ export const sendTransaction = (
             // checking if there are transactions with same nonce
             let outTx: IBlockchainTransaction = outboundTransactions.find(t => t.nonce === nonce);
             while (outTx) {
-                // console.log('check tx', outTx.nonce);
                 // found a tx with the same nonce
                 const txStatus = await client.utils.getTransactionStatus(outTx.id, {
                     broadcastedOnBlock: outTx.broadcastedOnBlock,

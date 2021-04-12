@@ -38,9 +38,7 @@ export class ZilliqaProvider extends BaseProvider {
 
             // handle window close
             const onWindowClose = windowId => {
-                // console.log('window closed', windowId);
                 if (windowId === window.id) {
-                    // console.log(id, 'window closed');
                     browser.windows.onRemoved.removeListener(onWindowClose);
                     const errorResponse: any = {
                         jsonrpc: '2.0',

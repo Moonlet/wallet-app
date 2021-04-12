@@ -107,10 +107,11 @@ export interface IScreenValidation {
 }
 
 export interface ICtaAction<P = any> {
-    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
+    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack' | 'navigationOnPop';
     params: {
         action?: string;
         url?: string;
+        count?: string;
         screen?: string;
         params?: P;
     };
@@ -425,13 +426,15 @@ export interface IPriceUpdateData {
 }
 
 export interface ITimerUpdateData {
-    numberOfSeconds: number;
+    numSeconds: number;
     reduxKey: string;
     endpoint: {
         url: string;
         method: 'POST' | 'GET';
         data: any;
     };
+    cta: ICta;
+    interval: number; // miliseconds
 }
 
 export interface IThreeLinesIconData {

@@ -73,6 +73,7 @@ export interface IHandleCtaOptions {
     };
     pubSub?: PubSub<SmartScreenPubSubEvents>;
     flowId?: string;
+    extraParams?: any;
 }
 
 export const handleCta = (cta: ICta, options?: IHandleCtaOptions) => async (
@@ -1392,6 +1393,7 @@ const handleCtaAction = async (
                 screen,
                 {
                     ...action.params?.params,
+                    extraParams: options?.extraParams,
                     blockchain,
                     accountIndex: account?.index,
                     token
@@ -1407,6 +1409,11 @@ const handleCtaAction = async (
 
         case 'onBack':
             NavigationService.goBack();
+            break;
+
+        case 'navigationOnPop':
+            const count = Number(action?.params?.count);
+            NavigationService.pop(count);
             break;
 
         default:

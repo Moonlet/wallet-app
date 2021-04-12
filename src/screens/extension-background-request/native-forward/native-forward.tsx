@@ -268,14 +268,10 @@ export class NativeForwardComp extends React.Component<
          *      - Sign Message
          */
 
-        // console.log('method: ', this.props.request.params[0].method);
-        // console.log('requestId: ', this.props.requestId);
-
         try {
             const sendRequestRes = await ConnectExtension.sendRequest(
                 await this.getRequestPayload()
             );
-            // console.log('sendRequestRes: ', sendRequestRes);
 
             if (sendRequestRes?.success) {
                 ConnectExtensionWeb.listenerReqResponse(
@@ -307,7 +303,7 @@ export class NativeForwardComp extends React.Component<
                 );
             }
         } catch (err) {
-            // console.log('error: ', err);
+            //
         }
     }
 

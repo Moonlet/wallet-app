@@ -335,6 +335,10 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
+    public async getMinimumGasPrice(): Promise<number> {
+        return this.http.jsonRpc('GetMinimumGasPrice', []).then(res => res?.result);
+    }
+
     public async getSmartContractSubState(
         contractAddress: string,
         field: string,

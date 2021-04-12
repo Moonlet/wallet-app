@@ -31,6 +31,24 @@ export const NavigationService = (() => {
         navigator?.dispatch(StackActions.popToTop());
     };
 
+    const pop = (
+        count: number = 1,
+        options?: {
+            immediate?: boolean;
+            prune?: boolean;
+            key?: string;
+        }
+    ) => {
+        navigator?.dispatch(
+            StackActions.pop({
+                n: count,
+                immediate: options?.immediate,
+                prune: options?.prune,
+                key: options?.key
+            })
+        );
+    };
+
     const goBack = (key?: string) => {
         navigator?.dispatch(NavigationActions.back({ key }));
     };
@@ -60,12 +78,13 @@ export const NavigationService = (() => {
         navigator && getRecursiveRouteWithParams(navigator.state.nav);
 
     return {
-        setTopLevelNavigator,
-        navigate,
-        replace,
-        popToTop,
         getCurrentRoute,
+        getCurrentRouteWithParams,
         goBack,
-        getCurrentRouteWithParams
+        navigate,
+        pop,
+        popToTop,
+        replace,
+        setTopLevelNavigator
     };
 })();

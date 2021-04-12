@@ -14,7 +14,8 @@ export enum RemoteFeature {
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
     TC_VERSION = 'tcVersion',
-    IMPROVED_NONCE = 'improvedNonce'
+    IMPROVED_NONCE = 'improvedNonce',
+    LIST_SWAP_TOKENS = 'list_swap_tokens'
 }
 
 let featuresConfig = {};
@@ -40,7 +41,8 @@ export const getRemoteConfigFeatures = async () => {
                 RemoteFeature.TC_VERSION,
                 RemoteFeature.SOLANA,
                 RemoteFeature.IMPROVED_NONCE,
-                RemoteFeature.ZIL_STAKING_SMART_SCREEN
+                RemoteFeature.ZIL_STAKING_SMART_SCREEN,
+                RemoteFeature.LIST_SWAP_TOKENS
             ]);
 
         // Retrieve values
@@ -71,6 +73,19 @@ export const getRemoteConfigFeatures = async () => {
     }
 
     return featuresConfig;
+};
+
+export const remoteFeatureContainsToken = (symbol: string): boolean => {
+    if (!symbol) return false;
+
+    const feature = RemoteFeature.LIST_SWAP_TOKENS;
+
+    return (
+        featuresConfig &&
+        featuresConfig[feature] &&
+        featuresConfig[feature]?.length > 0 &&
+        !!featuresConfig[feature].find((el: any) => el.toLowerCase() === symbol.toLowerCase())
+    );
 };
 
 export const isFeatureActive = (feature: RemoteFeature): boolean => {

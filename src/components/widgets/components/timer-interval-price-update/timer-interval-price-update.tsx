@@ -8,6 +8,12 @@ import { setScreenInputData } from '../../../../redux/ui/screens/input-data/acti
 import { IScreenContext, IScreenModule, ISmartScreenActions, ITimerUpdateData } from '../../types';
 import { getStateSelectors } from '../ui-state-selectors';
 import { HttpClient } from '../../../../core/utils/http-client';
+import { getChainId } from '../../../../redux/preferences/selectors';
+import { getScreenDataKey } from '../../../../redux/ui/screens/data/reducer';
+import { getSelectedAccount, getSelectedWallet } from '../../../../redux/wallets/selectors';
+import BigNumber from 'bignumber.js';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../../../core/blockchain/types';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -21,13 +27,40 @@ interface IExternalProps {
 
 interface IReduxProps {
     setScreenInputData: typeof setScreenInputData;
+    blockchain: Blockchain;
+    swapAmountTo: string;
+    customSlippage: string;
+    toTokenDecimals: number;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
-    return getStateSelectors(state, ownProps.module, {
-        flowId: ownProps?.options?.flowId,
-        screenKey: ownProps?.options?.screenKey
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const endpointDataScreenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step: ownProps.module?.details?.step,
+        tab: undefined
     });
+
+    return {
+        blockchain: account.blockchain,
+
+        // Data from Current Screen Key
+        ...getStateSelectors(state, ownProps.module, {
+            flowId: ownProps?.options?.flowId,
+            screenKey: ownProps?.options?.screenKey
+        }),
+
+        // Data from Custom Screen Key
+        ...getStateSelectors(state, ownProps.module, {
+            flowId: ownProps?.options?.flowId,
+            screenKey: endpointDataScreenKey
+        })
+    };
 };
 
 const mapDispatchToProps = {
@@ -45,18 +78,8 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
         this.startTimer();
     }
 
-    // public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
-    //     const data = this.props.module?.data as ITimerUpdateData;
-
-    //     const screenKey = this.props.options.screenKey;
-
-    //     this.props.setScreenInputData(screenKey, {
-    //         [data.reduxKey]: 1
-    //     });
-    // }
-
     public componentWillUnmount() {
-        this.interval && clearInterval(this.interval);
+        this.clearData();
     }
 
     private onFocus() {
@@ -64,63 +87,90 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
     }
 
     private onWillBlur() {
+        this.clearData();
+    }
+
+    private clearData() {
+        const screenKey = this.props.options.screenKey;
+        const data = this.props.module?.data as ITimerUpdateData;
+        this.props.setScreenInputData(screenKey, {
+            [data.reduxKey]: undefined
+        });
         this.interval && clearInterval(this.interval);
     }
 
-    private async getData(data: ITimerUpdateData, endpointData: any) {
-        try {
-            let response;
+    private async fetchData(data: ITimerUpdateData) {
+        const screenKey = this.props.options.screenKey;
+        const selector = this.props.module?.state?.selectors;
 
-            switch (data.endpoint.method) {
-                case 'POST':
-                    response = await this.httpClient.post('', endpointData);
-                    break;
+        if (this.remainingTime !== 0) {
+            this.remainingTime--;
+            this.props.setScreenInputData(screenKey, {
+                [data.reduxKey]: this.remainingTime
+            });
+        } else {
+            this.interval && clearInterval(this.interval);
 
-                case 'GET':
-                    response = await this.httpClient.get('');
-                    break;
+            const endpointData = data.endpoint.data;
 
-                default:
-                    break;
+            Object.keys(data.endpoint.data).map(key => {
+                if (selector.hasOwnProperty(key)) {
+                    endpointData[key] = this.props[key];
+                }
+            });
+
+            try {
+                const response = await this.httpClient.post('', endpointData);
+                if (response?.result?.data) {
+                    const newAmountTo = new BigNumber(response.result.data.toTokenAmount);
+                    const oldAmountTo = new BigNumber(this.props.swapAmountTo);
+
+                    const newAmount = getBlockchain(this.props.blockchain).account.amountFromStd(
+                        newAmountTo,
+                        this.props.toTokenDecimals
+                    );
+                    const oldAmount = getBlockchain(this.props.blockchain).account.amountFromStd(
+                        oldAmountTo,
+                        this.props.toTokenDecimals
+                    );
+
+                    const pricesDiff = new BigNumber(newAmount)
+                        .multipliedBy(100)
+                        .dividedBy(oldAmount);
+
+                    if (
+                        pricesDiff.isLessThan(new BigNumber(100).minus(this.props.customSlippage))
+                    ) {
+                        this.props.actions.handleCta(data.cta, {
+                            screenKey,
+                            extraParams: {
+                                priceDifference: new BigNumber(100).minus(pricesDiff).toFixed(2)
+                            }
+                        });
+                    } else {
+                        this.startTimer();
+                    }
+                }
+            } catch (error) {
+                this.startTimer();
             }
-
-            if (response?.result?.data) {
-                // response price
-            }
-        } catch (error) {
-            // TODO: maybe do something here
         }
     }
 
     private async startTimer() {
-        const screenKey = this.props.options.screenKey;
         const data = this.props.module?.data as ITimerUpdateData;
 
-        const selector = this.props.module?.state?.selectors;
+        this.httpClient = new HttpClient(data.endpoint.url);
 
-        if (data.numberOfSeconds) {
+        if (data.numSeconds) {
+            this.remainingTime = data.numSeconds;
+
+            await this.fetchData(data);
+
             this.interval && clearInterval(this.interval);
-            this.remainingTime = data.numberOfSeconds;
             this.interval = setInterval(async () => {
-                if (this.remainingTime !== 0) {
-                    this.props.setScreenInputData(screenKey, {
-                        [data.reduxKey]: this.remainingTime
-                    });
-                    this.remainingTime--;
-                } else {
-                    // fetch price;
-
-                    const endpointData = data.endpoint.data;
-
-                    Object.keys(data.endpoint.data).map(key => {
-                        if (selector.hasOwnProperty(key)) {
-                            endpointData[key] = this.props[key];
-                        }
-                    });
-
-                    await this.getData(data, endpointData);
-                }
-            }, 1000); // interval is in seconds
+                await this.fetchData(data);
+            }, data.interval);
         }
     }
 

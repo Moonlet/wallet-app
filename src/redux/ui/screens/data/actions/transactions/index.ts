@@ -30,6 +30,9 @@ export interface IContractCallParams {
     contractType: Contracts;
     tokenSymbol: string;
     aditionalInfo: any;
+    fees?: {
+        gasLimit: string;
+    };
 }
 
 export const sendTransactions = (context: IHandleCtaActionContext<IContractCallParams[]>) => async (

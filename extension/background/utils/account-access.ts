@@ -187,12 +187,10 @@ export const switchAccount = async (
     if (!accountsMap[blockchain]) {
         accountsMap[blockchain] = {};
     }
-    // console.log(walletPubKey, blockchain, address);
     const accounts = accountsMap[blockchain][walletPubKey] || [];
     // add the list of all accounts from the same wallet, to be sure we have all accounts
     accounts.unshift(address);
     // remove duplicates
     accountsMap[blockchain][walletPubKey] = [...new Set(accounts)];
-    // console.log(accountsMap);
     return Promise.resolve();
 };

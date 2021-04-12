@@ -238,7 +238,125 @@ export const getSwapToTokenAmount = (
     return blockchainInstance.account.amountToStd(amount, decimals).toFixed();
 };
 
-export const getSwipePrice = (
+export const getSwapPrice = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: {
+        screenKey: string;
+    },
+    params: any
+) => {
+    const account = getSelectedAccount(state);
+    const chainId = getChainId(state, account.blockchain);
+
+    const screenKey = getScreenDataKey({
+        pubKey: getSelectedWallet(state)?.walletPublicKey,
+        blockchain: account?.blockchain,
+        chainId: String(chainId),
+        address: account?.address,
+        step: module?.details?.step,
+        tab: undefined
+    });
+
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
+
+    const rate = screenData?.swapPrice?.rate;
+
+    if (!rate) return '...';
+
+    return formatNumber(rate, { maximumFractionDigits: 6 });
+};
+
+export const getSwapCustomSlippage = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: {
+        screenKey: string;
+    },
+    params: any
+) => {
+    let screenKey = options.screenKey;
+
+    if (module?.details?.step) {
+        const account = getSelectedAccount(state);
+        const chainId = getChainId(state, account.blockchain);
+
+        screenKey = getScreenDataKey({
+            pubKey: getSelectedWallet(state)?.walletPublicKey,
+            blockchain: account?.blockchain,
+            chainId: String(chainId),
+            address: account?.address,
+            step: module?.details?.step,
+            tab: undefined
+        });
+    }
+
+    return state.ui.screens.inputData && state.ui.screens.inputData[screenKey].data?.customSlippage;
+};
+
+export const getSwapAmountTo = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: {
+        screenKey: string;
+    },
+    params: any
+) => {
+    let screenKey = options.screenKey;
+
+    if (module?.details?.step) {
+        const account = getSelectedAccount(state);
+        const chainId = getChainId(state, account.blockchain);
+
+        screenKey = getScreenDataKey({
+            pubKey: getSelectedWallet(state)?.walletPublicKey,
+            blockchain: account?.blockchain,
+            chainId: String(chainId),
+            address: account?.address,
+            step: module?.details?.step,
+            tab: undefined
+        });
+    }
+
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
+    const amountTo: string = screenData.swapPrice.toTokenAmount;
+    return amountTo;
+};
+
+export const getSwapToDecimals = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: {
+        screenKey: string;
+    },
+    params: any
+) => {
+    let screenKey = options.screenKey;
+
+    if (module?.details?.step) {
+        const account = getSelectedAccount(state);
+        const chainId = getChainId(state, account.blockchain);
+
+        screenKey = getScreenDataKey({
+            pubKey: getSelectedWallet(state)?.walletPublicKey,
+            blockchain: account?.blockchain,
+            chainId: String(chainId),
+            address: account?.address,
+            step: module?.details?.step,
+            tab: undefined
+        });
+    }
+
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
+
+    const swapType = screenData?.swapType;
+    const swapFromToken = screenData?.swapFromToken;
+    const swapToToken = screenData?.swapToToken;
+
+    return swapType === SwapType.SELL ? swapFromToken?.decimals : swapToToken?.decimals;
+};
+
+export const getPriceUpdateTimer = (
     state: IReduxState,
     module: IScreenModule,
     options: {
@@ -250,9 +368,17 @@ export const getSwipePrice = (
 
     const screenData = state.ui.screens.inputData[screenKey]?.data;
 
-    const rate = screenData?.swapPrice?.rate;
+    if (screenData?.priceUpdateTimer === undefined) return '__:__';
 
-    if (!rate) return '...';
+    const timeLeft: number = Number(screenData.priceUpdateTimer);
 
-    return formatNumber(rate, { maximumFractionDigits: 6 });
+    const minutes = Number(Math.floor(timeLeft / 60)).toLocaleString(undefined, {
+        minimumIntegerDigits: 2
+    });
+
+    const seconds = Number(timeLeft % 60).toLocaleString(undefined, {
+        minimumIntegerDigits: 2
+    });
+
+    return `${minutes}:${seconds}`;
 };

@@ -23,7 +23,8 @@ import { SmartScreenComponent } from '../../../../../../../components/smart-scre
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 import {
     isFeatureActive,
-    RemoteFeature
+    RemoteFeature,
+    remoteFeatureContainsToken
 } from '../../../../../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
@@ -57,7 +58,7 @@ const mapDispatchToProps = {
     fetchDelegatedValidators
 };
 
-export class AccountTabComponent extends React.Component<
+class AccountTabComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public componentDidMount() {
@@ -66,7 +67,7 @@ export class AccountTabComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { token, styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         const tokenUiConfig = blockchainInstance.config.ui.token;
@@ -83,7 +84,7 @@ export class AccountTabComponent extends React.Component<
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
                     >
-                        <AccountAddress account={this.props.account} token={this.props.token} />
+                        <AccountAddress account={this.props.account} token={token} />
 
                         <View style={styles.buttonsRowContainer}>
                             <Button
@@ -98,7 +99,7 @@ export class AccountTabComponent extends React.Component<
                                         NavigationService.navigate('Send', {
                                             accountIndex: this.props.account.index,
                                             blockchain: this.props.account.blockchain,
-                                            token: this.props.token
+                                            token
                                         });
                                     } else {
                                         Dialog.alert(
@@ -122,6 +123,7 @@ export class AccountTabComponent extends React.Component<
                             >
                                 {translate('App.labels.send')}
                             </Button>
+
                             <Button
                                 key={`cta-receive`}
                                 style={styles.button}
@@ -130,15 +132,14 @@ export class AccountTabComponent extends React.Component<
                                     NavigationService.navigate('Receive', {
                                         accountIndex: this.props.account.index,
                                         blockchain: this.props.account.blockchain,
-                                        token: this.props.token
+                                        token
                                     })
                                 }
                             >
                                 {translate('App.labels.receive')}
                             </Button>
 
-                            {/* TODO: maybe find a better way to handle this */}
-                            {this.props.account.blockchain === Blockchain.ZILLIQA && (
+                            {token?.symbol && remoteFeatureContainsToken(token.symbol) && (
                                 <Button
                                     style={styles.button}
                                     wrapperStyle={{ flex: 1 }}
@@ -177,7 +178,7 @@ export class AccountTabComponent extends React.Component<
                         params={{
                             accountIndex: this.props.account.index,
                             blockchain: this.props.account.blockchain,
-                            token: this.props.token,
+                            token,
                             validators: [],
                             canPerformAction: !this.props.hasPendingTransactions
                         }}

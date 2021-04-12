@@ -142,7 +142,10 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
                         pricesDiff.isLessThan(new BigNumber(100).minus(this.props.customSlippage))
                     ) {
                         this.props.actions.handleCta(data.cta, {
-                            screenKey
+                            screenKey,
+                            extraParams: {
+                                priceDifference: new BigNumber(100).minus(pricesDiff).toFixed(2)
+                            }
                         });
                     } else {
                         this.startTimer();

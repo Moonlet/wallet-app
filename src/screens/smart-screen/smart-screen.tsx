@@ -42,6 +42,7 @@ interface INavigationParams {
         gradient?: string[];
     };
     newFlow?: boolean;
+    extraParams?: any;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -117,7 +118,11 @@ class SmartScreenComponent extends React.Component<
             loadingScreenData: false,
             context: {
                 ...props.context,
-                flowId: props.newFlow ? uuidv4() : props.context?.flowId
+                flowId: props.newFlow ? uuidv4() : props.context?.flowId,
+                params: {
+                    ...props.context?.params,
+                    ...props.extraParams
+                }
             }
         };
     }

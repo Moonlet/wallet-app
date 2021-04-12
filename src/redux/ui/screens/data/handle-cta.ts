@@ -1407,14 +1407,8 @@ const handleCtaAction = async (
 
         case 'onBack':
             NavigationService.goBack();
-
             break;
 
-        case 'on2Back':
-            NavigationService.goBack();
-            NavigationService.goBack();
-
-            break;
         default:
             break;
     }

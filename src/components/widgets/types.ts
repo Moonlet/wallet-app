@@ -107,7 +107,7 @@ export interface IScreenValidation {
 }
 
 export interface ICtaAction<P = any> {
-    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack' | 'on2Back'; // TODO  - fix navigation
+    type: 'callAction' | 'openUrl' | 'navigateTo' | 'onBack';
     params: {
         action?: string;
         url?: string;

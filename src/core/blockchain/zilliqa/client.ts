@@ -298,13 +298,24 @@ export class Client extends BlockchainGenericClient {
         },
         tokenType: TokenType = TokenType.NATIVE
     ) {
-        const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+        let gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
         try {
-            const result = await this.estimateFees();
+            const token = tokenType === TokenType.NATIVE ? 'zil' : 'zrc2';
 
-            const gasPrice = result.result
-                ? new BigNumber(Number(result.result))
+            const keyGasLimit = `zilliqa.fees.gasLimit.${token}`;
+
+            const [resMinimumGasPrice, resGasLimit] = await Promise.all([
+                this.http.jsonRpc('GetMinimumGasPrice', []),
+                new ApiClient().configs.getConfigs([keyGasLimit])
+            ]);
+
+            if (resGasLimit?.result && resGasLimit?.result[keyGasLimit]) {
+                gasLimit = resGasLimit.result[keyGasLimit];
+            }
+
+            const gasPrice = resMinimumGasPrice?.result
+                ? new BigNumber(Number(resMinimumGasPrice.result))
                 : config.feeOptions.defaults.gasPrice;
 
             return {
@@ -348,10 +359,6 @@ export class Client extends BlockchainGenericClient {
             addr = address.replace('0x', '').toLowerCase();
         }
         return this.call('GetSmartContractInit', [addr]).then(response => response?.result);
-    }
-
-    private async estimateFees(): Promise<any> {
-        return this.http.jsonRpc('GetMinimumGasPrice', []);
     }
 
     public async getMinimumAmountDelegate(): Promise<BigNumber> {

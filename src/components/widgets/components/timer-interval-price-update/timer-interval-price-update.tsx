@@ -92,56 +92,60 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
         this.interval && clearInterval(this.interval);
     }
 
-    private async startTimer() {
+    private async fetchData(data: ITimerUpdateData) {
         const screenKey = this.props.options.screenKey;
-        const data = this.props.module?.data as ITimerUpdateData;
-
         const selector = this.props.module?.state?.selectors;
+
+        if (this.remainingTime !== 0) {
+            this.remainingTime--;
+            this.props.setScreenInputData(screenKey, {
+                [data.reduxKey]: this.remainingTime
+            });
+        } else {
+            this.interval && clearInterval(this.interval);
+
+            const endpointData = data.endpoint.data;
+
+            Object.keys(data.endpoint.data).map(key => {
+                if (selector.hasOwnProperty(key)) {
+                    endpointData[key] = this.props[key];
+                }
+            });
+
+            try {
+                const response = await this.httpClient.post('', endpointData);
+                if (response?.result?.data) {
+                    // TODO: Check this
+                    if (
+                        new BigNumber(response.result.data.rate).isGreaterThan(this.props.swapPrice)
+                    ) {
+                        this.props.actions.handleCta(data.cta, {
+                            screenKey
+                        });
+                    } else {
+                        this.startTimer();
+                    }
+                }
+            } catch (error) {
+                this.startTimer();
+            }
+        }
+    }
+
+    private async startTimer() {
+        const data = this.props.module?.data as ITimerUpdateData;
 
         this.httpClient = new HttpClient(data.endpoint.url);
 
         if (data.numSeconds) {
-            this.interval && clearInterval(this.interval);
             this.remainingTime = data.numSeconds;
+
+            await this.fetchData(data);
+
+            this.interval && clearInterval(this.interval);
             this.interval = setInterval(async () => {
-                if (this.remainingTime !== 0) {
-                    this.remainingTime--;
-                    this.props.setScreenInputData(screenKey, {
-                        [data.reduxKey]: this.remainingTime
-                    });
-                } else {
-                    // fetch price
-
-                    this.interval && clearInterval(this.interval);
-
-                    const endpointData = data.endpoint.data;
-
-                    Object.keys(data.endpoint.data).map(key => {
-                        if (selector.hasOwnProperty(key)) {
-                            endpointData[key] = this.props[key];
-                        }
-                    });
-
-                    try {
-                        const response = await this.httpClient.post('', endpointData);
-                        if (response?.result?.data) {
-                            if (
-                                new BigNumber(response.result.data.rate).isGreaterThan(
-                                    this.props.swapPrice
-                                )
-                            ) {
-                                this.props.actions.handleCta(data.cta, {
-                                    screenKey
-                                });
-                            } else {
-                                this.startTimer();
-                            }
-                        }
-                    } catch (error) {
-                        this.startTimer();
-                    }
-                }
-            }, 1000); // interval is in seconds
+                await this.fetchData(data);
+            }, data.interval);
         }
     }
 

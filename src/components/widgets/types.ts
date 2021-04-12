@@ -434,6 +434,7 @@ export interface ITimerUpdateData {
         data: any;
     };
     cta: ICta;
+    interval: number; // miliseconds
 }
 
 export interface IThreeLinesIconData {

@@ -310,25 +310,27 @@ export class Client extends BlockchainGenericClient {
                 new ApiClient().configs.getConfigs([keyGasLimit])
             ]);
 
+            // Gas Limit
             if (resGasLimit?.result && resGasLimit?.result[keyGasLimit]) {
-                gasLimit = resGasLimit.result[keyGasLimit];
+                gasLimit = new BigNumber(resGasLimit.result[keyGasLimit]);
             }
 
+            // Gas Price
             const gasPrice = resMinimumGasPrice?.result
                 ? new BigNumber(Number(resMinimumGasPrice.result))
                 : config.feeOptions.defaults.gasPrice;
 
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         } catch {
             const gasPrice = config.feeOptions.defaults.gasPrice;
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         }
     }

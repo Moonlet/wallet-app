@@ -298,26 +298,39 @@ export class Client extends BlockchainGenericClient {
         },
         tokenType: TokenType = TokenType.NATIVE
     ) {
-        const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+        let gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
         try {
-            const result = await this.estimateFees();
+            const token = tokenType === TokenType.NATIVE ? 'zil' : 'zrc2';
 
-            const gasPrice = result.result
-                ? new BigNumber(Number(result.result))
+            const keyGasLimit = `zilliqa.${this.chainId.toString()}.fees.gasLimit.${token}`;
+
+            const [resMinimumGasPrice, resGasLimit] = await Promise.all([
+                this.http.jsonRpc('GetMinimumGasPrice', []),
+                new ApiClient().configs.getConfigs([keyGasLimit])
+            ]);
+
+            // Gas Limit
+            if (resGasLimit?.result && resGasLimit?.result[keyGasLimit]) {
+                gasLimit = new BigNumber(resGasLimit.result[keyGasLimit]);
+            }
+
+            // Gas Price
+            const gasPrice = resMinimumGasPrice?.result
+                ? new BigNumber(Number(resMinimumGasPrice.result))
                 : config.feeOptions.defaults.gasPrice;
 
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         } catch {
             const gasPrice = config.feeOptions.defaults.gasPrice;
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         }
     }
@@ -348,10 +361,6 @@ export class Client extends BlockchainGenericClient {
             addr = address.replace('0x', '').toLowerCase();
         }
         return this.call('GetSmartContractInit', [addr]).then(response => response?.result);
-    }
-
-    private async estimateFees(): Promise<any> {
-        return this.http.jsonRpc('GetMinimumGasPrice', []);
     }
 
     public async getMinimumAmountDelegate(): Promise<BigNumber> {

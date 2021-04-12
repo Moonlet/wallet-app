@@ -1,16 +1,12 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, Clipboard } from 'react-native';
 import { Text, Button } from '../../library';
-import { NavigationActions, StackActions } from 'react-navigation';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { generateEncryptionKey } from '../../core/secure/keychain/keychain';
 import { translate } from '../../core/i18n';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { IReduxState } from '../../redux/state';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 
@@ -50,33 +46,6 @@ export class OnboardingScreenComponent extends React.Component<
         };
     }
 
-    public mnemonic = [
-        'pigeon',
-        'road',
-        'portion',
-        'echo',
-        'robust',
-        'panel',
-        'fat',
-        'dune',
-        'direct',
-        'flee',
-        'pave',
-        'tonight',
-        'govern',
-        'blue',
-        'tree',
-        'actual',
-        'palace',
-        'rude',
-        'legal',
-        'sand',
-        'width',
-        'clever',
-        'order',
-        'icon'
-    ];
-
     public onPressRecover() {
         this.props.navigation.navigate('RecoverWallet');
     }
@@ -89,19 +58,6 @@ export class OnboardingScreenComponent extends React.Component<
 
     public onPressConnect() {
         this.props.navigation.navigate('ConnectHardwareWallet');
-    }
-
-    public async onPressGenerateWallet() {
-        await LoadingModal.open();
-        await generateEncryptionKey('000000');
-        this.props.createHDWallet(this.mnemonic.join(' '), '000000', () => {
-            this.props.navigation.dispatch(StackActions.popToTop());
-            this.props.navigation.navigate(
-                'MainNavigation',
-                {},
-                NavigationActions.navigate({ routeName: 'Dashboard' })
-            );
-        });
     }
 
     public render() {
@@ -165,17 +121,6 @@ export class OnboardingScreenComponent extends React.Component<
                     >
                         {translate('App.labels.create')}
                     </Button>
-
-                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
-                        <Button
-                            testID="generate-button"
-                            style={styles.bottomButton}
-                            primary
-                            onPress={() => this.onPressGenerateWallet()}
-                        >
-                            {`Generate wallet`}
-                        </Button>
-                    )}
                 </View>
             </View>
         );

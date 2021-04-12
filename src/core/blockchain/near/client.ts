@@ -250,11 +250,7 @@ export class Client extends BlockchainGenericClient {
             const interval = setInterval(async () => {
                 const res = await this.http.jsonRpc('tx', [txHash, accountId]);
 
-                if (
-                    res?.result?.status &&
-                    (res?.result?.status?.SuccessValue === '' ||
-                        res?.result?.status?.SuccessValue !== '')
-                ) {
+                if (res?.result?.status?.hasOwnProperty('SuccessValue')) {
                     resolve(txHash);
                     clearInterval(interval);
                     return;

@@ -122,7 +122,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         // found a tx with the same nonce
                         const txStatus = await client.utils.getTransactionStatus(outTx.id, {
                             broadcastedOnBlock: outTx.broadcastedOnBlock,
-                            currentBlockNumber
+                            currentBlockNumber,
+                            address: account.address
                         });
 
                         // if the status oif the tx is DROPPED we can reuse the nonce
@@ -134,7 +135,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                             outTx = outboundTransactions.find(tx => tx.nonce === nonce);
                         }
                     }
-                    // updateing the nonce
+                    // updating the nonce
                     transaction.nonce = nonce;
                 }
 

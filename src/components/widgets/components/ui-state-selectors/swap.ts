@@ -279,9 +279,17 @@ export const getPriceUpdateTimer = (
 
     const screenData = state.ui.screens.inputData[screenKey]?.data;
 
-    if (screenData?.priceUpdateTimer === undefined) return '';
+    if (screenData?.priceUpdateTimer === undefined) return '__:__';
 
-    const timeLeft: number = Number(screenData?.priceUpdateTimer);
+    const timeLeft: number = Number(screenData.priceUpdateTimer);
 
-    return `${Math.floor(timeLeft / 60)}:${timeLeft % 60}`;
+    const minutes = Number(Math.floor(timeLeft / 60)).toLocaleString(undefined, {
+        minimumIntegerDigits: 2
+    });
+
+    const seconds = Number(timeLeft % 60).toLocaleString(undefined, {
+        minimumIntegerDigits: 2
+    });
+
+    return `${minutes}:${seconds}`;
 };

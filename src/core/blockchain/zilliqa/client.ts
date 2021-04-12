@@ -303,7 +303,7 @@ export class Client extends BlockchainGenericClient {
         try {
             const token = tokenType === TokenType.NATIVE ? 'zil' : 'zrc2';
 
-            const keyGasLimit = `zilliqa.fees.gasLimit.${token}`;
+            const keyGasLimit = `zilliqa.${this.chainId.toString()}.fees.gasLimit.${token}`;
 
             const [resMinimumGasPrice, resGasLimit] = await Promise.all([
                 this.http.jsonRpc('GetMinimumGasPrice', []),

@@ -1,7 +1,9 @@
+import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../core/blockchain/blockchain-factory';
 import {
     Blockchain,
     IBlockchainTransaction,
+    IFeeOptions,
     TransactionType
 } from '../../../../../../core/blockchain/types';
 import { TransactionStatus } from '../../../../../../core/wallet/types';
@@ -75,17 +77,40 @@ export const buildContractCallTransaction = async (
             params: dataParams
         });
 
-        const feeOptions = await client.getFees(
-            TransactionType.CONTRACT_CALL,
-            {
-                from: account.address,
-                to: '',
-                amount: params.amount,
-                contractAddress,
-                raw
-            },
-            TokenType.ZRC2 // TODO change this when implementing other blockchains
-        );
+        let feeOptions: IFeeOptions;
+        let fetchFeesBackup = false;
+
+        if (params?.fees) {
+            const gasLimit = new BigNumber(params.fees.gasLimit);
+            const minGasPrice = await client.getMinimumGasPrice();
+
+            if (minGasPrice) {
+                const gasPrice = new BigNumber(minGasPrice);
+                feeOptions = {
+                    gasPrice: gasPrice.toFixed(),
+                    gasLimit: gasLimit.toFixed(),
+                    feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
+                };
+            } else {
+                fetchFeesBackup = true;
+            }
+        } else {
+            fetchFeesBackup = true;
+        }
+
+        if (fetchFeesBackup === true) {
+            feeOptions = await client.getFees(
+                TransactionType.CONTRACT_CALL,
+                {
+                    from: account.address,
+                    to: '',
+                    amount: params.amount,
+                    contractAddress,
+                    raw
+                },
+                TokenType.ZRC2 // TODO change this when implementing other blockchains
+            );
+        }
 
         return {
             date: {

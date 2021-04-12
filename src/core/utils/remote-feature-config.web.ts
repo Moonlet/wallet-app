@@ -25,3 +25,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
 export const getFirebaseTCVersion = (): number => {
     return undefined;
 };
+
+export const remoteFeatureContainsToken = (symbol: string): boolean => {
+    return false;
+};

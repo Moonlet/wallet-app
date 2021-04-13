@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { Dispatch } from 'react';
 import {
     IAmountInputData,
@@ -143,10 +144,11 @@ export const runScreenStateActions = (options: {
     }
 };
 
-export const setSwapInputAmount = (context: IScreenContext, screenKey: string) => async (
-    dispatch: Dispatch<IAction<any>>,
-    getState: () => IReduxState
-) => {
+export const setSwapInputAmount = (
+    context: IScreenContext,
+    screenKey: string,
+    params?: any
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const blockchain = getSelectedBlockchain(state);
 
@@ -173,31 +175,36 @@ export const setSwapInputAmount = (context: IScreenContext, screenKey: string) =
 
     const swapType = screenData?.swapType;
 
-    let amount = '';
+    let amount: BigNumber;
 
     if (swapType === SwapType.SELL) {
         // SELL
         if (inputFieldFocus === 'swapAmountFrom') {
             const decimals = screenData.swapToToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals);
         }
         if (inputFieldFocus === 'swapAmountTo') {
             const decimals = screenData.swapFromToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals);
         }
     } else {
         // BUY
         if (inputFieldFocus === 'swapAmountFrom') {
             const decimals = screenData.swapToToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals);
         }
         if (inputFieldFocus === 'swapAmountTo') {
             const decimals = screenData.swapFromToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals);
         }
     }
 
-    setScreenAmount(amount, {
+    let finalAmount = '';
+
+    const uiDecimals = params?.uiDecimals;
+    finalAmount = uiDecimals ? amount.toFixed(uiDecimals, BigNumber.ROUND_DOWN) : amount.toFixed();
+
+    setScreenAmount(finalAmount, {
         screenKey,
         context,
         inputKey: toInput

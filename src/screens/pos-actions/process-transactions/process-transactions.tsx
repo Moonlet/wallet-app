@@ -336,12 +336,13 @@ export class ProcessTransactionsComponent extends React.Component<
         if (tx.additionalInfo?.swap) {
             middleText = '';
             switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASEALLOWANCE:
+                case SwapContractMethod.INCREASE_ALLOWANCE:
                     topText = `${translate('App.labels.increaseAllowance')} ${translate(
                         'App.labels.for'
                     ).toLowerCase()} ${tx.additionalInfo?.swap.fromSymbol}`;
                     break;
-                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
+
+                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                     topText = `${translate('App.labels.swap')} ${
                         tx.additionalInfo?.swap.amountFrom
                     } ${tx.additionalInfo?.swap.fromSymbol} ${translate(
@@ -350,7 +351,8 @@ export class ProcessTransactionsComponent extends React.Component<
                         tx.additionalInfo?.swap.toSymbol
                     }`;
                     break;
-                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
+
+                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                     topText = `${translate('App.labels.swap')} ${
                         tx.additionalInfo?.swap.amountTo
                     } ${tx.additionalInfo?.swap.toSymbol} ${translate(

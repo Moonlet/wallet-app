@@ -280,13 +280,13 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         if (tx.additionalInfo?.swap) {
             switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASEALLOWANCE:
+                case SwapContractMethod.INCREASE_ALLOWANCE:
                     transactionType = translate('App.labels.increaseAllowance') + ' ';
                     break;
-                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
+                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                     transactionType = translate('App.labels.swap') + ' ';
                     break;
-                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
+                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                     transactionType = translate('App.labels.swap') + ' ';
                     break;
                 default:

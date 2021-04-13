@@ -29,7 +29,7 @@ export const getSwapToken2Decimals = (
         });
     }
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const swapType = screenData?.swapType;
 

@@ -28,5 +28,7 @@ export const getSwapCustomSlippage = (
         });
     }
 
-    return state.ui.screens.inputData && state.ui.screens.inputData[screenKey].data?.customSlippage;
+    return (
+        state.ui.screens.inputData && state.ui.screens.inputData[screenKey]?.data?.customSlippage
+    );
 };

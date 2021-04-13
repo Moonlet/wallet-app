@@ -15,7 +15,7 @@ export const getSwapToken1BlockchainSymbol = (
 
     const blockchain = getSelectedBlockchain(state);
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const swapType = screenData?.swapType;
 
@@ -39,7 +39,7 @@ export const getSwapToken2BlockchainSymbol = (
 
     const blockchain = getSelectedBlockchain(state);
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const swapType = screenData?.swapType;
 

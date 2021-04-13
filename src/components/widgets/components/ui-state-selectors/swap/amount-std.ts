@@ -17,7 +17,7 @@ export const getSwapToken1AmountStd = (
     const account = getSelectedAccount(state);
     const blockchainInstance = getBlockchain(account.blockchain);
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const swapType = screenData?.swapType;
 
@@ -58,7 +58,7 @@ export const getSwapToken2AmountStd = (
     const account = getSelectedAccount(state);
     const blockchainInstance = getBlockchain(account.blockchain);
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const swapType = screenData?.swapType;
     const swapToken1 = screenData?.swapToken1;

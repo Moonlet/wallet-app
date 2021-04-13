@@ -93,7 +93,7 @@ export const getSwapToken2SwapPriceAmount = (
         });
     }
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const token2Amount = screenData.swapPrice.token2Amount;
 

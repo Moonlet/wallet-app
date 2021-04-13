@@ -29,7 +29,7 @@ export const getSwapPriceRateFormat = (
         });
     }
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     const rate = screenData?.swapPrice?.rate;
 
@@ -48,7 +48,7 @@ export const getSwapPriceUpdateTimer = (
 ) => {
     const screenKey = options.screenKey;
 
-    const screenData = state.ui.screens.inputData[screenKey].data;
+    const screenData = state.ui.screens.inputData[screenKey]?.data;
 
     if (screenData?.priceUpdateTimer === undefined) return '__:__';
 

@@ -335,30 +335,31 @@ export class ProcessTransactionsComponent extends React.Component<
 
         if (tx.additionalInfo?.swap) {
             middleText = '';
+
             switch (tx.additionalInfo?.swap.contractMethod) {
                 case SwapContractMethod.INCREASE_ALLOWANCE:
                     topText = `${translate('App.labels.increaseAllowance')} ${translate(
                         'App.labels.for'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.fromSymbol}`;
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.token1Symbol}`;
                     break;
 
                 case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                     topText = `${translate('App.labels.swap')} ${
-                        tx.additionalInfo?.swap.amountFrom
-                    } ${tx.additionalInfo?.swap.fromSymbol} ${translate(
+                        tx.additionalInfo?.swap.token1Amount
+                    } ${tx.additionalInfo?.swap.token1Symbol} ${translate(
                         'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountTo} ${
-                        tx.additionalInfo?.swap.toSymbol
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.token2Amount} ${
+                        tx.additionalInfo?.swap.token2Symbol
                     }`;
                     break;
 
                 case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                     topText = `${translate('App.labels.swap')} ${
-                        tx.additionalInfo?.swap.amountTo
-                    } ${tx.additionalInfo?.swap.toSymbol} ${translate(
+                        tx.additionalInfo?.swap.token2Amount
+                    } ${tx.additionalInfo?.swap.token2Symbol} ${translate(
                         'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountFrom} ${
-                        tx.additionalInfo?.swap.fromSymbol
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.token1Amount} ${
+                        tx.additionalInfo?.swap.token1Symbol
                     }`;
                     break;
             }

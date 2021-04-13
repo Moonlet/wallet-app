@@ -1347,6 +1347,39 @@ const handleCtaAction = async (
                     break;
                 }
 
+                case 'moveInputDataFromScreenToFlow': {
+                    const flowId = action.params?.params?.flowId || options?.flowId;
+
+                    // Current screen key
+                    let screenKey = options?.screenKey;
+
+                    // Build custom screen key
+                    if (action.params?.params?.step) {
+                        const account = getSelectedAccount(state);
+                        const chainId = getChainId(state, account.blockchain);
+
+                        screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step: action.params.params.step,
+                            tab: undefined
+                        });
+                    }
+
+                    if (flowId && screenKey) {
+                        const screenData =
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[screenKey].data;
+
+                        if (screenData) {
+                            setScreenInputData(flowId, screenData)(dispatch, getState);
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     if (action.params?.action) {
                         if (supportedActions[action.params.action]) {

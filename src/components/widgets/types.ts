@@ -20,6 +20,7 @@ export interface IScreenContext<ScreenParams = any> {
     tab?: string;
     flowId?: string;
     params?: ScreenParams;
+    flowData?: any;
 }
 
 export interface IScreenCtaContextParams<F = any, S = any> {

@@ -4,7 +4,8 @@ import {
     FETCH_SCREEN_DATA,
     LOAD_MORE_VALIDATORS,
     LOAD_MORE_VALIDATORS_V2,
-    SCREEN_DATA_START_LOADING
+    SCREEN_DATA_START_LOADING,
+    RESET_SCREEN_DATA
 } from './actions';
 import {
     ContextScreen,
@@ -122,6 +123,15 @@ export default (state: IScreenDataState = intialState, action: IAction): IScreen
                 }
             };
         }
+
+        case RESET_SCREEN_DATA:
+            return {
+                ...state,
+                [action.data.context.screen]: {
+                    ...state[action.data.context.screen],
+                    [action.data.screenKey]: undefined
+                }
+            };
 
         default:
             break;

@@ -1,6 +1,7 @@
 import { IScreenInputState } from './state';
 import { IAction } from '../../../types';
 import { TOGGLE_VALIDATOR_MULTIPLE, SET_INPUT, CLEAR_INPUT, SET_INPUT_VALIDATION } from './actions';
+import { RESET_SCREEN_DATA } from '../data/actions';
 
 const intialState: IScreenInputState = {};
 
@@ -71,6 +72,12 @@ export default (state: IScreenInputState = intialState, action: IAction): IScree
                         ...screenData
                     }
                 }
+            };
+
+        case RESET_SCREEN_DATA:
+            return {
+                ...state,
+                [action.data.screenKey]: undefined
             };
 
         default:

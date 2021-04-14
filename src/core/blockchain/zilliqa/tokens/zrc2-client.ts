@@ -76,7 +76,13 @@ export class Zrc2Client {
         params: { type: string; value: string; vname: string }[],
         paramName: string
     ) {
-        return params.find(paramOjb => paramOjb.vname === paramName)?.value || '';
+        return (
+            (params &&
+                Array.isArray(params) &&
+                params.length > 0 &&
+                params.find(paramOjb => paramOjb.vname === paramName)?.value) ||
+            ''
+        );
     }
 
     private findSmartContractSubField(smartContractInit, field: string) {

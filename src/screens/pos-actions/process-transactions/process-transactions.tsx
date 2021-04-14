@@ -86,7 +86,7 @@ interface IState {
     amountNeededToPassTxs: string;
 }
 
-export class ProcessTransactionsComponent extends React.Component<
+class ProcessTransactionsComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -335,29 +335,50 @@ export class ProcessTransactionsComponent extends React.Component<
 
         if (tx.additionalInfo?.swap) {
             middleText = '';
+
             switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASEALLOWANCE:
-                    topText = `${translate('App.labels.increaseAllowance')} ${translate(
-                        'App.labels.for'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.fromSymbol}`;
+                case SwapContractMethod.INCREASE_ALLOWANCE:
+                    topText =
+                        translate('App.labels.increaseAllowance') +
+                        ' ' +
+                        translate('App.labels.for').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.swap.token1Symbol;
+
                     break;
-                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
-                    topText = `${translate('App.labels.swap')} ${
-                        tx.additionalInfo?.swap.amountFrom
-                    } ${tx.additionalInfo?.swap.fromSymbol} ${translate(
-                        'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountTo} ${
-                        tx.additionalInfo?.swap.toSymbol
-                    }`;
+
+                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                    topText =
+                        translate('App.labels.swap') +
+                        ' ' +
+                        tx.additionalInfo?.swap.token1Amount +
+                        ' ' +
+                        tx.additionalInfo?.swap.token1Symbol;
+
+                    middleText =
+                        translate('App.labels.to').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.swap.token2Amount +
+                        ' ' +
+                        tx.additionalInfo?.swap.token2Symbol;
+
                     break;
-                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
-                    topText = `${translate('App.labels.swap')} ${
-                        tx.additionalInfo?.swap.amountTo
-                    } ${tx.additionalInfo?.swap.toSymbol} ${translate(
-                        'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.amountFrom} ${
-                        tx.additionalInfo?.swap.fromSymbol
-                    }`;
+
+                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
+                    topText =
+                        translate('App.labels.swap') +
+                        ' ' +
+                        tx.additionalInfo?.swap.token2Amount +
+                        ' ' +
+                        tx.additionalInfo?.swap.token2Symbol;
+
+                    middleText =
+                        translate('App.labels.to').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.swap.token1Amount +
+                        ' ' +
+                        tx.additionalInfo?.swap.token1Symbol;
+
                     break;
             }
         }
@@ -458,6 +479,13 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
+        const isSwapTx =
+            tx.additionalInfo?.swap &&
+            (tx.additionalInfo?.swap.contractMethod ===
+                SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL ||
+                tx.additionalInfo?.swap.contractMethod ===
+                    SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS);
+
         return (
             <View
                 key={index + '-view-key'}
@@ -485,7 +513,11 @@ export class ProcessTransactionsComponent extends React.Component<
 
                     <View style={styles.cardTextContainer}>
                         <Text style={styles.topText}>{topText}</Text>
-                        {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
+                        {middleText !== '' && (
+                            <Text style={[isSwapTx ? styles.topText : styles.middleText]}>
+                                {middleText}
+                            </Text>
+                        )}
                         {bottomText !== '' && (
                             <Text style={styles.bottomText}>
                                 {translate('App.labels.maxFees') + ': ' + bottomText}

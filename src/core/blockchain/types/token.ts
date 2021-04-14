@@ -60,7 +60,7 @@ export enum SwapType {
 }
 
 export enum SwapContractMethod {
-    SWAPEXACTTOKENSFORZIL = 'SwapExactTokensForZIL',
-    SWAPEXACTZILFORTOKENS = 'SwapExactZILForTokens',
-    INCREASEALLOWANCE = 'IncreaseAllowance'
+    INCREASE_ALLOWANCE = 'IncreaseAllowance',
+    SWAP_EXACT_TOKENS_FOR_ZIL = 'SwapExactTokensForZIL',
+    SWAP_EXACT_ZIL_FOR_TOKENS = 'SwapExactZILForTokens'
 }

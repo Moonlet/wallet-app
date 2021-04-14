@@ -8,7 +8,12 @@ import { config } from './config';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
 
-const ZRC2_TRANSFER_EVENTS_SUCCESS_LIST = ['Transfer', 'TransferSuccess', 'TransferFromSuccess'];
+const ZRC2_TRANSFER_EVENTS_SUCCESS_LIST = [
+    'Transfer',
+    'TransferSuccess',
+    'TransferFromSuccess',
+    'IncreasedAllowance'
+];
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -38,13 +43,12 @@ export class ClientUtils implements IClientUtils {
                         event => ZRC2_TRANSFER_EVENTS_SUCCESS_LIST.indexOf(event._eventname) >= 0
                     );
 
+                    const recipientAddress = this.client.tokens[
+                        TokenType.ZRC2
+                    ].extractEventParamsValue(transferEvent?.params, 'recipient');
+
                     data.params = [
-                        toBech32Address(
-                            this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
-                                transferEvent?.params,
-                                'recipient'
-                            )
-                        ),
+                        (recipientAddress !== '' && toBech32Address(recipientAddress)) || '',
                         this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
                             transferEvent?.params,
                             'amount'

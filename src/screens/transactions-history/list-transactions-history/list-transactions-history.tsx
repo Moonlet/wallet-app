@@ -143,6 +143,38 @@ export class TransactionsHistoryListComponent extends React.Component<
                 primaryText = ` ${formattedAmount} ${toAddress}`;
         }
 
+        if (tx.additionalInfo?.swap) {
+            switch (tx.additionalInfo?.swap.contractMethod) {
+                case SwapContractMethod.INCREASE_ALLOWANCE:
+                    primaryText = `${translate('App.labels.increaseAllowance')} ${translate(
+                        'App.labels.for'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.token1Symbol}`;
+                    break;
+
+                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                    primaryText = `${translate('App.labels.swap')} ${
+                        tx.additionalInfo?.swap.token1Amount
+                    } ${tx.additionalInfo?.swap.token1Symbol} ${translate(
+                        'App.labels.to'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.token2Amount} ${
+                        tx.additionalInfo?.swap.token2Symbol
+                    }`;
+
+                    break;
+
+                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
+                    primaryText = `${translate('App.labels.swap')} ${
+                        tx.additionalInfo?.swap.token2Amount
+                    } ${tx.additionalInfo?.swap.token2Symbol} ${translate(
+                        'App.labels.to'
+                    ).toLowerCase()} ${tx.additionalInfo?.swap.token1Amount} ${
+                        tx.additionalInfo?.swap.token1Symbol
+                    }`;
+
+                    break;
+            }
+        }
+
         return primaryText;
     }
 
@@ -279,19 +311,9 @@ export class TransactionsHistoryListComponent extends React.Component<
         }
 
         if (tx.additionalInfo?.swap) {
-            switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASEALLOWANCE:
-                    transactionType = translate('App.labels.increaseAllowance') + ' ';
-                    break;
-                case SwapContractMethod.SWAPEXACTTOKENSFORZIL:
-                    transactionType = translate('App.labels.swap') + ' ';
-                    break;
-                case SwapContractMethod.SWAPEXACTZILFORTOKENS:
-                    transactionType = translate('App.labels.swap') + ' ';
-                    break;
-                default:
-                    transactionType = '';
-            }
+            // Clear data | set details on primary text
+            transactionType = '';
+            amount = null;
         }
 
         return (

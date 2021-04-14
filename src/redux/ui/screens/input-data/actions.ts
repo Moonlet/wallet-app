@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { Dispatch } from 'react';
 import {
     IAmountInputData,
@@ -143,10 +144,11 @@ export const runScreenStateActions = (options: {
     }
 };
 
-export const setSwapInputAmount = (context: IScreenContext, screenKey: string) => async (
-    dispatch: Dispatch<IAction<any>>,
-    getState: () => IReduxState
-) => {
+export const setSwapInputAmount = (
+    context: IScreenContext,
+    screenKey: string,
+    params?: any
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const blockchain = getSelectedBlockchain(state);
 
@@ -157,47 +159,53 @@ export const setSwapInputAmount = (context: IScreenContext, screenKey: string) =
 
     // don't populate fields if empty input
     if (
-        (screenData?.swapAmountFrom === '' && screenData?.swapAmountTo === '') ||
-        (screenData?.swapAmountFrom === undefined && screenData?.swapAmountTo === undefined)
+        (screenData?.swapToken1Amount === '' && screenData?.swapToken2Amount === '') ||
+        (screenData?.swapToken1Amount === undefined && screenData?.swapToken2Amount === undefined)
     )
         return;
 
     const inputFieldFocus = screenData?.inputFieldFocus;
 
-    const toInput = inputFieldFocus === 'swapAmountFrom' ? 'swapAmountTo' : 'swapAmountFrom';
+    const toInput =
+        inputFieldFocus === 'swapToken1Amount' ? 'swapToken2Amount' : 'swapToken1Amount';
 
-    const fromTokenAmount = screenData?.swapPrice?.fromTokenAmount;
-    const toTokenAmount = screenData?.swapPrice?.toTokenAmount;
+    const token1Amount = screenData?.swapPrice?.token1Amount;
+    const token2Amount = screenData?.swapPrice?.token2Amount;
 
     const blockchainInstance = getBlockchain(blockchain);
 
     const swapType = screenData?.swapType;
 
-    let amount = '';
+    let amount: BigNumber;
 
     if (swapType === SwapType.SELL) {
         // SELL
-        if (inputFieldFocus === 'swapAmountFrom') {
-            const decimals = screenData.swapToToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+        if (inputFieldFocus === 'swapToken1Amount') {
+            const decimals = screenData.swapToken2.decimals;
+            amount = blockchainInstance.account.amountFromStd(token2Amount, decimals);
         }
-        if (inputFieldFocus === 'swapAmountTo') {
-            const decimals = screenData.swapFromToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+        if (inputFieldFocus === 'swapToken2Amount') {
+            const decimals = screenData.swapToken1.decimals;
+            amount = blockchainInstance.account.amountFromStd(token1Amount, decimals);
         }
     } else {
         // BUY
-        if (inputFieldFocus === 'swapAmountFrom') {
-            const decimals = screenData.swapToToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(fromTokenAmount, decimals).toFixed();
+        if (inputFieldFocus === 'swapToken1Amount') {
+            const decimals = screenData.swapToken2.decimals;
+            amount = blockchainInstance.account.amountFromStd(token1Amount, decimals);
         }
-        if (inputFieldFocus === 'swapAmountTo') {
-            const decimals = screenData.swapFromToken.decimals;
-            amount = blockchainInstance.account.amountFromStd(toTokenAmount, decimals).toFixed();
+        if (inputFieldFocus === 'swapToken2Amount') {
+            const decimals = screenData.swapToken1.decimals;
+            amount = blockchainInstance.account.amountFromStd(token2Amount, decimals);
         }
     }
 
-    setScreenAmount(amount, {
+    let finalAmount = '';
+
+    const uiDecimals = params?.uiDecimals;
+    finalAmount = uiDecimals ? amount.toFixed(uiDecimals, BigNumber.ROUND_DOWN) : amount.toFixed();
+
+    setScreenAmount(finalAmount, {
         screenKey,
         context,
         inputKey: toInput

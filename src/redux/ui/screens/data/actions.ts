@@ -73,6 +73,19 @@ export const fetchScreenData = (context: IScreenContext) => async (
         }
     };
 
+    let flowData;
+    if (
+        context?.flowId &&
+        state.ui.screens.inputData &&
+        state.ui.screens.inputData[context.flowId]
+    ) {
+        flowData = state.ui.screens.inputData[context.flowId].data;
+    }
+
+    if (flowData) {
+        body.context.flowData = flowData;
+    }
+
     // start loading
     dispatch({ type: SCREEN_DATA_START_LOADING, data: { request: body } });
 

@@ -23,21 +23,20 @@ import {
 } from './input-balance-format';
 import { getStakeNowSelectValidators } from './stake-now';
 import { getTokenAvailableBalanceFormat, getTokenAvailableBalance } from './token-balance';
+import { getSwapToken1AmountStd, getSwapToken2AmountStd } from './swap/amount-std';
 import {
-    getFromAmount,
-    getToAmount,
-    getFromTokenSymbol,
-    getToTokenSymbol,
-    getSwapPrice,
-    getSwapFromToken,
-    getSwapFromTokenAmount,
-    getSwapToToken,
-    getSwapToTokenAmount,
-    getSwapCustomSlippage,
-    getSwapAmountTo,
-    getSwapToDecimals,
-    getPriceUpdateTimer
-} from './swap';
+    getSwapToken1Amount,
+    getSwapToken2Amount,
+    getSwapToken2SwapPriceAmount
+} from './swap/amount';
+import {
+    getSwapToken1BlockchainSymbol,
+    getSwapToken2BlockchainSymbol
+} from './swap/blockchain-symbol';
+import { getSwapToken2Decimals } from './swap/decimals';
+import { getSwapPriceRateFormat, getSwapPriceUpdateTimer } from './swap/price';
+import { getSwapCustomSlippage } from './swap/slippage';
+import { getSwapToken1Symbol, getSwapToken2Symbol } from './swap/symbol';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
@@ -61,21 +60,33 @@ const uiStateSelectors = {
 
     getTokenAvailableBalanceFormat,
     getTokenAvailableBalance,
-    getFromTokenSymbol,
-    getToTokenSymbol,
-    getFromAmount,
-    getToAmount,
 
-    getSwapPrice,
-    getSwapFromToken,
-    getSwapFromTokenAmount,
-    getSwapToToken,
-    getSwapToTokenAmount,
+    // Amount std
+    getSwapToken1AmountStd,
+    getSwapToken2AmountStd,
+
+    // Amount
+    getSwapToken1Amount,
+    getSwapToken2Amount,
+    getSwapToken2SwapPriceAmount,
+
+    // Blockchain:Symbol
+    getSwapToken1BlockchainSymbol,
+    getSwapToken2BlockchainSymbol,
+
+    // Decimals
+    getSwapToken2Decimals,
+
+    // Price
+    getSwapPriceRateFormat,
+    getSwapPriceUpdateTimer,
+
+    // Slippage
     getSwapCustomSlippage,
-    getSwapAmountTo,
-    getSwapToDecimals,
 
-    getPriceUpdateTimer
+    // Symbol
+    getSwapToken1Symbol,
+    getSwapToken2Symbol
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

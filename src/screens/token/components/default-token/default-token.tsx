@@ -131,7 +131,8 @@ class DefaultTokenScreenComponent extends React.Component<
                                         context: {
                                             screen: 'Swap',
                                             step: 'SwapEnterAmount',
-                                            key: 'swap-enter-amount'
+                                            key: 'swap-enter-amount',
+                                            params: { token: token.symbol }
                                         },
                                         navigationOptions: {
                                             title: translate('App.labels.swap')

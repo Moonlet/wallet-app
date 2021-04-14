@@ -125,7 +125,7 @@ const buildValidators = (
         tab: undefined
     });
 
-    const data = state.ui.screens.inputData[screenKey].data;
+    const data = state.ui.screens.inputData[screenKey]?.data;
 
     const validators: {
         validator: IValidator;
@@ -160,7 +160,7 @@ const buildValidators = (
         state.ui.screens.inputData[screenKey]?.data?.amount
     ) {
         const amountSplit = splitStake(
-            state.ui.screens.inputData[screenKey].data.amount,
+            state.ui.screens.inputData[screenKey]?.data.amount,
             action.params.params.validators.length
         );
         for (const validator of action.params.params.validators) {
@@ -310,7 +310,7 @@ const handleCtaAction = async (
                             state.ui.screens.inputData &&
                             state.ui.screens.inputData[screenKey]?.data?.amount
                         ) {
-                            const amount = state.ui.screens.inputData[screenKey].data.amount;
+                            const amount = state.ui.screens.inputData[screenKey]?.data.amount;
 
                             const validators = [buildDummyValidator(validatorId, validatorName)];
 
@@ -361,7 +361,7 @@ const handleCtaAction = async (
                     ) {
                         const { token, validators } = action.params.params;
 
-                        const amount = state.ui.screens.inputData[screenKey].data.amount;
+                        const amount = state.ui.screens.inputData[screenKey]?.data.amount;
 
                         const v = [];
                         for (const val of validators) {
@@ -1226,7 +1226,7 @@ const handleCtaAction = async (
                         tab: undefined
                     });
 
-                    const data = state.ui.screens.inputData[screenKey].data;
+                    const data = state.ui.screens.inputData[screenKey]?.data;
 
                     const amount = action.params.params.amount;
 
@@ -1272,7 +1272,7 @@ const handleCtaAction = async (
                         tab: undefined
                     });
 
-                    const amount = state.ui.screens.inputData[screenKey].data?.amount;
+                    const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
 
                     solanaCreateStakeAccount(
                         getSelectedAccount(state),
@@ -1301,7 +1301,7 @@ const handleCtaAction = async (
                         tab: undefined
                     });
 
-                    const amount = state.ui.screens.inputData[screenKey].data?.amount;
+                    const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
 
                     solanaSplitStakeAccount(
                         getSelectedAccount(state),
@@ -1344,6 +1344,39 @@ const handleCtaAction = async (
                         undefined, // feeOptions
                         { stakeAccountKey: action.params.params.stakeAccountKey, amount }
                     )(dispatch, getState);
+                    break;
+                }
+
+                case 'moveInputDataFromScreenToFlow': {
+                    const flowId = action.params?.params?.flowId || options?.flowId;
+
+                    // Current screen key
+                    let screenKey = options?.screenKey;
+
+                    // Build custom screen key
+                    if (action.params?.params?.step) {
+                        const account = getSelectedAccount(state);
+                        const chainId = getChainId(state, account.blockchain);
+
+                        screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step: action.params.params.step,
+                            tab: undefined
+                        });
+                    }
+
+                    if (flowId && screenKey) {
+                        const screenData =
+                            state.ui.screens.inputData &&
+                            state.ui.screens.inputData[screenKey]?.data;
+
+                        if (screenData) {
+                            setScreenInputData(flowId, screenData)(dispatch, getState);
+                        }
+                    }
                     break;
                 }
 

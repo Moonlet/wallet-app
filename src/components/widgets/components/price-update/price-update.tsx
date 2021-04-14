@@ -102,7 +102,11 @@ class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternal
                     [data.reduxKey]: response.result.data
                 });
 
-                this.props.setSwapInputAmount(this.props.context, screenKey);
+                this.props.setSwapInputAmount(
+                    this.props.context,
+                    screenKey,
+                    this.props.module?.details
+                );
             }
         } catch (error) {
             // TODO: maybe do something here

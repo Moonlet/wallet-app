@@ -28,9 +28,9 @@ interface IExternalProps {
 interface IReduxProps {
     setScreenInputData: typeof setScreenInputData;
     blockchain: Blockchain;
-    swapAmountTo: string;
+    swapToken2Amount: string;
     customSlippage: string;
-    toTokenDecimals: number;
+    token2Decimals: number;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -122,16 +122,16 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
             try {
                 const response = await this.httpClient.post('', endpointData);
                 if (response?.result?.data) {
-                    const newAmountTo = new BigNumber(response.result.data.toTokenAmount);
-                    const oldAmountTo = new BigNumber(this.props.swapAmountTo);
+                    const newAmountTo = new BigNumber(response.result.data.token2Amount);
+                    const oldAmountTo = new BigNumber(this.props.swapToken2Amount);
 
                     const newAmount = getBlockchain(this.props.blockchain).account.amountFromStd(
                         newAmountTo,
-                        this.props.toTokenDecimals
+                        this.props.token2Decimals
                     );
                     const oldAmount = getBlockchain(this.props.blockchain).account.amountFromStd(
                         oldAmountTo,
-                        this.props.toTokenDecimals
+                        this.props.token2Decimals
                     );
 
                     const pricesDiff = new BigNumber(newAmount)

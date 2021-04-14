@@ -169,8 +169,8 @@ export const setSwapInputAmount = (
     const toInput =
         inputFieldFocus === 'swapToken1Amount' ? 'swapToken2Amount' : 'swapToken1Amount';
 
-    const token1Amount = screenData?.swapPrice?.token1Amount;
-    const token2Amount = screenData?.swapPrice?.token2Amount;
+    const token1Amount = screenData?.swapPrice?.fromTokenAmount;
+    const token2Amount = screenData?.swapPrice?.toTokenAmount;
 
     const blockchainInstance = getBlockchain(blockchain);
 

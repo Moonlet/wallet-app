@@ -94,7 +94,9 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 step: 'GovPropsalList',
                 key: 'gov-propsal-list'
             },
-            navigationOptions: { title: 'Governance' },
+            navigationOptions: {
+                title: translate('App.labels.governance')
+            },
             newFlow: true
         });
     }

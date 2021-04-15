@@ -35,18 +35,6 @@ class AbsoluteModulesComponent extends React.Component<
         }
     }
 
-    public componentDidUpdate(prevProps: IExternalProps) {
-        if (JSON.stringify(this.props.module) !== JSON.stringify(prevProps.module)) {
-            if (this.props.module?.state?.actions) {
-                this.props.actions.runScreenStateActions({
-                    actions: this.props.module.state.actions,
-                    context: this.props.context,
-                    screenKey: this.props.options?.screenKey
-                });
-            }
-        }
-    }
-
     public render() {
         const { module, styles } = this.props;
         const data = module.data as IAbsoluteModulesData;

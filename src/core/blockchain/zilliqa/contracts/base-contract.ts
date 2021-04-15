@@ -22,13 +22,20 @@ export const fetchContracts = async (chainId: ChainIdType) => {
     // TODO - fetch from blockchain
 
     const keyStaking = `zilliqa.${chainId}.staking.contract`;
-    const keySwap = `zilliqa.${chainId}.moonletswap.contract`;
+    const keyMoonletSwap = `zilliqa.${chainId}.moonletswap.contract`;
+    const keyZilSwap = `zilliqa.${chainId}.zilswap.contract`;
+
     try {
-        const configs = await new ApiClient().configs.getConfigs([keyStaking, keySwap]);
+        const configs = await new ApiClient().configs.getConfigs([
+            keyStaking,
+            keyMoonletSwap,
+            keyZilSwap
+        ]);
         const values = {
             ...contracts[chainId],
             [Contracts.STAKING]: configs.result[keyStaking],
-            [Contracts.MOONLETSWAP]: configs.result[keySwap]
+            [Contracts.MOONLETSWAP]: configs.result[keyMoonletSwap],
+            [Contracts.ZILSWAP]: configs.result[keyZilSwap]
         };
         return values;
     } catch (error) {

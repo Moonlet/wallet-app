@@ -177,15 +177,9 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
             let amount = '';
             switch (tx.additionalInfo?.swap.contractMethod) {
                 case SwapContractMethod.INCREASE_ALLOWANCE:
-                    amount = tx.additionalInfo?.swap.token1From;
-                    break;
-
                 case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
-                    amount = tx.additionalInfo?.swap.token2Amount;
-                    break;
-
                 case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
-                    amount = tx.additionalInfo?.swap.token1Amount;
+                    amount = tx.additionalInfo?.swap.fromTokenAmount;
                     break;
             }
 

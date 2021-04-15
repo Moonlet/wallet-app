@@ -343,41 +343,25 @@ class ProcessTransactionsComponent extends React.Component<
                         ' ' +
                         translate('App.labels.for').toLowerCase() +
                         ' ' +
-                        tx.additionalInfo?.swap.token1Symbol;
-
-                    break;
-
-                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
-                    topText =
-                        translate('App.labels.swap') +
-                        ' ' +
-                        tx.additionalInfo?.swap.token1Amount +
-                        ' ' +
-                        tx.additionalInfo?.swap.token1Symbol;
-
-                    middleText =
-                        translate('App.labels.to').toLowerCase() +
-                        ' ' +
-                        tx.additionalInfo?.swap.token2Amount +
-                        ' ' +
-                        tx.additionalInfo?.swap.token2Symbol;
+                        tx.additionalInfo?.swap.fromTokenSymbol;
 
                     break;
 
                 case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
+                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                     topText =
                         translate('App.labels.swap') +
                         ' ' +
-                        tx.additionalInfo?.swap.token2Amount +
+                        tx.additionalInfo?.swap.fromTokenAmount +
                         ' ' +
-                        tx.additionalInfo?.swap.token2Symbol;
+                        tx.additionalInfo?.swap.fromTokenSymbol;
 
                     middleText =
                         translate('App.labels.to').toLowerCase() +
                         ' ' +
-                        tx.additionalInfo?.swap.token1Amount +
+                        tx.additionalInfo?.swap.toTokenAmount +
                         ' ' +
-                        tx.additionalInfo?.swap.token1Symbol;
+                        tx.additionalInfo?.swap.toTokenSymbol;
 
                     break;
             }

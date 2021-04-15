@@ -97,7 +97,8 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
             navigationOptions: {
                 title: translate('App.labels.governance')
             },
-            newFlow: true
+            newFlow: true,
+            resetScreen: true
         });
     }
 

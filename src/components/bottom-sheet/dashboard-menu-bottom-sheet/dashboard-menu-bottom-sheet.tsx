@@ -205,7 +205,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         this.props.blockchain === Blockchain.ZILLIQA &&
                         this.renderRow({
                             title: translate('App.labels.governance'),
-                            iconName: IconValues.ACTION_UP_DOWN,
+                            iconName: IconValues.SINGLE_NEUTRAL_ACTIONS_TEXT,
                             onPress: () => this.zilGovernance()
                         })}
 

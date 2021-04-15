@@ -146,30 +146,29 @@ export class TransactionsHistoryListComponent extends React.Component<
         if (tx.additionalInfo?.swap) {
             switch (tx.additionalInfo?.swap.contractMethod) {
                 case SwapContractMethod.INCREASE_ALLOWANCE:
-                    primaryText = `${translate('App.labels.increaseAllowance')} ${translate(
-                        'App.labels.for'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.token1Symbol}`;
-                    break;
-
-                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
-                    primaryText = `${translate('App.labels.swap')} ${
-                        tx.additionalInfo?.swap.token1Amount
-                    } ${tx.additionalInfo?.swap.token1Symbol} ${translate(
-                        'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.token2Amount} ${
-                        tx.additionalInfo?.swap.token2Symbol
-                    }`;
+                    primaryText =
+                        translate('App.labels.increaseAllowance') +
+                        ' ' +
+                        translate('App.labels.for').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.swap.fromTokenSymbol;
 
                     break;
 
                 case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
-                    primaryText = `${translate('App.labels.swap')} ${
-                        tx.additionalInfo?.swap.token2Amount
-                    } ${tx.additionalInfo?.swap.token2Symbol} ${translate(
-                        'App.labels.to'
-                    ).toLowerCase()} ${tx.additionalInfo?.swap.token1Amount} ${
-                        tx.additionalInfo?.swap.token1Symbol
-                    }`;
+                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                    primaryText =
+                        translate('App.labels.swap') +
+                        ' ' +
+                        tx.additionalInfo?.swap.fromTokenAmount +
+                        ' ' +
+                        tx.additionalInfo?.swap.fromTokenSymbol +
+                        ' ' +
+                        translate('App.labels.to').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.swap.toTokenAmount +
+                        ' ' +
+                        tx.additionalInfo?.swap.toTokenSymbol;
 
                     break;
             }

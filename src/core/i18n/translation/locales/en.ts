@@ -72,6 +72,7 @@ export const translation: ITranslations = {
                 for: 'For',
                 from: 'From',
                 function: 'Function',
+                governance: 'Governance',
                 half: 'Half',
                 hideDetails: 'Hide details',
                 holdUnveil: 'Hold to unveil',

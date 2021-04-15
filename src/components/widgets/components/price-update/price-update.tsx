@@ -121,15 +121,17 @@ class PriceUpdateModuleComponent extends React.Component<IReduxProps & IExternal
         if (data.interval) {
             const endpointData = data.endpoint.data;
 
-            Object.keys(data.endpoint.data).map(key => {
+            for (const key of Object.keys(data.endpoint.data)) {
                 if (selector.hasOwnProperty(key)) {
                     endpointData[key] = this.props[key];
                 }
-            });
+            }
 
             this.httpClient = new HttpClient(data.endpoint.url);
 
-            await this.getData(data, endpointData);
+            setTimeout(async () => {
+                await this.getData(data, endpointData);
+            }, 0);
 
             this.interval && clearInterval(this.interval);
             this.interval = setInterval(async () => {

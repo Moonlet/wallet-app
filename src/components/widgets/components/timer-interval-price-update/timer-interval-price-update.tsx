@@ -122,7 +122,7 @@ class TimerIntervalPriceUpdateModuleComponent extends React.Component<
             try {
                 const response = await this.httpClient.post('', endpointData);
                 if (response?.result?.data) {
-                    const newAmountTo = new BigNumber(response.result.data.token2Amount);
+                    const newAmountTo = new BigNumber(response.result.data.toTokenAmount);
                     const oldAmountTo = new BigNumber(this.props.swapToken2Amount);
 
                     const newAmount = getBlockchain(this.props.blockchain).account.amountFromStd(

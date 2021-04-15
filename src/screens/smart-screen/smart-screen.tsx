@@ -4,7 +4,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { Widgets } from '../../components/widgets/widgets';
-import { fetchScreenData } from '../../redux/ui/screens/data/actions';
+import { fetchScreenData, resetScreenData } from '../../redux/ui/screens/data/actions';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import {
     IScreenContext,
@@ -43,6 +43,7 @@ interface INavigationParams {
     };
     newFlow?: boolean;
     extraParams?: any;
+    resetScreen?: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -74,6 +75,7 @@ interface IReduxProps {
     runScreenValidation: typeof runScreenValidation;
     runScreenStateActions: typeof runScreenStateActions;
     setScreenInputData: typeof setScreenInputData;
+    resetScreenData: typeof resetScreenData;
 }
 
 const mapDispatchToProps = {
@@ -82,7 +84,8 @@ const mapDispatchToProps = {
     clearScreenInputData,
     runScreenValidation,
     runScreenStateActions,
-    setScreenInputData
+    setScreenInputData,
+    resetScreenData
 };
 
 interface IState {
@@ -128,6 +131,11 @@ class SmartScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
+        if (this.props.resetScreen) {
+            const screenKey = this.getScreenKey(this.props);
+            this.props.resetScreenData(this.props.context, screenKey);
+        }
+
         this.props.navigationOptions &&
             this.props.navigation.setParams({
                 navigationOptions: this.props.navigationOptions

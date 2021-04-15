@@ -137,7 +137,8 @@ class DefaultTokenScreenComponent extends React.Component<
                                         navigationOptions: {
                                             title: translate('App.labels.swap')
                                         },
-                                        newFlow: true
+                                        newFlow: true,
+                                        resetScreen: true
                                     })
                                 }
                             >

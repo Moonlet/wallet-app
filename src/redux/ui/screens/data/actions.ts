@@ -20,6 +20,7 @@ export const FETCH_SCREEN_DATA = 'FETCH_SCREEN_DATA';
 export const SCREEN_DATA_START_LOADING = 'SCREEN_DATA_START_LOADING';
 export const LOAD_MORE_VALIDATORS = 'LOAD_MORE_VALIDATORS';
 export const LOAD_MORE_VALIDATORS_V2 = 'LOAD_MORE_VALIDATORS_V2';
+export const RESET_SCREEN_DATA = 'RESET_SCREEN_DATA';
 
 export const fetchScreenData = (context: IScreenContext) => async (
     dispatch: Dispatch<
@@ -135,4 +136,14 @@ export const fetchScreenData = (context: IScreenContext) => async (
 
         SentryCaptureException(new Error('Fetch /walletUi/screen/widgets'));
     }
+};
+
+export const resetScreenData = (context: IScreenContext, screenKey: string) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    dispatch({
+        type: RESET_SCREEN_DATA,
+        data: { context, screenKey }
+    });
 };

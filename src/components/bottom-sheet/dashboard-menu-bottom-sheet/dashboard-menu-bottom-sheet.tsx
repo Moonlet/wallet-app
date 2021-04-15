@@ -86,6 +86,22 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         NavigationService.navigate('ConnectedWebsites', {});
     }
 
+    private zilGovernance() {
+        this.props.onClose();
+        NavigationService.navigate('SmartScreen', {
+            context: {
+                screen: 'Governance',
+                step: 'GovPropsalList',
+                key: 'gov-propsal-list'
+            },
+            navigationOptions: {
+                title: translate('App.labels.governance')
+            },
+            newFlow: true,
+            resetScreen: true
+        });
+    }
+
     private copyToClipboard() {
         this.props.onClose();
         Clipboard.setString(this.props.selectedAccount.address);
@@ -182,6 +198,15 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             title: translate('App.labels.addToken'),
                             iconName: IconValues.CLAIM_REWARD,
                             onPress: () => this.addToken()
+                        })}
+
+                    {/* ZIL Governance */}
+                    {Platform.OS !== 'web' &&
+                        this.props.blockchain === Blockchain.ZILLIQA &&
+                        this.renderRow({
+                            title: translate('App.labels.governance'),
+                            iconName: IconValues.SINGLE_NEUTRAL_ACTIONS_TEXT,
+                            onPress: () => this.zilGovernance()
                         })}
 
                     {/* TODO: move this - implement smart scan */}

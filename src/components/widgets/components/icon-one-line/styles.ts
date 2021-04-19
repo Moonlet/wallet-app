@@ -5,7 +5,8 @@ import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../../../styles/d
 export default (theme: ITheme) =>
     StyleSheet.create({
         row: {
-            flexDirection: 'row'
+            flexDirection: 'row',
+            flexShrink: 1
         },
         icon: {
             color: theme.colors.accent,

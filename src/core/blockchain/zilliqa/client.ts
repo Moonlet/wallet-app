@@ -5,7 +5,8 @@ import {
     IBlockInfo,
     TransactionMessageText,
     TransactionType,
-    IBalance
+    IBalance,
+    ITransactionFees
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
@@ -33,6 +34,36 @@ export class Client extends BlockchainGenericClient {
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
         this.utils = new ClientUtils(this);
         this.contracts[Contracts.STAKING] = new Staking(this);
+    }
+
+    public async getTransactionFees(txHash: string): Promise<ITransactionFees> {
+        try {
+            const txRes = await this.call('GetTransaction', [txHash]);
+
+            if (txRes?.result?.gasPrice && txRes?.result?.gasLimit) {
+                const gasPrice = new BigNumber(txRes.result.gasPrice);
+                const gasLimit = new BigNumber(txRes.result.gasLimit);
+                let gasUsed = new BigNumber(0);
+
+                let feeTotal = gasPrice.multipliedBy(gasLimit);
+
+                if (txRes?.result?.receipt?.cumulative_gas) {
+                    gasUsed = new BigNumber(txRes.result.receipt.cumulative_gas);
+                    feeTotal = gasPrice.multipliedBy(gasUsed);
+                }
+
+                return {
+                    gasPrice: gasPrice.toFixed(),
+                    gasLimit: gasLimit.toFixed(),
+                    gasUsed: gasUsed.toFixed(),
+                    feeTotal: feeTotal.toFixed()
+                };
+            } else {
+                return;
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     public async fetchRewardsForTransaction(

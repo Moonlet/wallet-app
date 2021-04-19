@@ -15,7 +15,8 @@ import {
     Blockchain,
     IBlockchainTransaction,
     ChainIdType,
-    TransactionType
+    TransactionType,
+    IFeeOptions
 } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -35,6 +36,8 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 interface IReduxProps {
     account: IAccountState;
@@ -52,6 +55,7 @@ interface IState {
         gZil: string;
         zil: string;
     };
+    txFees: IFeeOptions;
 }
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -59,7 +63,7 @@ const navigationOptions = ({ navigation }: any) => ({
     title: translate('Transaction.transactionDetails')
 });
 
-export class TransactionDetailsComponent extends React.Component<
+class TransactionDetailsComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IThemeProps<ReturnType<typeof stylesProvider>> &
         IReduxProps,
@@ -75,7 +79,8 @@ export class TransactionDetailsComponent extends React.Component<
         super(props);
 
         this.state = {
-            zilRewards: undefined
+            zilRewards: undefined,
+            txFees: undefined
         };
     }
 
@@ -83,44 +88,55 @@ export class TransactionDetailsComponent extends React.Component<
         const { account, transaction } = this.props;
         const { blockchain } = account;
 
-        if (blockchain === Blockchain.ZILLIQA && transaction?.data?.raw) {
+        if (blockchain === Blockchain.ZILLIQA) {
+            const blockchainConfig = getBlockchain(blockchain);
+            const zilClient = blockchainConfig.getClient(this.props.chainId) as ZilliqaClient;
+
             try {
-                const raw = JSON.parse(transaction.data.raw);
+                const txFees = await zilClient.getTransactionFees(this.props.transaction.id);
+                if (txFees) this.setState({ txFees });
+            } catch (error) {
+                SentryCaptureException(
+                    new Error(JSON.stringify({ event: 'getTransactionFees', error }))
+                );
+            }
 
-                if (raw?._tag === 'WithdrawStakeRewards') {
-                    const blockchainConfig = getBlockchain(blockchain);
-                    const zilClient = blockchainConfig.getClient(
-                        this.props.chainId
-                    ) as ZilliqaClient;
+            if (transaction?.data?.raw) {
+                try {
+                    const raw = JSON.parse(transaction.data.raw);
 
-                    const zilRewards = await zilClient.fetchRewardsForTransaction(
-                        this.props.transaction.id
-                    );
+                    if (raw?._tag === 'WithdrawStakeRewards') {
+                        const zilRewards = await zilClient.fetchRewardsForTransaction(
+                            this.props.transaction.id
+                        );
 
-                    // ZIL
-                    const amountZil = blockchainConfig.account.amountFromStd(
-                        new BigNumber(zilRewards.zil),
-                        12
-                    );
-                    const formatAmountZil = formatNumber(amountZil, {
-                        currency: blockchainConfig.config.coin,
-                        maximumFractionDigits: 4
-                    });
+                        // ZIL
+                        const amountZil = blockchainConfig.account.amountFromStd(
+                            new BigNumber(zilRewards.zil),
+                            12
+                        );
+                        const formatAmountZil = formatNumber(amountZil, {
+                            currency: blockchainConfig.config.coin,
+                            maximumFractionDigits: 4
+                        });
 
-                    // gZIL
-                    const amountGzil = blockchainConfig.account.amountFromStd(
-                        new BigNumber(zilRewards.zil),
-                        15
-                    );
-                    const formatAmountGzil = formatNumber(amountGzil, {
-                        currency: 'gZIL',
-                        maximumFractionDigits: 8
-                    });
+                        // gZIL
+                        const amountGzil = blockchainConfig.account.amountFromStd(
+                            new BigNumber(zilRewards.zil),
+                            15
+                        );
+                        const formatAmountGzil = formatNumber(amountGzil, {
+                            currency: 'gZIL',
+                            maximumFractionDigits: 8
+                        });
 
-                    this.setState({ zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil } });
+                        this.setState({
+                            zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil }
+                        });
+                    }
+                } catch {
+                    this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
                 }
-            } catch {
-                this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
             }
         }
     }
@@ -213,14 +229,12 @@ export class TransactionDetailsComponent extends React.Component<
                             {translate('App.labels.dateAndTime')}
                         </Text>
                     </View>
-
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>{transactionType}</Text>
                         <Text style={styles.textSecondary}>
                             {translate('Transaction.transactionType')}
                         </Text>
                     </View>
-
                     {isZilRewardsFlow ? (
                         <View>
                             {/* ZILLIQA ZIL and gZIL rewards */}
@@ -260,17 +274,19 @@ export class TransactionDetailsComponent extends React.Component<
                         </View>
                     )}
 
-                    {/* TODO: Fees */}
-                    {/* <View style={styles.rowContainer}>
-                        <Amount
-                            style={styles.textPrimary}
-                            amount={feeTotal}
-                            blockchain={account.blockchain}
-                            token={transaction?.token?.symbol || coin}
-                            tokenDecimals={transaction?.token?.decimals || tokens[coin].decimals}
-                        />
-                        <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
-                    </View> */}
+                    {/* Fees */}
+                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && this.state.txFees?.feeTotal && (
+                        <View style={styles.rowContainer}>
+                            <Amount
+                                style={styles.textPrimary}
+                                amount={this.state.txFees.feeTotal}
+                                blockchain={account.blockchain}
+                                token={transaction?.token?.symbol || coin}
+                                tokenDecimals={tokenConfig.decimals}
+                            />
+                            <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
+                        </View>
+                    )}
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>
@@ -284,21 +300,18 @@ export class TransactionDetailsComponent extends React.Component<
                             {translate('Transaction.transactionStatus')}
                         </Text>
                     </View>
-
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>
                             {formatAddress(transaction.address, account.blockchain)}
                         </Text>
                         <Text style={styles.textSecondary}>{translate('App.labels.sender')}</Text>
                     </View>
-
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>{recipient}</Text>
                         <Text style={styles.textSecondary}>
                             {translate('App.labels.recipient')}
                         </Text>
                     </View>
-
                     <TouchableOpacity
                         testID={'transaction-id'}
                         style={styles.transactionIdContainer}
@@ -318,7 +331,6 @@ export class TransactionDetailsComponent extends React.Component<
                             style={styles.icon}
                         />
                     </TouchableOpacity>
-
                     {account.blockchain !== Blockchain.SOLANA && (
                         <View style={styles.rowContainer}>
                             <Text style={styles.textPrimary}>{transaction.nonce}</Text>
@@ -327,7 +339,6 @@ export class TransactionDetailsComponent extends React.Component<
                             </Text>
                         </View>
                     )}
-
                     {account.blockchain === Blockchain.SOLANA &&
                         transaction?.additionalInfo?.currentBlockHash && (
                             <TouchableOpacity

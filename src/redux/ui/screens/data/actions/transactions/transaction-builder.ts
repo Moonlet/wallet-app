@@ -81,18 +81,28 @@ export const buildContractCallTransaction = async (
         let fetchFeesBackup = false;
 
         if (params?.fees) {
-            const gasLimit = new BigNumber(params.fees.gasLimit);
-            const minGasPrice = await client.getMinimumGasPrice();
-
-            if (minGasPrice) {
-                const gasPrice = new BigNumber(minGasPrice);
+            // Fees already calculated on api
+            if (params?.fees?.gasPrice && params?.fees?.total) {
                 feeOptions = {
-                    gasPrice: gasPrice.toFixed(),
-                    gasLimit: gasLimit.toFixed(),
-                    feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
+                    gasPrice: params.fees.gasPrice,
+                    gasLimit: params.fees.gasLimit,
+                    feeTotal: params.fees.total
                 };
             } else {
-                fetchFeesBackup = true;
+                // Calculate fees
+                const gasLimit = new BigNumber(params.fees.gasLimit);
+                const minGasPrice = await client.getMinimumGasPrice();
+
+                if (minGasPrice) {
+                    const gasPrice = new BigNumber(minGasPrice);
+                    feeOptions = {
+                        gasPrice: gasPrice.toFixed(),
+                        gasLimit: gasLimit.toFixed(),
+                        feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
+                    };
+                } else {
+                    fetchFeesBackup = true;
+                }
             }
         } else {
             fetchFeesBackup = true;

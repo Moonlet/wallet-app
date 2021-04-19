@@ -32,6 +32,8 @@ export interface IContractCallParams {
     aditionalInfo: any;
     fees?: {
         gasLimit: string;
+        gasPrice?: string;
+        total?: string;
     };
 }
 

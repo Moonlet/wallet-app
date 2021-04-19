@@ -76,6 +76,13 @@ export enum TransactionType {
     CONTRACT_DEPLOY = 'CONTRACT_DEPLOY'
 }
 
+export interface ITransactionFees {
+    gasPrice: string;
+    gasLimit: string;
+    gasUsed: string;
+    feeTotal: string;
+}
+
 export interface IFeeOptions {
     gasPrice?: string;
     gasLimit?: string;

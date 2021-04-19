@@ -88,7 +88,7 @@ class TransactionDetailsComponent extends React.Component<
         const { account, transaction } = this.props;
         const { blockchain } = account;
 
-        if (blockchain === Blockchain.ZILLIQA && transaction?.data?.raw) {
+        if (blockchain === Blockchain.ZILLIQA) {
             const blockchainConfig = getBlockchain(blockchain);
             const zilClient = blockchainConfig.getClient(this.props.chainId) as ZilliqaClient;
 
@@ -101,38 +101,42 @@ class TransactionDetailsComponent extends React.Component<
                 );
             }
 
-            try {
-                const raw = JSON.parse(transaction.data.raw);
+            if (transaction?.data?.raw) {
+                try {
+                    const raw = JSON.parse(transaction.data.raw);
 
-                if (raw?._tag === 'WithdrawStakeRewards') {
-                    const zilRewards = await zilClient.fetchRewardsForTransaction(
-                        this.props.transaction.id
-                    );
+                    if (raw?._tag === 'WithdrawStakeRewards') {
+                        const zilRewards = await zilClient.fetchRewardsForTransaction(
+                            this.props.transaction.id
+                        );
 
-                    // ZIL
-                    const amountZil = blockchainConfig.account.amountFromStd(
-                        new BigNumber(zilRewards.zil),
-                        12
-                    );
-                    const formatAmountZil = formatNumber(amountZil, {
-                        currency: blockchainConfig.config.coin,
-                        maximumFractionDigits: 4
-                    });
+                        // ZIL
+                        const amountZil = blockchainConfig.account.amountFromStd(
+                            new BigNumber(zilRewards.zil),
+                            12
+                        );
+                        const formatAmountZil = formatNumber(amountZil, {
+                            currency: blockchainConfig.config.coin,
+                            maximumFractionDigits: 4
+                        });
 
-                    // gZIL
-                    const amountGzil = blockchainConfig.account.amountFromStd(
-                        new BigNumber(zilRewards.zil),
-                        15
-                    );
-                    const formatAmountGzil = formatNumber(amountGzil, {
-                        currency: 'gZIL',
-                        maximumFractionDigits: 8
-                    });
+                        // gZIL
+                        const amountGzil = blockchainConfig.account.amountFromStd(
+                            new BigNumber(zilRewards.zil),
+                            15
+                        );
+                        const formatAmountGzil = formatNumber(amountGzil, {
+                            currency: 'gZIL',
+                            maximumFractionDigits: 8
+                        });
 
-                    this.setState({ zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil } });
+                        this.setState({
+                            zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil }
+                        });
+                    }
+                } catch {
+                    this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
                 }
-            } catch {
-                this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
             }
         }
     }

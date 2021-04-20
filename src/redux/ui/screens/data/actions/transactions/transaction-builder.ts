@@ -18,9 +18,10 @@ import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
 
 const contractCallFunctionsWhitelist = {
     [Blockchain.ZILLIQA]: [
-        SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL,
+        SwapContractMethod.INCREASE_ALLOWANCE,
         SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS,
-        SwapContractMethod.INCREASE_ALLOWANCE
+        SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL,
+        SwapContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
     ]
 };
 

@@ -1,4 +1,5 @@
 export enum RemoteFeature {
+    // please try to add keys in alphabetic order
     BETA_BADGE = 'beta_badge',
     CELO = 'feature_celo',
     COSMOS = 'feature_cosmos',
@@ -11,6 +12,5 @@ export enum RemoteFeature {
     SOLANA = 'feature_solana',
     SWAP_TOKENS = 'swap_tokens',
     TC_VERSION = 'tcVersion',
-    ZIL = 'feature_zil',
-    ZIL_STAKING_SMART_SCREEN = 'feature_zil_staking_smart_screen'
+    ZIL = 'feature_zil'
 }

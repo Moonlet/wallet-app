@@ -18,8 +18,6 @@ import { getValidators } from '../../../../../../../redux/ui/validators/selector
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
 import { getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
-import { isFeatureActive } from '../../../../../../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../../../../../../core/utils/remote-feature-config/types';
 
 interface IExternalProps {
     accountIndex: number;
@@ -107,11 +105,7 @@ export class ValidatorsTabComponent extends React.Component<
         const { validators } = this.state;
 
         const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
-        let mainCta = tokenUiConfig.accountCTA.mainCta;
-        if (isFeatureActive(RemoteFeature.ZIL_STAKING_SMART_SCREEN)) {
-            mainCta =
-                tokenUiConfig.accountCTA?.mainCtaSmartScreen || tokenUiConfig.accountCTA.mainCta;
-        }
+        const mainCta = tokenUiConfig.accountCTA.mainCta;
 
         return (
             <View style={styles.container}>

@@ -17,8 +17,6 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { NavigationService } from '../../navigation/navigation-service';
 import { AccountStats } from '../../core/blockchain/types/stats';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -76,14 +74,7 @@ export const QuickDelegateBannerComponent = (
                 maximumFractionDigits: 4
             });
 
-            const tokenUiConfig = blockchainConfig.config.ui.token;
-
-            let mainCta = blockchainConfig.config.ui.token.accountCTA.mainCta;
-            if (isFeatureActive(RemoteFeature.ZIL_STAKING_SMART_SCREEN)) {
-                mainCta =
-                    tokenUiConfig.accountCTA?.mainCtaSmartScreen ||
-                    tokenUiConfig.accountCTA.mainCta;
-            }
+            const mainCta = blockchainConfig.config.ui.token.accountCTA.mainCta;
 
             const navigateTo = mainCta.navigateTo;
 

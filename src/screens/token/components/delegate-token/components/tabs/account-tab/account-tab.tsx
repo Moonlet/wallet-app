@@ -71,11 +71,7 @@ class AccountTabComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         const tokenUiConfig = blockchainInstance.config.ui.token;
-        let mainCta = tokenUiConfig.accountCTA.mainCta;
-        if (isFeatureActive(RemoteFeature.ZIL_STAKING_SMART_SCREEN)) {
-            mainCta =
-                tokenUiConfig.accountCTA?.mainCtaSmartScreen || tokenUiConfig.accountCTA.mainCta;
-        }
+        const mainCta = tokenUiConfig.accountCTA.mainCta;
 
         return (
             <View style={styles.container}>

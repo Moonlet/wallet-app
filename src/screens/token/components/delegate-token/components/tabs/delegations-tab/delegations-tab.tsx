@@ -20,10 +20,6 @@ import { getAccount, getNrPendingTransactions } from '../../../../../../../redux
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { getDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/selectors';
 import { Text } from '../../../../../../../library';
-import {
-    isFeatureActive,
-    RemoteFeature
-} from '../../../../../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     accountIndex: number;
@@ -113,11 +109,7 @@ export class DelegationsTabComponent extends React.Component<
         const { validators } = this.state;
 
         const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
-        let mainCta = tokenUiConfig.accountCTA.mainCta;
-        if (isFeatureActive(RemoteFeature.ZIL_STAKING_SMART_SCREEN)) {
-            mainCta =
-                tokenUiConfig.accountCTA?.mainCtaSmartScreen || tokenUiConfig.accountCTA.mainCta;
-        }
+        const mainCta = tokenUiConfig.accountCTA.mainCta;
 
         return (
             <View style={styles.container}>

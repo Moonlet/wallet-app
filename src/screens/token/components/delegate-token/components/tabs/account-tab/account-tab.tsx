@@ -23,8 +23,8 @@ import { SmartScreenComponent } from '../../../../../../../components/smart-scre
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 import {
     isFeatureActive,
-    RemoteFeature,
-    remoteFeatureContainsToken
+    remoteFeatureSwapContainsToken,
+    RemoteFeature
 } from '../../../../../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
@@ -71,11 +71,7 @@ class AccountTabComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         const tokenUiConfig = blockchainInstance.config.ui.token;
-        let mainCta = tokenUiConfig.accountCTA.mainCta;
-        if (isFeatureActive(RemoteFeature.ZIL_STAKING_SMART_SCREEN)) {
-            mainCta =
-                tokenUiConfig.accountCTA?.mainCtaSmartScreen || tokenUiConfig.accountCTA.mainCta;
-        }
+        const mainCta = tokenUiConfig.accountCTA.mainCta;
 
         return (
             <View style={styles.container}>
@@ -139,29 +135,31 @@ class AccountTabComponent extends React.Component<
                                 {translate('App.labels.receive')}
                             </Button>
 
-                            {token?.symbol && remoteFeatureContainsToken(token.symbol) && (
-                                <Button
-                                    style={styles.button}
-                                    wrapperStyle={{ flex: 1 }}
-                                    onPress={() =>
-                                        NavigationService.navigate('SmartScreen', {
-                                            context: {
-                                                screen: 'Swap',
-                                                step: 'SwapEnterAmount',
-                                                key: 'swap-enter-amount',
-                                                params: { token: token.symbol }
-                                            },
-                                            navigationOptions: {
-                                                title: translate('App.labels.swap')
-                                            },
-                                            newFlow: true,
-                                            resetScreen: true
-                                        })
-                                    }
-                                >
-                                    {translate('App.labels.swap')}
-                                </Button>
-                            )}
+                            {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
+                                token?.symbol &&
+                                remoteFeatureSwapContainsToken(token.symbol) && (
+                                    <Button
+                                        style={styles.button}
+                                        wrapperStyle={{ flex: 1 }}
+                                        onPress={() =>
+                                            NavigationService.navigate('SmartScreen', {
+                                                context: {
+                                                    screen: 'Swap',
+                                                    step: 'SwapEnterAmount',
+                                                    key: 'swap-enter-amount',
+                                                    params: { token: token.symbol }
+                                                },
+                                                navigationOptions: {
+                                                    title: translate('App.labels.swap')
+                                                },
+                                                newFlow: true,
+                                                resetScreen: true
+                                            })
+                                        }
+                                    >
+                                        {translate('App.labels.swap')}
+                                    </Button>
+                                )}
                         </View>
 
                         {Platform.OS !== 'web' && (

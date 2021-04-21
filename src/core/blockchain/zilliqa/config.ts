@@ -55,14 +55,6 @@ const accountCTA = {
         title: 'App.labels.stakeNow',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
-            params: { actionText: 'App.labels.stakeNow' }
-        }
-    },
-    mainCtaSmartScreen: {
-        title: 'App.labels.stakeNow',
-        iconName: IconValues.VOTE,
-        navigateTo: {
             screen: 'SmartScreen',
             params: {
                 context: {

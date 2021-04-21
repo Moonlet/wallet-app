@@ -1,24 +1,10 @@
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
-import CONFIG from '../../config';
+import CONFIG from '../../../config';
+import { RemoteFeature } from './types';
 
-export enum RemoteFeature {
-    BETA_BADGE = 'beta_badge',
-    ZIL = 'feature_zil',
-    ZIL_STAKING_SMART_SCREEN = 'feature_zil_staking_smart_screen',
-    SOLANA = 'feature_solana',
-    NEAR = 'feature_near',
-    NEAR_LEDGER_BLE = 'near_ledger_ble',
-    COSMOS = 'feature_cosmos',
-    CELO = 'feature_celo',
-    DEV_TOOLS = 'dev_tools',
-    TC_VERSION = 'tcVersion',
-    IMPROVED_NONCE = 'improvedNonce',
-    LIST_SWAP_TOKENS = 'list_swap_tokens'
-}
-
-let featuresConfig = {};
+const featuresConfig = {};
 
 export const getRemoteConfigFeatures = async () => {
     const duration = CONFIG.firebaseConfigFetchInterval;
@@ -30,20 +16,7 @@ export const getRemoteConfigFeatures = async () => {
         await firebase.config().fetch(duration);
         await firebase.config().activateFetched();
 
-        const objects = await firebase
-            .config()
-            .getValues([
-                RemoteFeature.BETA_BADGE,
-                RemoteFeature.NEAR_LEDGER_BLE,
-                RemoteFeature.COSMOS,
-                RemoteFeature.CELO,
-                RemoteFeature.DEV_TOOLS,
-                RemoteFeature.TC_VERSION,
-                RemoteFeature.SOLANA,
-                RemoteFeature.IMPROVED_NONCE,
-                RemoteFeature.ZIL_STAKING_SMART_SCREEN,
-                RemoteFeature.LIST_SWAP_TOKENS
-            ]);
+        const objects = await firebase.config().getValues(Object.values(RemoteFeature));
 
         // Retrieve values
         Object.keys(objects).forEach(key => {
@@ -51,17 +24,10 @@ export const getRemoteConfigFeatures = async () => {
         });
     } catch (err) {
         // Set default values
-        featuresConfig = {
-            [RemoteFeature.BETA_BADGE]: JSON.stringify([]),
-            [RemoteFeature.NEAR_LEDGER_BLE]: JSON.stringify([]),
-            [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
-            [RemoteFeature.COSMOS]: JSON.stringify([]),
-            [RemoteFeature.CELO]: JSON.stringify([]),
-            [RemoteFeature.SOLANA]: JSON.stringify([]),
-            [RemoteFeature.ZIL_STAKING_SMART_SCREEN]: JSON.stringify([]),
-            [RemoteFeature.IMPROVED_NONCE]: JSON.stringify([]),
-            [RemoteFeature.TC_VERSION]: '0'
-        };
+        for (const feature of Object.values(RemoteFeature)) {
+            featuresConfig[feature] = JSON.stringify([]);
+        }
+        featuresConfig[RemoteFeature.TC_VERSION] = '0';
     }
 
     for (const key of Object.keys(featuresConfig)) {
@@ -75,10 +41,10 @@ export const getRemoteConfigFeatures = async () => {
     return featuresConfig;
 };
 
-export const remoteFeatureContainsToken = (symbol: string): boolean => {
+export const remoteFeatureSwapContainsToken = (symbol: string): boolean => {
     if (!symbol) return false;
 
-    const feature = RemoteFeature.LIST_SWAP_TOKENS;
+    const feature = RemoteFeature.LIST_SWAP_TOKENS_V2;
 
     return (
         featuresConfig &&

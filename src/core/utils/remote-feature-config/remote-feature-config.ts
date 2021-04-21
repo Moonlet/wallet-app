@@ -1,22 +1,8 @@
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
-import CONFIG from '../../config';
-
-export enum RemoteFeature {
-    BETA_BADGE = 'beta_badge',
-    ZIL = 'feature_zil',
-    ZIL_STAKING_SMART_SCREEN = 'feature_zil_staking_smart_screen',
-    SOLANA = 'feature_solana',
-    NEAR = 'feature_near',
-    NEAR_LEDGER_BLE = 'near_ledger_ble',
-    COSMOS = 'feature_cosmos',
-    CELO = 'feature_celo',
-    DEV_TOOLS = 'dev_tools',
-    TC_VERSION = 'tcVersion',
-    IMPROVED_NONCE = 'improvedNonce',
-    LIST_SWAP_TOKENS = 'list_swap_tokens'
-}
+import CONFIG from '../../../config';
+import { RemoteFeature } from './types';
 
 let featuresConfig = {};
 

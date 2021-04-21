@@ -15,7 +15,7 @@ import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-not
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
-import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
+import { getRemoteConfigFeatures } from './core/utils/remote-feature-config/remote-feature-config';
 import { ImageCanvas } from './components/image-canvas/image-canvas';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
 import { LegalModal } from './components/legal/legal-modal/legal-modal';

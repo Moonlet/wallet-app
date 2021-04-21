@@ -79,7 +79,8 @@ import { ExtensionEventEmitter } from '../../../core/communication/extension-eve
 import { ExtensionEvents } from '../../../core/communication/extension';
 import { bgPortRequest } from '../../../core/communication/bg-port';
 import { Platform } from 'react-native';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../core/utils/remote-feature-config/types';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';

@@ -18,10 +18,8 @@ import { getValidators } from '../../../../../../../redux/ui/validators/selector
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
 import { getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
-import {
-    isFeatureActive,
-    RemoteFeature
-} from '../../../../../../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../../../../../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../../../../../core/utils/remote-feature-config/types';
 
 interface IExternalProps {
     accountIndex: number;

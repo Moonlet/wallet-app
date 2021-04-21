@@ -49,10 +49,11 @@ import {
     getUnseenNotifications
 } from '../../redux/notifications/actions';
 import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
 import { StakingBetaBadge } from '../../components/staking-beta-badge/staking-beta-badge';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { ContextScreen } from '../../components/widgets/types';
+import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);

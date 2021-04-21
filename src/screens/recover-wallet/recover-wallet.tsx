@@ -16,10 +16,11 @@ import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
 import { DialogComponent } from '../../components/dialog/dialog-component';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 interface IState {
     mnemonic: string[];

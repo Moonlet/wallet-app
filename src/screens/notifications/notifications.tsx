@@ -28,7 +28,8 @@ import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ITokenConfigState } from '../../redux/tokens/state';
 import moment from 'moment';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 export interface IReduxProps {
     notifications: INotificationState;

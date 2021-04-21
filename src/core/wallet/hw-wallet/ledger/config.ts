@@ -1,5 +1,6 @@
 import { HWConnection } from '../types';
-import { isFeatureActive, RemoteFeature } from '../../../utils/remote-feature-config';
+import { isFeatureActive } from '../../../utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../utils/remote-feature-config/types';
 
 export interface ILedgerTransportConfig {
     // ios | android | web

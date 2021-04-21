@@ -12,9 +12,10 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/preferences/state';
 import { normalize } from '../../../styles/dimensions';
 import { IconValues } from '../../../components/icon/values';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../../core/utils/remote-feature-config/remote-feature-config';
 import { IReduxState } from '../../../redux/state';
 import { getNetworks } from '../../../redux/preferences/selectors';
+import { RemoteFeature } from '../../../core/utils/remote-feature-config/types';
 
 interface INavigationParams {
     blockchain: Blockchain;

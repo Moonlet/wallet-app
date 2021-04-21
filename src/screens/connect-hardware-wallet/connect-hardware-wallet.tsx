@@ -24,8 +24,9 @@ import bind from 'bind-decorator';
 import { createHWWallet } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 interface IReduxProps {
     createHWWallet: typeof createHWWallet;

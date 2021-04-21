@@ -20,10 +20,8 @@ import { getAccount, getNrPendingTransactions } from '../../../../../../../redux
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { getDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/selectors';
 import { Text } from '../../../../../../../library';
-import {
-    isFeatureActive,
-    RemoteFeature
-} from '../../../../../../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../../../../../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../../../../../core/utils/remote-feature-config/types';
 
 interface IExternalProps {
     accountIndex: number;

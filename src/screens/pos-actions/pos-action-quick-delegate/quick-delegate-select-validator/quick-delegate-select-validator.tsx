@@ -37,7 +37,8 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { NavigationService } from '../../../../navigation/navigation-service';
-import { isFeatureActive, RemoteFeature } from '../../../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../../core/utils/remote-feature-config/types';
 
 interface IReduxProps {
     account: IAccountState;

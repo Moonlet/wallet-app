@@ -5,7 +5,7 @@ import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
 import { SplashScreen } from './components/splash-screen/splash-screen';
-import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
+import { getRemoteConfigFeatures } from './core/utils/remote-feature-config/remote-feature-config';
 import { WebWalletNavigation } from './navigation/navigation.web-wallet';
 import { createAppContainer } from 'react-navigation';
 

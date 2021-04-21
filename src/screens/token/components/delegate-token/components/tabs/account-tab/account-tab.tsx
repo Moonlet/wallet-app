@@ -23,9 +23,9 @@ import { SmartScreenComponent } from '../../../../../../../components/smart-scre
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 import {
     isFeatureActive,
-    RemoteFeature,
     remoteFeatureContainsToken
-} from '../../../../../../../core/utils/remote-feature-config';
+} from '../../../../../../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../../../../../core/utils/remote-feature-config/types';
 
 interface IExternalProps {
     accountIndex: number;

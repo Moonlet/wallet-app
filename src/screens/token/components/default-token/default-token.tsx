@@ -25,7 +25,7 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TransactionStatus } from '../../../../core/wallet/types';
 import { NavigationService } from '../../../../navigation/navigation-service';
-import { remoteFeatureContainsToken } from '../../../../core/utils/remote-feature-config';
+import { remoteFeatureContainsToken } from '../../../../core/utils/remote-feature-config/remote-feature-config';
 
 interface IProps {
     accountIndex: number;

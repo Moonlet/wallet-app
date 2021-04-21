@@ -61,7 +61,8 @@ import { IconValues } from '../../../../components/icon/values';
 import { delay } from '../../../../core/utils/time';
 import { buildDummyValidator } from '../../../wallets/actions/util-actions';
 import { supportedActions } from './actions/index';
-import { isFeatureActive, RemoteFeature } from '../../../../core/utils/remote-feature-config';
+import { isFeatureActive } from '../../../../core/utils/remote-feature-config/remote-feature-config';
+import { RemoteFeature } from '../../../../core/utils/remote-feature-config/types';
 
 export interface IHandleCtaOptions {
     screenKey?: string;

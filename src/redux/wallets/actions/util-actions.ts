@@ -40,8 +40,7 @@ import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/react-native';
-import { isFeatureActive } from '../../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../../core/utils/remote-feature-config/types';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export const signAndSendTransactions = (specificIndex?: number) => async (
     dispatch: Dispatch<IAction<any>>,

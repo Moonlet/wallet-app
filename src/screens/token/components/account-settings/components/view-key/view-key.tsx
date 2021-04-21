@@ -12,9 +12,8 @@ import {
     INavigationProps
 } from '../../../../../../navigation/with-navigation-params';
 import { allowScreenshots, forbidScreenshots } from '../../../../../../core/utils/screenshot';
-import { isFeatureActive } from '../../../../../../core/utils/remote-feature-config/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../../../../../core/utils/remote-feature-config';
 import { IconValues } from '../../../../../../components/icon/values';
-import { RemoteFeature } from '../../../../../../core/utils/remote-feature-config/types';
 
 export enum KeyType {
     private = 'private',

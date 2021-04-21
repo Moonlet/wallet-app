@@ -12,10 +12,9 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 export interface IReduxProps {
     createHDWallet: typeof createHDWallet;

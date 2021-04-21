@@ -23,14 +23,13 @@ import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
 import { IAccountState, IWalletState } from '../../../redux/wallets/state';
-import { isFeatureActive } from '../../../core/utils/remote-feature-config/remote-feature-config';
 import { Dialog } from '../../dialog/dialog';
 import {
     addAccount,
     getBalance,
     setSelectedAccount
 } from '../../../redux/wallets/actions/wallet-actions';
-import { RemoteFeature } from '../../../core/utils/remote-feature-config/types';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };

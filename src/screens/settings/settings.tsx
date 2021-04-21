@@ -15,7 +15,7 @@ import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { Dialog } from '../../components/dialog/dialog';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
@@ -27,7 +27,6 @@ import { resetAllData } from '../../redux/app/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { openURL } from '../../core/utils/linking-handler';
 import { IconValues } from '../../components/icon/values';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 export interface IState {
     isTouchIDSupported: boolean;

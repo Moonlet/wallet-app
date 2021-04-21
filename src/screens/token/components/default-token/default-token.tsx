@@ -27,9 +27,9 @@ import { TransactionStatus } from '../../../../core/wallet/types';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import {
     isFeatureActive,
-    remoteFeatureSwapContainsToken
-} from '../../../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../../../core/utils/remote-feature-config/types';
+    remoteFeatureSwapContainsToken,
+    RemoteFeature
+} from '../../../../core/utils/remote-feature-config';
 
 interface IProps {
     accountIndex: number;

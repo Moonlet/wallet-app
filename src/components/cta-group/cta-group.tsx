@@ -12,8 +12,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
 import { IValidator } from '../../core/blockchain/types/stats';
 import { Dialog } from '../dialog/dialog';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface INavParams {
     accountIndex: number;

@@ -20,8 +20,7 @@ import { cloneDeep } from 'lodash';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { NavigationService } from '../../../navigation/navigation-service';
 import BigNumber from 'bignumber.js';
-import { isFeatureActive } from '../../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../../core/utils/remote-feature-config/types';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export const solanaDelegateStakeAccount = (
     account: IAccountState,

@@ -14,10 +14,9 @@ import { INetworksOptions } from '../../../redux/preferences/state';
 import { toggleTestNet } from '../../../redux/preferences/actions';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Blockchain } from '../../../core/blockchain/types';
-import { isFeatureActive } from '../../../core/utils/remote-feature-config/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { getNetworks } from '../../../redux/preferences/selectors';
 import { IconValues } from '../../../components/icon/values';
-import { RemoteFeature } from '../../../core/utils/remote-feature-config/types';
 
 export interface IReduxProps {
     testNet: boolean;

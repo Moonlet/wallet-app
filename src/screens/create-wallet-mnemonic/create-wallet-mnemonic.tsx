@@ -9,10 +9,9 @@ import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { translate } from '../../core/i18n';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
 
 const NR_MNEMONICS_SCREEN = 4;
 

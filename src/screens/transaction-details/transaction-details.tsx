@@ -37,8 +37,7 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 interface IReduxProps {
     account: IAccountState;

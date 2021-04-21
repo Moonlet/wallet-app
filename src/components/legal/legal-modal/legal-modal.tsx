@@ -7,7 +7,7 @@ import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import Modal from '../../../library/modal/modal';
 import { Legal } from '../legal';
-import { getFirebaseTCVersion } from '../../../core/utils/remote-feature-config/remote-feature-config';
+import { getFirebaseTCVersion } from '../../../core/utils/remote-feature-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationService } from '../../../navigation/navigation-service';
 

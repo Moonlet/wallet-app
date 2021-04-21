@@ -3,8 +3,7 @@ import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getBlockchain, BLOCKCHAIN_LIST } from '../../core/blockchain/blockchain-factory';
 import { createSelector } from 'reselect';
 import { IPrefState, INetworksOptions, IBlockchainsOptions, IBlockchainOptions } from './state';
-import { isFeatureActive } from '../../core/utils/remote-feature-config/remote-feature-config';
-import { RemoteFeature } from '../../core/utils/remote-feature-config/types';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdType => {
     if (!BLOCKCHAIN_LIST.includes(blockchain)) {

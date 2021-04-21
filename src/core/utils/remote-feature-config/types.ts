@@ -5,7 +5,6 @@ export enum RemoteFeature {
     COSMOS = 'feature_cosmos',
     DEV_TOOLS = 'dev_tools',
     IMPROVED_NONCE = 'improvedNonce',
-    LIST_SWAP_TOKENS = 'list_swap_tokens',
     LIST_SWAP_TOKENS_V2 = 'list_swap_tokens_v2',
     NEAR = 'feature_near',
     NEAR_LEDGER_BLE = 'near_ledger_ble',

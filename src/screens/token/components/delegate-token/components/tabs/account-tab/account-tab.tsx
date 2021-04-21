@@ -135,29 +135,31 @@ class AccountTabComponent extends React.Component<
                                 {translate('App.labels.receive')}
                             </Button>
 
-                            {token?.symbol && remoteFeatureContainsToken(token.symbol) && (
-                                <Button
-                                    style={styles.button}
-                                    wrapperStyle={{ flex: 1 }}
-                                    onPress={() =>
-                                        NavigationService.navigate('SmartScreen', {
-                                            context: {
-                                                screen: 'Swap',
-                                                step: 'SwapEnterAmount',
-                                                key: 'swap-enter-amount',
-                                                params: { token: token.symbol }
-                                            },
-                                            navigationOptions: {
-                                                title: translate('App.labels.swap')
-                                            },
-                                            newFlow: true,
-                                            resetScreen: true
-                                        })
-                                    }
-                                >
-                                    {translate('App.labels.swap')}
-                                </Button>
-                            )}
+                            {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
+                                token?.symbol &&
+                                remoteFeatureContainsToken(token.symbol) && (
+                                    <Button
+                                        style={styles.button}
+                                        wrapperStyle={{ flex: 1 }}
+                                        onPress={() =>
+                                            NavigationService.navigate('SmartScreen', {
+                                                context: {
+                                                    screen: 'Swap',
+                                                    step: 'SwapEnterAmount',
+                                                    key: 'swap-enter-amount',
+                                                    params: { token: token.symbol }
+                                                },
+                                                navigationOptions: {
+                                                    title: translate('App.labels.swap')
+                                                },
+                                                newFlow: true,
+                                                resetScreen: true
+                                            })
+                                        }
+                                    >
+                                        {translate('App.labels.swap')}
+                                    </Button>
+                                )}
                         </View>
 
                         {Platform.OS !== 'web' && (

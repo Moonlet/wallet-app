@@ -41,7 +41,7 @@ export const getRemoteConfigFeatures = async () => {
     return featuresConfig;
 };
 
-export const remoteFeatureContainsToken = (symbol: string): boolean => {
+export const remoteFeatureSwapContainsToken = (symbol: string): boolean => {
     if (!symbol) return false;
 
     const feature = RemoteFeature.LIST_SWAP_TOKENS_V2;

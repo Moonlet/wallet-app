@@ -23,7 +23,7 @@ import { SmartScreenComponent } from '../../../../../../../components/smart-scre
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 import {
     isFeatureActive,
-    remoteFeatureContainsToken
+    remoteFeatureSwapContainsToken
 } from '../../../../../../../core/utils/remote-feature-config/remote-feature-config';
 import { RemoteFeature } from '../../../../../../../core/utils/remote-feature-config/types';
 
@@ -137,7 +137,7 @@ class AccountTabComponent extends React.Component<
 
                             {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
                                 token?.symbol &&
-                                remoteFeatureContainsToken(token.symbol) && (
+                                remoteFeatureSwapContainsToken(token.symbol) && (
                                     <Button
                                         style={styles.button}
                                         wrapperStyle={{ flex: 1 }}

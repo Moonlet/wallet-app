@@ -14,6 +14,6 @@ export const getFirebaseTCVersion = (): number => {
     return undefined;
 };
 
-export const remoteFeatureContainsToken = (symbol: string): boolean => {
+export const remoteFeatureSwapContainsToken = (symbol: string): boolean => {
     return false;
 };

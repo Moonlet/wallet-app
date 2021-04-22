@@ -42,9 +42,9 @@ class AbsoluteModulesComponent extends React.Component<
         const { module1, module2 } = data;
 
         const moduleJSX = (
-            <View style={[styles.container, formatStyles(module?.style)]}>
+            <View>
                 {/* Module 1 */}
-                <View style={[styles.rowContainer, formatStyles(module1?.style)]}>
+                <View style={[styles.moduleContainer, formatStyles(module1?.style)]}>
                     {renderModule(
                         module1.module,
                         this.props.context,
@@ -54,7 +54,7 @@ class AbsoluteModulesComponent extends React.Component<
                 </View>
 
                 {/* Module 2 */}
-                <View style={[styles.rowContainer, formatStyles(module2?.style)]}>
+                <View style={[styles.moduleContainer, formatStyles(module2?.style)]}>
                     {renderModule(
                         module2.module,
                         this.props.context,
@@ -70,13 +70,13 @@ class AbsoluteModulesComponent extends React.Component<
                 <TouchableOpacity
                     onPress={() => this.props.actions.handleCta(module.cta, this.props?.options)}
                     activeOpacity={0.9}
-                    style={{ zIndex: 100 }}
+                    style={formatStyles(module?.style)}
                 >
                     {moduleJSX}
                 </TouchableOpacity>
             );
         } else {
-            return moduleJSX;
+            return <View style={formatStyles(module?.style)}>{moduleJSX}</View>;
         }
     }
 }

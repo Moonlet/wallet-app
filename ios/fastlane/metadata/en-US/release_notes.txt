@@ -1,4 +1,4 @@
-Team's log. Stardate 2104.21:
+Team's log. Stardate 2104.22:
 
 We had a pretty nasty bug with the nonce on Zilliqa blockchain, which is now fixed with this release. As well happy to let you know that we are pushing live the long awaited swap feature for ZIL gZIL pair; currently in an open beta version.
 

@@ -61,7 +61,6 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-fab-pie'),
         path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view'),
         path.resolve(appDirectory, 'node_modules/react-native-firebase'),
-        path.resolve(appDirectory, 'node_modules/react-native-ble-plx'),
         path.resolve(appDirectory, 'node_modules/@ledgerhq')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],

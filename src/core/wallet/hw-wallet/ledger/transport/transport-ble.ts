@@ -1,9 +1,9 @@
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
+// import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import { Platform, PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
 let transportOpenInProgress = false;
-let transportPromise;
+const transportPromise = null;
 
 export class BLE {
     public static async get(deviceId): Promise<Transport> {
@@ -16,7 +16,7 @@ export class BLE {
         }
         try {
             transportOpenInProgress = true;
-            transportPromise = TransportBLE.open(deviceId);
+            // transportPromise = TransportBLE.open(deviceId);
             transportOpenInProgress = false;
         } catch (e) {
             transportOpenInProgress = false;
@@ -29,19 +29,20 @@ export class BLE {
     public static async scan(callback: (event: { name: string; data?: any }) => any): Promise<any> {
         await BLE.requestPermissions();
 
-        return TransportBLE.listen({
-            complete: e => {
-                callback({ name: 'scanEnded' });
-            },
-            next: async e => {
-                if (e.type === 'add') {
-                    callback({ name: 'deviceFound', data: e.descriptor });
-                }
-            },
-            error: error => {
-                callback({ name: 'scanError', data: error });
-            }
-        });
+        return;
+        // return TransportBLE.listen({
+        //     complete: e => {
+        //         callback({ name: 'scanEnded' });
+        //     },
+        //     next: async e => {
+        //         if (e.type === 'add') {
+        //             callback({ name: 'deviceFound', data: e.descriptor });
+        //         }
+        //     },
+        //     error: error => {
+        //         callback({ name: 'scanError', data: error });
+        //     }
+        // });
     }
 
     public static async requestPermissions(): Promise<boolean> {

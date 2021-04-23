@@ -174,6 +174,7 @@ export interface IScreenWidget {
     style?: IDataStyle;
     modules: IScreenModule[];
     cta?: ICta;
+    hideExpandableIcon?: boolean;
 }
 
 export interface IScreenModule {

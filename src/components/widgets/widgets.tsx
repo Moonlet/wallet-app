@@ -139,15 +139,18 @@ class WidgetsComponent extends React.Component<
                             (typeof widget.title === 'string' ? (
                                 <View style={styles.itemHeader}>
                                     <Text style={styles.headerText}>{widget.title}</Text>
-                                    <Icon
-                                        name={
-                                            isWidgetExpanded
-                                                ? IconValues.CHEVRON_UP
-                                                : IconValues.CHEVRON_DOWN
-                                        }
-                                        size={normalize(16)}
-                                        style={styles.expandingArrow}
-                                    />
+                                    {(widget?.hideExpandableIcon === undefined ||
+                                        widget?.hideExpandableIcon === false) && (
+                                        <Icon
+                                            name={
+                                                isWidgetExpanded
+                                                    ? IconValues.CHEVRON_UP
+                                                    : IconValues.CHEVRON_DOWN
+                                            }
+                                            size={normalize(16)}
+                                            style={styles.expandingArrow}
+                                        />
+                                    )}
                                 </View>
                             ) : (
                                 <View
@@ -164,21 +167,24 @@ class WidgetsComponent extends React.Component<
                                     >
                                         {widget.title.value}
                                     </Text>
-                                    <Icon
-                                        name={
-                                            isWidgetExpanded
-                                                ? IconValues.CHEVRON_UP
-                                                : IconValues.CHEVRON_DOWN
-                                        }
-                                        size={
-                                            (formatStyles(widget.title?.iconStyle)
-                                                ?.size as number) || normalize(18)
-                                        }
-                                        style={[
-                                            styles.expandingArrow,
-                                            formatStyles(widget.title?.iconStyle)
-                                        ]}
-                                    />
+                                    {(widget?.hideExpandableIcon === undefined ||
+                                        widget?.hideExpandableIcon === false) && (
+                                        <Icon
+                                            name={
+                                                isWidgetExpanded
+                                                    ? IconValues.CHEVRON_UP
+                                                    : IconValues.CHEVRON_DOWN
+                                            }
+                                            size={
+                                                (formatStyles(widget.title?.iconStyle)
+                                                    ?.size as number) || normalize(18)
+                                            }
+                                            style={[
+                                                styles.expandingArrow,
+                                                formatStyles(widget.title?.iconStyle)
+                                            ]}
+                                        />
+                                    )}
                                 </View>
                             ))}
 

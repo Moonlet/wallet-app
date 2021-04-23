@@ -1215,19 +1215,7 @@ const handleCtaAction = async (
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);
 
-                    const token = action.params?.params?.token;
-
-                    const screenKey = getScreenDataKey({
-                        pubKey: getSelectedWallet(state)?.walletPublicKey,
-                        blockchain: account?.blockchain,
-                        chainId: String(chainId),
-                        address: account?.address,
-                        step: action.params?.params?.step,
-                        tab: undefined
-                    });
-
-                    const data = state.ui.screens.inputData[screenKey]?.data;
-
+                    const token = action.params.params.token;
                     const amount = action.params.params.amount;
 
                     const validators: {
@@ -1235,21 +1223,46 @@ const handleCtaAction = async (
                         amount: string;
                     }[] = [];
 
-                    // Build validators list from redux
-                    for (const v of data?.validators || []) {
+                    if (action.params?.params?.validator) {
+                        const validator = action.params.params.validator;
+
                         validators.push({
                             validator: buildDummyValidator(
-                                v?.id || v?.address,
-                                v.name,
-                                v.icon,
-                                v.website
+                                validator?.id || validator?.address,
+                                validator.name,
+                                validator.icon,
+                                validator.website
                             ),
                             amount
                         });
+                    } else {
+                        const screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step: action.params?.params?.step,
+                            tab: undefined
+                        });
+
+                        const data = state.ui.screens.inputData[screenKey]?.data;
+
+                        // Build validators list from redux
+                        for (const v of data?.validators || []) {
+                            validators.push({
+                                validator: buildDummyValidator(
+                                    v?.id || v?.address,
+                                    v.name,
+                                    v.icon,
+                                    v.website
+                                ),
+                                amount
+                            });
+                        }
                     }
 
                     solanaDelegateStakeAccount(
-                        getSelectedAccount(state),
+                        account,
                         validators,
                         token,
                         undefined, // feeOptions

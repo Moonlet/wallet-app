@@ -58,8 +58,8 @@ const validatorCTA = {
             params: {
                 context: {
                     screen: 'StakeNow',
-                    step: 'StakeSelectValidator',
-                    key: 'stake-now-select-validator'
+                    step: 'SelectStakeAccount',
+                    key: 'select-stake-account'
                 },
                 navigationOptions: {
                     title: 'Stake now'

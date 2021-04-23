@@ -23,10 +23,11 @@ export interface IScreenContext<ScreenParams = any> {
     flowData?: any;
 }
 
-export interface IScreenCtaContextParams<F = any, S = any> {
+export interface IScreenCtaContextParams<F = any, S = any, E = any> {
     ctaId: string;
     flowInputData: F;
     screenInputData: S;
+    otherParams?: E;
 }
 
 /** @deprecated use string instead */

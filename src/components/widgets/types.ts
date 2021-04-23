@@ -27,7 +27,7 @@ export interface IScreenCtaContextParams<F = any, S = any, E = any> {
     ctaId: string;
     flowInputData: F;
     screenInputData: S;
-    otherParams?: E;
+    extraParams?: E;
 }
 
 /** @deprecated use string instead */

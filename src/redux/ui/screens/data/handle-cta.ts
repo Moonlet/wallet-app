@@ -22,7 +22,8 @@ import {
     solanaCreateStakeAccount,
     solanaSplitStakeAccount,
     solanaUnstake,
-    solanaWithdraw
+    solanaWithdraw,
+    solanaCreateAndDelegateStakeAccount
 } from '../../../wallets/actions';
 import {
     runScreenValidation,
@@ -1288,7 +1289,7 @@ const handleCtaAction = async (
                     const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
 
                     solanaCreateStakeAccount(
-                        getSelectedAccount(state),
+                        account,
                         amount,
                         token,
                         undefined, // feeOptions
@@ -1299,6 +1300,54 @@ const handleCtaAction = async (
                     )(dispatch, getState);
                     break;
                 }
+
+                case 'solanaCreateAndDelegateStakeAccount': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const token = action.params.params.token;
+                    const validator = action.params.params.validator;
+
+                    const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+
+                    const validators: {
+                        validator: IValidator;
+                        amount: string;
+                    }[] = [];
+
+                    validators.push({
+                        validator: buildDummyValidator(
+                            validator?.id || validator?.address,
+                            validator.name,
+                            validator.icon,
+                            validator.website
+                        ),
+                        amount
+                    });
+
+                    solanaCreateAndDelegateStakeAccount(
+                        account,
+                        validators,
+                        token,
+                        undefined, // feeOptions
+                        {
+                            stakeAccountKey: action.params.params.stakeAccountKey,
+                            stakeAccountIndex: action.params.params.stakeAccountIndex,
+                            amount
+                        }
+                    )(dispatch, getState);
+                    break;
+                }
+
                 case 'solanaSplitStakeAccount': {
                     const token = action.params?.params?.token;
 

@@ -324,7 +324,11 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             return tx?.data?.params[1];
         } else {
             // Amount is stored on data params for stake tx
-            if (tx?.additionalInfo?.type === SolanaTransactionInstructionType.DELEGATE_STAKE) {
+            if (
+                tx?.additionalInfo?.type === SolanaTransactionInstructionType.DELEGATE_STAKE &&
+                tx?.data?.params &&
+                tx?.data?.params[1]
+            ) {
                 return tx?.data?.params[1];
             }
             return tx.amount;

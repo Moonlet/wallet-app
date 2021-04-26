@@ -27,7 +27,7 @@ export class Eth implements IHardwareWalletApp {
      * @param {number} path derivation path, values accepted: live, legacy
      */
     public getAddress(index: number, derivationIndex: number = 0, path: string) {
-        return this.app.getAddress(this.getPath(index, derivationIndex, path), true);
+        return this.app.getAddress(this.getPath(index, derivationIndex, path), true, false);
     }
 
     public signTransaction = async (

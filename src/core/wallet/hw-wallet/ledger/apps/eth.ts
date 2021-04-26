@@ -1,4 +1,5 @@
 import EthApp from '@ledgerhq/hw-app-eth';
+import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import { IHardwareWalletApp } from '../types';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
 import { Transaction } from 'ethereumjs-tx';
@@ -35,18 +36,29 @@ export class Eth implements IHardwareWalletApp {
         path: string,
         tx: IBlockchainTransaction
     ): Promise<any> => {
-        const transaction = new Transaction(
-            {
-                nonce: '0x' + tx.nonce.toString(16),
-                gasPrice: '0x' + new BigNumber(tx.feeOptions.gasPrice).toString(16),
-                gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
-                to: tx.toAddress,
-                value: '0x' + new BigNumber(tx.amount).toString(16)
-            },
-            {
-                chain: tx.chainId
-            }
-        );
+        const params = {
+            nonce: '0x' + tx.nonce.toString(16),
+            gasPrice: '0x' + new BigNumber(tx.feeOptions.gasPrice).toString(16),
+            gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
+            to: tx.toAddress.toLowerCase(),
+            value: '0x' + new BigNumber(tx.amount).toString(16)
+        };
+
+        let txParams;
+
+        if (tx.data) {
+            txParams = {
+                ...params,
+                data: tx.data?.raw.toLowerCase()
+            };
+            const tokenInfo = byContractAddress(tx.toAddress.toLowerCase());
+
+            if (tokenInfo) await this.app.provideERC20TokenInformation(tokenInfo);
+        } else txParams = params;
+
+        const transaction = new Transaction(txParams, {
+            chain: tx.chainId
+        });
 
         transaction.raw[6] = Buffer.from([Number(tx.chainId)]); // v
         transaction.raw[7] = Buffer.from([]); // r
@@ -60,7 +72,6 @@ export class Eth implements IHardwareWalletApp {
         transaction.v = Buffer.from(result.v, 'hex');
         transaction.r = Buffer.from(result.r, 'hex');
         transaction.s = Buffer.from(result.s, 'hex');
-
         return '0x' + transaction.serialize().toString('hex');
     };
 

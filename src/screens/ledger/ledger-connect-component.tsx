@@ -30,6 +30,7 @@ import { AnimatedValue } from 'react-navigation';
 import { SignDeclined } from './components/sign-declined/sign-declined';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ReviewMessage } from './components/review-message/review-message';
+import { SmartContractWarning } from './components/smartcontract-warning/smartcontract-warning';
 
 const ANIMATION_TIME = 300;
 
@@ -44,6 +45,7 @@ enum ScreenStep {
     OPEN_APP = 'OPEN_APP',
     VERIFY_ADDRESS = 'VERIFY_ADDRESS',
     ERROR_SCREEN = 'ERROR_SCREEN',
+    WARNING_SMART_CONTRACT_NOT_ALLOWED = 'WARNING_SMART_CONTRACT_NOT_ALLOWED',
     SIGN_DECLINED = 'SIGN_DECLINED',
     LOCATION_REQUIRED = 'LOCATION_REQUIRED',
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
@@ -237,6 +239,8 @@ export class LedgerConnectComponent extends React.Component<
                     const message = err?.message || '';
                     if (message?.indexOf('denied by the user') >= 0) {
                         this.selectStep(ScreenStep.SIGN_DECLINED);
+                    } else if (message?.includes('Please enable Contract data') >= 0) {
+                        this.selectStep(ScreenStep.WARNING_SMART_CONTRACT_NOT_ALLOWED);
                     } else {
                         this.selectStep(ScreenStep.ERROR_SCREEN);
                     }
@@ -546,6 +550,16 @@ export class LedgerConnectComponent extends React.Component<
             case ScreenStep.ERROR_SCREEN:
                 return (
                     <FailedComponent
+                        blockchain={this.state.blockchain}
+                        deviceModel={this.state.deviceModel}
+                        connectionType={this.state.connectionType}
+                        onRetry={this.onRetry}
+                        onTroubleshootPress={this.showTroubleShootPage}
+                    />
+                );
+            case ScreenStep.WARNING_SMART_CONTRACT_NOT_ALLOWED:
+                return (
+                    <SmartContractWarning
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}

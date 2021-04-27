@@ -36,16 +36,15 @@ const accountCTA = {
             screen: 'SmartScreen',
             params: {
                 context: {
-                    screen: 'StakingAccount',
-                    key: 'solana-staking-account'
+                    screen: 'StakeNow',
+                    step: 'StakeSelectValidator',
+                    key: 'stake-now-select-validator'
                 },
                 navigationOptions: {
-                    title: 'Staking accounts'
+                    title: 'Stake now'
                 },
                 newFlow: true
             }
-            // screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
-            // params: { actionText: 'App.labels.stakeNow' }
         }
     }
 };
@@ -58,16 +57,15 @@ const validatorCTA = {
             screen: 'SmartScreen',
             params: {
                 context: {
-                    screen: 'StakingAccount',
-                    key: 'solana-staking-account'
+                    screen: 'StakeNow',
+                    step: 'SelectStakeAccount',
+                    key: 'select-stake-account'
                 },
                 navigationOptions: {
-                    title: 'Staking accounts'
+                    title: 'Stake now'
                 },
                 newFlow: true
             }
-            // screen: 'PosDelegate',
-            // params: { actionText: 'App.labels.stake' }
         }
     },
     otherCtas: [
@@ -86,11 +84,6 @@ const validatorCTA = {
                     },
                     newFlow: true
                 }
-                // screen: 'PosBasicAction',
-                // params: {
-                //     actionText: 'App.labels.unstake',
-                //     basicAction: PosBasicActionType.UNSTAKE
-                // }
             }
         }
     ]

@@ -15,6 +15,7 @@ import { ClientUtils } from './client-utils';
 import { Connection } from '@solana/web3.js/src/connection';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class Client extends BlockchainGenericClient {
     private connection;
@@ -68,14 +69,20 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
-        return this.connection.sendRawTransaction(transaction).then(res => {
-            if (res) {
-                return {
-                    txHash: res,
-                    rawResponse: res
-                };
-            }
-        });
+        return this.connection
+            .sendRawTransaction(transaction)
+            .then(res => {
+                if (res) {
+                    return {
+                        txHash: res,
+                        rawResponse: res
+                    };
+                }
+            })
+            .catch((error: any) => {
+                SentryCaptureException(new Error(JSON.stringify(error)));
+                throw new Error(error);
+            });
     }
 
     public async getTransactionConfirmations(

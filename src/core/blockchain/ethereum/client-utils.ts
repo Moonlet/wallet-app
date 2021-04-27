@@ -7,6 +7,7 @@ import { config } from './config';
 import abi from 'ethereumjs-abi';
 import { Ethereum } from '.';
 import { TransactionStatus } from '../../wallet/types';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -47,28 +48,30 @@ export class ClientUtils implements IClientUtils {
         try {
             if (context?.txData?.status) {
                 status = Ethereum.transaction.getTransactionStatusByCode(context.txData.status);
-            }
-
-            if (context?.address) {
+            } else if (context?.address) {
                 const tx = await this.getTransaction(hash);
                 status = tx.status;
             }
         } catch (error) {
-            // tx is not present on the blockchain
-        }
+            // tx not present
+            let currentBlockNumber = context?.currentBlockNumber;
+            if (!currentBlockNumber) {
+                try {
+                    currentBlockNumber = await this.client
+                        .getCurrentBlock()
+                        .then(res => res.number);
+                } catch (error) {
+                    SentryCaptureException(new Error(JSON.stringify(error)));
+                }
+            }
 
-        // tx not present
-        let currentBlockNumber = context?.currentBlockNumber;
-        if (!currentBlockNumber) {
-            currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
-        }
-
-        if (
-            currentBlockNumber &&
-            context?.broadcastedOnBlock &&
-            currentBlockNumber - context?.broadcastedOnBlock > 2
-        ) {
-            status = TransactionStatus.DROPPED;
+            if (
+                currentBlockNumber &&
+                context?.broadcastedOnBlock &&
+                currentBlockNumber - context?.broadcastedOnBlock > 2
+            ) {
+                status = TransactionStatus.DROPPED;
+            }
         }
 
         return status;

@@ -4,6 +4,7 @@ import { IHardwareWalletApp } from '../types';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
 import { Transaction } from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
+import { TokenType } from '../../../../blockchain/types/token';
 
 export class Eth implements IHardwareWalletApp {
     private app: EthApp;
@@ -51,9 +52,12 @@ export class Eth implements IHardwareWalletApp {
                 ...params,
                 data: tx.data?.raw.toLowerCase()
             };
-            const tokenInfo = byContractAddress(tx.toAddress.toLowerCase());
 
-            if (tokenInfo) await this.app.provideERC20TokenInformation(tokenInfo);
+            if (tx.token.type === TokenType.ERC20) {
+                const tokenInfo = byContractAddress(tx.toAddress.toLowerCase());
+
+                if (tokenInfo) await this.app.provideERC20TokenInformation(tokenInfo);
+            }
         } else txParams = params;
 
         const transaction = new Transaction(txParams, {

@@ -5,6 +5,7 @@ import { Near } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { TransactionStatus } from '../../wallet/types';
 import { ITokenConfigState } from '../../../redux/tokens/state';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -40,21 +41,25 @@ export class ClientUtils implements IClientUtils {
                 status = tx.status;
             }
         } catch (error) {
-            // tx is not present on the blockchain
-        }
+            // tx not present
+            let currentBlockNumber = context?.currentBlockNumber;
+            if (!currentBlockNumber) {
+                try {
+                    currentBlockNumber = await this.client
+                        .getCurrentBlock()
+                        .then(res => res.number);
+                } catch (error) {
+                    SentryCaptureException(new Error(JSON.stringify(error)));
+                }
+            }
 
-        // tx not present
-        let currentBlockNumber = context?.currentBlockNumber;
-        if (!currentBlockNumber) {
-            currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
-        }
-
-        if (
-            currentBlockNumber &&
-            context?.broadcastedOnBlock &&
-            currentBlockNumber - context?.broadcastedOnBlock > 2
-        ) {
-            status = TransactionStatus.DROPPED;
+            if (
+                currentBlockNumber &&
+                context?.broadcastedOnBlock &&
+                currentBlockNumber - context?.broadcastedOnBlock > 2
+            ) {
+                status = TransactionStatus.DROPPED;
+            }
         }
 
         return status;

@@ -34,6 +34,7 @@ export const handleDynamicCta = (
         ctaId: string;
         context: IScreenContext;
         steps: string[];
+        extraParams?: any;
     }>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
@@ -46,6 +47,7 @@ export const handleDynamicCta = (
 
     const screenRequestContext = context.action.params.params.context;
     const steps = context.action.params.params?.steps || [];
+    const extraParams = context.action.params?.params?.extraParams;
 
     const screenInputData = {};
 
@@ -72,7 +74,8 @@ export const handleDynamicCta = (
     const screenRequestParams: IScreenCtaContextParams = {
         ctaId: context.action.params.params.ctaId,
         flowInputData: state.ui.screens.inputData[flowId]?.data || {},
-        screenInputData
+        screenInputData,
+        extraParams
     };
     const body: IScreenRequest = {
         context: {

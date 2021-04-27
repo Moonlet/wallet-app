@@ -23,10 +23,11 @@ export interface IScreenContext<ScreenParams = any> {
     flowData?: any;
 }
 
-export interface IScreenCtaContextParams<F = any, S = any> {
+export interface IScreenCtaContextParams<F = any, S = any, E = any> {
     ctaId: string;
     flowInputData: F;
     screenInputData: S;
+    extraParams?: E;
 }
 
 /** @deprecated use string instead */
@@ -174,6 +175,7 @@ export interface IScreenWidget {
     style?: IDataStyle;
     modules: IScreenModule[];
     cta?: ICta;
+    hideExpandableIcon?: boolean;
 }
 
 export interface IScreenModule {

@@ -23,6 +23,7 @@ import { config, Contracts } from '../solana/config';
 import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
+import { getBlockchain } from '../blockchain-factory';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -174,6 +175,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 }
 
                 break;
+
             case PosBasicActionType.WITHDRAW:
                 const transactionWithdraW: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
@@ -184,17 +186,18 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     BigNumber.ROUND_DOWN
                 );
                 transactions.push(transactionWithdraW);
-
                 break;
-            case PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE:
+
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE: {
                 const solanaTxCreate: IPosTransaction = cloneDeep(tx);
                 const solanaTransactionCreate: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
                 ].createStakeAccountWithSeed(solanaTxCreate);
                 transactions.push(solanaTransactionCreate);
-
                 break;
-            case PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE:
+            }
+
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE: {
                 const solanaTxStake: IPosTransaction = cloneDeep(tx);
                 solanaTxStake.extraFields.amount = new BigNumber(
                     (tx.validators as any)[0].amount
@@ -204,7 +207,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 ].delegateStake(solanaTxStake, (tx.validators as any)[0].validator);
                 transactions.push(solanaTransactionDelegate);
                 break;
-            case PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT:
+            }
+
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT: {
                 const solanaTxSplit: IPosTransaction = cloneDeep(tx);
                 solanaTxSplit.amount = new BigNumber(tx.amount).toFixed();
                 const solanaTransactionSplit: IBlockchainTransaction = await client.contracts[
@@ -213,20 +218,56 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 transactions.push(solanaTransactionSplit);
                 break;
-            case PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE:
+            }
+
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_UNSTAKE: {
                 const solanaTxUnstake: IPosTransaction = cloneDeep(tx);
                 const solanaTransactionUnstake: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
                 ].unStake(solanaTxUnstake, tx.validators[0]);
                 transactions.push(solanaTransactionUnstake);
                 break;
-            case PosBasicActionType.SOLANA_STAKEACCOUNT_WITHDRAW:
+            }
+
+            case PosBasicActionType.SOLANA_STAKEACCOUNT_WITHDRAW: {
                 const solanaTxWithdraw: IPosTransaction = cloneDeep(tx);
                 const solanaTransactionWithdraw: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
                 ].withdraw(solanaTxWithdraw);
                 transactions.push(solanaTransactionWithdraw);
                 break;
+            }
+
+            case PosBasicActionType.SOLANA_CREATE_AND_DELEGATE_STAKE_ACCOUNT: {
+                const blockchainInstance = getBlockchain(tx.account.blockchain);
+                const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
+
+                const amount = blockchainInstance.account
+                    .amountToStd(tx.extraFields.amount, tokenConfig.decimals)
+                    .toFixed(0, BigNumber.ROUND_DOWN);
+
+                // Create stake account tx
+                const solanaTxCreate: IPosTransaction = cloneDeep(tx);
+                solanaTxCreate.amount = amount;
+                solanaTxCreate.extraFields.posAction =
+                    PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE;
+                const solanaTransactionCreate: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].createStakeAccountWithSeed(solanaTxCreate);
+                solanaTransactionCreate.amount = amount;
+                transactions.push(solanaTransactionCreate);
+
+                // Delegate tx
+                const solanaTxStake: IPosTransaction = cloneDeep(tx);
+                solanaTxStake.extraFields.amount = amount;
+                solanaTxCreate.extraFields.posAction =
+                    PosBasicActionType.SOLANA_STAKEACCOUNT_DELEGATE;
+                const solanaTransactionDelegate: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].delegateStake(solanaTxStake, (tx.validators as any)[0].validator);
+                transactions.push(solanaTransactionDelegate);
+                break;
+            }
         }
 
         return transactions;
@@ -282,6 +323,14 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         if (tokenInfo.type === TokenType.ERC20) {
             return tx?.data?.params[1];
         } else {
+            // Amount is stored on data params for stake tx
+            if (
+                tx?.additionalInfo?.type === SolanaTransactionInstructionType.DELEGATE_STAKE &&
+                tx?.data?.params &&
+                tx?.data?.params[1]
+            ) {
+                return tx?.data?.params[1];
+            }
             return tx.amount;
         }
     }

@@ -32,12 +32,46 @@ export class ClientUtils implements IClientUtils {
         });
     }
 
-    // TODO: fix this in order to use Sign Transaction(s) Screen
     async getTransactionStatus(
         hash: string,
-        context: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
+        context: {
+            address?: string;
+            txData?: any;
+            broadcastedOnBlock?: number;
+            currentBlockNumber?: number;
+            token?: ITokenConfigState;
+        }
     ): Promise<TransactionStatus> {
-        return Promise.reject('Ethereum ClientUtils.getTransactionStatus() not impelmented');
+        let status = TransactionStatus.PENDING;
+
+        try {
+            if (context?.txData?.status) {
+                status = Ethereum.transaction.getTransactionStatusByCode(context.txData.status);
+            }
+
+            if (context?.address) {
+                const tx = await this.getTransaction(hash);
+                status = tx.status;
+            }
+        } catch (error) {
+            // tx is not present on the blockchain
+        }
+
+        // tx not present
+        let currentBlockNumber = context?.currentBlockNumber;
+        if (!currentBlockNumber) {
+            currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
+        }
+
+        if (
+            currentBlockNumber &&
+            context?.broadcastedOnBlock &&
+            currentBlockNumber - context?.broadcastedOnBlock > 2
+        ) {
+            status = TransactionStatus.DROPPED;
+        }
+
+        return status;
     }
 
     async buildTransactionFromBlockchain(txInfo, txReceipt) {

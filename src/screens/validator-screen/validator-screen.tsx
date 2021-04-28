@@ -89,6 +89,18 @@ export class ValidatorScreenComponent extends React.Component<
             );
         }
 
+        const mainCta = config.ui.token.validatorCTA.mainCta;
+        mainCta.navigateTo.params = {
+            ...mainCta.navigateTo.params,
+            context: {
+                ...mainCta.navigateTo.params?.context,
+                params: {
+                    ...mainCta.navigateTo.params?.context?.params,
+                    validatorId: validator.id
+                }
+            }
+        };
+
         return (
             <View style={styles.container}>
                 <View style={styles.topContainer}>
@@ -131,7 +143,7 @@ export class ValidatorScreenComponent extends React.Component<
 
                 <View style={styles.bottomContainer}>
                     <CtaGroup
-                        mainCta={config.ui.token.validatorCTA.mainCta}
+                        mainCta={mainCta}
                         otherCtas={otherCtas}
                         params={{
                             accountIndex: this.props.accountIndex,

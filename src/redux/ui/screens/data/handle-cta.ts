@@ -22,7 +22,8 @@ import {
     solanaCreateStakeAccount,
     solanaSplitStakeAccount,
     solanaUnstake,
-    solanaWithdraw
+    solanaWithdraw,
+    solanaCreateAndDelegateStakeAccount
 } from '../../../wallets/actions';
 import {
     runScreenValidation,
@@ -1215,19 +1216,7 @@ const handleCtaAction = async (
                     const account = getSelectedAccount(state);
                     const chainId = getChainId(state, account.blockchain);
 
-                    const token = action.params?.params?.token;
-
-                    const screenKey = getScreenDataKey({
-                        pubKey: getSelectedWallet(state)?.walletPublicKey,
-                        blockchain: account?.blockchain,
-                        chainId: String(chainId),
-                        address: account?.address,
-                        step: action.params?.params?.step,
-                        tab: undefined
-                    });
-
-                    const data = state.ui.screens.inputData[screenKey]?.data;
-
+                    const token = action.params.params.token;
                     const amount = action.params.params.amount;
 
                     const validators: {
@@ -1235,21 +1224,46 @@ const handleCtaAction = async (
                         amount: string;
                     }[] = [];
 
-                    // Build validators list from redux
-                    for (const v of data?.validators || []) {
+                    if (action.params?.params?.validator) {
+                        const validator = action.params.params.validator;
+
                         validators.push({
                             validator: buildDummyValidator(
-                                v?.id || v?.address,
-                                v.name,
-                                v.icon,
-                                v.website
+                                validator?.id || validator?.address,
+                                validator.name,
+                                validator.icon,
+                                validator.website
                             ),
                             amount
                         });
+                    } else {
+                        const screenKey = getScreenDataKey({
+                            pubKey: getSelectedWallet(state)?.walletPublicKey,
+                            blockchain: account?.blockchain,
+                            chainId: String(chainId),
+                            address: account?.address,
+                            step: action.params?.params?.step,
+                            tab: undefined
+                        });
+
+                        const data = state.ui.screens.inputData[screenKey]?.data;
+
+                        // Build validators list from redux
+                        for (const v of data?.validators || []) {
+                            validators.push({
+                                validator: buildDummyValidator(
+                                    v?.id || v?.address,
+                                    v.name,
+                                    v.icon,
+                                    v.website
+                                ),
+                                amount
+                            });
+                        }
                     }
 
                     solanaDelegateStakeAccount(
-                        getSelectedAccount(state),
+                        account,
                         validators,
                         token,
                         undefined, // feeOptions
@@ -1275,7 +1289,7 @@ const handleCtaAction = async (
                     const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
 
                     solanaCreateStakeAccount(
-                        getSelectedAccount(state),
+                        account,
                         amount,
                         token,
                         undefined, // feeOptions
@@ -1286,6 +1300,54 @@ const handleCtaAction = async (
                     )(dispatch, getState);
                     break;
                 }
+
+                case 'solanaCreateAndDelegateStakeAccount': {
+                    const account = getSelectedAccount(state);
+                    const chainId = getChainId(state, account.blockchain);
+
+                    const screenKey = getScreenDataKey({
+                        pubKey: getSelectedWallet(state)?.walletPublicKey,
+                        blockchain: account?.blockchain,
+                        chainId: String(chainId),
+                        address: account?.address,
+                        step: action.params?.params?.step,
+                        tab: undefined
+                    });
+
+                    const token = action.params.params.token;
+                    const validator = action.params.params.validator;
+
+                    const amount = state.ui.screens.inputData[screenKey]?.data?.amount;
+
+                    const validators: {
+                        validator: IValidator;
+                        amount: string;
+                    }[] = [];
+
+                    validators.push({
+                        validator: buildDummyValidator(
+                            validator?.id || validator?.address,
+                            validator.name,
+                            validator.icon,
+                            validator.website
+                        ),
+                        amount
+                    });
+
+                    solanaCreateAndDelegateStakeAccount(
+                        account,
+                        validators,
+                        token,
+                        undefined, // feeOptions
+                        {
+                            stakeAccountKey: action.params.params.stakeAccountKey,
+                            stakeAccountIndex: action.params.params.stakeAccountIndex,
+                            amount
+                        }
+                    )(dispatch, getState);
+                    break;
+                }
+
                 case 'solanaSplitStakeAccount': {
                     const token = action.params?.params?.token;
 

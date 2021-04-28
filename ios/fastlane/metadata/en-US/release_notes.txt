@@ -1,6 +1,6 @@
-Team's log. Stardate 2104.22:
+Team's log. Stardate 2104.28:
 
-We had a pretty nasty bug with the nonce on Zilliqa blockchain, which is now fixed with this release. As well happy to let you know that we are pushing live the long awaited swap feature for ZIL gZIL pair; currently in an open beta version.
+In the past weeks we fixed some annoying bugs on Solana. Anyway, happy to let you know that everything works well now.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

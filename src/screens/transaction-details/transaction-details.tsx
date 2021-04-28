@@ -37,7 +37,6 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 interface IReduxProps {
     account: IAccountState;
@@ -275,7 +274,7 @@ class TransactionDetailsComponent extends React.Component<
                     )}
 
                     {/* Fees */}
-                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && this.state.txFees?.feeTotal && (
+                    {this.state.txFees?.feeTotal && (
                         <View style={styles.rowContainer}>
                             <Amount
                                 style={styles.textPrimary}

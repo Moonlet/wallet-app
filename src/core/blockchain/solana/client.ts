@@ -68,14 +68,19 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
-        return this.connection.sendRawTransaction(transaction).then(res => {
+        try {
+            const res = await this.connection.sendRawTransaction(transaction);
             if (res) {
                 return {
                     txHash: res,
                     rawResponse: res
                 };
+            } else {
+                throw new Error(res);
             }
-        });
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     public async getTransactionConfirmations(

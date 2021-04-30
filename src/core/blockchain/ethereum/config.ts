@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { DAI_MAINNET } from './tokens/dai';
@@ -17,6 +17,8 @@ import { USDC_MAINNET } from './tokens/usdCoin';
 import { YFI_MAINNET } from './tokens/yearnFinance';
 import { AccountType } from '../../../redux/wallets/state';
 import { IDRT_MAINNET } from './tokens/idrt';
+import { GRT_MAINNET, GRT_TESTNET } from './tokens/grt';
+import { IconValues } from '../../../components/icon/values';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -39,6 +41,78 @@ export const ETH_NATIVE: ITokenConfigState = {
     }
 };
 
+const accountCTA = {
+    mainCta: {
+        title: 'App.labels.stakeNow',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakeNow',
+                    step: 'StakeSelectValidator',
+                    key: 'stake-now-select-validator'
+                },
+                navigationOptions: {
+                    title: 'Stake now'
+                },
+                newFlow: true
+            }
+        }
+    }
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.stake',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'PosDelegate',
+            params: { actionText: 'App.labels.stake' }
+        }
+    },
+    otherCtas: [
+        {
+            title: 'App.labels.claimReward',
+            iconName: IconValues.CLAIM_REWARD,
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.claimReward',
+                    basicAction: PosBasicActionType.CLAIM_REWARD_NO_INPUT,
+                    unlockDays: '3 days'
+                }
+            }
+        },
+        {
+            title: 'App.labels.switchNode',
+            iconName: IconValues.REVOTE,
+            navigateTo: {
+                screen: 'SmartScreen',
+                params: {
+                    context: {
+                        screen: 'SwitchNode',
+                        step: 'SwitchNodeSelectNode',
+                        key: 'switch-node-select-node'
+                    },
+                    newFlow: true
+                }
+            }
+        },
+        {
+            title: 'App.labels.unstake',
+            iconName: IconValues.UNVOTE,
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.unstake',
+                    basicAction: PosBasicActionType.UNSTAKE
+                }
+            }
+        }
+    ]
+};
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/60'/0'/0`,
     derivationType: DerivationType.HD_KEY,
@@ -48,6 +122,7 @@ export const config: IBlockchainConfig = {
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {
         '1': {
+            GRT: GRT_MAINNET,
             DAI: DAI_MAINNET,
             USDT: USDT_MAINNET,
             LINK: LINK_MAINNET,
@@ -60,6 +135,9 @@ export const config: IBlockchainConfig = {
             COMP: COMP_MAINNET,
             SNX: SNX_MAINNET,
             IDRT: IDRT_MAINNET
+        },
+        '4': {
+            GRT: GRT_TESTNET
         }
     },
     tokens: {
@@ -89,6 +167,33 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalStakes',
+            amountCardLabel: 'Validator.myStake',
+            maximumNumberOfValidators: 9999 // TBD
+        },
+        token: {
+            labels: {
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.myStakes',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
+            },
+            actionScreenLabels: {
+                unstake: 'Validator.unstakeScreenMessageZil',
+                redelegate: 'Validator.restakeScreenMessageZil'
+            },
+            sendStepLabels: [
+                'Validator.selectValidator',
+                'App.labels.enterAmount',
+                'Validator.confirmStake'
+            ],
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta
+            },
+            validatorCTA
+        },
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,

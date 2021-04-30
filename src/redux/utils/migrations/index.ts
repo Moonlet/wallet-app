@@ -8,6 +8,7 @@ import v8 from './008';
 import v9 from './009';
 import v10 from './010';
 import v11 from './011';
+import v12 from './012';
 
 export const migrations: any = {
     /**
@@ -49,5 +50,9 @@ export const migrations: any = {
     /**
      * Solana change `Account 0` to `Root Account` - 25 Mar 2021
      */
-    11: v11
+    11: v11,
+    /**
+     * Add GRT testnet to rinkeby and GRT Mainnet - 25 Apr 2021
+     */
+    12: v12
 };

@@ -685,6 +685,7 @@ export const translation: ITranslations = {
             NANO_X_CONNECTED:
                 'Please make sure your Ledger Nano X is unlocked with Bluetooth enabled.',
             somethingWentWrong: 'Oops, something went wrong...',
+            enableContractData: 'Please enable Contract data on the {{blockchain}} app Settings',
             verificationFailed: 'Verifcation failed',
             tryAgain:
                 'Please try again. If the problem continues, check this troubleshooting guideline:',

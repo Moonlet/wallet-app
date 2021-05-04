@@ -114,6 +114,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     const outboundTransactions = getSelectedAccountTransactions(getState()).filter(
                         tx => tx.address === account.address
                     );
+
                     // checking if there are transactions with same nonce
                     let outTx: IBlockchainTransaction = outboundTransactions.find(
                         tx => tx.nonce === nonce

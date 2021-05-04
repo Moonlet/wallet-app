@@ -17,6 +17,7 @@ import { ClientUtils } from './client-utils';
 import { Ethereum } from '.';
 import { fixEthAddress } from '../../utils/format-address';
 import CONFIG from '../../../config';
+import { HttpClient } from '../../utils/http-client';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -142,7 +143,7 @@ export class Client extends BlockchainGenericClient {
                 fastest: BigNumber;
             };
             if (results[1]) {
-                const response = await results[1].json();
+                const response = results[1];
 
                 // Need to divide by 10 the response from ethgasAPI.json
                 // Note: To convert the provided values to gwei, divide by 10
@@ -220,10 +221,14 @@ export class Client extends BlockchainGenericClient {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);
         }
 
+        const httpGetGasPrice = new HttpClient(
+            CONFIG.walletApiBaseUrl + '/blockchain/ethereum/gas-prices'
+        );
+
         return Promise.all([
             gasEstimatePromise,
             // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
-            fetch(CONFIG.walletApiBaseUrl + '/blockchain/ethereum/gas-prices')
+            httpGetGasPrice.get('')
         ]);
     }
 

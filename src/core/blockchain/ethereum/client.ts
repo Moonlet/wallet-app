@@ -223,7 +223,6 @@ export class Client extends BlockchainGenericClient {
 
         return Promise.all([
             gasEstimatePromise,
-            // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
             new HttpClient(CONFIG.walletApiBaseUrl).get('/blockchain/ethereum/gas-prices')
         ]);
     }

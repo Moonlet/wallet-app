@@ -221,14 +221,10 @@ export class Client extends BlockchainGenericClient {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);
         }
 
-        const httpGetGasPrice = new HttpClient(
-            CONFIG.walletApiBaseUrl + '/blockchain/ethereum/gas-prices'
-        );
-
         return Promise.all([
             gasEstimatePromise,
             // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
-            httpGetGasPrice.get('')
+            new HttpClient(CONFIG.walletApiBaseUrl).get('/blockchain/ethereum/gas-prices')
         ]);
     }
 

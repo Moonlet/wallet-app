@@ -79,12 +79,6 @@ export class NetworkOptionsComponent extends React.Component<
                         ) {
                             return <View key={index} />;
                         }
-                        if (
-                            blockchain === Blockchain.SOLANA &&
-                            isFeatureActive(RemoteFeature.SOLANA) === false
-                        ) {
-                            return <View key={index} />;
-                        }
 
                         return (
                             <View key={index}>

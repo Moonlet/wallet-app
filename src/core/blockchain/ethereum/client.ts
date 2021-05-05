@@ -16,6 +16,8 @@ import { NameService } from './name-service';
 import { ClientUtils } from './client-utils';
 import { Ethereum } from '.';
 import { fixEthAddress } from '../../utils/format-address';
+import CONFIG from '../../../config';
+import { HttpClient } from '../../utils/http-client';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -136,39 +138,35 @@ export class Client extends BlockchainGenericClient {
                 }
             }
             let presets: {
-                cheap: BigNumber;
                 standard: BigNumber;
                 fast: BigNumber;
                 fastest: BigNumber;
             };
             if (results[1]) {
-                const response = await results[1].json();
+                const response = results[1];
 
                 // Need to divide by 10 the response from ethgasAPI.json
                 // Note: To convert the provided values to gwei, divide by 10
 
-                presets = {
-                    cheap: Ethereum.account.convertUnit(
-                        new BigNumber(response.safeLow).dividedBy(new BigNumber(10)),
-                        config.feeOptions.ui.gasPriceUnit,
-                        config.defaultUnit
-                    ),
-                    standard: Ethereum.account.convertUnit(
-                        new BigNumber(response.average).dividedBy(new BigNumber(10)),
-                        config.feeOptions.ui.gasPriceUnit,
-                        config.defaultUnit
-                    ),
-                    fast: Ethereum.account.convertUnit(
-                        new BigNumber(response.fast).dividedBy(new BigNumber(10)),
-                        config.feeOptions.ui.gasPriceUnit,
-                        config.defaultUnit
-                    ),
-                    fastest: Ethereum.account.convertUnit(
-                        new BigNumber(response.fastest).dividedBy(new BigNumber(10)),
-                        config.feeOptions.ui.gasPriceUnit,
-                        config.defaultUnit
-                    )
-                };
+                if (response && response.result) {
+                    presets = {
+                        standard: Ethereum.account.convertUnit(
+                            new BigNumber(response.result.data.average),
+                            config.feeOptions.ui.gasPriceUnit,
+                            config.defaultUnit
+                        ),
+                        fast: Ethereum.account.convertUnit(
+                            new BigNumber(response.result.data.fast),
+                            config.feeOptions.ui.gasPriceUnit,
+                            config.defaultUnit
+                        ),
+                        fastest: Ethereum.account.convertUnit(
+                            new BigNumber(response.result.data.fastest),
+                            config.feeOptions.ui.gasPriceUnit,
+                            config.defaultUnit
+                        )
+                    };
+                }
             }
 
             const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
@@ -225,8 +223,7 @@ export class Client extends BlockchainGenericClient {
 
         return Promise.all([
             gasEstimatePromise,
-            // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
-            fetch('https://ethgasstation.info/json/ethgasAPI.json')
+            new HttpClient(CONFIG.walletApiBaseUrl).get('/blockchain/ethereum/gas-prices')
         ]);
     }
 

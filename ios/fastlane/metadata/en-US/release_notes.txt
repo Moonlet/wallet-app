@@ -1,6 +1,6 @@
 Team's log. Stardate 2105.05:
 
-We had some issues with SOL. The data was not consistent and randomly it disappeared from blockchain portfolio. It has been fixed now. Anyway, happy to let you know that everything works well now. 
+The ETH fees were optimised and are working smoothly now. We also had some issues with SOL. The data was not consistent and randomly it disappeared from blockchain portfolio. It has been fixed now. Anyway, happy to let you know that everything works well now.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

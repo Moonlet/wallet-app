@@ -106,11 +106,6 @@ export const ledgerSetupConfig = async (): Promise<ILedgerTransportConfig> => {
             delete ledgerConfigInternal.ios.CELO;
         }
 
-        if (!isFeatureActive(RemoteFeature.SOLANA)) {
-            delete ledgerConfigInternal.android.SOLANA;
-            delete ledgerConfigInternal.ios.SOLANA;
-        }
-
         return resolve(ledgerConfigInternal);
     });
 };

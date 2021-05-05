@@ -50,7 +50,6 @@ import {
 } from '../../redux/notifications/actions';
 import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-import { StakingBetaBadge } from '../../components/staking-beta-badge/staking-beta-badge';
 import { fetchScreenData } from '../../redux/ui/screens/data/actions';
 import { ContextScreen } from '../../components/widgets/types';
 
@@ -472,7 +471,6 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
-                {isFeatureActive(RemoteFeature.BETA_BADGE) && <StakingBetaBadge />}
                 <TestnetBadge />
                 <LedgerBadge hwOptions={wallet?.hwOptions} />
 

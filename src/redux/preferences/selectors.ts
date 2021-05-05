@@ -57,10 +57,6 @@ export const getNetworks = createSelector(
                     if (isFeatureActive(RemoteFeature.CELO) === true) {
                         networks[blockchain] = network;
                     }
-                } else if (blockchain === Blockchain.SOLANA) {
-                    if (isFeatureActive(RemoteFeature.SOLANA) === true) {
-                        networks[blockchain] = network;
-                    }
                 } else {
                     networks[blockchain] = network;
                 }
@@ -102,10 +98,6 @@ export const getBlockchainsPortfolio = createSelector(
                 }
             } else if (blockchain === Blockchain.CELO) {
                 if (isFeatureActive(RemoteFeature.CELO) === true) {
-                    list[blockchain] = blockchainObject;
-                }
-            } else if (blockchain === Blockchain.SOLANA) {
-                if (isFeatureActive(RemoteFeature.SOLANA) === true) {
                     list[blockchain] = blockchainObject;
                 }
             } else {

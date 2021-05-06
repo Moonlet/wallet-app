@@ -76,8 +76,18 @@ const validatorCTA = {
         title: 'App.labels.stake',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'PosDelegate',
-            params: { actionText: 'App.labels.stake' }
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakeNow',
+                    step: 'StakeNowEnterAmountValidators',
+                    key: 'stake-now-enter-amount-validators'
+                },
+                navigationOptions: {
+                    title: 'Stake now'
+                },
+                newFlow: true
+            }
         }
     },
     otherCtas: [

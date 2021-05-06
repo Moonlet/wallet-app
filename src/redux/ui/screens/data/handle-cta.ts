@@ -1498,6 +1498,21 @@ const handleCtaAction = async (
             break;
         }
 
+        case 'navigateReplace': {
+            const screen = action.params?.params?.screen || action.params?.screen;
+            const screenKey = action.params?.params?.context?.key;
+
+            NavigationService.replace(
+                screen,
+                {
+                    ...action.params?.params,
+                    extraParams: options?.extraParams
+                },
+                screenKey
+            );
+            break;
+        }
+
         case 'openUrl':
             action?.params?.url && openURL(action.params.url);
             break;

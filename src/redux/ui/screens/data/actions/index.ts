@@ -107,7 +107,11 @@ export const handleDynamicCta = (
         const screenResponse = await apiClient.http.post('/walletUi/screen/cta', body);
         const data: IScreenCtaResponse = screenResponse?.result?.data;
 
-        handleCta(data.cta, { flowId })(dispatch, getState);
+        if (data?.cta) {
+            handleCta(data.cta, { flowId })(dispatch, getState);
+        } else {
+            throw new Error(`no data cta, ${screenResponse}`);
+        }
     } catch (error) {
         // handle error
         SentryAddBreadcrumb({

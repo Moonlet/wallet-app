@@ -85,7 +85,7 @@ const validatorCTA = {
             title: 'App.labels.claimReward',
             iconName: IconValues.CLAIM_REWARD,
             navigateTo: {
-                screen: 'PosBasicAction',
+                screen: 'PosBasicActionSmartScreenWrapper',
                 params: {
                     actionText: 'App.labels.claimReward',
                     basicAction: PosBasicActionType.CLAIM_REWARD_NO_INPUT,
@@ -112,7 +112,7 @@ const validatorCTA = {
             title: 'App.labels.unstake',
             iconName: IconValues.UNVOTE,
             navigateTo: {
-                screen: 'PosBasicAction',
+                screen: 'PosBasicActionSmartScreenWrapper',
                 params: {
                     actionText: 'App.labels.unstake',
                     basicAction: PosBasicActionType.UNSTAKE

@@ -20,13 +20,9 @@ const mapDispatchToProps = {
     handleDynamicCta
 };
 
-const navigationOptions = () => ({ header: null });
-
 class PosBasicActionSmartScreenWrapperComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public static navigationOptions = navigationOptions;
-
     private sanitisedProps() {
         const props: any = klona(this.props);
 

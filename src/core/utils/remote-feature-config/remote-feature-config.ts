@@ -3,6 +3,7 @@ import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import CONFIG from '../../../config';
 import { RemoteFeature } from './types';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 const featuresConfig = {};
 
@@ -22,12 +23,14 @@ export const getRemoteConfigFeatures = async () => {
         Object.keys(objects).forEach(key => {
             featuresConfig[key] = objects[key].val();
         });
-    } catch (err) {
+    } catch (error) {
         // Set default values
         for (const feature of Object.values(RemoteFeature)) {
             featuresConfig[feature] = JSON.stringify([]);
         }
         featuresConfig[RemoteFeature.TC_VERSION] = '0';
+
+        SentryCaptureException(new Error(JSON.stringify(error)));
     }
 
     for (const key of Object.keys(featuresConfig)) {

@@ -46,6 +46,7 @@ import { ConnectExtensionScreen } from '../screens/connect-extension/connect-ext
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
 import { QuickDelegateSelectValidator } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-select-validator/quick-delegate-select-validator';
 import { PosBasicAction } from '../screens/pos-actions/pos-basic-action/pos-basic-action';
+import { PosBasicActionSmartScreenWrapper } from '../screens/pos-actions/pos-basic-action-smart-screen-wrapper/pos-basic-action-smart-screen-wrapper';
 import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
 import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
 import { IconValues } from '../components/icon/values';
@@ -210,6 +211,9 @@ export const WalletNavigation = createStackNavigator(
         },
         PosBasicAction: {
             screen: PosBasicAction
+        },
+        PosBasicActionSmartScreenWrapper: {
+            screen: PosBasicActionSmartScreenWrapper
         },
         SmartScreen: {
             screen: SmartScreen

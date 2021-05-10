@@ -55,7 +55,7 @@ export enum PosBasicActionType {
     SOLANA_CREATE_AND_DELEGATE_STAKE_ACCOUNT = 'SOLANA_CREATE_AND_DELEGATE_STAKE_ACCOUNT',
 
     // GRT allowance
-    APPROVE = 'APPROVE'
+    INCREASE_ALLOWANCE = 'INCREASE_ALLOWANCE'
 }
 
 export enum SwapType {
@@ -68,6 +68,5 @@ export enum ContractMethod {
     SWAP_EXACT_ZIL_FOR_TOKENS = 'SwapExactZILForTokens',
     SWAP_EXACT_TOKENS_FOR_ZIL = 'SwapExactTokensForZIL',
     SWAP_EXACT_TOKENS_FOR_TOKENS = 'SwapExactTokensForTokens',
-    DELEGATE = 'Delegate',
-    APPROVE = 'Approve'
+    DELEGATE = 'Delegate'
 }

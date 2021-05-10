@@ -219,7 +219,7 @@ class ProcessTransactionsComponent extends React.Component<
         );
 
         amount = formatNumber(new BigNumber(amountNumber), {
-            currency: blockchainInstance.config.coin
+            currency: tx.additionalInfo?.tokenSymbol || blockchainInstance.config.coin
         });
 
         let middleText = '';
@@ -231,8 +231,14 @@ class ProcessTransactionsComponent extends React.Component<
                 topText = translate('Transaction.registerAccount');
                 break;
             }
-            case PosBasicActionType.APPROVE: {
-                topText = translate('App.labels.unlocking') + ' ' + amount;
+            case PosBasicActionType.INCREASE_ALLOWANCE: {
+                topText =
+                    translate('App.labels.increaseAllowance') +
+                    ' ' +
+                    translate('App.labels.for').toLowerCase() +
+                    ' ' +
+                    tx.additionalInfo?.tokenSymbol;
+
                 break;
             }
             case PosBasicActionType.CREATE_STAKE_ACCOUNT: {

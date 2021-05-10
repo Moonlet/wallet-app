@@ -24,7 +24,7 @@ const contractCallFunctionsWhitelist = {
         ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL,
         ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
     ],
-    [Blockchain.ETHEREUM]: [ContractMethod.APPROVE, ContractMethod.DELEGATE]
+    [Blockchain.ETHEREUM]: [ContractMethod.INCREASE_ALLOWANCE, ContractMethod.DELEGATE]
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -164,7 +164,7 @@ export const buildContractCallTransaction = async (
             status: TransactionStatus.PENDING,
             data: {
                 method: params.contractMethod,
-                params: [contractAddress, params.amount],
+                params: [contractAddress, params.additionalInfo?.tokenAmount || params.amount],
                 raw
             },
             additionalInfo: params.additionalInfo

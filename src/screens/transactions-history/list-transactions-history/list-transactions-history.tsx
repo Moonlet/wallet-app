@@ -133,6 +133,14 @@ export class TransactionsHistoryListComponent extends React.Component<
                     .split('_')
                     .join(' ');
                 break;
+            case PosBasicActionType.INCREASE_ALLOWANCE:
+                primaryText =
+                    translate('App.labels.increaseAllowance') +
+                    ' ' +
+                    translate('App.labels.for').toLowerCase() +
+                    ' ' +
+                    tx.additionalInfo?.tokenSymbol;
+                break;
             case PosBasicActionType.CREATE_STAKE_ACCOUNT:
             case PosBasicActionType.SOLANA_STAKEACCOUNT_CREATE:
             case PosBasicActionType.SOLANA_STAKEACCOUNT_SPLIT:
@@ -297,6 +305,10 @@ export class TransactionsHistoryListComponent extends React.Component<
                 posAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT
             ) {
                 transactionType = translate('App.labels.claimingRewards');
+            }
+
+            if (posAction === PosBasicActionType.INCREASE_ALLOWANCE) {
+                transactionType = translate('App.labels.increaseAllowance');
             }
 
             if (

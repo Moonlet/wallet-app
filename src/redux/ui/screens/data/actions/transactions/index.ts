@@ -29,7 +29,7 @@ export interface IContractCallParams {
     contractMethod: string;
     contractType: Contracts;
     tokenSymbol: string;
-    aditionalInfo: any;
+    additionalInfo: any;
     fees?: {
         gasLimit: string;
         gasPrice?: string;

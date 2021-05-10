@@ -12,7 +12,7 @@ import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
-import { TokenType, PosBasicActionType, SwapContractMethod } from '../types/token';
+import { TokenType, PosBasicActionType, ContractMethod } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { Contracts } from './config';
@@ -176,9 +176,9 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         if (tx.additionalInfo?.swap) {
             let amount = '';
             switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASE_ALLOWANCE:
-                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
-                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
+                case ContractMethod.INCREASE_ALLOWANCE:
+                case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                     amount = tx.additionalInfo?.swap.fromTokenAmount;
                     break;
             }

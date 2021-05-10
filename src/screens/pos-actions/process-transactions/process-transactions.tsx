@@ -24,7 +24,7 @@ import {
     getSelectedAccountTransactions,
     getSelectedAccount
 } from '../../../redux/wallets/selectors';
-import { PosBasicActionType, SwapContractMethod } from '../../../core/blockchain/types/token';
+import { PosBasicActionType, ContractMethod } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
@@ -231,6 +231,10 @@ class ProcessTransactionsComponent extends React.Component<
                 topText = translate('Transaction.registerAccount');
                 break;
             }
+            case PosBasicActionType.APPROVE: {
+                topText = translate('App.labels.unlocking') + ' ' + amount;
+                break;
+            }
             case PosBasicActionType.CREATE_STAKE_ACCOUNT: {
                 topText = translate('Transaction.creatingStakeAccount');
                 middleText = amount;
@@ -337,7 +341,7 @@ class ProcessTransactionsComponent extends React.Component<
             middleText = '';
 
             switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASE_ALLOWANCE:
+                case ContractMethod.INCREASE_ALLOWANCE:
                     topText =
                         translate('App.labels.increaseAllowance') +
                         ' ' +
@@ -347,8 +351,8 @@ class ProcessTransactionsComponent extends React.Component<
 
                     break;
 
-                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
-                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
+                case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                     topText =
                         translate('App.labels.swap') +
                         ' ' +
@@ -465,10 +469,9 @@ class ProcessTransactionsComponent extends React.Component<
 
         const isSwapTx =
             tx.additionalInfo?.swap &&
-            (tx.additionalInfo?.swap.contractMethod ===
-                SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL ||
+            (tx.additionalInfo?.swap.contractMethod === ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL ||
                 tx.additionalInfo?.swap.contractMethod ===
-                    SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS);
+                    ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS);
 
         return (
             <View

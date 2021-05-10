@@ -27,7 +27,7 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
 import {
     PosBasicActionType,
-    SwapContractMethod,
+    ContractMethod,
     TokenType
 } from '../../../core/blockchain/types/token';
 import bind from 'bind-decorator';
@@ -145,7 +145,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         if (tx.additionalInfo?.swap) {
             switch (tx.additionalInfo?.swap.contractMethod) {
-                case SwapContractMethod.INCREASE_ALLOWANCE:
+                case ContractMethod.INCREASE_ALLOWANCE:
                     primaryText =
                         translate('App.labels.increaseAllowance') +
                         ' ' +
@@ -155,8 +155,8 @@ export class TransactionsHistoryListComponent extends React.Component<
 
                     break;
 
-                case SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
-                case SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
+                case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                     primaryText =
                         translate('App.labels.swap') +
                         ' ' +

@@ -149,7 +149,7 @@ export const config: IBlockchainConfig = {
             gasPrice: new BigNumber(20000000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(21000),
-                [TokenType.ERC20]: new BigNumber(100000)
+                [TokenType.ERC20]: new BigNumber(300000)
             },
             gasPricePresets: {
                 cheap: new BigNumber(2000000000),

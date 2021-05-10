@@ -13,16 +13,18 @@ import { getSelectedAccount } from '../../../../../wallets/selectors';
 import { getContract } from '../../../../../../core/blockchain/zilliqa/contracts/base-contract';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
-import { SwapContractMethod, TokenType } from '../../../../../../core/blockchain/types/token';
+import { ContractMethod, TokenType } from '../../../../../../core/blockchain/types/token';
 import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
+import abi from 'ethereumjs-abi';
 
 const contractCallFunctionsWhitelist = {
     [Blockchain.ZILLIQA]: [
-        SwapContractMethod.INCREASE_ALLOWANCE,
-        SwapContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS,
-        SwapContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL,
-        SwapContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
-    ]
+        ContractMethod.INCREASE_ALLOWANCE,
+        ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS,
+        ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL,
+        ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
+    ],
+    [Blockchain.ETHEREUM]: [ContractMethod.APPROVE, ContractMethod.DELEGATE]
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -46,9 +48,12 @@ export const buildContractCallTransaction = async (
         if (params.contractType === Contracts.TOKEN_CONTRACT) {
             const configToken = getTokenConfig(account.blockchain, params.tokenSymbol);
             contractAddress = configToken.contractAddress;
-        } else contractAddress = await getContract(chainId, params.contractType);
+        } else {
+            contractAddress = await getContract(chainId, params.contractType);
+            contractAddress = '0x2d44C0e097F6cD0f514edAC633d82E01280B4A5c';
+        }
 
-        const tokenConfig = getTokenConfig(account.blockchain, blockchainInstance.config.coin);
+        const tokenConfig = getTokenConfig(account.blockchain, params.tokenSymbol);
         const client = blockchainInstance.getClient(chainId);
         const blockInfo = await client.getCurrentBlock();
 
@@ -57,7 +62,9 @@ export const buildContractCallTransaction = async (
         const dataParams = [];
 
         for (const arg of params.args) {
-            if (arg.data.type === 'value') {
+            if (arg.type === 'string') {
+                dataParams.push(arg.data.value);
+            } else if (arg.data.type === 'value') {
                 const obj = {
                     type: arg.type,
                     value: arg.data.value
@@ -73,10 +80,23 @@ export const buildContractCallTransaction = async (
             }
         }
 
-        const raw = JSON.stringify({
-            _tag: params.contractMethod,
-            params: dataParams
-        });
+        let raw = '';
+
+        switch (account.blockchain) {
+            case Blockchain.ZILLIQA:
+                raw = JSON.stringify({
+                    _tag: params.contractMethod,
+                    params: dataParams
+                });
+                break;
+            case Blockchain.ETHEREUM:
+                raw =
+                    '0x' +
+                    abi
+                        .simpleEncode(params.additionalInfo.contractMethodSignature, ...dataParams)
+                        .toString('hex');
+                break;
+        }
 
         let feeOptions: IFeeOptions;
         let fetchFeesBackup = false;
@@ -119,7 +139,7 @@ export const buildContractCallTransaction = async (
                     contractAddress,
                     raw
                 },
-                TokenType.ZRC2 // TODO change this when implementing other blockchains
+                account.blockchain === Blockchain.ZILLIQA ? TokenType.ZRC2 : TokenType.ERC20 // TODO change this when implementing other blockchains
             );
         }
 
@@ -147,7 +167,7 @@ export const buildContractCallTransaction = async (
                 params: [contractAddress, params.amount],
                 raw
             },
-            additionalInfo: params.aditionalInfo
+            additionalInfo: params.additionalInfo
         };
     }
 

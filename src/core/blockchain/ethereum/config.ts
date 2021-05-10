@@ -73,33 +73,6 @@ const validatorCTA = {
     },
     otherCtas: [
         {
-            title: 'App.labels.claimReward',
-            iconName: IconValues.CLAIM_REWARD,
-            navigateTo: {
-                screen: 'PosBasicAction',
-                params: {
-                    actionText: 'App.labels.claimReward',
-                    basicAction: PosBasicActionType.CLAIM_REWARD_NO_INPUT,
-                    unlockDays: '3 days'
-                }
-            }
-        },
-        {
-            title: 'App.labels.switchNode',
-            iconName: IconValues.REVOTE,
-            navigateTo: {
-                screen: 'SmartScreen',
-                params: {
-                    context: {
-                        screen: 'SwitchNode',
-                        step: 'SwitchNodeSelectNode',
-                        key: 'switch-node-select-node'
-                    },
-                    newFlow: true
-                }
-            }
-        },
-        {
             title: 'App.labels.unstake',
             iconName: IconValues.UNVOTE,
             navigateTo: {
@@ -180,7 +153,7 @@ export const config: IBlockchainConfig = {
                 tabTransactions: 'App.labels.transactions'
             },
             actionScreenLabels: {
-                unstake: 'Validator.unstakeScreenMessageZil',
+                unstake: 'Validator.unstakeScreenMessageZil', // TODO change messages
                 redelegate: 'Validator.restakeScreenMessageZil'
             },
             sendStepLabels: [

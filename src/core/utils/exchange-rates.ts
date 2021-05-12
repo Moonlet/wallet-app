@@ -1,4 +1,4 @@
-import { database } from 'react-native-firebase';
+import database from '@react-native-firebase/database';
 import { store } from '../../redux/config';
 import { EXCHANGE_RATE_UPDATE } from '../../redux/market/actions';
 

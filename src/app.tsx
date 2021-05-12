@@ -11,7 +11,6 @@ import { loadTranslations } from './core/i18n';
 import { SplashScreen } from './components/splash-screen/splash-screen';
 import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
-import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
@@ -97,10 +96,6 @@ export default class App extends React.Component<{}, IState> {
 
         if (appReady && !this.notificationsConfigured) {
             Notifications.configure();
-
-            if (Platform.OS === 'ios') {
-                setupVoipNotification();
-            }
 
             this.notificationsConfigured = true;
         }

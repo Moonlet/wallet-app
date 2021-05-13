@@ -9,7 +9,7 @@ export const GRT_MAINNET: ITokenConfigState = {
     },
     contractAddress: '0xc944e90c64b2c07662a292be6244bdf05cda44a7',
     removable: false,
-    defaultOrder: 999,
+    defaultOrder: 998,
     decimals: 18,
     ui: {
         decimals: 4,
@@ -26,7 +26,7 @@ export const GRT_TESTNET: ITokenConfigState = {
     },
     contractAddress: '0x54fe55d5d255b8460fb3bc52d5d676f9ae5697cd',
     removable: false,
-    defaultOrder: 999,
+    defaultOrder: 998,
     decimals: 18,
     ui: {
         decimals: 4,

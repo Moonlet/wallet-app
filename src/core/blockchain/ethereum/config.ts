@@ -95,7 +95,6 @@ export const config: IBlockchainConfig = {
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {
         '1': {
-            GRT: GRT_MAINNET,
             DAI: DAI_MAINNET,
             USDT: USDT_MAINNET,
             LINK: LINK_MAINNET,
@@ -107,7 +106,8 @@ export const config: IBlockchainConfig = {
             OMG: OMG_MAINNET,
             COMP: COMP_MAINNET,
             SNX: SNX_MAINNET,
-            IDRT: IDRT_MAINNET
+            IDRT: IDRT_MAINNET,
+            GRT: GRT_MAINNET
         },
         '4': {
             GRT: GRT_TESTNET

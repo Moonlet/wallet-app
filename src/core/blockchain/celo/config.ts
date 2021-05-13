@@ -153,9 +153,3 @@ export const config: IBlockchainConfig = {
         [AccountType.DEFAULT]: new BigNumber(0)
     }
 };
-
-export enum Contracts {
-    LOCKED_GOLD = 'LOCKED_GOLD',
-    ELECTION = 'ELECTION',
-    ACCOUNTS = 'ACCOUNTS'
-}

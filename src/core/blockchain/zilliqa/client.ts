@@ -6,12 +6,13 @@ import {
     TransactionMessageText,
     TransactionType,
     IBalance,
-    ITransactionFees
+    ITransactionFees,
+    Contracts
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
-import { config, Contracts } from './config';
+import { config } from './config';
 import { NameService } from './name-service';
 import { PosBasicActionType, TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';

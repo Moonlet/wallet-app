@@ -1,7 +1,7 @@
 import { config } from './config';
 import { networks } from './networks';
 import { Client } from './client';
-import { IBlockchain, ChainIdType } from '../types';
+import { IBlockchain, ChainIdType, Contracts } from '../types';
 import { Stats } from './stats';
 import { SolanaAccountUtils } from './account';
 import { SolanaTransactionUtils } from './transaction';
@@ -22,5 +22,8 @@ export const Solana: IBlockchain = {
             clients[chainId] = new Client(chainId);
         }
         return clients[chainId];
+    },
+    getContract: async (chainId: ChainIdType, contractType: Contracts) => {
+        return undefined;
     }
 };

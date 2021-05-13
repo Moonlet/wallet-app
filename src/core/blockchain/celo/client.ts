@@ -1,13 +1,13 @@
 import { Client as EthereumClient } from '../ethereum/client';
 import { Erc20Client } from './tokens/erc20-client';
-import { ChainIdType, TransactionMessageText, TransactionType } from '../types';
+import { ChainIdType, TransactionMessageText, TransactionType, Contracts } from '../types';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { networks } from './networks';
 import { HttpClient } from '../../utils/http-client';
 import { NameService } from './name-service';
 import BigNumber from 'bignumber.js';
-import { config, Contracts } from './config';
+import { config } from './config';
 import { LockedGold } from './contracts/lockedgold';
 import { Election } from './contracts/election';
 import { Accounts } from './contracts/accounts';

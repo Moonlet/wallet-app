@@ -9,6 +9,7 @@ export const addToken = (
         blockchain: Blockchain;
         chainId: string;
         tokenActive: boolean;
+        order?: number;
     }
 ) => {
     if (
@@ -43,9 +44,13 @@ export const addToken = (
                     // Token has been already added
                 } else {
                     // Add Token
-                    account.tokens[data.chainId][token.symbol] = accountToken(token.symbol, 999, {
-                        active: data.tokenActive
-                    });
+                    account.tokens[data.chainId][token.symbol] = accountToken(
+                        token.symbol,
+                        data.order || 999,
+                        {
+                            active: data.tokenActive
+                        }
+                    );
                 }
             }
         }

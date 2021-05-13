@@ -3,7 +3,8 @@ import {
     ITransferTransaction,
     TransactionType,
     AbstractBlockchainTransactionUtils,
-    IPosTransaction
+    IPosTransaction,
+    Contracts
 } from '../types';
 
 import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
@@ -15,7 +16,6 @@ import { TransactionStatus } from '../../wallet/types';
 import { TokenType, PosBasicActionType, ContractMethod } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-import { Contracts } from './config';
 import BigNumber from 'bignumber.js';
 import { cloneDeep } from 'lodash';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';

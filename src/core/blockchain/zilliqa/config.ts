@@ -76,8 +76,18 @@ const validatorCTA = {
         title: 'App.labels.stake',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'PosDelegate',
-            params: { actionText: 'App.labels.stake' }
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakeNow',
+                    step: 'StakeNowEnterAmountValidators',
+                    key: 'stake-now-enter-amount-validators'
+                },
+                navigationOptions: {
+                    title: 'Stake now'
+                },
+                newFlow: true
+            }
         }
     },
     otherCtas: [
@@ -85,7 +95,7 @@ const validatorCTA = {
             title: 'App.labels.claimReward',
             iconName: IconValues.CLAIM_REWARD,
             navigateTo: {
-                screen: 'PosBasicAction',
+                screen: 'PosBasicActionSmartScreenWrapper',
                 params: {
                     actionText: 'App.labels.claimReward',
                     basicAction: PosBasicActionType.CLAIM_REWARD_NO_INPUT,
@@ -112,7 +122,7 @@ const validatorCTA = {
             title: 'App.labels.unstake',
             iconName: IconValues.UNVOTE,
             navigateTo: {
-                screen: 'PosBasicAction',
+                screen: 'PosBasicActionSmartScreenWrapper',
                 params: {
                     actionText: 'App.labels.unstake',
                     basicAction: PosBasicActionType.UNSTAKE

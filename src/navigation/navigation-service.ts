@@ -18,11 +18,12 @@ export const NavigationService = (() => {
         );
     };
 
-    const replace = (routeName: string, params: NavigationParams) => {
+    const replace = (routeName: string, params: NavigationParams, key?: string) => {
         navigator?.dispatch(
             StackActions.replace({
                 routeName,
-                params
+                params,
+                key
             })
         );
     };

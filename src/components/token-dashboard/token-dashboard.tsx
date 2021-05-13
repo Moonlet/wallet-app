@@ -42,9 +42,11 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
         accountStats:
             ownProps.account &&
             getAccountStats(state, ownProps.blockchain, ownProps.chainId, ownProps.account.address),
-        tokens: Object.values(ownProps.account.tokens[ownProps.chainId]).sort(
-            (a, b) => a.order - b.order
-        )
+        tokens:
+            ownProps.account &&
+            Object.values(ownProps.account.tokens[ownProps.chainId]).sort(
+                (a, b) => a.order - b.order
+            )
     };
 };
 

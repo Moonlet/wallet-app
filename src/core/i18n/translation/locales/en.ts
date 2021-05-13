@@ -61,6 +61,7 @@ export const translation: ITranslations = {
                 enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
+                errorMessage: 'Error message',
                 errorOccured: 'An error has occurred. Please try again!',
                 extensionNotConnected: 'Connecting to phone',
                 failed: 'Failed',
@@ -754,6 +755,9 @@ export const translation: ITranslations = {
         TotalBalance: {
             byCumulativeMessage:
                 'By Cumulative: ON, the total balance will be computed in both FIAT and Main Token taking into account the total value of the portfolio.\n\nBy Cumulative: OFF, the total balance will be computed in both FIAT and Main Token taking into account the total value of the Main Token.'
+        },
+        Errors: {
+            RequestedRatesCannotBeFulfilled: 'Requested Rates Cannot Be Fulfilled'
         }
     },
     plural: (n: number, ord?: boolean) => {

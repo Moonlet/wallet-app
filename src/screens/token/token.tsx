@@ -177,11 +177,12 @@ export class TokenScreenComponent extends React.Component<
 
         if (isFeatureActive(RemoteFeature.GRT) && this.props.token.symbol === 'GRT') {
             return (
-                <DefaultTokenScreen
+                <DelegateTokenScreen
                     accountIndex={this.props.accountIndex}
                     blockchain={this.props.blockchain}
                     token={this.props.token}
                     navigation={this.props.navigation}
+                    activeTab={this.props.activeTab}
                 />
             );
         }

@@ -3,8 +3,9 @@ import { networks } from './networks';
 import { Client } from './client';
 import { ZilliqaAccountUtils } from './account';
 import { ZilliqaTransactionUtils } from './transaction';
-import { IBlockchain, ChainIdType } from '../types';
+import { IBlockchain, ChainIdType, Contracts } from '../types';
 import { Stats } from './stats';
+import { getContract } from './contracts/base-contract';
 
 const account = new ZilliqaAccountUtils();
 const transaction = new ZilliqaTransactionUtils();
@@ -23,5 +24,8 @@ export const Zilliqa: IBlockchain = {
             clients[chainId] = new Client(chainId);
         }
         return clients[chainId];
+    },
+    getContract: (chainId: ChainIdType, contractType: Contracts) => {
+        return getContract(chainId, contractType);
     }
 };

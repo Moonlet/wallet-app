@@ -1,5 +1,6 @@
 import {
     AbstractBlockchainTransactionUtils,
+    Contracts,
     IBlockchainTransaction,
     IPosTransaction,
     ITransferTransaction,
@@ -19,7 +20,7 @@ import { Transaction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from './types';
 import { decode as bs58Decode } from 'bs58';
 import { cloneDeep } from 'lodash';
-import { config, Contracts } from '../solana/config';
+import { config } from '../solana/config';
 import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';

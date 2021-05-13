@@ -1,7 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { Dispatch } from 'react';
 import { IHandleCtaActionContext } from '../index';
-import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
 import { TransactionStatus } from '../../../../../../core/wallet/types';
 import { IReduxState } from '../../../../../state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
@@ -11,6 +10,7 @@ import {
     setProcessTransactions
 } from '../../../../process-transactions/actions';
 import { buildContractCallTransaction } from './transaction-builder';
+import { Contracts } from '../../../../../../core/blockchain/types';
 
 export * from './transaction-builder';
 

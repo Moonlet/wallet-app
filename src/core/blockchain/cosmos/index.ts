@@ -4,7 +4,7 @@ import { Client } from './client';
 import { CosmosTransactionUtils } from './transaction';
 import { CosmosAccountUtils } from './account';
 
-import { IBlockchain, ChainIdType } from '../types';
+import { IBlockchain, ChainIdType, Contracts } from '../types';
 import { Stats } from './stats';
 
 const account = new CosmosAccountUtils();
@@ -23,5 +23,8 @@ export const Cosmos: IBlockchain = {
             clients[chainId] = new Client(chainId);
         }
         return clients[chainId];
+    },
+    getContract: async (chainId: ChainIdType, contractType: Contracts) => {
+        return undefined;
     }
 };

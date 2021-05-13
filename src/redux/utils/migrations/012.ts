@@ -10,13 +10,15 @@ export default (state: any) => {
     state = addToken(state, GRT_TESTNET, {
         blockchain: Blockchain.ETHEREUM,
         chainId: '4',
-        tokenActive: true
+        tokenActive: true,
+        order: 900
     });
 
     state = addToken(state, GRT_MAINNET, {
         blockchain: Blockchain.ETHEREUM,
         chainId: '1',
-        tokenActive: true
+        tokenActive: true,
+        order: 900
     });
 
     return {

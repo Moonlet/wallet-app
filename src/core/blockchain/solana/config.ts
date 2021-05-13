@@ -160,7 +160,3 @@ export const config: IBlockchainConfig = {
         [AccountType.ROOT]: new BigNumber(10).pow(9).dividedBy(100) // 0.01 SOL
     }
 };
-
-export enum Contracts {
-    STAKING = 'STAKING'
-}

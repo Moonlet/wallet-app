@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../core/blockchain/blockchain-factory';
 import {
     Blockchain,
+    Contracts,
     IBlockchainTransaction,
     IFeeOptions,
     TransactionType
@@ -10,11 +11,9 @@ import { TransactionStatus } from '../../../../../../core/wallet/types';
 import { getChainId } from '../../../../../preferences/selectors';
 import { IReduxState } from '../../../../../state';
 import { getSelectedAccount } from '../../../../../wallets/selectors';
-import { getContract } from '../../../../../../core/blockchain/zilliqa/contracts/base-contract';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
 import { ContractMethod, TokenType } from '../../../../../../core/blockchain/types/token';
-import { Contracts } from '../../../../../../core/blockchain/zilliqa/config';
 import abi from 'ethereumjs-abi';
 
 const contractCallFunctionsWhitelist = {
@@ -49,8 +48,7 @@ export const buildContractCallTransaction = async (
             const configToken = getTokenConfig(account.blockchain, params.tokenSymbol);
             contractAddress = configToken.contractAddress;
         } else {
-            contractAddress = await getContract(chainId, params.contractType);
-            contractAddress = '0x2d44C0e097F6cD0f514edAC633d82E01280B4A5c';
+            contractAddress = await blockchainInstance.getContract(chainId, params.contractType);
         }
 
         const tokenConfig = getTokenConfig(account.blockchain, params.tokenSymbol);

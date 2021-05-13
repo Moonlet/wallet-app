@@ -3,7 +3,8 @@ import {
     IBlockchainNetwork,
     IBlockchainAccountUtils,
     BlockchainGenericClient,
-    ChainIdType
+    ChainIdType,
+    Contracts
 } from './';
 import { GenericStats } from './stats';
 import { AbstractBlockchainTransactionUtils } from './transaction';
@@ -25,6 +26,7 @@ export interface IBlockchain {
     Client: new (chainId) => BlockchainGenericClient;
     getStats: (chainId: ChainIdType) => GenericStats;
     getClient: (chainId: ChainIdType) => BlockchainGenericClient;
+    getContract: (chainId: ChainIdType, contractType: Contracts) => Promise<string>;
 }
 
 export enum WsEvent {

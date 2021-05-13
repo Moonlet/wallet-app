@@ -1,7 +1,6 @@
 import { Client } from '../client';
-import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
+import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
 import { IValidator } from '../../types/stats';
-import { Contracts } from '../config';
 import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract, ContractFields } from './base-contract';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';

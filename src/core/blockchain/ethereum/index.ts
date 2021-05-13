@@ -3,8 +3,9 @@ import { networks } from './networks';
 import { Client } from './client';
 import { EthereumTransactionUtils } from './transaction';
 import { EthereumAccountUtils } from './account';
-import { IBlockchain, ChainIdType } from '../types';
+import { IBlockchain, ChainIdType, Contracts } from '../types';
 import { Stats } from './stats';
+import { getContract } from './contracts/base-contract';
 
 const account = new EthereumAccountUtils();
 const transaction = new EthereumTransactionUtils();
@@ -24,5 +25,8 @@ export const Ethereum: IBlockchain = {
             clients[chainId] = new Client(chainId);
         }
         return clients[chainId];
+    },
+    getContract: (chainId: ChainIdType, contractType: Contracts) => {
+        return getContract(chainId, contractType);
     }
 };

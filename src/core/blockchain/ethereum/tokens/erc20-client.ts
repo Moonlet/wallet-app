@@ -1,24 +1,29 @@
 import { Client } from '../client';
 import BigNumber from 'bignumber.js';
-import { IBalance } from '../../types';
+import { Blockchain, IBalance } from '../../types';
+import { ApiClient } from '../../../utils/api-client/api-client';
 
 export class Erc20Client {
     constructor(private client: Client) {}
 
     public async getBalance(contractAddress, accountAddress): Promise<IBalance> {
         try {
-            const balance = await this.client.callContract(
-                contractAddress,
-                'balanceOf(address):(uint256)',
-                [accountAddress]
+            const data = await new ApiClient().validators.getBalance(
+                accountAddress,
+                Blockchain.ETHEREUM,
+                this.client.chainId.toString()
             );
-
             return {
-                total: new BigNumber(balance as string) || new BigNumber(0),
-                available: new BigNumber(balance as string) || new BigNumber(0)
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0),
+                detailed: data?.balance.detailed || {}
             };
         } catch {
-            return { total: new BigNumber(0), available: new BigNumber(0) };
+            return {
+                total: new BigNumber(0),
+                available: new BigNumber(0),
+                detailed: {}
+            };
         }
     }
 

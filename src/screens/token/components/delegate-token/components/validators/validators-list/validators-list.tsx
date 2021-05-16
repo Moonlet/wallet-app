@@ -49,7 +49,7 @@ export const ValidatorsListComponent = (
                             tokenConfig.decimals
                         ),
                         {
-                            currency: blockchainInstance.config.coin
+                            currency: tokenConfig.symbol
                         }
                     )}
                     actionType={

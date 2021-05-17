@@ -154,11 +154,15 @@ export class Staking {
             const res = await Promise.all(cycleCalls);
 
             const lastWithdrawCycleDeleg =
+                res[0] &&
+                res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG] &&
                 res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG][address];
 
-            const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
+            const lastRewardCycle = res[1] && Number(res[1][ContractFields.LASTREWARDCYCLE]);
 
             const lastBufferDepositCycleDeleg =
+                res[2] &&
+                res[2][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG] &&
                 res[2][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
 
             let lastBufferDepositCycleDelegValue = 0;

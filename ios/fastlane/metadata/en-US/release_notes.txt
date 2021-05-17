@@ -1,6 +1,6 @@
-Team's log. Stardate 2105.07:
+Team's log. Stardate 2105.05:
 
-We are ready now for Zilliqa staking contract migration. Therefore we had to add some new features to support this process and help you get informed decisions.
+Zilliqa network upgrade and staking contract migration brought many new things and improvements, however all these changes impacted some of flows within Moonlet and we had to fix them which this release.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

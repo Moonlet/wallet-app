@@ -3,6 +3,7 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 import { Platform } from 'react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { notificationHandler } from '../handlers/notification';
+import PushNotification from 'react-native-push-notification';
 
 export class NotificationService {
     private messageListener = null;
@@ -36,18 +37,27 @@ export class NotificationService {
 
     private async sendNotification(message) {
         if (Platform.OS === 'android') {
-            const msg = messaging();
-
-            if (message?.data?.type) {
-                await msg.sendMessage({
-                    notification: {
-                        title: message?.notification?.title,
-                        body: message?.notification?.body
+            try {
+                const channelId = 'channel-id';
+                PushNotification.createChannel(
+                    {
+                        channelId,
+                        channelName: 'My channel',
+                        vibrate: true
                     },
-                    data: message?.data
-                });
-            } else {
-                // notification already sent
+                    () => {
+                        PushNotification.localNotification({
+                            channelId,
+                            title: message?.notification?.title,
+                            message: message?.notification?.body,
+                            userInfo: {
+                                data: message?.data
+                            }
+                        });
+                    }
+                );
+            } catch (error) {
+                SentryCaptureException(new Error(JSON.stringify(error)));
             }
         }
 

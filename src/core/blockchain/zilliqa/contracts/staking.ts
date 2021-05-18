@@ -63,11 +63,12 @@ export class Staking {
 
             const res = await Promise.all(cycleCalls);
 
-            const lastRewardCycle = Number(res[0][ContractFields.LASTREWARDCYCLE]);
+            const lastRewardCycle = res[0] && Number(res[0][ContractFields.LASTREWARDCYCLE]);
 
-            const lastBufferDepositCycleDeleg = res[1]
-                ? res[1][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address]
-                : -1;
+            const lastBufferDepositCycleDeleg =
+                res[1] &&
+                res[1][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG] &&
+                res[1][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
 
             let lastBufferDepositCycleDelegValue = 0;
             if (lastBufferDepositCycleDeleg && lastBufferDepositCycleDeleg[ssnaddr]) {
@@ -107,10 +108,12 @@ export class Staking {
 
             const res = await Promise.all(cycleCalls);
 
-            const lastWithdrawCycleDeleg =
-                res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG][address];
+            const lastRewardCycle = res[1] && Number(res[1][ContractFields.LASTREWARDCYCLE]);
 
-            const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
+            const lastWithdrawCycleDeleg =
+                res[0] &&
+                res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG] &&
+                res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG][address];
 
             let lastWithdrawCycleDelegValue = 0;
             if (lastWithdrawCycleDeleg && lastWithdrawCycleDeleg[ssnaddr]) {

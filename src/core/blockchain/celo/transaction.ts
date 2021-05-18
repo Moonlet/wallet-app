@@ -3,7 +3,8 @@ import {
     ITransferTransaction,
     IBlockchainTransaction,
     TransactionType,
-    IPosTransaction
+    IPosTransaction,
+    Contracts
 } from '../types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { Celo } from '.';
@@ -14,7 +15,6 @@ import BigNumber from 'bignumber.js';
 import { keccak256 } from './library/hash';
 import { encode } from './library/rlp';
 import elliptic from 'elliptic';
-import { Contracts } from './config';
 import { fixEthAddress } from '../../utils/format-address';
 import cloneDeep from 'lodash/cloneDeep';
 import { splitStake } from '../../utils/balance';

@@ -244,10 +244,3 @@ export const config: IBlockchainConfig = {
         [AccountType.DEFAULT]: new BigNumber(10).pow(13).multipliedBy(3) // 30 ZIL
     }
 };
-
-export enum Contracts {
-    STAKING = 'STAKING',
-    ZILSWAP = 'ZILSWAP',
-    MOONLETSWAP = 'MOONLETSWAP',
-    TOKEN_CONTRACT = 'TOKEN_CONTRACT'
-}

@@ -1,8 +1,7 @@
 import { Client } from '../client';
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
-import { Contracts } from '../config';
-import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
+import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
 import { PosBasicActionType, TokenType } from '../../types/token';
 
 export class Accounts {

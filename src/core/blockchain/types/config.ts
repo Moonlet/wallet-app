@@ -112,3 +112,18 @@ export interface IBlockchainConfig {
         [accountType: string]: BigNumber;
     };
 }
+
+export enum Contracts {
+    STAKING = 'STAKING',
+
+    // SWAP
+    ZILSWAP = 'ZILSWAP',
+    MOONLETSWAP = 'MOONLETSWAP',
+
+    TOKEN_CONTRACT = 'TOKEN_CONTRACT',
+
+    // CELO
+    LOCKED_GOLD = 'LOCKED_GOLD',
+    ELECTION = 'ELECTION',
+    ACCOUNTS = 'ACCOUNTS'
+}

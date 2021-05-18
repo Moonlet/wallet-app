@@ -2,13 +2,14 @@ import {
     Blockchain,
     BlockchainGenericClient,
     ChainIdType,
+    Contracts,
     IBalance,
     IBlockInfo,
     TransactionType
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
-import { config, Contracts } from './config';
+import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';

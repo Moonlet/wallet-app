@@ -34,13 +34,19 @@ interface IExternalProps {
 interface IReduxProps {
     accountStats: AccountStats;
     openBottomSheet: typeof openBottomSheet;
+    tokens: ITokenState[];
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         accountStats:
             ownProps.account &&
-            getAccountStats(state, ownProps.blockchain, ownProps.chainId, ownProps.account.address)
+            getAccountStats(state, ownProps.blockchain, ownProps.chainId, ownProps.account.address),
+        tokens:
+            ownProps.account &&
+            Object.values(ownProps.account.tokens[ownProps.chainId]).sort(
+                (a, b) => a.order - b.order
+            )
     };
 };
 
@@ -112,7 +118,7 @@ export class TokenDashboardComponent extends React.Component<
 
                     {this.props.account?.tokens &&
                         this.props.chainId &&
-                        Object.values(this.props.account.tokens[this.props.chainId]).map(
+                        this.props.tokens.map(
                             (token: ITokenState, index: number) =>
                                 token.active && (
                                     <TokenCard

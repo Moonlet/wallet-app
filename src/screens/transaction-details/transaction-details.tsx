@@ -55,6 +55,9 @@ interface IState {
         zil: string;
     };
     txFees: IFeeOptions;
+    errorMessage: {
+        message: string;
+    };
 }
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -79,7 +82,8 @@ class TransactionDetailsComponent extends React.Component<
 
         this.state = {
             zilRewards: undefined,
-            txFees: undefined
+            txFees: undefined,
+            errorMessage: undefined
         };
     }
 
@@ -97,6 +101,20 @@ class TransactionDetailsComponent extends React.Component<
             } catch (error) {
                 SentryCaptureException(
                     new Error(JSON.stringify({ event: 'getTransactionFees', error }))
+                );
+            }
+
+            try {
+                if (transaction?.additionalInfo?.swap) {
+                    const errorMessage = await zilClient.getTransactionErrorMessage(
+                        this.props.transaction.id
+                    );
+
+                    if (errorMessage) this.setState({ errorMessage });
+                }
+            } catch (error) {
+                SentryCaptureException(
+                    new Error(JSON.stringify({ event: 'getTransactionErrorMessage', error }))
                 );
             }
 
@@ -299,6 +317,18 @@ class TransactionDetailsComponent extends React.Component<
                             {translate('Transaction.transactionStatus')}
                         </Text>
                     </View>
+
+                    {this.state.errorMessage?.message && (
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.textPrimary}>
+                                {this.state.errorMessage.message}
+                            </Text>
+                            <Text style={styles.textSecondary}>
+                                {translate('App.labels.errorMessage')}
+                            </Text>
+                        </View>
+                    )}
+
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>
                             {formatAddress(transaction.address, account.blockchain)}

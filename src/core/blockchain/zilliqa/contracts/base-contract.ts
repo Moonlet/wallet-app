@@ -1,8 +1,13 @@
-import { ChainIdType, IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
+import {
+    ChainIdType,
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts
+} from '../../types';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { TransactionStatus } from '../../../wallet/types';
-import { Contracts } from '../config';
 import { Zilliqa } from '..';
 import { Client as ZilliqaClient } from '../client';
 import { ApiClient } from '../../../utils/api-client/api-client';

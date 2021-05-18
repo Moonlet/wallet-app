@@ -1,5 +1,10 @@
-import { ChainIdType, IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
-import { Contracts } from '../config';
+import {
+    ChainIdType,
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts
+} from '../../types';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { Celo } from '..';
 import { TransactionStatus } from '../../../wallet/types';

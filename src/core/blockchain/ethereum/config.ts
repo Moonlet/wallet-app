@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { DAI_MAINNET } from './tokens/dai';
@@ -17,6 +17,8 @@ import { USDC_MAINNET } from './tokens/usdCoin';
 import { YFI_MAINNET } from './tokens/yearnFinance';
 import { AccountType } from '../../../redux/wallets/state';
 import { IDRT_MAINNET } from './tokens/idrt';
+import { GRT_MAINNET, GRT_TESTNET } from './tokens/grt';
+import { IconValues } from '../../../components/icon/values';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -39,6 +41,51 @@ export const ETH_NATIVE: ITokenConfigState = {
     }
 };
 
+const accountCTA = {
+    mainCta: {
+        title: 'App.labels.stakeNow',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakeNow',
+                    step: 'StakeSelectValidator',
+                    key: 'stake-now-select-validator'
+                },
+                navigationOptions: {
+                    title: 'Stake now'
+                },
+                newFlow: true
+            }
+        }
+    }
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.stake',
+        iconName: IconValues.VOTE,
+        navigateTo: {
+            screen: 'PosDelegate',
+            params: { actionText: 'App.labels.stake' }
+        }
+    },
+    otherCtas: [
+        {
+            title: 'App.labels.unstake',
+            iconName: IconValues.UNVOTE,
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.unstake',
+                    basicAction: PosBasicActionType.UNSTAKE
+                }
+            }
+        }
+    ]
+};
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/60'/0'/0`,
     derivationType: DerivationType.HD_KEY,
@@ -59,7 +106,11 @@ export const config: IBlockchainConfig = {
             OMG: OMG_MAINNET,
             COMP: COMP_MAINNET,
             SNX: SNX_MAINNET,
-            IDRT: IDRT_MAINNET
+            IDRT: IDRT_MAINNET,
+            GRT: GRT_MAINNET
+        },
+        '4': {
+            GRT: GRT_TESTNET
         }
     },
     tokens: {
@@ -71,7 +122,7 @@ export const config: IBlockchainConfig = {
             gasPrice: new BigNumber(20000000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(21000),
-                [TokenType.ERC20]: new BigNumber(100000)
+                [TokenType.ERC20]: new BigNumber(300000)
             },
             gasPricePresets: {
                 cheap: new BigNumber(2000000000),
@@ -89,6 +140,33 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalStakes',
+            amountCardLabel: 'Validator.myStake',
+            maximumNumberOfValidators: 9999 // TBD
+        },
+        token: {
+            labels: {
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.myStakes',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
+            },
+            actionScreenLabels: {
+                unstake: 'Validator.unstakeScreenMessageZil', // TODO change messages
+                redelegate: 'Validator.restakeScreenMessageZil'
+            },
+            sendStepLabels: [
+                'Validator.selectValidator',
+                'App.labels.enterAmount',
+                'Validator.confirmStake'
+            ],
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta
+            },
+            validatorCTA
+        },
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,

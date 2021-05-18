@@ -3,7 +3,7 @@ import { networks } from './networks';
 import { Client } from './client';
 import { NearTransactionUtils } from './transaction';
 import { NearAccountUtils } from './account';
-import { IBlockchain, ChainIdType } from '../types';
+import { IBlockchain, ChainIdType, Contracts } from '../types';
 import { Stats } from './stats';
 
 const account = new NearAccountUtils();
@@ -22,5 +22,8 @@ export const Near: IBlockchain = {
             clients[chainId] = new Client(chainId);
         }
         return clients[chainId];
+    },
+    getContract: async (chainId: ChainIdType, contractType: Contracts) => {
+        return undefined;
     }
 };

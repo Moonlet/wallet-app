@@ -6,12 +6,13 @@ import {
     TransactionMessageText,
     TransactionType,
     IBalance,
-    ITransactionFees
+    ITransactionFees,
+    Contracts
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
-import { config, Contracts } from './config';
+import { config } from './config';
 import { NameService } from './name-service';
 import { PosBasicActionType, TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';
@@ -38,6 +39,8 @@ export class Client extends BlockchainGenericClient {
 
     public async getTransactionFees(txHash: string): Promise<ITransactionFees> {
         try {
+            if (txHash.startsWith('0x')) txHash = txHash.replace('0x', '');
+
             const txRes = await this.call('GetTransaction', [txHash]);
 
             if (txRes?.result?.gasPrice && txRes?.result?.gasLimit) {
@@ -61,6 +64,34 @@ export class Client extends BlockchainGenericClient {
             } else {
                 return;
             }
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    public async getTransactionErrorMessage(txHash: string): Promise<{ message: string }> {
+        try {
+            if (txHash.startsWith('0x')) txHash = txHash.replace('0x', '');
+
+            const txRes = await this.call('GetTransaction', [txHash]);
+
+            let error: {
+                message: string;
+            };
+
+            const exceptions = txRes?.result?.receipt?.exceptions;
+            if (exceptions && Array.isArray(exceptions) && exceptions.length > 0) {
+                if (exceptions[0]?.message) {
+                    const errorMsg = exceptions[0].message;
+                    if (errorMsg.includes('RequestedRatesCannotBeFulfilled')) {
+                        error = {
+                            message: translate('Errors.RequestedRatesCannotBeFulfilled')
+                        };
+                    }
+                }
+            }
+
+            return error;
         } catch (error) {
             throw new Error(error);
         }

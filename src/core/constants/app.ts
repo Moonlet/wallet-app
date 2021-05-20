@@ -6,6 +6,7 @@ export const AVAILABLE_CURRENCIES = [
     'EUR',
     'GBP',
     'JPY',
+    'KRW',
     'SGD',
     'THB',
     'USD',

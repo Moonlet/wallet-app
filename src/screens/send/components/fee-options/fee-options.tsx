@@ -45,6 +45,7 @@ interface IState {
     selectedPreset: string;
     showAdvancedOptions: boolean;
     isLoading: boolean;
+    showRetrySection: boolean;
 }
 
 interface IReduxProps {
@@ -68,12 +69,18 @@ export class FeeOptionsComponent extends React.Component<
             showAdvancedOptions: false,
             hasAdvancedOptions: !!feeOptions.ui.feeComponentAdvanced,
             selectedPreset: feeOptions.ui.defaultPreset,
-            isLoading: true
+            isLoading: true,
+            showRetrySection: false
         };
         this.getEstimatedFees();
     }
 
+    @bind
     public async getEstimatedFees() {
+        this.state.isLoading === false &&
+            this.setState({
+                isLoading: true
+            });
         try {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
             const tokenSendingToken = getTokenConfig(
@@ -92,10 +99,17 @@ export class FeeOptionsComponent extends React.Component<
                 tokenSendingToken.type
             );
 
-            this.setState({ feeOptions: fees, isLoading: false });
+            this.setState({
+                feeOptions: fees,
+                isLoading: false,
+                showRetrySection: (fees.responseHasDefaults && fees.responseHasDefaults) || false
+            });
             this.props.onFeesChanged(fees);
         } catch (err) {
             //
+            this.setState({
+                showRetrySection: true
+            });
         }
     }
 
@@ -222,10 +236,20 @@ export class FeeOptionsComponent extends React.Component<
                     <LoadingIndicator />
                 ) : (
                     <View>
+                        {this.state.showRetrySection && (
+                            <TouchableOpacity
+                                testID="advanced-fees"
+                                onPress={this.getEstimatedFees}
+                                style={styles.buttonRightOptions}
+                            >
+                                <Text style={styles.textTranferButton}>
+                                    {translate('App.labels.retryFees')}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                         {this.state.showAdvancedOptions
                             ? this.renderAdvancedFees()
                             : this.renderSimpleFees()}
-
                         {this.state.feeOptions && (
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.displayErrorFees}>

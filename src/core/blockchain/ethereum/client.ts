@@ -4,7 +4,8 @@ import {
     IBlockInfo,
     TransactionMessageText,
     TransactionType,
-    IBalance
+    IBalance,
+    IFeeOptions
 } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
@@ -18,6 +19,7 @@ import { Ethereum } from '.';
 import { fixEthAddress } from '../../utils/format-address';
 import CONFIG from '../../../config';
 import { HttpClient } from '../../utils/http-client';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -113,7 +115,7 @@ export class Client extends BlockchainGenericClient {
             raw?: string;
         },
         tokenType: TokenType = TokenType.NATIVE
-    ) {
+    ): Promise<IFeeOptions> {
         try {
             let results = {};
 
@@ -166,29 +168,45 @@ export class Client extends BlockchainGenericClient {
                             config.defaultUnit
                         )
                     };
+                } else {
+                    SentryCaptureException(
+                        new Error(
+                            JSON.stringify({
+                                event: 'getEstimated Fees - no response - defaults Set'
+                            })
+                        )
+                    );
                 }
             }
 
             const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
-            const gasLimit = results[0].result
-                ? new BigNumber(parseInt(results[0].result, 16))
-                : config.feeOptions.defaults.gasLimit[tokenType];
+            const gasLimit =
+                // results[0].result
+                //     ? new BigNumber(parseInt(results[0].result, 16))
+                //     :
+                config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
                 gasPrice: gasPrice.toString(),
                 gasLimit: gasLimit.toString(),
                 presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString(),
+                responseHasDefaults: presets ? false : true
             };
-        } catch {
+        } catch (error) {
             const gasPrice = config.feeOptions.defaults.gasPrice;
             const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+
+            SentryCaptureException(
+                new Error(JSON.stringify({ event: 'getEstimated Fees - defaults Set', error }))
+            );
 
             return {
                 gasPrice: gasPrice.toString(),
                 gasLimit: gasLimit.toString(),
                 presets: config.feeOptions.defaults.gasPricePresets,
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString(),
+                responseHasDefaults: true
             };
         }
     }

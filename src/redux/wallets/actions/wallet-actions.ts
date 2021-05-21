@@ -466,30 +466,29 @@ export const updateTransactionFromBlockchain = (
     let transaction;
 
     try {
-        transaction = await client.utils.getTransaction(transactionHash, {
+        const currentBlock = await client.getCurrentBlock();
+        const txStatus = await client.utils.getTransactionStatus(transactionHash, {
+            broadcastedOnBlock,
+            currentBlockNumber: currentBlock.number,
             address: selectedAccount?.address
         });
-    } catch (e) {
-        const currentBlock = await client.getCurrentBlock();
-        if (
-            currentBlock.number - broadcastedOnBlock >
-            blockchainInstance.config.droppedTxBlocksThreshold
-        ) {
-            const response = getWalletAndTransactionForHash(state, transactionHash);
-            if (response) {
-                transaction = {
-                    ...response.transaction,
-                    status: TransactionStatus.DROPPED
-                };
-                dispatch({
-                    type: TRANSACTION_UPSERT,
-                    data: {
-                        walletId: response.walletId,
-                        transaction
-                    }
-                });
-            }
+
+        const response = getWalletAndTransactionForHash(state, transactionHash);
+        if (response) {
+            transaction = {
+                ...response.transaction,
+                status: txStatus
+            };
+            dispatch({
+                type: TRANSACTION_UPSERT,
+                data: {
+                    walletId: response.walletId,
+                    transaction
+                }
+            });
         }
+    } catch (error) {
+        SentryCaptureException(new Error(JSON.stringify(error)));
         return;
     }
 

@@ -125,7 +125,6 @@ export const config: IBlockchainConfig = {
                 [TokenType.ERC20]: new BigNumber(300000)
             },
             gasPricePresets: {
-                cheap: new BigNumber(2000000000),
                 standard: new BigNumber(20000000000),
                 fast: new BigNumber(40000000000),
                 fastest: new BigNumber(120000000000)

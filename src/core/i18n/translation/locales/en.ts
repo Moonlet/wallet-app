@@ -125,6 +125,7 @@ export const translation: ITranslations = {
                 sender: 'Sender',
                 settings: 'Settings',
                 setup: 'Setup',
+                retryFees: 'Warning: Default fees applied. Transaction might fail. Retry',
                 sign: 'Sign',
                 signMessage: 'Sign message',
                 simple: 'Simple',

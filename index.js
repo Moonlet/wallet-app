@@ -46,13 +46,6 @@ YellowBox.ignoreWarnings([
 
 // console.disableYellowBox = true;
 
-if (Platform.OS === 'android') {
-    AppRegistry.registerHeadlessTask(
-        'RNFirebaseBackgroundMessage',
-        () => androidBgMessagingHandler
-    );
-}
-
 PushNotification.configure({
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: notification => {

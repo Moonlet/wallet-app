@@ -17,6 +17,9 @@ PODS:
   - Firebase/Database (7.11.0):
     - Firebase/CoreOnly
     - FirebaseDatabase (~> 7.11.0)
+  - Firebase/DynamicLinks (7.11.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 7.11.0)
   - Firebase/Messaging (7.11.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 7.11.0)
@@ -40,6 +43,8 @@ PODS:
   - FirebaseDatabase (7.11.0):
     - FirebaseCore (~> 7.0)
     - leveldb-library (~> 1.22)
+  - FirebaseDynamicLinks (7.11.0):
+    - FirebaseCore (~> 7.0)
   - FirebaseInstallations (7.11.0):
     - FirebaseCore (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
@@ -360,22 +365,27 @@ PODS:
     - React
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder (~> 0.2.3)
-  - RNFBApp (11.4.1):
+  - RNFBApp (11.5.0):
     - Firebase/CoreOnly (= 7.11.0)
     - React-Core
-  - RNFBDatabase (11.4.1):
+  - RNFBDatabase (11.5.0):
     - Firebase/Database (= 7.11.0)
     - React-Core
     - RNFBApp
-  - RNFBMessaging (11.4.1):
+  - RNFBDynamicLinks (11.5.0):
+    - Firebase/DynamicLinks (= 7.11.0)
+    - GoogleUtilities/AppDelegateSwizzler
+    - React-Core
+    - RNFBApp
+  - RNFBMessaging (11.5.0):
     - Firebase/Messaging (= 7.11.0)
     - React-Core
     - RNFBApp
-  - RNFBRemoteConfig (11.4.1):
+  - RNFBRemoteConfig (11.5.0):
     - Firebase/RemoteConfig (= 7.11.0)
     - React-Core
     - RNFBApp
-  - RNFBStorage (11.4.1):
+  - RNFBStorage (11.5.0):
     - Firebase/Storage (= 7.11.0)
     - React-Core
     - RNFBApp
@@ -455,6 +465,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
+  - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
@@ -477,6 +488,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseDatabase
+    - FirebaseDynamicLinks
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
@@ -583,6 +595,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBDatabase:
     :path: "../node_modules/@react-native-firebase/database"
+  RNFBDynamicLinks:
+    :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBRemoteConfig:
@@ -620,6 +634,7 @@ SPEC CHECKSUMS:
   FirebaseCore: 907447d8917a4d3eb0cce2829c5a0ad21d90b432
   FirebaseCoreDiagnostics: 68ad972f99206cef818230f3f3179d52ccfb7f8c
   FirebaseDatabase: 6c39fbf1c8514a2f32e610f9bf9ef30c535dc15a
+  FirebaseDynamicLinks: 07f101c20bb40fd39f6b3e5278a64a5f2f660dc1
   FirebaseInstallations: a58d4f72ec5861840b84df489f2668d970df558a
   FirebaseInstanceID: ad5135045a498d7775903efd39762d2cdfa1be27
   FirebaseMessaging: 163435fb6db065e3b6228f1e577b10ed2cc506d2
@@ -671,11 +686,12 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 5b1cf9ad2aaa107ecb92d5d2d7005ba521b2b97a
   RNDeviceInfo: 12faae605ba42a1a5041c3c41a77834bc23f049d
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
-  RNFBApp: 996860ad6832996faba79ef3f6ec2d3ea5870dd9
-  RNFBDatabase: 026067d3ce9d65c96146f7f32c1f044f27665f29
-  RNFBMessaging: 8d84ceadc705ca6b6047c37376d2e2aaabcb8e3d
-  RNFBRemoteConfig: 3035dd5d7b2a903f822505f04a5cd01752d5bc37
-  RNFBStorage: 519ea44ccd27418d4bffbc9cd088a72697b5cb98
+  RNFBApp: 9c90f9d576861947ba75fe0830567c570bcbcf6d
+  RNFBDatabase: 64aaecd9e48c6378864ef7d0fe65cc5f312987ed
+  RNFBDynamicLinks: 53f5621a2ab44b6f967f2240f1b7d56f8b6c74de
+  RNFBMessaging: c873e6c37f69d22de22cab134413030a9c6330a9
+  RNFBRemoteConfig: d2c532f1fee5862a7518190211ea2a28123167c5
+  RNFBStorage: 052a32c5af38b106e4d6b0a296df304d97be995e
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNKeychain: a5623de13ec5378bfb8035422e3dee4fa538660d
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff

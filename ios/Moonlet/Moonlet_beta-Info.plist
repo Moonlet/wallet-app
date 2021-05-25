@@ -20,6 +20,19 @@
 	<string>1.4.29</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.moonlet.beta</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1061</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -39,11 +52,9 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSFaceIDUsageDescription</key>
-	<string>This allows you to securely login to Moonlet.</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Moonlet need to access camera to read qr-code</string>

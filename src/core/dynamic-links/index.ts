@@ -60,6 +60,15 @@ export class DynamicLinksService {
 
             const selectedAccount = getSelectedAccount(this.state);
 
+            if (!selectedAccount) {
+                SentryCaptureException(
+                    new Error(
+                        `Dynamic Links - no selected account, no wallet, blockchain: ${blockchain}, tokenSymbol: ${tokenSymbol}, validatorAddress: ${validatorAddress}`
+                    )
+                );
+                return;
+            }
+
             const token: ITokenState = selectedAccount.tokens[chainId][tokenSymbol];
 
             if (validator) {
@@ -72,7 +81,17 @@ export class DynamicLinksService {
                     token,
                     canPerformAction: !hasPendingTransactions
                 });
+            } else {
+                SentryCaptureException(
+                    new Error(
+                        `Dynamic Links - no validator, blockchain: ${blockchain}, tokenSymbol: ${tokenSymbol}, validatorAddress: ${validatorAddress}`
+                    )
+                );
             }
+        } else {
+            SentryCaptureException(
+                new Error(`Dynamic Links - navigateValidatorAddress, invalid params: ${params}`)
+            );
         }
     }
 
@@ -99,6 +118,10 @@ export class DynamicLinksService {
                 },
                 newFlow: true
             });
+        } else {
+            SentryCaptureException(
+                new Error(`Dynamic Links - stakeValidatorAddress, invalid params: ${params}`)
+            );
         }
     }
 
@@ -120,6 +143,10 @@ export class DynamicLinksService {
                 },
                 newFlow: true
             });
+        } else {
+            SentryCaptureException(
+                new Error(`Dynamic Links - blockchainStake, invalid params: ${params}`)
+            );
         }
     }
 

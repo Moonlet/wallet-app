@@ -6,7 +6,6 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import Modal from '../../library/modal/modal';
 import { Text, Button } from '../../library';
 import { Notifications } from '../../core/messaging/notifications/notifications';
-import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notification';
 import { readEncrypted } from '../../core/secure/storage/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 import { getBaseEncryptionKey } from '../../core/secure/keychain/keychain';
@@ -46,12 +45,6 @@ export class DebugModalComponent extends React.Component<
                 fcmToken
             });
         });
-        Platform.OS === 'ios' &&
-            getApnsToken().then(apnToken => {
-                this.setState({
-                    apnToken
-                });
-            });
         getBaseEncryptionKey().then(async keychainPassword => {
             if (keychainPassword) {
                 try {

@@ -11,7 +11,6 @@ import { loadTranslations } from './core/i18n';
 import { SplashScreen } from './components/splash-screen/splash-screen';
 import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
-import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
@@ -36,6 +35,7 @@ import { ContextScreen } from './components/widgets/types';
 import { fetchScreenData } from './redux/ui/screens/data/actions';
 import { InfoModal } from './components/info-modal/info-modal';
 import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
+import { DynamicLinks } from './core/dynamic-links';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -97,10 +97,7 @@ export default class App extends React.Component<{}, IState> {
 
         if (appReady && !this.notificationsConfigured) {
             Notifications.configure();
-
-            if (Platform.OS === 'ios') {
-                setupVoipNotification();
-            }
+            DynamicLinks.configure(store.getState());
 
             this.notificationsConfigured = true;
         }
@@ -144,6 +141,7 @@ export default class App extends React.Component<{}, IState> {
     public componentWillUnmount() {
         AppState.removeEventListener('change', this.handleAppStateChange);
         Notifications.removeListeners();
+        DynamicLinks.removeListeners();
     }
 
     public async showPasswordModal() {

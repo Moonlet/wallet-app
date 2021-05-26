@@ -20,7 +20,7 @@ import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
 
 import { HWWalletFactory } from '../../../core/wallet/hw-wallet/hw-wallet-factory';
-import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { translate } from '../../../core/i18n';
 import { TokenType } from '../../../core/blockchain/types/token';
 import { NavigationService } from '../../../navigation/navigation-service';
@@ -547,24 +547,13 @@ export const updateTransactionFromBlockchain = (
             )(dispatch, getState);
         }
 
-        // const currentChainId = getChainId(state, blockchain);
-        // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
-
         if (navigateToTransaction) {
-            const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
-            const navigationParams: NavigationParams = {
-                blockchain,
-                accountIndex: transactionAccount.index,
-                token: generateAccountTokenState(tokenConfig),
-                tokenLogo: tokenConfig.icon,
-                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions,
-                accountName:
-                    transactionAccount?.name ||
-                    `${translate('App.labels.account')} ${transactionAccount.index + 1}`
-            };
-
             dispatch(setSelectedWallet(wallet.id));
-            NavigationService.navigate('Token', navigationParams);
+            NavigationService.navigate('TransactionDetails', {
+                transaction,
+                accountIndex: transactionAccount.index,
+                blockchain
+            });
         }
     }
 

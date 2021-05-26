@@ -1,142 +1,146 @@
-import firebase from 'react-native-firebase';
-import { dataMessageHandler } from '../handlers/data-message';
-import { INotificationPayload, NotificationType } from '../types';
+import messaging from '@react-native-firebase/messaging';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { Platform } from 'react-native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { notificationHandler } from '../handlers/notification';
-import { store } from '../../../redux/config';
-import { themes } from '../../../navigation/navigation';
-import { getUnseenNotifications } from '../../../redux/notifications/actions';
+import PushNotification from 'react-native-push-notification';
 
-// this file is in this format for testing purposes
 export class NotificationService {
-    public onTokenRefreshListener = null;
-    public messageListener = null;
-    public notificationDisplayedListener = null;
-    public onNotificationListener = null;
-    public onNotificationOpenedListener = null;
+    private messageListener = null;
+    private messageBackgrounListener = null;
+    private messageNotificationOpenedAppListener = null;
+    private tokenRefreshListener = null;
+    private localNotificationIOSListener = null;
 
-    public async getToken() {
-        return firebase.messaging().getToken();
-    }
-
-    public async checkPermission() {
-        // @ts-ignore seems like this is a must for now
-        const enabled = await firebase.messaging().hasPermission();
-        this.requestPermission();
-    }
-
-    public async requestPermission() {
-        try {
-            await firebase.messaging().requestPermission();
-            this.getToken();
-        } catch (error) {
-            // TODO: 'Messaging permission rejected';
-        }
-    }
-
-    public async createListeners() {
-        this.messageListener = firebase.messaging().onMessage(message => {
-            // received data message
-            dataMessageHandler(message.data);
-        });
-
-        // when app is opened or in background and a notification is received
-        this.onNotificationListener = firebase.notifications().onNotification(notification => {
-            notification.android.setChannelId('default').setSound('default');
-            // if this is a transaction notification, handle it and update state and display another notification after that
-            if (notification.data.type === NotificationType.TRANSACTION) {
-                notificationHandler((notification as any).data, false);
-            }
-
-            this.displayNotification(
-                notification.title,
-                notification.body,
-                (notification as any).data
-            );
-        });
-
-        // called when app is opened or in background and a regular notification is displaed
-        this.notificationDisplayedListener = firebase
-            .notifications()
-            .onNotificationDisplayed(notification => {
-                store.dispatch(getUnseenNotifications() as any);
-            });
-
-        // when app is opened or in background and user taps on a notification
-        this.onNotificationOpenedListener = firebase
-            .notifications()
-            .onNotificationOpened(notificationOpen => {
-                notificationHandler((notificationOpen.notification as any).data, false);
-            });
-    }
-
-    public removeListeners() {
-        typeof this.messageListener === 'function' && this.messageListener();
-        typeof this.notificationDisplayedListener === 'function' &&
-            this.notificationDisplayedListener();
-        typeof this.onNotificationListener === 'function' && this.onNotificationListener();
-        typeof this.onNotificationOpenedListener === 'function' &&
-            this.onNotificationOpenedListener();
-    }
-
-    public async displayNotification(title: string, body: string, data: INotificationPayload) {
-        const notification = new firebase.notifications.Notification()
-            .setNotificationId('1')
-            .setTitle(title)
-            .setBody(body)
-            .setData(data)
-            .android.setPriority(firebase.notifications.Android.Priority.High)
-            .android.setChannelId('default')
-            .android.setAutoCancel(true)
-            .android.setSmallIcon('icon')
-            .android.setColor(themes.dark.colors.accent);
-
-        firebase.notifications().displayNotification(notification);
-    }
-
-    public async scheduleNotification(date) {
-        const notification = new firebase.notifications.Notification()
-            .setNotificationId('1')
-            .setTitle('Test notification')
-            .setBody('This is a test notification')
-            .android.setPriority(firebase.notifications.Android.Priority.High)
-            .android.setChannelId('default')
-            .android.setAutoCancel(true)
-            .android.setSmallIcon('icon')
-            .android.setColor(themes.dark.colors.accent);
-
-        firebase
-            .notifications()
-            .scheduleNotification(notification, {
-                fireDate: date.getTime()
-            })
-            .catch(err => {
-                // console.error(err);
-            });
-    }
+    private token: string = null;
 
     public async configure() {
-        const channel = new firebase.notifications.Android.Channel(
-            'default',
-            'default channel',
-            firebase.notifications.Android.Importance.Max
-        );
-        firebase.notifications().android.createChannel(channel);
-        this.checkPermission();
+        try {
+            const msg = messaging();
+
+            await msg.hasPermission();
+            await msg.requestPermission();
+
+            this.token = await msg.getToken();
+        } catch (error) {
+            SentryCaptureException(new Error(JSON.stringify(error)));
+        }
+
         this.createListeners();
 
         this.wasOpenedByNotification();
     }
 
-    public wasOpenedByNotification() {
-        firebase
-            .notifications()
-            .getInitialNotification()
-            .then(notificationOpen => {
-                if (notificationOpen) {
-                    // app was opened by a notification
-                    notificationHandler((notificationOpen.notification as any).data, true);
+    public async getToken() {
+        return this.token || messaging().getToken();
+    }
+
+    private async sendNotification(message) {
+        if (Platform.OS === 'android') {
+            try {
+                const channelId = 'channel-id';
+                PushNotification.createChannel(
+                    {
+                        channelId,
+                        channelName: 'My channel',
+                        vibrate: true
+                    },
+                    () => {
+                        PushNotification.localNotification({
+                            channelId,
+                            title: message?.notification?.title,
+                            message: message?.notification?.body,
+                            userInfo: {
+                                data: message?.data
+                            }
+                        });
+                    }
+                );
+            } catch (error) {
+                SentryCaptureException(new Error(JSON.stringify(error)));
+            }
+        }
+
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.addNotificationRequest({
+                id: await this.getToken(),
+                title: message?.notification?.title,
+                body: message?.notification?.body,
+                userInfo: {
+                    data: message?.data
                 }
             });
+        }
+    }
+
+    public async createListeners() {
+        const msg = messaging();
+
+        // when app is opened
+        this.messageListener = msg.onMessage(async message => {
+            // received data message
+            await this.sendNotification(message);
+        });
+
+        // when app is opened or in background
+        this.messageBackgrounListener = msg.setBackgroundMessageHandler(async message => {
+            await this.sendNotification(message);
+            return null;
+        });
+
+        // Notification caused app to open from background state
+        this.messageNotificationOpenedAppListener = msg.onNotificationOpenedApp(message => {
+            const data = (message as any)?.data || (message as any)?.userInfo?.data;
+            notificationHandler(data, true);
+        });
+
+        this.tokenRefreshListener = msg.onTokenRefresh((token: string) => {
+            if (this.token !== token) {
+                this.token = token;
+            }
+        });
+
+        if (Platform.OS === 'ios') {
+            this.localNotificationIOSListener = PushNotificationIOS.addEventListener(
+                'localNotification',
+                notification => {
+                    const data = notification.getData();
+                    const isClicked = data.userInteraction === 1;
+
+                    if (isClicked) {
+                        notificationHandler(data?.data, true);
+                    }
+                }
+            );
+        }
+
+        // TODO: store.dispatch(getUnseenNotifications() as any);
+    }
+
+    // Check whether an initial notification is available
+    public wasOpenedByNotification() {
+        messaging()
+            .getInitialNotification()
+            .then(message => {
+                // app was opened by a notification
+                if (message) {
+                    notificationHandler((message as any).data, true);
+                }
+            });
+    }
+
+    public removeListeners() {
+        typeof this.messageListener === 'function' && this.messageListener();
+
+        typeof this.messageBackgrounListener === 'function' && this.messageBackgrounListener();
+
+        typeof this.messageNotificationOpenedAppListener === 'function' &&
+            this.messageNotificationOpenedAppListener();
+
+        typeof this.tokenRefreshListener === 'function' && this.tokenRefreshListener();
+
+        typeof this.localNotificationIOSListener === 'function' &&
+            this.localNotificationIOSListener();
     }
 }
 

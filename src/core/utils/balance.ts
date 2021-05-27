@@ -46,19 +46,22 @@ export const calculateBalance = (
                 );
             }
 
-            if (cumulativeBalance === true) {
-                // Cumulative Balance
-                // balance of all portfolio
-                balance = balance.plus(amount);
-            } else {
-                // No Cumulative Balance
-                // add only the balance of the native coin
-                if (tokenSymbol === blockchainInstance.config.coin) {
-                    balance = balance.plus(amount);
-                } else {
-                    // skip, do not add the balance of non native coins
-                }
-            }
+            // Consider Cumulative Balance
+            balance = balance.plus(amount);
+
+            // if (cumulativeBalance === true) {
+            //     // Cumulative Balance
+            //     // balance of all portfolio
+            //     balance = balance.plus(amount);
+            // } else {
+            //     // No Cumulative Balance
+            //     // add only the balance of the native coin
+            //     if (tokenSymbol === blockchainInstance.config.coin) {
+            //         balance = balance.plus(amount);
+            //     } else {
+            //         // skip, do not add the balance of non native coins
+            //     }
+            // }
         }
     }
 

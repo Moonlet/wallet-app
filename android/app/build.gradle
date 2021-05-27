@@ -223,11 +223,6 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation "com.google.android.gms:play-services-base:17.0.0"
-	implementation "com.google.firebase:firebase-core:17.0.1"
-	implementation "com.google.firebase:firebase-messaging:19.0.0"
-    implementation "com.google.firebase:firebase-config:19.0.0"
-    implementation "com.google.firebase:firebase-database:19.2.1"
 	implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 

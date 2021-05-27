@@ -1,4 +1,4 @@
-import firebase from 'react-native-firebase';
+import remoteConfig from '@react-native-firebase/remote-config';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import CONFIG from '../../../config';
@@ -8,37 +8,60 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 const featuresConfig = {};
 
 export const getRemoteConfigFeatures = async () => {
+    const config = remoteConfig();
+
     const duration = CONFIG.firebaseConfigFetchInterval;
     if (__DEV__) {
-        firebase.config().enableDeveloperMode();
+        await config.setConfigSettings({
+            minimumFetchIntervalMillis: 0
+        });
     }
 
     try {
-        await firebase.config().fetch(duration);
-        await firebase.config().activateFetched();
+        // Set default values
+        const defaultValues = {};
+        for (const feature of Object.values(RemoteFeature)) {
+            defaultValues[feature] = [];
+        }
+        defaultValues[RemoteFeature.TC_VERSION] = 0;
+        await config.setDefaults(defaultValues);
 
-        const objects = await firebase.config().getValues(Object.values(RemoteFeature));
+        await config.fetch(duration);
 
-        // Retrieve values
-        Object.keys(objects).forEach(key => {
-            featuresConfig[key] = objects[key].val();
-        });
+        const activated = await config.fetchAndActivate();
+
+        if (activated) {
+            // Ensures the last activated config are available to the getters.
+            await config.ensureInitialized();
+
+            const all = config.getAll();
+            const allKeys = Object.keys(all);
+
+            for (const key of allKeys) {
+                const val = all[key].asString();
+                try {
+                    featuresConfig[key] = JSON.parse(val);
+                } catch {
+                    featuresConfig[key] = val;
+                }
+            }
+        } else {
+            // Set default values
+            for (const feature of Object.values(RemoteFeature)) {
+                featuresConfig[feature] = [];
+            }
+            featuresConfig[RemoteFeature.TC_VERSION] = 0;
+
+            SentryCaptureException(new Error('Remote config not activated'));
+        }
     } catch (error) {
         // Set default values
         for (const feature of Object.values(RemoteFeature)) {
-            featuresConfig[feature] = JSON.stringify([]);
+            featuresConfig[feature] = [];
         }
-        featuresConfig[RemoteFeature.TC_VERSION] = '0';
+        featuresConfig[RemoteFeature.TC_VERSION] = 0;
 
         SentryCaptureException(new Error(JSON.stringify(error)));
-    }
-
-    for (const key of Object.keys(featuresConfig)) {
-        try {
-            featuresConfig[key] = JSON.parse(featuresConfig[key]);
-        } catch {
-            // console.error(`${key} from remote feature config is not a valid JSON string`);
-        }
     }
 
     return featuresConfig;

@@ -637,7 +637,9 @@ export const translation: ITranslations = {
                 SOLANA:
                     'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Unstake or Withdraw.',
                 CELO:
-                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.'
+                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Claim, Unstake or Switch Node.',
+                ETHEREUM:
+                    'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Unstake or Withdraw.'
             },
             cannotInitiateTxTitle: 'You have pending transactions',
             disableSignMessage:

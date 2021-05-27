@@ -200,7 +200,7 @@ class ProcessTransactionsComponent extends React.Component<
         const fees =
             feesNumber &&
             formatNumber(new BigNumber(feesNumber), {
-                currency: blockchainInstance.config.coin
+                currency: tx.token.symbol
             });
 
         let amount = tx.amount;
@@ -219,7 +219,7 @@ class ProcessTransactionsComponent extends React.Component<
         );
 
         amount = formatNumber(new BigNumber(amountNumber), {
-            currency: tx.additionalInfo?.tokenSymbol || blockchainInstance.config.coin
+            currency: tx.additionalInfo?.tokenSymbol || tx.token.symbol
         });
 
         let middleText = '';
@@ -234,10 +234,10 @@ class ProcessTransactionsComponent extends React.Component<
             case PosBasicActionType.INCREASE_ALLOWANCE: {
                 topText =
                     translate('App.labels.increaseAllowance') +
-                    ' ' +
-                    translate('App.labels.for').toLowerCase() +
-                    ' ' +
-                    tx.additionalInfo?.tokenSymbol;
+                        ' ' +
+                        translate('App.labels.for').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.tokenSymbol || tx.token.symbol;
 
                 break;
             }
@@ -576,7 +576,7 @@ class ProcessTransactionsComponent extends React.Component<
             } else {
                 const blockchainInstance = getBlockchain(this.props.transactions[0].blockchain);
                 const token: ITokenState = this.props.selectedAccount.tokens[this.props.chainId][
-                    blockchainInstance.config.coin
+                    this.props.transactions[0].token.symbol
                 ];
                 NavigationService.popToTop();
                 NavigationService.navigate('Token', {

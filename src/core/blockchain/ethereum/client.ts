@@ -4,7 +4,8 @@ import {
     IBlockInfo,
     TransactionMessageText,
     TransactionType,
-    IBalance
+    IBalance,
+    Contracts
 } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
@@ -18,6 +19,7 @@ import { Ethereum } from '.';
 import { fixEthAddress } from '../../utils/format-address';
 import CONFIG from '../../../config';
 import { HttpClient } from '../../utils/http-client';
+import { Staking } from './contracts/staking';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -25,6 +27,7 @@ export class Client extends BlockchainGenericClient {
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
+        this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
     public getBalance(address: string): Promise<IBalance> {

@@ -62,7 +62,6 @@ import { IconValues } from '../../../../components/icon/values';
 import { delay } from '../../../../core/utils/time';
 import { buildDummyValidator } from '../../../wallets/actions/util-actions';
 import { supportedActions } from './actions/index';
-import { isFeatureActive, RemoteFeature } from '../../../../core/utils/remote-feature-config';
 
 export interface IHandleCtaOptions {
     screenKey?: string;
@@ -526,10 +525,7 @@ const handleCtaAction = async (
                     break;
 
                 case 'hasPendingTransactions':
-                    if (
-                        !isFeatureActive(RemoteFeature.IMPROVED_NONCE) &&
-                        getNrPendingTransactions(state)
-                    ) {
+                    if (getNrPendingTransactions(state)) {
                         const nvServiceFn =
                             NavigationService.getCurrentRoute() === 'Dashboard'
                                 ? 'navigate'

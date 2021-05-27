@@ -12,7 +12,6 @@ import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
 import { IValidator } from '../../core/blockchain/types/stats';
 import { Dialog } from '../dialog/dialog';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface INavParams {
     accountIndex: number;
@@ -39,10 +38,7 @@ export const CtaGroupComponent = (
                         <Button
                             leftIcon={props.otherCtas[0].iconName}
                             onPress={() => {
-                                if (
-                                    props.params.canPerformAction ||
-                                    isFeatureActive(RemoteFeature.IMPROVED_NONCE)
-                                ) {
+                                if (props.params.canPerformAction) {
                                     NavigationService.navigate(
                                         props.otherCtas[0].navigateTo.screen,
                                         {
@@ -73,10 +69,7 @@ export const CtaGroupComponent = (
                                 key={`cta-${index}`}
                                 leftIcon={cta.iconName}
                                 onPress={() => {
-                                    if (
-                                        props.params.canPerformAction ||
-                                        isFeatureActive(RemoteFeature.IMPROVED_NONCE)
-                                    ) {
+                                    if (props.params.canPerformAction) {
                                         NavigationService.navigate(cta.navigateTo.screen, {
                                             ...cta.navigateTo.params,
                                             ...props.params
@@ -108,10 +101,7 @@ export const CtaGroupComponent = (
                 primary
                 leftIcon={props.mainCta.iconName}
                 onPress={() => {
-                    if (
-                        props.params.canPerformAction ||
-                        isFeatureActive(RemoteFeature.IMPROVED_NONCE)
-                    ) {
+                    if (props.params.canPerformAction) {
                         NavigationService.navigate(props.mainCta.navigateTo.screen, {
                             ...props.mainCta.navigateTo.params,
                             ...props.params

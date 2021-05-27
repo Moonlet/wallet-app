@@ -40,7 +40,6 @@ import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/react-native';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export const signAndSendTransactions = (specificIndex?: number) => async (
     dispatch: Dispatch<IAction<any>>,
@@ -105,40 +104,36 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     nonce: nonce + nrPendingTransactions
                 };
 
-                if (isFeatureActive(RemoteFeature.IMPROVED_NONCE)) {
-                    // Adjust nonce
-                    const currentBlockNumber = await client
-                        .getCurrentBlock()
-                        .then(res => res.number);
-                    // getting all outbound tx for current account
-                    const outboundTransactions = getSelectedAccountTransactions(getState()).filter(
-                        tx => tx.address === account.address
-                    );
+                // Adjust nonce
+                const currentBlockNumber = await client.getCurrentBlock().then(res => res.number);
+                // getting all outbound tx for current account
+                const outboundTransactions = getSelectedAccountTransactions(getState()).filter(
+                    tx => tx.address === account.address
+                );
 
-                    // checking if there are transactions with same nonce
-                    let outTx: IBlockchainTransaction = outboundTransactions.find(
-                        tx => tx.nonce === nonce
-                    );
-                    while (outTx) {
-                        // found a tx with the same nonce
-                        const txStatus = await client.utils.getTransactionStatus(outTx.id, {
-                            broadcastedOnBlock: outTx.broadcastedOnBlock,
-                            currentBlockNumber,
-                            address: account.address
-                        });
+                // checking if there are transactions with same nonce
+                let outTx: IBlockchainTransaction = outboundTransactions.find(
+                    tx => tx.nonce === nonce
+                );
+                while (outTx) {
+                    // found a tx with the same nonce
+                    const txStatus = await client.utils.getTransactionStatus(outTx.id, {
+                        broadcastedOnBlock: outTx.broadcastedOnBlock,
+                        currentBlockNumber,
+                        address: account.address
+                    });
 
-                        // if the status oif the tx is DROPPED we can reuse the nonce
-                        if (txStatus === TransactionStatus.DROPPED) {
-                            break;
-                        } else {
-                            // the transactions is not dropped, so it's on the chain, we need to increase the nonce and check again
-                            nonce++;
-                            outTx = outboundTransactions.find(tx => tx.nonce === nonce);
-                        }
+                    // if the status oif the tx is DROPPED we can reuse the nonce
+                    if (txStatus === TransactionStatus.DROPPED) {
+                        break;
+                    } else {
+                        // the transactions is not dropped, so it's on the chain, we need to increase the nonce and check again
+                        nonce++;
+                        outTx = outboundTransactions.find(tx => tx.nonce === nonce);
                     }
-                    // updating the nonce
-                    transaction.nonce = nonce;
                 }
+                // updating the nonce
+                transaction.nonce = nonce;
 
                 signed = await wallet.sign(
                     transaction.blockchain,

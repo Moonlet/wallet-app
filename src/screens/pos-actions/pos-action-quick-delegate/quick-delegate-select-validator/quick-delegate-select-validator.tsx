@@ -37,7 +37,6 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { NavigationService } from '../../../../navigation/navigation-service';
-import { isFeatureActive, RemoteFeature } from '../../../../core/utils/remote-feature-config';
 
 interface IReduxProps {
     account: IAccountState;
@@ -101,7 +100,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (!isFeatureActive(RemoteFeature.IMPROVED_NONCE) && this.props.hasPendingTransactions) {
+        if (this.props.hasPendingTransactions) {
             Dialog.alert(
                 translate('Validator.cannotInitiateTxTitle'),
                 translate('Validator.cannotInitiateTxMessage'),

@@ -297,15 +297,15 @@ export class DashboardScreenComponent extends React.Component<
             extrapolate: 'clamp'
         });
 
-        const animateConvertedAmountFontSize = this.animationValue.interpolate({
-            inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
-            outputRange: [
-                normalizeFontAndLineHeight(16),
-                normalizeFontAndLineHeight(13),
-                normalizeFontAndLineHeight(13)
-            ],
-            extrapolate: 'clamp'
-        });
+        // const animateConvertedAmountFontSize = this.animationValue.interpolate({
+        //     inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
+        //     outputRange: [
+        //         normalizeFontAndLineHeight(16),
+        //         normalizeFontAndLineHeight(13),
+        //         normalizeFontAndLineHeight(13)
+        //     ],
+        //     extrapolate: 'clamp'
+        // });
 
         const animateCoinBalanceCardHeight = this.animationValue.interpolate({
             inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
@@ -386,9 +386,10 @@ export class DashboardScreenComponent extends React.Component<
                         <Amount
                             style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
                             amount={String(balance)}
-                            token={tokenConfig.symbol}
+                            token={blockchainConfig.coin}
                             tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
+                            convert
                             isAnimated={true}
                             smallFontToken={{
                                 visible: true
@@ -396,7 +397,7 @@ export class DashboardScreenComponent extends React.Component<
                         />
                     </Animated.View>
 
-                    <View style={styles.row}>
+                    {/* <View style={styles.row}>
                         <Amount
                             testID={this.props.userCurrency}
                             style={[
@@ -410,7 +411,7 @@ export class DashboardScreenComponent extends React.Component<
                             convert
                             isAnimated={true}
                         />
-                    </View>
+                    </View> */}
                 </TouchableOpacity>
             </Animated.View>
         );

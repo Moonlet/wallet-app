@@ -35,8 +35,6 @@ import { fetchValidators } from '../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { Dialog } from '../../../../components/dialog/dialog';
-import { NavigationService } from '../../../../navigation/navigation-service';
 
 interface IReduxProps {
     account: IAccountState;
@@ -100,20 +98,8 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.props.hasPendingTransactions) {
-            Dialog.alert(
-                translate('Validator.cannotInitiateTxTitle'),
-                translate('Validator.cannotInitiateTxMessage'),
-                undefined,
-                {
-                    text: translate('App.labels.ok'),
-                    onPress: () => NavigationService.replace('TransactonsHistory', {})
-                }
-            );
-        } else {
-            this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
-            this.props.fetchDelegatedValidators(this.props.account);
-        }
+        this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
+        this.props.fetchDelegatedValidators(this.props.account);
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {

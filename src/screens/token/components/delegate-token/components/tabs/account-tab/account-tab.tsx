@@ -18,7 +18,6 @@ import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { PosBasicActionType } from '../../../../../../../core/blockchain/types/token';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
-import { Dialog } from '../../../../../../../components/dialog/dialog';
 import { SmartScreenComponent } from '../../../../../../../components/smart-screen/smart-screen';
 import { ContextScreen, ContextTab } from '../../../../../../../components/widgets/types';
 import {
@@ -88,27 +87,11 @@ class AccountTabComponent extends React.Component<
                                 style={styles.button}
                                 wrapperStyle={{ flex: 1 }}
                                 onPress={() => {
-                                    if (!this.props.hasPendingTransactions) {
-                                        NavigationService.navigate('Send', {
-                                            accountIndex: this.props.account.index,
-                                            blockchain: this.props.account.blockchain,
-                                            token
-                                        });
-                                    } else {
-                                        Dialog.alert(
-                                            translate('Validator.cannotInitiateTxTitle'),
-                                            translate('Validator.cannotInitiateTxMessage'),
-                                            undefined,
-                                            {
-                                                text: translate('App.labels.ok'),
-                                                onPress: () =>
-                                                    NavigationService.navigate(
-                                                        'TransactonsHistory',
-                                                        {}
-                                                    )
-                                            }
-                                        );
-                                    }
+                                    NavigationService.navigate('Send', {
+                                        accountIndex: this.props.account.index,
+                                        blockchain: this.props.account.blockchain,
+                                        token
+                                    });
                                 }}
                                 disabledSecondary={
                                     this.props.account.type === AccountType.LOCKUP_CONTRACT

@@ -34,7 +34,8 @@ import 'node-libs-react-native/globals';
 import { AppRegistry, Platform } from 'react-native';
 import App from './src/app';
 import { name as appName } from './app.json';
-import androidBgMessagingHandler from './src/core/messaging/silent/android-background-messaging';
+import PushNotification from 'react-native-push-notification';
+import { notificationHandler } from './src/core/messaging/handlers/notification';
 
 // TODO remove this when fixed
 import { YellowBox } from 'react-native';
@@ -45,10 +46,16 @@ YellowBox.ignoreWarnings([
 
 // console.disableYellowBox = true;
 
-if (Platform.OS === 'android') {
-    AppRegistry.registerHeadlessTask(
-        'RNFirebaseBackgroundMessage',
-        () => androidBgMessagingHandler
-    );
-}
+PushNotification.configure({
+    // (required) Called when a remote is received or opened, or local notification is opened
+    onNotification: notification => {
+        const isClicked =
+            notification?.userInteraction === true || notification?.userInteraction === 1;
+        const data = notification?.data?.data || notification?.data;
+        if (isClicked && data) {
+            notificationHandler(data, true);
+        }
+    }
+});
+
 AppRegistry.registerComponent(appName, () => App);

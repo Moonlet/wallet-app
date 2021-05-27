@@ -20,6 +20,8 @@ jest.mock('react-navigation', () => {
     };
 });
 
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
 jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({}));
 
 jest.mock('react-navigation-tabs', () => {

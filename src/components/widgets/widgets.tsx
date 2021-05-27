@@ -94,10 +94,12 @@ class WidgetsComponent extends React.Component<
     }
 
     private getWidgetKey(title: string, index: number) {
-        return `widget-${index}-${title
-            .split(' ')
-            .join('-')
-            .toLocaleLowerCase()}`;
+        return title
+            ? `widget-${index}-${title
+                  .split(' ')
+                  .join('-')
+                  .toLocaleLowerCase()}`
+            : `widget-${index}`;
     }
 
     private renderWidget(widget: IScreenWidget, index: number) {

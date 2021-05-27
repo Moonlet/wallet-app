@@ -5,7 +5,7 @@ import { CONN_EXTENSION } from '../constants/app';
 import { Dialog } from '../../components/dialog/dialog';
 import { translate } from '../i18n';
 import { ConnectExtension } from './connect-extension';
-import { database } from 'react-native-firebase';
+import database from '@react-native-firebase/database';
 import { decrypt } from '../secure/encrypt/encrypt.extension';
 import { IBlockchainTransaction } from '../blockchain/types';
 

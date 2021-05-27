@@ -4,7 +4,7 @@ use_frameworks!
 
 target 'Moonlet' do
   # Pods for Moonlet
-  
+
   target 'Moonlet_beta'
 
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
@@ -38,26 +38,14 @@ target 'Moonlet' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'Firebase/Core', '~> 6.3.0', :modular_headers => true
-  pod 'Firebase/RemoteConfig'
-  pod 'Firebase/Messaging', '~> 6.3.0'
-  pod 'Firebase/Database'
   pod 'react-native-ble-plx-swift', :path => '../node_modules/react-native-ble-plx'
   pod 'React-ART', :path => '../node_modules/react-native/Libraries/ART'
-
-
 
   use_native_modules!
 
 end
 
 post_install do |installer|
-  rnfirebase = installer.pods_project.targets.find { |target| target.name == 'RNFirebase' }
-  rnfirebase.build_configurations.each do |config|
-    config.build_settings['HEADER_SEARCH_PATHS'] = '$(inherited) ${PODS_ROOT}/Headers/Public/**'
-  end
-
-
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'

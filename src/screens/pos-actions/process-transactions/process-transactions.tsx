@@ -188,19 +188,24 @@ class ProcessTransactionsComponent extends React.Component<
     private formatTopMiddleAndBottomText(
         tx: IBlockchainTransaction
     ): { topText: string; middleText: string; bottomText: string } {
-        const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
         const blockchainInstance = getBlockchain(tx.blockchain);
+        const nativeCoin = blockchainInstance.config.coin;
+
+        const nativeTokenConfig = getTokenConfig(tx.blockchain, nativeCoin);
+        const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
+
+        // fees are always paid in native token
         const feesNumber =
             tx.feeOptions &&
             blockchainInstance.account.amountFromStd(
                 new BigNumber(tx.feeOptions.feeTotal),
-                tokenConfig.decimals
+                nativeTokenConfig.decimals
             );
 
         const fees =
             feesNumber &&
             formatNumber(new BigNumber(feesNumber), {
-                currency: tx.token.symbol
+                currency: nativeCoin
             });
 
         let amount = tx.amount;
@@ -219,7 +224,7 @@ class ProcessTransactionsComponent extends React.Component<
         );
 
         amount = formatNumber(new BigNumber(amountNumber), {
-            currency: tx.additionalInfo?.tokenSymbol || tx.token.symbol
+            currency: tx.additionalInfo?.tokenSymbol || nativeCoin
         });
 
         let middleText = '';

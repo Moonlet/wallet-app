@@ -170,15 +170,17 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
                 break;
             }
 
-            // case PosBasicActionType.WITHDRAW: {
-            //     const txWithdraw = cloneDeep(tx);
-            //     const transaction = await client.contracts[Contracts.STAKING].completeWithdrawal(
-            //         txWithdraw
-            //     );
-            //     if (transaction) transactions.push(transaction);
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
 
-            //     break;
-            // }
+                const transaction = await client.contracts[Contracts.STAKING].withdrawDelegated(
+                    txWithdraw,
+                    tx.validators[0]
+                );
+                if (transaction) transactions.push(transaction);
+
+                break;
+            }
         }
 
         return transactions;

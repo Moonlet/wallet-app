@@ -3,7 +3,6 @@ import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } f
 import { IValidator } from '../../types/stats';
 import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract } from './base-contract';
-import BigNumber from 'bignumber.js';
 import abi from 'ethereumjs-abi';
 
 export class Staking {
@@ -138,7 +137,11 @@ export class Staking {
         const raw =
             '0x' +
             abi
-                .simpleEncode('withdrawDelegated(address,uint256)', validator.id, tx.amount)
+                .simpleEncode(
+                    'withdrawDelegated(address,address)',
+                    validator.id,
+                    '0x000000000000000000000000000000000000'
+                )
                 .toString('hex');
 
         const fees = await this.client.getFees(
@@ -152,21 +155,17 @@ export class Staking {
             },
             TokenType.ERC20
         );
-
-        transaction.feeOptions = {
-            feeTotal: new BigNumber(fees.gasPrice).multipliedBy(new BigNumber(1)).toFixed(),
-            gasLimit: '',
-            gasPrice: new BigNumber(fees.gasPrice).toFixed()
-        };
+        transaction.feeOptions = fees;
 
         transaction.data = {
             method: 'Withdraw',
-            params: [validator.id, undefined],
+            params: [validator.id, tx.extraFields.amount],
             raw
         };
 
-        transaction.additionalInfo.posAction = PosBasicActionType.CLAIM_REWARD;
+        transaction.additionalInfo.posAction = PosBasicActionType.WITHDRAW;
         transaction.additionalInfo.validatorName = validator.name;
+        transaction.additionalInfo.tokenSymbol = 'GRT';
 
         return transaction;
     }

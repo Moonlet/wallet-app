@@ -168,7 +168,7 @@ export class DynamicLinksService {
     }
 
     // app is in the foreground state
-    public async handleDynamicLink(link) {
+    public async handleDynamicLink(link: any) {
         if (link?.url) {
             this.processUrl(link.url);
         } else {

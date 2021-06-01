@@ -102,7 +102,7 @@ export class FeeOptionsComponent extends React.Component<
             this.setState({
                 feeOptions: fees,
                 isLoading: false,
-                showRetrySection: (fees.responseHasDefaults && fees.responseHasDefaults) || false
+                showRetrySection: !!fees.responseHasDefaults || false
             });
             this.props.onFeesChanged(fees);
         } catch (err) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import stylesProvider from './styles';
-import { Text } from '../../../../library';
+import { Button, Text } from '../../../../library';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { View, TouchableOpacity, FlatList } from 'react-native';
 import { translate } from '../../../../core/i18n';
@@ -228,25 +228,34 @@ export class FeeOptionsComponent extends React.Component<
         }
     }
 
+    public renderRetrySection() {
+        const styles = this.props.styles;
+        return (
+            <View style={styles.container}>
+                <Text style={styles.retryText}>{translate('Send.noFeesTitle')}</Text>
+                <Text style={styles.retrySubtitleText}>{translate('Send.noFeesSubtitle')}</Text>
+                <Button
+                    testID="create-button"
+                    style={styles.retryButton}
+                    wrapperStyle={{ flex: 1 }}
+                    onPress={() => this.getEstimatedFees()}
+                >
+                    {translate('App.labels.retry')}
+                </Button>
+            </View>
+        );
+    }
+
     public render() {
         const styles = this.props.styles;
         return (
             <View style={styles.container}>
                 {this.state.isLoading ? (
                     <LoadingIndicator />
+                ) : this.state.showRetrySection ? (
+                    this.renderRetrySection()
                 ) : (
                     <View>
-                        {this.state.showRetrySection && (
-                            <TouchableOpacity
-                                testID="advanced-fees"
-                                onPress={this.getEstimatedFees}
-                                style={styles.buttonRightOptions}
-                            >
-                                <Text style={styles.textTranferButton}>
-                                    {translate('App.labels.retryFees')}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
                         {this.state.showAdvancedOptions
                             ? this.renderAdvancedFees()
                             : this.renderSimpleFees()}

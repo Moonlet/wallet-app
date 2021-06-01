@@ -135,8 +135,6 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
             case PosBasicActionType.INCREASE_ALLOWANCE:
                 primaryText =
-                    translate('App.labels.increaseAllowance') +
-                    ' ' +
                     translate('App.labels.for').toLowerCase() +
                     ' ' +
                     tx.additionalInfo?.tokenSymbol;
@@ -308,7 +306,8 @@ export class TransactionsHistoryListComponent extends React.Component<
             }
 
             if (posAction === PosBasicActionType.INCREASE_ALLOWANCE) {
-                transactionType = translate('App.labels.increaseAllowance');
+                transactionType = translate('App.labels.increaseAllowance') + ' ';
+                amount = null;
             }
 
             if (

@@ -7,12 +7,20 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getSelectedAccount } from '../../../../redux/wallets/selectors';
 import { IScreenModule } from './../../types';
 
-export const getStakeEnterAllBalanceFormat = (state: IReduxState, module: IScreenModule) => {
+export const getStakeEnterAllBalanceFormat = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
     const account = getSelectedAccount(state);
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
-    const token = account.tokens[chainId][blockchainInstance.config.coin];
+
+    const tokenSymbol = (params && params[0]) || blockchainInstance.config.coin;
+
+    const token = account.tokens[chainId][tokenSymbol];
 
     let balance = new BigNumber(token.balance?.available || '0');
     const amountToKeepInAccount = blockchainInstance.config.amountToKeepInAccount[account.type];
@@ -30,12 +38,19 @@ export const getStakeEnterAllBalanceFormat = (state: IReduxState, module: IScree
     });
 };
 
-export const getStakeEnterAllBalance = (state: IReduxState, module: IScreenModule) => {
+export const getStakeEnterAllBalance = (
+    state: IReduxState,
+    module: IScreenModule,
+    options: any,
+    params: any
+) => {
     const account = getSelectedAccount(state);
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
-    const token = account.tokens[chainId][blockchainInstance.config.coin];
+    const tokenSymbol = (params && params[0]) || blockchainInstance.config.coin;
+
+    const token = account.tokens[chainId][tokenSymbol];
 
     let balance = new BigNumber(token.balance?.available || '0');
     const amountToKeepInAccount = blockchainInstance.config.amountToKeepInAccount[account.type];

@@ -959,6 +959,7 @@ const handleCtaAction = async (
                                 screen: 'StakeNow',
                                 step: 'StakeNowEnterAmountValidators',
                                 key: 'stake-now-enter-amount-validators',
+                                flowId: action.params?.params?.flowId,
                                 screenKey,
                                 params: {
                                     validators

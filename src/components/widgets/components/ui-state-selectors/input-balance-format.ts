@@ -10,7 +10,8 @@ import { IScreenModule } from '../../types';
 export const getInputBalanceFormat = (
     state: IReduxState,
     module: IScreenModule,
-    options: { flowId: string; screenKey: string }
+    options: { flowId: string; screenKey: string },
+    params: any
 ) => {
     const blockchainInstance = getBlockchain(getSelectedBlockchain(state));
 
@@ -24,16 +25,21 @@ export const getInputBalanceFormat = (
         balance = new BigNumber(state.ui.screens.inputData[options.screenKey].data.amount);
     }
 
-    return `${balance} ${blockchainInstance.config.coin}`;
+    const tokenSymbol = (params && params[0]) || blockchainInstance.config.coin;
+
+    return `${balance} ${tokenSymbol}`;
 };
 
 export const getInputBalanceConverted = (
     state: IReduxState,
     module: IScreenModule,
-    options: { flowId: string; screenKey: string }
+    options: { flowId: string; screenKey: string },
+    params: any
 ) => {
     const blockchain = getSelectedBlockchain(state);
     const blockchainInstance = getBlockchain(blockchain);
+
+    const tokenSymbol = (params && params[0]) || blockchainInstance.config.coin;
 
     let balance = new BigNumber(0);
 
@@ -45,13 +51,13 @@ export const getInputBalanceConverted = (
         balance = new BigNumber(state.ui.screens.inputData[options.screenKey].data.amount);
     }
 
-    const tokenConfig = getTokenConfig(blockchain, blockchainInstance.config.coin);
+    const tokenConfig = getTokenConfig(blockchain, tokenSymbol);
 
     const amount = convertAmount(
         blockchain,
         state.market.exchangeRates,
         blockchainInstance.account.amountToStd(balance.toFixed(4), tokenConfig.decimals).toFixed(),
-        blockchainInstance.config.coin,
+        tokenSymbol,
         state.preferences.currency,
         tokenConfig.decimals
     );
@@ -95,6 +101,8 @@ export const getStakeAmountValidatorSplit = (
 
     const validatorsLength = params && params[0] && params[0]?.validatorsLength;
 
+    const tokenSymbol = (params && params[1]) || blockchainInstance.config.coin;
+
     let balance = new BigNumber(0);
 
     if (
@@ -105,5 +113,5 @@ export const getStakeAmountValidatorSplit = (
         balance = new BigNumber(state.ui.screens.inputData[options.screenKey].data.amount);
     }
 
-    return `${splitStake(balance, validatorsLength).toFixed(2)} ${blockchainInstance.config.coin}`;
+    return `${splitStake(balance, validatorsLength).toFixed(2)} ${tokenSymbol}`;
 };

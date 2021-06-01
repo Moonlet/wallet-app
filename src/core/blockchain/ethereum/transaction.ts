@@ -2,15 +2,19 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    AbstractBlockchainTransactionUtils
+    AbstractBlockchainTransactionUtils,
+    IPosTransaction,
+    Contracts
 } from '../types';
 import { Transaction } from 'ethereumjs-tx';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
-import { TokenType } from '../types/token';
+import { PosBasicActionType, TokenType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
 import { Ethereum } from '.';
+import { cloneDeep } from 'lodash';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { splitStake } from '../../utils/balance';
 
 export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
@@ -121,5 +125,64 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
         } else {
             return tx?.amount;
         }
+    }
+
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Ethereum.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.STAKE:
+            case PosBasicActionType.DELEGATE: {
+                const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
+
+                const txIncrease: IPosTransaction = cloneDeep(tx);
+                const transactionAllowance: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].increaseAllowance(txIncrease, tokenInfo.contractAddress);
+                transactionAllowance.nonce = transactionAllowance.nonce + transactions.length; // increase nonce with the number of previous transactions
+                transactions.push(transactionAllowance);
+
+                const splitAmount = splitStake(new BigNumber(tx.amount), tx.validators.length);
+                for (const validator of tx.validators) {
+                    const txStake: IPosTransaction = cloneDeep(tx);
+                    txStake.amount = splitAmount.toFixed(0, BigNumber.ROUND_DOWN);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].delegate(txStake, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+                break;
+            }
+
+            case PosBasicActionType.UNSTAKE: {
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].undelegate(txUnStake, tx.validators[0]);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+                break;
+            }
+
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
+
+                const transaction = await client.contracts[Contracts.STAKING].withdrawDelegated(
+                    txWithdraw,
+                    tx.validators[0]
+                );
+                if (transaction) transactions.push(transaction);
+
+                break;
+            }
+        }
+
+        return transactions;
     }
 }

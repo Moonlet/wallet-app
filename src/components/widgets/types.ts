@@ -496,6 +496,7 @@ export interface ISearchData {
     state: string;
     stateModifierFn: string;
     initialStateData: IScreenModule[];
+    type: any;
     input?: {
         style?: IDataStyle;
         textStyle?: IDataStyle;

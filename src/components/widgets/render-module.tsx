@@ -335,7 +335,10 @@ export const renderModule = (
                     module={module}
                     context={context}
                     actions={actions}
-                    options={options}
+                    options={{
+                        ...options,
+                        flowId: context?.flowId
+                    }}
                 />
             );
             break;

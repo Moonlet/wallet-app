@@ -17,6 +17,8 @@ import { Text } from '../../../../library';
 import { handleCta } from '../../../../redux/ui/screens/data/handle-cta';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { renderModules } from '../../render-module';
+import { ApiClient } from '../../../../core/utils/api-client/api-client';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -31,8 +33,9 @@ interface IExternalProps {
 interface IReduxProps {
     search: {
         input: string;
-        result: any;
+        result: IScreenModule[];
     };
+    testnet: boolean;
     setScreenInputData: typeof setScreenInputData;
 }
 
@@ -41,6 +44,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 
     return {
         search: screenKey && state.ui.screens.inputData[screenKey]?.data?.search,
+        testnet: state.preferences.testNet,
 
         ...getStateSelectors(state, ownProps.module, {
             screenKey,
@@ -53,17 +57,23 @@ const mapDispatchToProps = {
     setScreenInputData
 };
 
+interface IState {
+    apiClient: ApiClient;
+}
+
 class SearchComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps,
+    IState
 > {
     private textInputRef: any;
 
-    private clearInput() {
-        if (this.props.options?.screenKey) {
-            this.props.actions.clearScreenInputData(this.props.options.screenKey, {
-                search: undefined
-            });
-        }
+    constructor(
+        props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & IExternalProps
+    ) {
+        super(props);
+        this.state = {
+            apiClient: new ApiClient()
+        };
     }
 
     public componentDidMount() {
@@ -71,6 +81,49 @@ class SearchComponent extends React.Component<
 
         if ((this.props.module.data as ISearchData)?.focus) {
             this.textInputRef?.focus();
+        }
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
+        if (this.props.search?.input !== prevProps.search?.input) {
+            const input = this.props.search?.input;
+            if (input && input.length >= 3) {
+                this.fetchSearchInput(input);
+            }
+        }
+    }
+
+    private async fetchSearchInput(input: string) {
+        try {
+            // isLoading
+
+            const searchResult = await this.state.apiClient.http.post('/walletUi/search', {
+                type: (this.props.module.data as ISearchData).type,
+                input,
+                options: {
+                    testnet: this.props.testnet,
+                    flowId: this.props.options?.flowId
+                }
+            });
+
+            const result = searchResult?.result?.data;
+
+            this.props.setScreenInputData(this.props.options?.screenKey, {
+                search: {
+                    ...this.props.search,
+                    result
+                }
+            });
+        } catch (error) {
+            SentryCaptureException(new Error(JSON.stringify(error)));
+        }
+    }
+
+    private clearInput() {
+        if (this.props.options?.screenKey) {
+            this.props.actions.clearScreenInputData(this.props.options.screenKey, {
+                search: undefined
+            });
         }
     }
 
@@ -132,12 +185,22 @@ class SearchComponent extends React.Component<
                     )}
                 </View>
 
-                {renderModules(
-                    data.initialStateData,
-                    this.props.context,
-                    this.props.actions,
-                    this.props.options
-                )}
+                {(!this.props.search?.input || this.props.search?.input === '') &&
+                    renderModules(
+                        data.initialStateData,
+                        this.props.context,
+                        this.props.actions,
+                        this.props.options
+                    )}
+
+                {this.props.search?.input !== '' &&
+                    this.props.search?.result &&
+                    renderModules(
+                        this.props.search.result,
+                        this.props.context,
+                        this.props.actions,
+                        this.props.options
+                    )}
             </View>
         );
     }

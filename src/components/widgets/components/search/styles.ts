@@ -3,7 +3,8 @@ import { ITheme } from '../../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     BORDER_RADIUS,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    SCREEN_HEIGHT
 } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -39,5 +40,9 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent
+        },
+        loadingContainer: {
+            flex: 1,
+            height: SCREEN_HEIGHT - BASE_DIMENSION * 12
         }
     });

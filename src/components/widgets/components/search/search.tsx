@@ -20,6 +20,8 @@ import { renderModules } from '../../render-module';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 
+const MIN_INPUT_LEN_SEARCH = 3;
+
 interface IExternalProps {
     module: IScreenModule;
     context: IScreenContext;
@@ -58,6 +60,7 @@ const mapDispatchToProps = {
 };
 
 interface IState {
+    isLoading: boolean;
     apiClient: ApiClient;
 }
 
@@ -72,6 +75,7 @@ class SearchComponent extends React.Component<
     ) {
         super(props);
         this.state = {
+            isLoading: false,
             apiClient: new ApiClient()
         };
     }
@@ -87,16 +91,16 @@ class SearchComponent extends React.Component<
     public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
         if (this.props.search?.input !== prevProps.search?.input) {
             const input = this.props.search?.input;
-            if (input && input.length >= 3) {
+            if (input && input.length >= MIN_INPUT_LEN_SEARCH) {
                 this.fetchSearchInput(input);
             }
         }
     }
 
     private async fetchSearchInput(input: string) {
-        try {
-            // isLoading
+        // this.setState({ isLoading: true });
 
+        try {
             const searchResult = await this.state.apiClient.http.post('/walletUi/search', {
                 type: (this.props.module.data as ISearchData).type,
                 input,
@@ -117,6 +121,8 @@ class SearchComponent extends React.Component<
         } catch (error) {
             SentryCaptureException(new Error(JSON.stringify(error)));
         }
+
+        // this.setState({ isLoading: false });
     }
 
     private clearInput() {
@@ -185,7 +191,15 @@ class SearchComponent extends React.Component<
                     )}
                 </View>
 
-                {(!this.props.search?.input || this.props.search?.input === '') &&
+                {/* {this.state.isLoading && (
+                    <View style={styles.loadingContainer}>
+                        <LoadingIndicator />
+                    </View>
+                )} */}
+
+                {// !this.state.isLoading &&
+                (!this.props.search?.input ||
+                    this.props.search?.input?.length < MIN_INPUT_LEN_SEARCH) &&
                     renderModules(
                         data.initialStateData,
                         this.props.context,
@@ -193,7 +207,8 @@ class SearchComponent extends React.Component<
                         this.props.options
                     )}
 
-                {this.props.search?.input !== '' &&
+                {// !this.state.isLoading &&
+                this.props.search?.input.length >= MIN_INPUT_LEN_SEARCH &&
                     this.props.search?.result &&
                     renderModules(
                         this.props.search.result,

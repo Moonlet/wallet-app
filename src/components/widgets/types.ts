@@ -119,7 +119,7 @@ export interface ICtaAction<P = any> {
     params: {
         action?: string;
         url?: string;
-        count?: string;
+        count?: number;
         screen?: string;
         params?: P;
     };

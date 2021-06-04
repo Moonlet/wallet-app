@@ -136,11 +136,9 @@ class DefaultTokenScreenComponent extends React.Component<
                                         NavigationService.navigate('SmartScreen', {
                                             context: {
                                                 screen: 'Swap',
-                                                step: 'SwapPairs',
-                                                key: 'swap-pairs',
-                                                params: {
-                                                    token: `${this.props.blockchain}:${token.symbol}`
-                                                }
+                                                step: 'SwapEnterAmount',
+                                                key: 'swap-enter-amount',
+                                                params: { token: token.symbol }
                                             },
                                             navigationOptions: {
                                                 title: translate('App.labels.swap')

@@ -40,6 +40,7 @@ import { PubSub } from '../../core/blockchain/common/pub-sub';
 import { PriceUpdateModule } from './components/price-update/price-update';
 import { AbsoluteModules } from './components/absolute-modules/absolute-modules';
 import { TimerIntervalPriceUpdateModule } from './components/timer-interval-price-update/timer-interval-price-update';
+import { SearchModule } from './components/search/search';
 
 const renderModules = (
     modules: IScreenModule[],
@@ -307,6 +308,17 @@ export const renderModule = (
         case ModuleTypes.ABSOLUTE_MODULES:
             moduleJSX = (
                 <AbsoluteModules
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={options}
+                />
+            );
+            break;
+
+        case ModuleTypes.SEARCH:
+            moduleJSX = (
+                <SearchModule
                     module={module}
                     context={context}
                     actions={actions}

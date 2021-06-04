@@ -63,6 +63,7 @@ class AmountSelectableBoxComponent extends React.Component<
     private renderAmountComp(amount: IAmountInputAmountBox, index: number) {
         const { amountBox, styles } = this.props;
 
+        const data = this.props.module.data as IAmountSelectableBoxData;
         const isSelected = amountBox && isEqual(amountBox, amount);
 
         let label = '';
@@ -77,7 +78,9 @@ class AmountSelectableBoxComponent extends React.Component<
                 key={`amount-comp-${index}`}
                 style={[
                     styles.amountComp,
+                    formatStyles(data?.style?.default),
                     isSelected && styles.amountCompSelected,
+                    isSelected && formatStyles(data?.style?.selected),
                     index === 0 && { marginLeft: 0 },
                     index === (this.props.module.data as IAmountInputData).amounts.length - 1 && {
                         marginRight: 0
@@ -94,7 +97,14 @@ class AmountSelectableBoxComponent extends React.Component<
                     });
                 }}
             >
-                <Text style={[styles.amountCompText, isSelected && styles.amountCompTextSelected]}>
+                <Text
+                    style={[
+                        styles.amountCompText,
+                        formatStyles(data?.style?.text),
+                        isSelected && styles.amountCompTextSelected,
+                        isSelected && formatStyles(data?.style?.textSelected)
+                    ]}
+                >
                     {label}
                 </Text>
             </TouchableOpacity>

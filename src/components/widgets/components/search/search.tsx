@@ -16,6 +16,7 @@ import { translate } from '../../../../core/i18n';
 import { Text } from '../../../../library';
 import { handleCta } from '../../../../redux/ui/screens/data/handle-cta';
 import { NavigationService } from '../../../../navigation/navigation-service';
+import { renderModules } from '../../render-module';
 
 interface IExternalProps {
     module: IScreenModule;
@@ -131,7 +132,12 @@ class SearchComponent extends React.Component<
                     )}
                 </View>
 
-                {/* {search?.result && } */}
+                {renderModules(
+                    data.initialStateData,
+                    this.props.context,
+                    this.props.actions,
+                    this.props.options
+                )}
             </View>
         );
     }

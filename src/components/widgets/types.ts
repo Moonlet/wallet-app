@@ -219,6 +219,7 @@ export interface IScreenModule {
         | ModuleTypes.TWO_LINES_TEXT_BANNER
         | ModuleTypes.VALIDATIONS;
     cta?: ICta;
+    ctaStyle?: IDataStyle;
     data:
         | I2LinesTextBannerData
         | I3LinesCtaData
@@ -492,6 +493,9 @@ export interface IAmountInputData {
 }
 
 export interface ISearchData {
+    state: string;
+    stateModifierFn: string;
+    initialStateData: IScreenModule[];
     input?: {
         style?: IDataStyle;
         textStyle?: IDataStyle;

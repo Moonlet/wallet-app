@@ -68,5 +68,6 @@ export enum ContractMethod {
     SWAP_EXACT_ZIL_FOR_TOKENS = 'SwapExactZILForTokens',
     SWAP_EXACT_TOKENS_FOR_ZIL = 'SwapExactTokensForZIL',
     SWAP_EXACT_TOKENS_FOR_TOKENS = 'SwapExactTokensForTokens',
-    DELEGATE = 'Delegate'
+    DELEGATE = 'Delegate',
+    UNDELEGATE = 'Undelegate'
 }

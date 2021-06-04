@@ -27,7 +27,7 @@ export const statGetValueString = (stat: IStatValue, tokenConfig: ITokenConfigSt
             }
 
             return formatNumber(new BigNumber(amountFromStd), {
-                currency: blockchainInstance.config.coin,
+                currency: tokenConfig.symbol,
                 maximumFractionDigits: 4
             });
         }

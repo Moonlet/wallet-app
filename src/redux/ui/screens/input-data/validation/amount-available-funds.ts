@@ -28,7 +28,10 @@ export const amountAvailableFunds = (
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
     const chainId = getChainId(state, blockchain);
-    const token = account.tokens[chainId][blockchainInstance.config.coin];
+
+    const tokenSymbol =
+        (validation.params && validation.params[0]) || blockchainInstance.config.coin;
+    const token = account.tokens[chainId][tokenSymbol];
 
     const tokenConfig = getTokenConfig(blockchain, token.symbol);
 

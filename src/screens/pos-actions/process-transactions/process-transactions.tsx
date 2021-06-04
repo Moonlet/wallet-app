@@ -239,10 +239,10 @@ class ProcessTransactionsComponent extends React.Component<
             case PosBasicActionType.INCREASE_ALLOWANCE: {
                 topText =
                     translate('App.labels.increaseAllowance') +
-                    ' ' +
-                    translate('App.labels.for').toLowerCase() +
-                    ' ' +
-                    tx.additionalInfo?.tokenSymbol;
+                        ' ' +
+                        translate('App.labels.for').toLowerCase() +
+                        ' ' +
+                        tx.additionalInfo?.tokenSymbol || tx.token.symbol;
 
                 break;
             }
@@ -584,7 +584,7 @@ class ProcessTransactionsComponent extends React.Component<
             } else {
                 const blockchainInstance = getBlockchain(this.props.transactions[0].blockchain);
                 const token: ITokenState = this.props.selectedAccount.tokens[this.props.chainId][
-                    blockchainInstance.config.coin
+                    this.props.transactions[0].token.symbol
                 ];
                 NavigationService.popToTop();
                 NavigationService.navigate('Token', {

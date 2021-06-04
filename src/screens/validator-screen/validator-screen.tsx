@@ -70,7 +70,7 @@ export class ValidatorScreenComponent extends React.Component<
             `${validator.rank ? ` (${validator.rank})` : ''}`;
 
         const amount = validator.totalVotes;
-        const token = getTokenConfig(blockchain, config.coin);
+        const token = getTokenConfig(blockchain, this.props.token.symbol);
 
         validator.actionType = CardActionType.CHECKBOX;
         validator.actionTypeSelected = true;

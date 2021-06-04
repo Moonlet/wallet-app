@@ -401,17 +401,17 @@ export class Staking {
             TokenType.ZRC2
         );
 
-        let gasLimitBasedOnCycles = 3125; // default value
+        let gasLimitBasedOnCycles = 3450; // default value
         if (nrCyclesPassed >= 365) {
-            gasLimitBasedOnCycles = 32000;
+            gasLimitBasedOnCycles = 35200;
         } else if (nrCyclesPassed >= 180) {
-            gasLimitBasedOnCycles = 18000;
+            gasLimitBasedOnCycles = 19800;
         } else if (nrCyclesPassed >= 30) {
-            gasLimitBasedOnCycles = 10000;
+            gasLimitBasedOnCycles = 11000;
         } else if (nrCyclesPassed >= 7) {
-            gasLimitBasedOnCycles = 3500;
+            gasLimitBasedOnCycles = 3850;
         } else {
-            gasLimitBasedOnCycles = 2000;
+            gasLimitBasedOnCycles = 2200;
         }
 
         transaction.feeOptions = {

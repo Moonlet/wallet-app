@@ -1,6 +1,6 @@
-Team's log. Stardate 2105.18:
+Team's log. Stardate 2106.04:
 
-Another bunch of fixes were released with this update. Hopefully this one will stabilise Zilliqa network within Moonlet. Let's hope for the best.
+We solved some issues on Claim operation for Zilliqa blockchain. Everything should work fine now.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

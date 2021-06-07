@@ -119,7 +119,7 @@ export interface ICtaAction<P = any> {
     params: {
         action?: string;
         url?: string;
-        count?: string;
+        count?: number;
         screen?: string;
         params?: P;
     };
@@ -208,6 +208,7 @@ export interface IScreenModule {
         | ModuleTypes.ONE_LINE_TEXT_BANNER
         | ModuleTypes.PRICE_UPDATE
         | ModuleTypes.PROGRESS_BAR
+        | ModuleTypes.SEARCH
         | ModuleTypes.SEPARATOR
         | ModuleTypes.SINGLE_BALANCE_ICON
         | ModuleTypes.STATIC_TEXT_COLUMNS_BOTTOM_HEADER
@@ -218,6 +219,7 @@ export interface IScreenModule {
         | ModuleTypes.TWO_LINES_TEXT_BANNER
         | ModuleTypes.VALIDATIONS;
     cta?: ICta;
+    ctaStyle?: IDataStyle;
     data:
         | I2LinesTextBannerData
         | I3LinesCtaData
@@ -233,6 +235,7 @@ export interface IScreenModule {
         | IInputData
         | IMdTextData
         | IOneLineTextBannerData
+        | ISearchData
         | IScreenModuleColumnsWrapperData
         | IScreenModuleSelectableWrapperData
         | IScreenModuleWrapperData
@@ -280,6 +283,7 @@ export enum ModuleTypes {
     ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
     PRICE_UPDATE = 'price-update',
     PROGRESS_BAR = 'progress-bar',
+    SEARCH = 'search',
     SEPARATOR = 'separator',
     SINGLE_BALANCE_ICON = 'single-balance-icon',
     STATIC_TEXT_COLUMNS_BOTTOM_HEADER = 'static-text-columns-bottom-header',
@@ -488,8 +492,38 @@ export interface IAmountInputData {
     onChangeTextAction?: IStateSelector;
 }
 
+export interface ISearchData {
+    state: string;
+    stateModifierFn: string;
+    initialStateData: IScreenModule[];
+    type: any;
+    input?: {
+        style?: IDataStyle;
+        textStyle?: IDataStyle;
+    };
+    placeholder?: {
+        value: string;
+        color?: string;
+    };
+    search?: {
+        icon?: IconValues;
+        style?: IDataStyle;
+    };
+    cancel?: {
+        style?: IDataStyle;
+        cta?: ICta;
+    };
+    focus?: boolean;
+}
+
 export interface IAmountSelectableBoxData {
     amounts: IAmountInputAmountBox[];
+    style?: {
+        default?: IDataStyle;
+        selected?: IDataStyle;
+        text?: IDataStyle;
+        textSelected?: IDataStyle;
+    };
 }
 
 export interface IIconOneLineData {

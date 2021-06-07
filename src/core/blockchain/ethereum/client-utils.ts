@@ -96,9 +96,8 @@ export class ClientUtils implements IClientUtils {
 
         if (token.type === TokenType.ERC20) {
             try {
-                this.getMethodId(txInfo.input);
                 const transferInputParameteres = this.decodeInputData(
-                    'transfer(address,uint256)',
+                    this.getMethodSignatureString(txInfo.input),
                     txInfo.input
                 );
                 if (transferInputParameteres[0] && transferInputParameteres[1]) {
@@ -164,7 +163,7 @@ export class ClientUtils implements IClientUtils {
         return token;
     }
 
-    getMethodId(data: string) {
+    getMethodSignatureString(data: string) {
         const methodNameHex = data.substring(2, 10);
 
         switch (methodNameHex) {

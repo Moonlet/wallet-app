@@ -20,6 +20,7 @@ import { fixEthAddress } from '../../utils/format-address';
 import CONFIG from '../../../config';
 import { HttpClient } from '../../utils/http-client';
 import { Staking } from './contracts/staking';
+import { MethodSignature } from './types';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -131,7 +132,7 @@ export class Client extends BlockchainGenericClient {
                               '0x' +
                                   abi
                                       .simpleEncode(
-                                          'transfer(address,uint256)',
+                                          MethodSignature.TRANSFER,
                                           data.to,
                                           new BigNumber(data.amount).toFixed()
                                       )

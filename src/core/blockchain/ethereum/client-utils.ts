@@ -55,23 +55,35 @@ export class ClientUtils implements IClientUtils {
             }
         } catch (error) {
             // tx not present
-            let currentBlockNumber = context?.currentBlockNumber;
-            if (!currentBlockNumber) {
-                try {
-                    currentBlockNumber = await this.client
-                        .getCurrentBlock()
-                        .then(res => res.number);
-                } catch (error) {
-                    SentryCaptureException(new Error(JSON.stringify(error)));
-                }
-            }
+            try {
+                const txFromBlockchain = await this.client.http.jsonRpc(
+                    'eth_getTransactionByHash',
+                    [hash]
+                );
 
-            if (
-                currentBlockNumber &&
-                context?.broadcastedOnBlock &&
-                currentBlockNumber - context?.broadcastedOnBlock > 2
-            ) {
-                status = TransactionStatus.DROPPED;
+                if (
+                    txFromBlockchain?.result?.blockHash === null &&
+                    txFromBlockchain?.result?.blockNumber === null
+                ) {
+                    status = TransactionStatus.PENDING;
+                } else {
+                    let currentBlockNumber = context?.currentBlockNumber;
+                    if (!currentBlockNumber) {
+                        currentBlockNumber = await this.client
+                            .getCurrentBlock()
+                            .then(res => res.number);
+                    }
+
+                    if (
+                        currentBlockNumber &&
+                        context?.broadcastedOnBlock &&
+                        currentBlockNumber - context?.broadcastedOnBlock > 5
+                    ) {
+                        status = TransactionStatus.DROPPED;
+                    }
+                }
+            } catch (error) {
+                SentryCaptureException(new Error(JSON.stringify(error)));
             }
         }
 

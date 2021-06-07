@@ -5,6 +5,7 @@ import { switchNodeMinAmountDelegate } from './switch-node-min-amount-delegate';
 import { switchNodeValidateAmount } from './switch-node-validate-amount';
 import { switchNodeAvailableFunds } from './switch-node-available-funds';
 import { inputAmountNotEmpty } from './amount-not-empty';
+import { tokenActiveWallet } from './token-active';
 
 export const screenInputValidationActions = {
     amountAvailableFunds,
@@ -15,5 +16,6 @@ export const screenInputValidationActions = {
     switchNodeMinAmountDelegate,
     switchNodeValidateAmount,
     switchNodeAvailableFunds,
-    inputAmountNotEmpty
+    inputAmountNotEmpty,
+    tokenActiveWallet
 };

@@ -364,6 +364,7 @@ class ProcessTransactionsComponent extends React.Component<
 
                 case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                 case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                case ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS:
                     topText =
                         translate('App.labels.swap') +
                         ' ' +
@@ -482,7 +483,9 @@ class ProcessTransactionsComponent extends React.Component<
             tx.additionalInfo?.swap &&
             (tx.additionalInfo?.swap.contractMethod === ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL ||
                 tx.additionalInfo?.swap.contractMethod ===
-                    ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS);
+                    ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS ||
+                tx.additionalInfo?.swap.contractMethod ===
+                    ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS);
 
         return (
             <View

@@ -9,9 +9,6 @@ import { IAction } from '../../../../types';
 import { getSelectedAccount } from '../../../../wallets/selectors';
 import { setScreenInputValidation } from '../actions';
 
-/**
- * This data is stored on screen key
- */
 export const tokenActiveWallet = (
     validation: IScreenFieldValidation,
     field: string,
@@ -36,9 +33,8 @@ export const tokenActiveWallet = (
         if (tokens[symbol]) {
             const tokenConfig = tokens[symbol];
             if (!tokenConfig.active) {
-                // TODO
                 Dialog.alert(
-                    'Inactive swap token',
+                    'Inactive token',
                     `Please activate ${symbol} token`,
                     {
                         text: translate('App.labels.cancel'),

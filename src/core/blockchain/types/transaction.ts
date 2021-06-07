@@ -95,6 +95,7 @@ export interface IFeeOptions {
         low?: BigNumber;
         average?: BigNumber;
     };
+    responseHasDefaults?: boolean;
 }
 
 export interface IPosTransaction {

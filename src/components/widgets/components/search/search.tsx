@@ -19,6 +19,7 @@ import { NavigationService } from '../../../../navigation/navigation-service';
 import { renderModules } from '../../render-module';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { LoadingIndicator } from '../../../loading-indicator/loading-indicator';
 
 const MIN_INPUT_LEN_SEARCH = 3;
 
@@ -98,7 +99,7 @@ class SearchComponent extends React.Component<
     }
 
     private async fetchSearchInput(input: string) {
-        // this.setState({ isLoading: true });
+        this.setState({ isLoading: true });
 
         try {
             const searchResult = await this.state.apiClient.http.post('/walletUi/search', {
@@ -122,7 +123,7 @@ class SearchComponent extends React.Component<
             SentryCaptureException(new Error(JSON.stringify(error)));
         }
 
-        // this.setState({ isLoading: false });
+        this.setState({ isLoading: false });
     }
 
     private clearInput() {
@@ -191,15 +192,15 @@ class SearchComponent extends React.Component<
                     )}
                 </View>
 
-                {/* {this.state.isLoading && (
+                {this.state.isLoading && (
                     <View style={styles.loadingContainer}>
                         <LoadingIndicator />
                     </View>
-                )} */}
+                )}
 
-                {// !this.state.isLoading &&
-                (!this.props.search?.input ||
-                    this.props.search?.input?.length < MIN_INPUT_LEN_SEARCH) &&
+                {!this.state.isLoading &&
+                    (!this.props.search?.input ||
+                        this.props.search?.input?.length < MIN_INPUT_LEN_SEARCH) &&
                     renderModules(
                         data.initialStateData,
                         this.props.context,
@@ -207,8 +208,8 @@ class SearchComponent extends React.Component<
                         this.props.options
                     )}
 
-                {// !this.state.isLoading &&
-                this.props.search?.input.length >= MIN_INPUT_LEN_SEARCH &&
+                {!this.state.isLoading &&
+                    this.props.search?.input.length >= MIN_INPUT_LEN_SEARCH &&
                     this.props.search?.result &&
                     renderModules(
                         this.props.search.result,

@@ -67,6 +67,7 @@ export enum IconValues {
     SIGNED = 'signed-icon',
     SINGLE_MAN_HIERACHY = 'single-man-hierachy',
     SINGLE_NEUTRAL_ACTIONS_TEXT = 'single-neutral-actions-text',
+    SYNCHRONIZE = 'synchronize',
     TOUCH_ID = 'touch-id',
     UNLOCK = 'unlock',
     UNVOTE = 'unvote',

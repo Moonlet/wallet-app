@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -38,7 +38,7 @@ class IconModuleComponent extends React.Component<
 
         const customStyle = formatStyles(module?.style);
 
-        const moduleJSX = (
+        let moduleJSX = (
             <Icon
                 name={data.icon}
                 size={(customStyle?.size as number) || normalize(18)}
@@ -46,11 +46,16 @@ class IconModuleComponent extends React.Component<
             />
         );
 
+        if (data?.wrapperStyle) {
+            moduleJSX = <View style={formatStyles(data.wrapperStyle)}>{moduleJSX}</View>;
+        }
+
         if (module?.cta) {
             return (
                 <TouchableOpacity
                     onPress={() => this.props.actions.handleCta(module.cta, this.props?.options)}
                     activeOpacity={0.9}
+                    style={formatStyles(module?.ctaStyle)}
                 >
                     {moduleJSX}
                 </TouchableOpacity>

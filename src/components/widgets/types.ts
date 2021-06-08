@@ -203,6 +203,7 @@ export interface IScreenModule {
         | ModuleTypes.TIMER_INTERVAL_PRICE_UPDATE
         | ModuleTypes.MD_TEXT
         | ModuleTypes.MODULE_COLUMNS_WRAPPER
+        | ModuleTypes.MODULE_ROWS_WRAPPER
         | ModuleTypes.MODULE_SELECTABLE_WRAPPER
         | ModuleTypes.MODULE_WRAPPER
         | ModuleTypes.ONE_LINE_TEXT_BANNER
@@ -237,6 +238,7 @@ export interface IScreenModule {
         | IOneLineTextBannerData
         | ISearchData
         | IScreenModuleColumnsWrapperData
+        | IScreenModuleRowsWrapperData
         | IScreenModuleSelectableWrapperData
         | IScreenModuleWrapperData
         | ISeparatorData
@@ -278,6 +280,7 @@ export enum ModuleTypes {
     TIMER_INTERVAL_PRICE_UPDATE = 'timer-interval-price-update',
     MD_TEXT = 'md-text',
     MODULE_COLUMNS_WRAPPER = 'module-columns-wrapper',
+    MODULE_ROWS_WRAPPER = 'module-rows-wrapper',
     MODULE_SELECTABLE_WRAPPER = 'module-selectable-wrapper',
     MODULE_WRAPPER = 'module-wrapper',
     ONE_LINE_TEXT_BANNER = 'one_line_text_banner',
@@ -315,6 +318,11 @@ export interface IScreenModuleSelectableWrapperData {
 }
 
 export interface IScreenModuleColumnsWrapperData {
+    style?: IDataStyle;
+    submodules: IScreenModule[];
+}
+
+export interface IScreenModuleRowsWrapperData {
     style?: IDataStyle;
     submodules: IScreenModule[];
 }
@@ -426,6 +434,7 @@ export interface IIconTwoLinesData {
 
 export interface IIconData {
     icon: IconValues;
+    wrapperStyle?: IDataStyle;
 }
 
 export interface IPriceUpdateData {
@@ -578,7 +587,7 @@ export interface IAbsoluteModulesData {
         module: IScreenModule;
         style?: IDataStyle;
     };
-    module2: {
+    module2?: {
         module: IScreenModule;
         style?: IDataStyle;
     };

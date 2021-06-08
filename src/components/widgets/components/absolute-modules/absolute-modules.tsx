@@ -39,7 +39,8 @@ class AbsoluteModulesComponent extends React.Component<
         const { module, styles } = this.props;
         const data = module.data as IAbsoluteModulesData;
 
-        const { module1, module2 } = data;
+        const module1 = data.module1;
+        const module2 = data?.module2;
 
         const moduleJSX = (
             <View>
@@ -54,14 +55,16 @@ class AbsoluteModulesComponent extends React.Component<
                 </View>
 
                 {/* Module 2 */}
-                <View style={[styles.moduleContainer, formatStyles(module2?.style)]}>
-                    {renderModule(
-                        module2.module,
-                        this.props.context,
-                        this.props.actions,
-                        this.props.options
-                    )}
-                </View>
+                {module2 && (
+                    <View style={[styles.moduleContainer, formatStyles(module2?.style)]}>
+                        {renderModule(
+                            module2.module,
+                            this.props.context,
+                            this.props.actions,
+                            this.props.options
+                        )}
+                    </View>
+                )}
             </View>
         );
 

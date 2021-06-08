@@ -234,7 +234,34 @@ export const renderModule = (
             } else {
                 return moduleJSX;
             }
-            break;
+
+        case ModuleTypes.MODULE_ROWS_WRAPPER:
+            const rowWrapperData = module.data as IScreenModuleColumnsWrapperData;
+
+            moduleJSX = (
+                <View>
+                    {renderModules(rowWrapperData.submodules, context, actions, {
+                        ...options,
+                        moduleColWrapperContainer: {},
+                        colWrapperStyle:
+                            formatStyles(module?.style) || formatStyles(colWrapperData?.style) || {}
+                    })}
+                </View>
+            );
+
+            if (module?.cta) {
+                return (
+                    <TouchableOpacity
+                        onPress={() => actions.handleCta(module.cta, options)}
+                        activeOpacity={0.9}
+                        style={formatStyles(module?.ctaStyle)}
+                    >
+                        {moduleJSX}
+                    </TouchableOpacity>
+                );
+            } else {
+                return moduleJSX;
+            }
 
         case ModuleTypes.CTA:
             moduleJSX =

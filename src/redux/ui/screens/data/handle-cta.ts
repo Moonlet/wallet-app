@@ -10,7 +10,7 @@ import {
     getWalletByPubKey
 } from '../../../wallets/selectors';
 import { getChainId } from '../../../preferences/selectors';
-import { PosBasicActionType } from '../../../../core/blockchain/types/token';
+import { PosBasicActionType, SwapType } from '../../../../core/blockchain/types/token';
 import {
     claimRewardNoInput,
     delegate,
@@ -1439,6 +1439,32 @@ const handleCtaAction = async (
                         if (screenData) {
                             setScreenInputData(flowId, screenData)(dispatch, getState);
                         }
+                    }
+                    break;
+                }
+
+                case 'swapSwitch': {
+                    // Current screen key
+                    const screenKey = options?.screenKey;
+
+                    const screenData =
+                        screenKey &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data;
+
+                    if (screenKey && screenData) {
+                        setScreenInputData(screenKey, {
+                            ...screenData,
+                            swapType: SwapType.SELL, // keep this be always sell
+
+                            swapToken1: screenData.swapToken2,
+                            swapToken2: screenData.swapToken1,
+
+                            maxBalance: {
+                                token1: screenData.maxBalance.token2,
+                                token2: screenData.maxBalance.token1
+                            }
+                        })(dispatch, getState);
                     }
                     break;
                 }

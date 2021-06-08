@@ -1460,6 +1460,10 @@ const handleCtaAction = async (
                             swapToken1: screenData.swapToken2,
                             swapToken2: screenData.swapToken1,
 
+                            swapToken1Amount: '',
+                            swapToken2Amount: '',
+                            inputFieldFocus: 'swapToken1Amount',
+
                             maxBalance: {
                                 token1: screenData.maxBalance.token2,
                                 token2: screenData.maxBalance.token1

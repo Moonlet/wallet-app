@@ -92,64 +92,86 @@ export const amountAvailableFundsToken = (
     const blockchain = account.blockchain;
     const blockchainInstance = getBlockchain(blockchain);
 
-    const tokenSymbol = validation.params[0].tokenSymbol;
-    const balance = new BigNumber(validation.params[0].balance);
-    const swapType = validation.params[0]?.swapType;
+    let tokenSymbol: string;
+    let balance: string;
+
+    if (inputData) {
+        if (field === 'swapToken1Amount') {
+            tokenSymbol = inputData.swapToken1.symbol;
+            balance = inputData.maxBalance.token1;
+        }
+
+        if (field === 'swapToken2Amount') {
+            // ignore this validations
+            return;
+        }
+    }
+
+    // const tokenSymbol = validation.params[0].tokenSymbol;
+    // const balance = new BigNumber(validation.params[0].balance);
+    // const swapType = validation.params[0]?.swapType;
 
     const inputAmount = inputData && inputData[field];
 
-    const tokenConfig = getTokenConfig(blockchain, tokenSymbol);
+    const tokenConfig = tokenSymbol && getTokenConfig(blockchain, tokenSymbol);
 
     const screenValidations = state.ui.screens.inputData[screenKey]?.validation;
     const fieldsErrors = screenValidations?.fieldsErrors;
     let errors = (fieldsErrors && fieldsErrors[field]) || [];
 
-    if (
-        swapType &&
-        state.ui.screens.inputData[screenKey]?.data?.swapType &&
-        swapType !== state.ui.screens.inputData[screenKey]?.data?.swapType
-    ) {
-        // ignore this validations
-        return;
-    }
+    // if (
+    //     swapType &&
+    //     state.ui.screens.inputData[screenKey]?.data?.swapType &&
+    //     swapType !== state.ui.screens.inputData[screenKey]?.data?.swapType
+    // ) {
+    //     // ignore this validations
+    //     return;
+    // }
 
-    const inputAmountToStd = blockchainInstance.account.amountToStd(
-        new BigNumber(inputAmount),
-        tokenConfig.decimals
-    );
+    if (tokenConfig) {
+        const inputAmountToStd = blockchainInstance.account.amountToStd(
+            new BigNumber(inputAmount),
+            tokenConfig.decimals
+        );
 
-    if (inputAmountToStd.isGreaterThan(balance) || inputAmountToStd.isLessThanOrEqualTo(0)) {
-        // Show error
-        for (const msgKey of Object.keys(validation?.messages || [])) {
-            const msg = validation.messages[msgKey] as any;
-            // Make sure don't duplicate error messages
-            let alreadyAdded = false;
-            for (const error of errors || []) {
-                if (JSON.stringify(error) === JSON.stringify(msg)) {
-                    alreadyAdded = true;
+        const balanceStd = blockchainInstance.account.amountToStd(
+            new BigNumber(balance),
+            tokenConfig.decimals
+        );
+
+        if (inputAmountToStd.isGreaterThan(balanceStd) || inputAmountToStd.isLessThanOrEqualTo(0)) {
+            // Show error
+            for (const msgKey of Object.keys(validation?.messages || [])) {
+                const msg = validation.messages[msgKey] as any;
+                // Make sure don't duplicate error messages
+                let alreadyAdded = false;
+                for (const error of errors || []) {
+                    if (JSON.stringify(error) === JSON.stringify(msg)) {
+                        alreadyAdded = true;
+                    }
                 }
+                if (!alreadyAdded) errors.push(msg);
             }
-            if (!alreadyAdded) errors.push(msg);
+        } else {
+            // cleanup error messages
+            errors = undefined;
         }
-    } else {
-        // cleanup error messages
-        errors = undefined;
-    }
 
-    if (errors === undefined || errors?.length === 0) {
-        // All fields are valid => Validate Screen
-        setScreenInputValidation(screenKey, {
-            fieldsErrors: undefined,
-            valid: true
-        })(dispatch, getState);
-    } else {
-        // Set fields errors
-        setScreenInputValidation(screenKey, {
-            fieldsErrors: {
-                ...fieldsErrors,
-                [field]: errors
-            },
-            valid: false
-        })(dispatch, getState);
+        if (errors === undefined || errors?.length === 0) {
+            // All fields are valid => Validate Screen
+            setScreenInputValidation(screenKey, {
+                fieldsErrors: undefined,
+                valid: true
+            })(dispatch, getState);
+        } else {
+            // Set fields errors
+            setScreenInputValidation(screenKey, {
+                fieldsErrors: {
+                    ...fieldsErrors,
+                    [field]: errors
+                },
+                valid: false
+            })(dispatch, getState);
+        }
     }
 };

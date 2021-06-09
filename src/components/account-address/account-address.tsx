@@ -28,14 +28,14 @@ export const AccountAddressComponent = (
             <View style={styles.balanceContainer}>
                 <Amount
                     style={styles.balance}
-                    amount={props.token.balance?.value}
+                    amount={props.token.balance?.total}
                     blockchain={props.account.blockchain}
                     token={props.token.symbol}
                     tokenDecimals={tokenConfig.decimals}
                 />
                 <Amount
                     style={styles.convert}
-                    amount={props.token.balance?.value}
+                    amount={props.token.balance?.total}
                     blockchain={props.account.blockchain}
                     token={props.token.symbol}
                     tokenDecimals={tokenConfig.decimals}

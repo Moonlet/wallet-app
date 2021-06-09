@@ -16,6 +16,7 @@ export default (state: any) => {
             ...state.tokens[Blockchain.ETHEREUM]['4'].GRT.ui,
             tokenScreenComponent: TokenScreenComponentType.DEFAULT
         };
+        state.tokens[Blockchain.ETHEREUM]['4'].GRT.removable = true;
     }
 
     if (
@@ -28,6 +29,7 @@ export default (state: any) => {
             ...state.tokens[Blockchain.ETHEREUM]['1'].GRT.ui,
             tokenScreenComponent: TokenScreenComponentType.DEFAULT
         };
+        state.tokens[Blockchain.ETHEREUM]['1'].GRT.removable = true;
     }
 
     return {

@@ -1,4 +1,5 @@
 import { translate } from '../../../../core/i18n';
+import { formatValidatorName } from '../../../../core/utils/format-string';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IReduxState } from '../../../../redux/state';
 import { getScreenDataKey } from '../../../../redux/ui/screens/data/reducer';
@@ -22,7 +23,7 @@ export const getStakeNowSelectValidators = (state: IReduxState, module: IScreenM
 
     if (validators && Array.isArray(validators) && validators.length > 0) {
         if (validators.length === 1) {
-            return validators[0].name;
+            return formatValidatorName(validators[0].name, 15);
         }
 
         if (validators.length > 1) {

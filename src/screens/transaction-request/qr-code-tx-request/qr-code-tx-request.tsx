@@ -552,7 +552,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
             selectedAccount.tokens[chainId] && selectedAccount.tokens[chainId][tokenSymbol]
                 ? blockchainInstance.account.amountFromStd(
                       new BigNumber(
-                          selectedAccount.tokens[chainId][tokenSymbol].balance?.value || '0'
+                          selectedAccount.tokens[chainId][tokenSymbol].balance?.total || '0'
                       ),
                       tokenConfig.decimals
                   )

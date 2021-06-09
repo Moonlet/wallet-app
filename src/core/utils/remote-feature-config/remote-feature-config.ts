@@ -81,9 +81,9 @@ export const remoteFeatureSwapContainsToken = (symbol: string): boolean => {
 };
 
 export const isFeatureActive = (feature: RemoteFeature): boolean => {
-    if (__DEV__) {
-        return true;
-    }
+    // if (__DEV__) {
+    //     return true;
+    // }
 
     if (feature !== RemoteFeature.TC_VERSION)
         return (

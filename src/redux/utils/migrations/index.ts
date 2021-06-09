@@ -57,7 +57,7 @@ export const migrations: any = {
      */
     12: v12,
     /**
-     * Update GRT testnet to rinkeby and GRT Mainnet - 25 Apr 2021
+     * Update GRT testnet to rinkeby and GRT Mainnet - 9 Jun 2021
      */
     13: v13
 };

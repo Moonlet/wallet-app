@@ -29,7 +29,7 @@ const newBalance = (oldBalance: any, action: any) => ({
     // TODO migration and change value to actual avaialble and total values
     value: action.data.balance
         ? new BigNumber(action.data.balance.available).toFixed()
-        : new BigNumber(oldBalance?.value).toFixed(),
+        : new BigNumber(oldBalance?.total).toFixed(),
     inProgress: action.inProgress !== undefined ? action.inProgress : false,
     timestamp: action.data.balance ? new Date() : oldBalance?.timestamp,
     error: action.error !== undefined ? action.error : undefined,

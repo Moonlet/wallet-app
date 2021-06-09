@@ -9,6 +9,7 @@ import v9 from './009';
 import v10 from './010';
 import v11 from './011';
 import v12 from './012';
+import v13 from './013';
 
 export const migrations: any = {
     /**
@@ -54,5 +55,9 @@ export const migrations: any = {
     /**
      * Add GRT testnet to rinkeby and GRT Mainnet - 25 Apr 2021
      */
-    12: v12
+    12: v12,
+    /**
+     * Update GRT testnet to rinkeby and GRT Mainnet - 25 Apr 2021
+     */
+    13: v13
 };

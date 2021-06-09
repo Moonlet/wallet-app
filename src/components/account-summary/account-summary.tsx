@@ -91,7 +91,7 @@ export class AccountSummaryComponent extends React.Component<
         const amountFromStd =
             data?.extraToken &&
             getBlockchain(blockchain).account.amountFromStd(
-                new BigNumber(data.extraToken.balance.value),
+                new BigNumber(data.extraToken.balance.total),
                 extraTokenConfig.decimals
             );
 

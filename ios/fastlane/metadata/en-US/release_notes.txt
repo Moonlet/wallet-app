@@ -1,6 +1,6 @@
-Team's log. Stardate 2106.04:
+Team's log. Stardate 2106.09:
 
-We solved some issues on Claim operation for Zilliqa blockchain. Everything should work fine now.
+This update includes bug fixes and several other improvements.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

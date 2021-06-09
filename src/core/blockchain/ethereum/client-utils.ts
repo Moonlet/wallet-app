@@ -8,10 +8,11 @@ import abi from 'ethereumjs-abi';
 import { Ethereum } from '.';
 import { TransactionStatus } from '../../wallet/types';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { MethodSignature } from './types';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
-    getTransaction(hash: string): Promise<IBlockchainTransaction> {
+    getTransaction(hash: string, options?: { address?: string }): Promise<IBlockchainTransaction> {
         const rpcCalls = [
             this.client.http.jsonRpc('eth_getTransactionByHash', [hash]),
             this.client.http.jsonRpc('eth_getTransactionReceipt', [hash])
@@ -54,23 +55,35 @@ export class ClientUtils implements IClientUtils {
             }
         } catch (error) {
             // tx not present
-            let currentBlockNumber = context?.currentBlockNumber;
-            if (!currentBlockNumber) {
-                try {
-                    currentBlockNumber = await this.client
-                        .getCurrentBlock()
-                        .then(res => res.number);
-                } catch (error) {
-                    SentryCaptureException(new Error(JSON.stringify(error)));
-                }
-            }
+            try {
+                const txFromBlockchain = await this.client.http.jsonRpc(
+                    'eth_getTransactionByHash',
+                    [hash]
+                );
 
-            if (
-                currentBlockNumber &&
-                context?.broadcastedOnBlock &&
-                currentBlockNumber - context?.broadcastedOnBlock > 2
-            ) {
-                status = TransactionStatus.DROPPED;
+                if (
+                    txFromBlockchain?.result?.blockHash === null &&
+                    txFromBlockchain?.result?.blockNumber === null
+                ) {
+                    status = TransactionStatus.PENDING;
+                } else {
+                    let currentBlockNumber = context?.currentBlockNumber;
+                    if (!currentBlockNumber) {
+                        currentBlockNumber = await this.client
+                            .getCurrentBlock()
+                            .then(res => res.number);
+                    }
+
+                    if (
+                        currentBlockNumber &&
+                        context?.broadcastedOnBlock &&
+                        currentBlockNumber - context?.broadcastedOnBlock > 5
+                    ) {
+                        status = TransactionStatus.DROPPED;
+                    }
+                }
+            } catch (error) {
+                SentryCaptureException(new Error(JSON.stringify(error)));
             }
         }
 
@@ -84,7 +97,7 @@ export class ClientUtils implements IClientUtils {
         if (token.type === TokenType.ERC20) {
             try {
                 const transferInputParameteres = this.decodeInputData(
-                    'transfer(address,uint256)',
+                    this.getMethodSignatureString(txInfo.input),
                     txInfo.input
                 );
                 if (transferInputParameteres[0] && transferInputParameteres[1]) {
@@ -150,6 +163,26 @@ export class ClientUtils implements IClientUtils {
         return token;
     }
 
+    getMethodSignatureString(data: string) {
+        const methodNameHex = data.substring(2, 10);
+
+        switch (methodNameHex) {
+            case abi.methodID('increaseAllowance', ['address', 'uint256']).toString('hex'):
+                return MethodSignature.INCREASE_ALLOWANCE;
+            case abi.methodID('delegate', ['address', 'uint256']).toString('hex'):
+                return MethodSignature.DELEGATE;
+            case abi.methodID('undelegate', ['address', 'uint256']).toString('hex'):
+                return MethodSignature.UNDELEGATE;
+            case abi.methodID('withdrawDelegated', ['address', 'address']).toString('hex'):
+                return MethodSignature.WITHDRAW_DELEGATED;
+            case abi.methodID('transfer', ['address', 'uint256']).toString('hex'):
+                return MethodSignature.TRANSFER;
+
+            default:
+                return MethodSignature.TRANSFER;
+        }
+    }
+
     decodeInputData(signature: string, data: string) {
         const sig = signature.split(':');
         const sigParts = sig[0].split('(');
@@ -163,7 +196,6 @@ export class ClientUtils implements IClientUtils {
         }
 
         const methodId = abi.methodID(methodName, params).toString('hex');
-
         data = data.replace('0x', '');
 
         if (data.indexOf(methodId) === 0) {

@@ -31,7 +31,7 @@ import {
     TokenType
 } from '../../../core/blockchain/types/token';
 import bind from 'bind-decorator';
-import { Capitalize } from '../../../core/utils/format-string';
+import { Capitalize, formatValidatorName } from '../../../core/utils/format-string';
 
 interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -69,11 +69,11 @@ export class TransactionsHistoryListComponent extends React.Component<
                 : formatAddress(tx.toAddress, account.blockchain);
 
         if (tx.additionalInfo?.validatorName) {
-            toAddress = tx.additionalInfo.validatorName;
+            toAddress = formatValidatorName(tx.additionalInfo?.validatorName, 15);
         }
 
         if (tx.additionalInfo?.validator?.name) {
-            toAddress = tx.additionalInfo.validator.name;
+            toAddress = formatValidatorName(tx.additionalInfo?.validator?.name, 15);
         }
 
         let primaryText = '';
@@ -163,6 +163,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
                 case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                 case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
+                case ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS:
                     primaryText =
                         translate('App.labels.swap') +
                         ' ' +

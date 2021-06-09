@@ -4,6 +4,7 @@ import { IValidator } from '../../types/stats';
 import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract } from './base-contract';
 import abi from 'ethereumjs-abi';
+import { MethodSignature } from '../types';
 
 export class Staking {
     constructor(private client: Client) {}
@@ -16,6 +17,7 @@ export class Staking {
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
         transaction.toAddress = contractAddress;
+        transaction.amount = '0';
         const raw =
             '0x' +
             abi.simpleEncode('delegate(address,uint256)', validator.id, tx.amount).toString('hex');
@@ -41,6 +43,7 @@ export class Staking {
 
         transaction.additionalInfo.posAction = PosBasicActionType.STAKE;
         transaction.additionalInfo.validatorName = validator.name;
+        transaction.additionalInfo.tokenSymbol = 'GRT';
         return transaction;
     }
 
@@ -52,10 +55,11 @@ export class Staking {
         const allowanceContract = await getContract(this.client.chainId, Contracts.STAKING);
 
         transaction.toAddress = contractAddress;
+        transaction.amount = '0';
         const raw =
             '0x' +
             abi
-                .simpleEncode('increaseAllowance(address,uint256)', allowanceContract, tx.amount)
+                .simpleEncode(MethodSignature.INCREASE_ALLOWANCE, allowanceContract, tx.amount)
                 .toString('hex');
 
         const fees = await this.client.getFees(
@@ -95,9 +99,7 @@ export class Staking {
 
         const raw =
             '0x' +
-            abi
-                .simpleEncode('undelegate(address,uint256)', validator.id, tx.amount)
-                .toString('hex');
+            abi.simpleEncode(MethodSignature.UNDELEGATE, validator.id, tx.amount).toString('hex');
 
         const fees = await this.client.getFees(
             TransactionType.CONTRACT_CALL,
@@ -120,6 +122,7 @@ export class Staking {
 
         transaction.additionalInfo.posAction = PosBasicActionType.UNSTAKE;
         transaction.additionalInfo.validatorName = validator.name;
+        transaction.additionalInfo.tokenSymbol = 'GRT';
 
         return transaction;
     }
@@ -138,7 +141,7 @@ export class Staking {
             '0x' +
             abi
                 .simpleEncode(
-                    'withdrawDelegated(address,address)',
+                    MethodSignature.WITHDRAW_DELEGATED,
                     validator.id,
                     '0x000000000000000000000000000000000000'
                 )

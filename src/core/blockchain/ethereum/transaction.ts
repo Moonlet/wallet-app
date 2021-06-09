@@ -15,6 +15,7 @@ import { Ethereum } from '.';
 import { cloneDeep } from 'lodash';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { splitStake } from '../../utils/balance';
+import { MethodSignature } from './types';
 
 export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
@@ -87,7 +88,7 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
                         raw:
                             '0x' +
                             abi
-                                .simpleEncode('transfer(address,uint256)', tx.toAddress, tx.amount)
+                                .simpleEncode(MethodSignature.TRANSFER, tx.toAddress, tx.amount)
                                 .toString('hex')
                     }
                 };

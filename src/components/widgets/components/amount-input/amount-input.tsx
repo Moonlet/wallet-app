@@ -218,6 +218,10 @@ class AmountInputComponent extends React.Component<
                                 if (data?.onChangeTextAction) {
                                     this.props.onAmountChangeTextAction(module, context, screenKey);
                                 }
+
+                                this.props.setScreenInputData(screenKey, {
+                                    amountBox: undefined
+                                });
                             }}
                             keyboardType={Platform.select({
                                 default: 'number-pad',

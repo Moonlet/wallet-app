@@ -13,7 +13,7 @@ export const GRT_MAINNET: ITokenConfigState = {
     decimals: 18,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
     type: TokenType.ERC20
 };
@@ -30,7 +30,7 @@ export const GRT_TESTNET: ITokenConfigState = {
     decimals: 18,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DELEGATE
+        tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
     type: TokenType.ERC20
 };

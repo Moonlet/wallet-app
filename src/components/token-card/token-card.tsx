@@ -54,14 +54,14 @@ const TokenCardComponent = (props: IProps & IThemeProps<ReturnType<typeof styles
                             token={token.symbol}
                             tokenDecimals={tokenConfig.decimals}
                             uiDecimals={tokenConfig.ui.decimals}
-                            amount={token.balance?.total || token.balance?.value}
+                            amount={token.balance?.total}
                             blockchain={blockchain}
                         />
                         <Amount
                             style={styles.secondAmount}
                             token={token.symbol}
                             tokenDecimals={tokenConfig.decimals}
-                            amount={token.balance?.total || token.balance?.value}
+                            amount={token.balance?.total}
                             blockchain={blockchain}
                             convert
                         />

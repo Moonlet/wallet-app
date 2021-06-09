@@ -158,7 +158,7 @@ export class AddTokenScreenComponent extends React.Component<
                             style={styles.amountText}
                             token={token.symbol}
                             tokenDecimals={tokenConfig.decimals}
-                            amount={token.balance?.value}
+                            amount={token.balance?.total}
                             blockchain={this.props.blockchain}
                         />
                     }
@@ -167,7 +167,7 @@ export class AddTokenScreenComponent extends React.Component<
                             style={styles.amountConvertedText}
                             token={token.symbol}
                             tokenDecimals={tokenConfig.decimals}
-                            amount={token.balance?.value}
+                            amount={token.balance?.total}
                             blockchain={this.props.blockchain}
                             convert
                         />

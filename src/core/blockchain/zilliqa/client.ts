@@ -83,11 +83,14 @@ export class Client extends BlockchainGenericClient {
             if (exceptions && Array.isArray(exceptions) && exceptions.length > 0) {
                 if (exceptions[0]?.message) {
                     const errorMsg = exceptions[0].message;
-                    if (errorMsg.includes('RequestedRatesCannotBeFulfilled')) {
-                        error = {
-                            message: translate('Errors.RequestedRatesCannotBeFulfilled')
-                        };
-                    }
+                    if (errorMsg.includes('RequestedRatesCannotBeFulfilled'))
+                        error = { message: translate('Errors.RequestedRatesCannotBeFulfilled') };
+
+                    if (errorMsg.includes('TransactionExpired'))
+                        error = { message: translate('Errors.TransactionExpired') };
+
+                    if (errorMsg.includes('MissingPool'))
+                        error = { message: translate('Errors.MissingPool') };
                 }
             }
 

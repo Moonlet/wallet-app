@@ -761,7 +761,9 @@ export const translation: ITranslations = {
                 'By Cumulative: ON, the total balance will be computed in both FIAT and Main Token taking into account the total value of the portfolio.\n\nBy Cumulative: OFF, the total balance will be computed in both FIAT and Main Token taking into account the total value of the Main Token.'
         },
         Errors: {
-            RequestedRatesCannotBeFulfilled: 'Requested Rates Cannot Be Fulfilled'
+            RequestedRatesCannotBeFulfilled: 'Requested rates cannot be fulfilled',
+            MissingPool: 'Missing pool',
+            TransactionExpired: 'Transaction has expired'
         }
     },
     plural: (n: number, ord?: boolean) => {

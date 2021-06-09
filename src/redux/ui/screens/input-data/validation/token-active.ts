@@ -32,44 +32,50 @@ export const tokenActiveWallet = (
 
     const tokens = account.tokens[chainId];
 
+    let showError = false;
+
     if (symbol && tokens) {
         if (!tokens[symbol]) {
-            // TODO
+            showError = true;
         }
 
         if (tokens[symbol]) {
             const tokenConfig = tokens[symbol];
             if (!tokenConfig.active) {
-                Dialog.alert(
-                    'Inactive token',
-                    `Please activate ${symbol} token`,
-                    {
-                        text: translate('App.labels.cancel'),
-                        onPress: () => {
-                            //
-                        }
-                    },
-                    {
-                        text: 'Activate',
-                        onPress: () => NavigationService.navigate('AddToken', {})
-                    }
-                );
-
-                // Show error
-
-                const fieldsErrors = [];
-
-                for (const msgKey of Object.keys(validation?.messages || [])) {
-                    fieldsErrors.push(validation.messages[msgKey]);
-                }
-
-                setScreenInputValidation(screenKey, {
-                    fieldsErrors: {
-                        [field]: fieldsErrors
-                    },
-                    valid: false
-                })(dispatch, getState);
+                showError = true;
             }
         }
+    }
+
+    if (showError) {
+        Dialog.alert(
+            'Inactive token',
+            `Please activate ${symbol} token`,
+            {
+                text: translate('App.labels.cancel'),
+                onPress: () => {
+                    //
+                }
+            },
+            {
+                text: 'Activate',
+                onPress: () => NavigationService.navigate('AddToken', {})
+            }
+        );
+
+        // Show error
+
+        const fieldsErrors = [];
+
+        for (const msgKey of Object.keys(validation?.messages || [])) {
+            fieldsErrors.push(validation.messages[msgKey]);
+        }
+
+        setScreenInputValidation(screenKey, {
+            fieldsErrors: {
+                [field]: fieldsErrors
+            },
+            valid: false
+        })(dispatch, getState);
     }
 };

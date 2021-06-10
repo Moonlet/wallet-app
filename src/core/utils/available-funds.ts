@@ -35,7 +35,7 @@ export const availableFunds = (
     const inputAmount = getInputAmountToStd(account, token, amount);
     const availableBalanceValue = balanceAvailable
         ? getInputAmountToStd(account, token, balanceAvailable)
-        : new BigNumber(token.balance?.total);
+        : new BigNumber(token.balance?.available);
 
     // Amount > available amount
     result.insufficientFunds =
@@ -56,7 +56,7 @@ export const availableFunds = (
             .isGreaterThan(availableBalanceValue);
     } else {
         const nativeCoin = getBlockchain(account.blockchain).config.coin;
-        const nativeCoinBalance = account.tokens[chainId][nativeCoin].balance?.total;
+        const nativeCoinBalance = account.tokens[chainId][nativeCoin].balance?.available;
         const availableBalance = new BigNumber(nativeCoinBalance);
 
         // ERC20 / ZRC2
@@ -91,7 +91,7 @@ export const availableAmount = async (
 
     let balance: BigNumber = options.balanceAvailable
         ? getInputAmountToStd(account, token, options.balanceAvailable)
-        : new BigNumber(token.balance?.total);
+        : new BigNumber(token.balance?.available);
 
     const blockchainInstance = getBlockchain(account.blockchain);
 

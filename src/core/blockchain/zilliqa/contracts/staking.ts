@@ -409,7 +409,11 @@ export class Staking {
         } else if (nrCyclesPassed >= 30) {
             gasLimitBasedOnCycles = 11000;
         } else if (nrCyclesPassed >= 7) {
-            gasLimitBasedOnCycles = 3850;
+            gasLimitBasedOnCycles = 5000;
+        } else if (nrCyclesPassed >= 3) {
+            gasLimitBasedOnCycles = 3500;
+        } else if (nrCyclesPassed >= 2) {
+            gasLimitBasedOnCycles = 2500;
         } else {
             gasLimitBasedOnCycles = 2200;
         }

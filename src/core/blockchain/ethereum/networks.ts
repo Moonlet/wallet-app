@@ -5,7 +5,7 @@ export const networks: IBlockchainNetwork[] = [
         name: 'Main Network',
         chainId: 1,
         mainNet: true,
-        url: 'https://mainnet.infura.io/v3/1fc164b9a9054e4bab0f54e3d8d312b8',
+        url: 'https://fire.moonlet.app/functions/nodes/rpc/ethereum/mainnet',
         explorer: {
             name: 'Etherscan',
             getAccountUrl: addr => `https://etherscan.io/address/${addr}`,

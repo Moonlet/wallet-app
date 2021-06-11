@@ -37,6 +37,7 @@ import { getSwapToken2Decimals } from './swap/decimals';
 import { getSwapPriceRateFormat, getSwapPriceUpdateTimer } from './swap/price';
 import { getSwapCustomSlippage } from './swap/slippage';
 import { getSwapToken1Symbol, getSwapToken2Symbol } from './swap/symbol';
+import { getSwapToken1MaxBalance, getSwapToken2MaxBalance } from './swap/max-balance';
 
 const uiStateSelectors = {
     getStakeEnterAllBalance,
@@ -86,7 +87,11 @@ const uiStateSelectors = {
 
     // Symbol
     getSwapToken1Symbol,
-    getSwapToken2Symbol
+    getSwapToken2Symbol,
+
+    // Max balance
+    getSwapToken1MaxBalance,
+    getSwapToken2MaxBalance
 };
 
 export const getStateSelectors = (state: IReduxState, module: IScreenModule, options?: any) => {

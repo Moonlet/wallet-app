@@ -303,6 +303,8 @@ export const translation: ITranslations = {
             insufficientFunds: 'Insufficient funds',
             mimimumAmount: 'Minimum amount is {{value}} {{coin}}',
             insufficientFundsFees: 'Insufficient funds for fees',
+            noFeesTitle: 'Oops, the fees didn’t get through',
+            noFeesSubtitle: 'Please retry and wait for the fees to load',
             receipientWarning: 'Warning: recipient address is not checksumed',
             allBalance: 'All balance: ',
             cameraDisabledTitle: 'Enable camera',
@@ -759,7 +761,9 @@ export const translation: ITranslations = {
                 'By Cumulative: ON, the total balance will be computed in both FIAT and Main Token taking into account the total value of the portfolio.\n\nBy Cumulative: OFF, the total balance will be computed in both FIAT and Main Token taking into account the total value of the Main Token.'
         },
         Errors: {
-            RequestedRatesCannotBeFulfilled: 'Requested Rates Cannot Be Fulfilled'
+            RequestedRatesCannotBeFulfilled: 'Requested rates cannot be fulfilled',
+            MissingPool: 'Missing pool',
+            TransactionExpired: 'Transaction has expired'
         }
     },
     plural: (n: number, ord?: boolean) => {

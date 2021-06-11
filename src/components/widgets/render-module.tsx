@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Button } from '../../library';
 import {
     ICta,
@@ -40,8 +40,9 @@ import { PubSub } from '../../core/blockchain/common/pub-sub';
 import { PriceUpdateModule } from './components/price-update/price-update';
 import { AbsoluteModules } from './components/absolute-modules/absolute-modules';
 import { TimerIntervalPriceUpdateModule } from './components/timer-interval-price-update/timer-interval-price-update';
+import { SearchModule } from './components/search/search';
 
-const renderModules = (
+export const renderModules = (
     modules: IScreenModule[],
     context: IScreenContext,
     actions: ISmartScreenActions,
@@ -220,7 +221,47 @@ export const renderModule = (
                 colWrapperStyle:
                     formatStyles(module?.style) || formatStyles(colWrapperData?.style) || {}
             });
-            break;
+            if (module?.cta) {
+                return (
+                    <TouchableOpacity
+                        onPress={() => actions.handleCta(module.cta, options)}
+                        activeOpacity={0.9}
+                        style={formatStyles(module?.ctaStyle)}
+                    >
+                        {moduleJSX}
+                    </TouchableOpacity>
+                );
+            } else {
+                return moduleJSX;
+            }
+
+        case ModuleTypes.MODULE_ROWS_WRAPPER:
+            const rowWrapperData = module.data as IScreenModuleColumnsWrapperData;
+
+            moduleJSX = (
+                <View>
+                    {renderModules(rowWrapperData.submodules, context, actions, {
+                        ...options,
+                        moduleColWrapperContainer: {},
+                        colWrapperStyle:
+                            formatStyles(module?.style) || formatStyles(colWrapperData?.style) || {}
+                    })}
+                </View>
+            );
+
+            if (module?.cta) {
+                return (
+                    <TouchableOpacity
+                        onPress={() => actions.handleCta(module.cta, options)}
+                        activeOpacity={0.9}
+                        style={formatStyles(module?.ctaStyle)}
+                    >
+                        {moduleJSX}
+                    </TouchableOpacity>
+                );
+            } else {
+                return moduleJSX;
+            }
 
         case ModuleTypes.CTA:
             moduleJSX =
@@ -311,6 +352,20 @@ export const renderModule = (
                     context={context}
                     actions={actions}
                     options={options}
+                />
+            );
+            break;
+
+        case ModuleTypes.SEARCH:
+            moduleJSX = (
+                <SearchModule
+                    module={module}
+                    context={context}
+                    actions={actions}
+                    options={{
+                        ...options,
+                        flowId: context?.flowId
+                    }}
                 />
             );
             break;

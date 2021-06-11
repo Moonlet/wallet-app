@@ -10,7 +10,7 @@ import {
     getWalletByPubKey
 } from '../../../wallets/selectors';
 import { getChainId } from '../../../preferences/selectors';
-import { PosBasicActionType } from '../../../../core/blockchain/types/token';
+import { PosBasicActionType, SwapType } from '../../../../core/blockchain/types/token';
 import {
     claimRewardNoInput,
     delegate,
@@ -879,22 +879,27 @@ const handleCtaAction = async (
                         state.ui.screens.inputData &&
                         state.ui.screens.inputData[screenKey]?.data;
 
-                    const swapType = screenData?.swapType;
+                    // const swapType = screenData?.swapType;
 
                     const amountBox = screenData?.amountBox || action?.params?.params?.amountBox;
 
                     if (
                         screenKey &&
                         amountBox &&
-                        action.params?.params &&
-                        action.params?.params[swapType] &&
-                        action.params?.params[swapType]?.amount &&
-                        action.params?.params[swapType]?.inputKey &&
-                        action.params?.params[swapType]?.screenValidation
-                    ) {
-                        const params = action.params?.params[swapType];
+                        action.params?.params?.inputKey &&
+                        action.params?.params?.screenValidation
 
-                        const amount = params.amount;
+                        // action.params?.params &&
+                        // action.params?.params[swapType] &&
+                        // action.params?.params[swapType]?.amount &&
+                        // action.params?.params[swapType]?.inputKey &&
+                        // action.params?.params[swapType]?.screenValidation
+                    ) {
+                        const params = action.params?.params; // [swapType];
+
+                        // const amount = params.amount;
+                        const amount = screenData.maxBalance.token1;
+
                         const inputKey = params.inputKey;
 
                         const percentage = amountBox.value;
@@ -1439,6 +1444,38 @@ const handleCtaAction = async (
                         if (screenData) {
                             setScreenInputData(flowId, screenData)(dispatch, getState);
                         }
+                    }
+                    break;
+                }
+
+                case 'swapSwitch': {
+                    // Current screen key
+                    const screenKey = options?.screenKey;
+
+                    const screenData =
+                        screenKey &&
+                        state.ui.screens.inputData &&
+                        state.ui.screens.inputData[screenKey]?.data;
+
+                    if (screenKey && screenData) {
+                        setScreenInputData(screenKey, {
+                            ...screenData,
+                            swapType: SwapType.SELL, // keep this be always sell
+
+                            swapToken1: screenData.swapToken2,
+                            swapToken2: screenData.swapToken1,
+
+                            swapToken1Amount: '',
+                            swapToken2Amount: '',
+                            inputFieldFocus: 'swapToken1Amount',
+
+                            maxBalance: {
+                                token1: screenData.maxBalance.token2,
+                                token2: screenData.maxBalance.token1
+                            },
+
+                            amountBox: undefined
+                        })(dispatch, getState);
                     }
                     break;
                 }

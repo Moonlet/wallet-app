@@ -1,7 +1,7 @@
 import React from 'react';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import stylesProvider from './styles';
-import { Text } from '../../../../library';
+import { Button, Text } from '../../../../library';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { View, TouchableOpacity, FlatList } from 'react-native';
 import { translate } from '../../../../core/i18n';
@@ -45,6 +45,7 @@ interface IState {
     selectedPreset: string;
     showAdvancedOptions: boolean;
     isLoading: boolean;
+    showRetrySection: boolean;
 }
 
 interface IReduxProps {
@@ -68,12 +69,18 @@ export class FeeOptionsComponent extends React.Component<
             showAdvancedOptions: false,
             hasAdvancedOptions: !!feeOptions.ui.feeComponentAdvanced,
             selectedPreset: feeOptions.ui.defaultPreset,
-            isLoading: true
+            isLoading: true,
+            showRetrySection: false
         };
         this.getEstimatedFees();
     }
 
+    @bind
     public async getEstimatedFees() {
+        this.state.isLoading === false &&
+            this.setState({
+                isLoading: true
+            });
         try {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
             const tokenSendingToken = getTokenConfig(
@@ -92,10 +99,17 @@ export class FeeOptionsComponent extends React.Component<
                 tokenSendingToken.type
             );
 
-            this.setState({ feeOptions: fees, isLoading: false });
+            this.setState({
+                feeOptions: fees,
+                isLoading: false,
+                showRetrySection: !!fees.responseHasDefaults || false
+            });
             this.props.onFeesChanged(fees);
         } catch (err) {
             //
+            this.setState({
+                showRetrySection: true
+            });
         }
     }
 
@@ -214,18 +228,37 @@ export class FeeOptionsComponent extends React.Component<
         }
     }
 
+    public renderRetrySection() {
+        const styles = this.props.styles;
+        return (
+            <View style={styles.container}>
+                <Text style={styles.retryText}>{translate('Send.noFeesTitle')}</Text>
+                <Text style={styles.retrySubtitleText}>{translate('Send.noFeesSubtitle')}</Text>
+                <Button
+                    testID="create-button"
+                    style={styles.retryButton}
+                    wrapperStyle={{ flex: 1 }}
+                    onPress={() => this.getEstimatedFees()}
+                >
+                    {translate('App.labels.retry')}
+                </Button>
+            </View>
+        );
+    }
+
     public render() {
         const styles = this.props.styles;
         return (
             <View style={styles.container}>
                 {this.state.isLoading ? (
                     <LoadingIndicator />
+                ) : this.state.showRetrySection ? (
+                    this.renderRetrySection()
                 ) : (
                     <View>
                         {this.state.showAdvancedOptions
                             ? this.renderAdvancedFees()
                             : this.renderSimpleFees()}
-
                         {this.state.feeOptions && (
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.displayErrorFees}>

@@ -129,10 +129,27 @@ export const setReduxScreenInputData = (
     context: IHandleCtaActionContext<transactions.IContractCallParams>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     if (context.action.params?.params && context?.options?.screenKey) {
-        setScreenInputData(context.options.screenKey, context.action.params?.params)(
-            dispatch,
-            getState
-        );
+        const step = (context.action.params?.params as any)?.step;
+
+        let screenKey = context.options.screenKey;
+
+        if (step) {
+            const state = getState();
+
+            const account = getSelectedAccount(state);
+            const chainId = getChainId(state, account.blockchain);
+
+            screenKey = getScreenDataKey({
+                pubKey: getSelectedWallet(state)?.walletPublicKey,
+                blockchain: account?.blockchain,
+                chainId: String(chainId),
+                address: account?.address,
+                step,
+                tab: undefined
+            });
+        }
+
+        setScreenInputData(screenKey, context.action.params?.params)(dispatch, getState);
     }
 };
 

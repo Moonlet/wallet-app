@@ -3,15 +3,21 @@ import BigNumber from 'bignumber.js';
 import { Blockchain, Contracts, IBalance } from '../../types';
 import { ApiClient } from '../../../utils/api-client/api-client';
 import { getContract } from '../contracts/base-contract';
+import { isFeatureActive, RemoteFeature } from '../../../utils/remote-feature-config';
 
 export class Erc20Client {
     constructor(private client: Client) {}
 
     public async getBalance(contractAddress, accountAddress): Promise<IBalance> {
-        const contractAddressStaking = await getContract(this.client.chainId, Contracts.STAKING);
+        if (isFeatureActive(RemoteFeature.GRT)) {
+            const contractAddressStaking = await getContract(
+                this.client.chainId,
+                Contracts.STAKING
+            );
 
-        if (contractAddressStaking === contractAddress)
-            return this.getStakingBalance(contractAddress, accountAddress);
+            if (contractAddressStaking === contractAddress)
+                return this.getStakingBalance(contractAddress, accountAddress);
+        }
 
         try {
             const balance = await this.client.callContract(
@@ -36,6 +42,7 @@ export class Erc20Client {
                 Blockchain.ETHEREUM,
                 this.client.chainId.toString()
             );
+
             return {
                 total: data?.balance.total || new BigNumber(0),
                 available: data?.balance.available || new BigNumber(0),

@@ -267,7 +267,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         text: translate('App.labels.ok'),
                         onPress: () => {
                             dispatch(closeProcessTransactions());
-                            NavigationService.navigate('Token', navigationParams);
+                            // NavigationService.navigate('Token', navigationParams);
+                            NavigationService.navigate('TransactonsHistory', {});
                         }
                     }
                 );
@@ -280,7 +281,8 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         text: translate('App.labels.ok'),
                         onPress: () => {
                             dispatch(closeProcessTransactions());
-                            NavigationService.navigate('Token', navigationParams);
+                            // NavigationService.navigate('Token', navigationParams);
+                            NavigationService.navigate('TransactonsHistory', {});
                         }
                     }
                 );

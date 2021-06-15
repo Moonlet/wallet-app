@@ -10,6 +10,7 @@ import v10 from './010';
 import v11 from './011';
 import v12 from './012';
 import v13 from './013';
+import v14 from './014';
 
 export const migrations: any = {
     /**
@@ -59,5 +60,9 @@ export const migrations: any = {
     /**
      * Update GRT testnet to rinkeby and GRT Mainnet - 25 Apr 2021
      */
-    13: v13
+    13: v13,
+    /**
+     * Add Zilliqa SCO and XCAD tokens - 15 Jun 2021
+     */
+    14: v14
 };

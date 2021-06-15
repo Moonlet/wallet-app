@@ -45,6 +45,7 @@ interface INavigationParams {
     extraParams?: any;
     resetScreen?: boolean;
     hideLoading?: boolean;
+    disableLoadingTimeout?: boolean;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -245,10 +246,18 @@ class SmartScreenComponent extends React.Component<
                     } else {
                         // show loading animation
                         // - default
-                        this.setState({
-                            loadingScreenData: true,
-                            loadingTimeoutInProgress: true
-                        });
+
+                        if (this.props.disableLoadingTimeout === true) {
+                            this.setState({
+                                loadingScreenData: true,
+                                loadingTimeoutInProgress: false
+                            });
+                        } else {
+                            this.setState({
+                                loadingScreenData: true,
+                                loadingTimeoutInProgress: true
+                            });
+                        }
 
                         this.startLoadingTimeout();
                     }

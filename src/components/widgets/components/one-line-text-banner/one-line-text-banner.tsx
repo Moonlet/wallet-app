@@ -49,6 +49,7 @@ const OneLineTextBannerComponent = (
             <TouchableOpacity
                 onPress={() => actions.handleCta(module.cta, props?.options)}
                 activeOpacity={0.9}
+                style={formatStyles(module?.ctaStyle)}
             >
                 {moduleJSX}
             </TouchableOpacity>

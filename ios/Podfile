@@ -46,10 +46,51 @@ target 'Moonlet' do
 end
 
 post_install do |installer|
+  # fix_deployment_target(installer)
+
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['ARCHS'] = 'arm64'
     end
   end
+
+   ## Fix for XCode 12.5
+  # find_and_replace("../node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm",
+  # "_initializeModules:(NSArray<id<RCTBridgeModule>> *)modules", "_initializeModules:(NSArray<Class> *)modules")
+  # find_and_replace("../node_modules/react-native/ReactCommon/turbomodule/core/platform/ios/RCTTurboModuleManager.mm",
+  #     "RCTBridgeModuleNameForClass(module))", "RCTBridgeModuleNameForClass(Class(module)))")
+
+end
+
+
+def fix_deployment_target(installer)
+  return if !installer
+  project = installer.pods_project
+  project_deployment_target = project.build_configurations.first.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+
+  puts "Make sure all pods deployment target is #{project_deployment_target.green}"
+  project.targets.each do |target|
+    puts "  #{target.name}".blue
+    target.build_configurations.each do |config|
+      old_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      new_target = project_deployment_target
+      next if old_target == new_target
+      puts "    #{config.name}: #{old_target.yellow} -> #{new_target.green}"
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = new_target
+    end
+  end
+end
+
+def find_and_replace(dir, findstr, replacestr)
+  Dir[dir].each do |name|
+    text = File.read(name)
+    replace = text.gsub(findstr,replacestr)
+    if text != replace
+        puts "Fix: " + name
+        File.open(name, "w") { |file| file.puts replace }
+        # STDOUT.ls -lush
+    end
+  end
+  Dir[dir + '*/'].each(&method(:find_and_replace))
 end

@@ -27,7 +27,7 @@ import {
 import { PosBasicActionType, ContractMethod } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
-import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { bind } from 'bind-decorator';
 import { addAccount, setSelectedAccount } from '../../../redux/wallets/actions';
@@ -582,20 +582,21 @@ class ProcessTransactionsComponent extends React.Component<
                 this.props.setSelectedAccount(this.props.createAccount);
                 NavigationService.navigate('Dashboard', {});
             } else {
-                const blockchainInstance = getBlockchain(this.props.transactions[0].blockchain);
-                const token: ITokenState = this.props.selectedAccount.tokens[this.props.chainId][
-                    this.props.transactions[0].token.symbol
-                ];
+                // const blockchainInstance = getBlockchain(this.props.transactions[0].blockchain);
+                // const token: ITokenState = this.props.selectedAccount.tokens[this.props.chainId][
+                //     this.props.transactions[0].token.symbol
+                // ];
                 NavigationService.popToTop();
-                NavigationService.navigate('Token', {
-                    blockchain: this.props.selectedAccount.blockchain,
-                    accountIndex: this.props.selectedAccount.index,
-                    token,
-                    activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions,
-                    accountName:
-                        this.props.selectedAccount?.name ||
-                        `${translate('App.labels.account')} ${this.props.selectedAccount.index + 1}`
-                });
+                NavigationService.navigate('TransactonsHistory', {});
+                // NavigationService.navigate('Token', {
+                //     blockchain: this.props.selectedAccount.blockchain,
+                //     accountIndex: this.props.selectedAccount.index,
+                //     token,
+                //     activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions,
+                //     accountName:
+                //         this.props.selectedAccount?.name ||
+                //         `${translate('App.labels.account')} ${this.props.selectedAccount.index + 1}`
+                // });
             }
         }
 

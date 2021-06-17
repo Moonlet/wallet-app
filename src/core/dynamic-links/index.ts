@@ -156,13 +156,13 @@ export class DynamicLinksService {
         const dl = dynamicLinks();
 
         this.onLinkListener = dl.onLink(link => {
-            console.log('onLink', link);
+            // console.log('onLink', link);
             this.handleDynamicLink(link);
         });
 
         // // application is in a background state or has fully quit
         dl.getInitialLink().then(link => {
-            console.log('getInitialLink', link);
+            // console.log('getInitialLink', link);
             this.handleDynamicLink(link);
         });
 
@@ -172,9 +172,18 @@ export class DynamicLinksService {
     // app is in the foreground state
     public async handleDynamicLink(link: any) {
         if (link?.url) {
-            this.processUrl(link.url);
+            this.processUrl(link.url, this.handlers, {
+                protocol: ['https:'],
+                host: [
+                    'moonlet.io',
+                    'moonlet.xyz',
+                    'moonletwallet.com',
+                    'moonlet.app',
+                    'moonlet.link'
+                ]
+            });
         } else {
-            SentryCaptureException(new Error(JSON.stringify(`Invalid link url, link:${link}`)));
+            // console.log(`Invalid link url, link:${link}`);
         }
     }
 
@@ -221,7 +230,7 @@ export class DynamicLinksService {
 
     private processPath(path: string, handlers: any, urlParams = {}) {
         const pathsPatterns = Object.keys(handlers);
-
+        // console.log(path, handlers, urlParams);
         for (const pathPattern of pathsPatterns) {
             if (typeof handlers[pathPattern] === 'function') {
                 const params = this.parsePath(path, pathPattern);

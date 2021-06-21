@@ -6,7 +6,6 @@ import { NavigationService } from '../../navigation/navigation-service';
 import { getChainId } from '../../redux/preferences/selectors';
 import { setSelectedBlockchain } from '../../redux/wallets/actions';
 import { Blockchain } from '../blockchain/types';
-import { IValidator } from '../blockchain/types/stats';
 import { getNrPendingTransactions, getSelectedAccount } from '../../redux/wallets/selectors';
 import { ITokenState } from '../../redux/wallets/state';
 import { store } from '../../redux/config';
@@ -42,22 +41,6 @@ export class DynamicLinksService {
 
             const chainId = getChainId(this.state, blockchain);
 
-            // @ts-ignore
-            const reduxValidators = this.state.validators;
-
-            const validators =
-                reduxValidators &&
-                reduxValidators[blockchain] &&
-                reduxValidators[blockchain][chainId as string];
-
-            let validator: IValidator;
-
-            if (validators && Array.isArray(validators) && validators.length > 0) {
-                validator = validators.find(
-                    v => v.id.toLowerCase() === validatorAddress.toLowerCase()
-                );
-            }
-
             const selectedAccount = getSelectedAccount(this.state);
 
             if (!selectedAccount) {
@@ -71,23 +54,17 @@ export class DynamicLinksService {
 
             const token: ITokenState = selectedAccount.tokens[chainId][tokenSymbol];
 
-            if (validator) {
-                const hasPendingTransactions = getNrPendingTransactions(this.state);
-
-                NavigationService.navigate('Validator', {
-                    blockchain,
-                    validator,
-                    accountIndex: selectedAccount.index,
-                    token,
-                    canPerformAction: !hasPendingTransactions
-                });
-            } else {
-                SentryCaptureException(
-                    new Error(
-                        `Dynamic Links - no validator, blockchain: ${blockchain}, tokenSymbol: ${tokenSymbol}, validatorAddress: ${validatorAddress}`
-                    )
-                );
-            }
+            NavigationService.navigate('Validator', {
+                blockchain,
+                undefined, // validator
+                accountIndex: selectedAccount.index,
+                token,
+                canPerformAction: !getNrPendingTransactions(this.state), // hasPendingTransactions
+                options: {
+                    validatorAddress,
+                    tokenSymbol
+                }
+            });
         } else {
             SentryCaptureException(
                 new Error(`Dynamic Links - navigateValidatorAddress, invalid params: ${params}`)

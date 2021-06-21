@@ -7,6 +7,7 @@ import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Blockchain } from '../../../core/blockchain/types';
 
 export const ADD_VALIDATORS = 'ADD_VALIDATORS';
+export const SET_IS_LOADING = 'SET_IS_LOADING';
 
 export const fetchValidators = (account: IAccountState, posAction: PosBasicActionType) => async (
     dispatch: Dispatch<any>,
@@ -15,6 +16,11 @@ export const fetchValidators = (account: IAccountState, posAction: PosBasicActio
     const state = getState();
     const blockchain = account.blockchain;
     const chainId = getChainId(state, blockchain).toString();
+
+    dispatch({
+        type: SET_IS_LOADING,
+        data: { chainId, blockchain }
+    });
 
     // TODO fix the non base 58 problem on solana
     const address =

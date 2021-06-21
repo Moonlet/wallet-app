@@ -11,6 +11,7 @@ import v11 from './011';
 import v12 from './012';
 import v13 from './013';
 import v14 from './014';
+import v15 from './015';
 
 export const migrations: any = {
     /**
@@ -64,5 +65,9 @@ export const migrations: any = {
     /**
      * Add Zilliqa SCO and XCAD tokens - 15 Jun 2021
      */
-    14: v14
+    14: v14,
+    /**
+     * Update validators redux - 21 Jun 2021
+     */
+    15: v15
 };

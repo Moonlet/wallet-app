@@ -10,6 +10,6 @@ export const getDelegatedValidators = (
     return (
         state.ui.delegatedValidators &&
         state.ui.delegatedValidators[blockchain] &&
-        state.ui.delegatedValidators[blockchain][chainId as string]
+        state.ui.delegatedValidators[blockchain][chainId as string]?.validators
     );
 };

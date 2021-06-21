@@ -75,7 +75,6 @@ export class DynamicLinksService {
     private stakeValidatorAddress(params: any) {
         const blockchain = String(params?.blockchain)?.toUpperCase() as Blockchain;
         const validatorAddress = params?.validatorAddress;
-        // const tokenSymbol = String(params?.token)?.toUpperCase();
 
         if (blockchain && validatorAddress) {
             // make sure `blockchain` is selected
@@ -133,17 +132,13 @@ export class DynamicLinksService {
         const dl = dynamicLinks();
 
         this.onLinkListener = dl.onLink(link => {
-            // console.log('onLink', link);
             this.handleDynamicLink(link);
         });
 
-        // // application is in a background state or has fully quit
+        // application is in a background state or has fully quit
         dl.getInitialLink().then(link => {
-            // console.log('getInitialLink', link);
             this.handleDynamicLink(link);
         });
-
-        // Linking.getInitialURL().then(value => console.log('Linking', value));
     }
 
     // app is in the foreground state
@@ -160,7 +155,7 @@ export class DynamicLinksService {
                 ]
             });
         } else {
-            // console.log(`Invalid link url, link:${link}`);
+            // Invalid link url, link:${link}`
         }
     }
 

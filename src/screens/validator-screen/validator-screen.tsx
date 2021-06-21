@@ -144,6 +144,9 @@ class ValidatorScreenComponent extends React.Component<
             ) {
                 this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
                 // this.props.fetchDelegatedValidators(this.props.account);
+            } else if (validator) {
+                this.setState({ validator });
+                this.props.navigation.setParams({ validator });
             }
         }
     }

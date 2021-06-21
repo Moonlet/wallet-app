@@ -202,7 +202,6 @@ export class DynamicLinksService {
 
     private processPath(path: string, handlers: any, urlParams = {}) {
         const pathsPatterns = Object.keys(handlers);
-        // console.log(path, handlers, urlParams);
         for (const pathPattern of pathsPatterns) {
             if (typeof handlers[pathPattern] === 'function') {
                 const params = this.parsePath(path, pathPattern);

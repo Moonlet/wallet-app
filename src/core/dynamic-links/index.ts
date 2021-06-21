@@ -54,6 +54,7 @@ export class DynamicLinksService {
 
             const token: ITokenState = selectedAccount.tokens[chainId][tokenSymbol];
 
+            NavigationService.popToTop();
             NavigationService.navigate('Validator', {
                 blockchain,
                 undefined, // validator
@@ -80,6 +81,7 @@ export class DynamicLinksService {
             // make sure `blockchain` is selected
             store.dispatch(setSelectedBlockchain(blockchain));
 
+            NavigationService.popToTop();
             NavigationService.navigate('SmartScreen', {
                 context: {
                     screen: 'StakeNow',
@@ -108,6 +110,7 @@ export class DynamicLinksService {
             // make sure `blockchain` is selected
             store.dispatch(setSelectedBlockchain(blockchain));
 
+            NavigationService.popToTop();
             NavigationService.navigate('SmartScreen', {
                 context: {
                     screen: 'StakeNow',

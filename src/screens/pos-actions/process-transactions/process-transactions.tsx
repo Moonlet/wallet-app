@@ -1,5 +1,6 @@
 import React from 'react';
 import { Animated, Easing, ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Text, Button } from '../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
@@ -710,7 +711,7 @@ class ProcessTransactionsComponent extends React.Component<
 
         if (this.props.isVisible) {
             return (
-                <View style={styles.container}>
+                <SafeAreaView style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.defaultHeaderContainer}>
                             {!this.props.signingInProgress && !this.props.signingCompleted && (
@@ -754,7 +755,7 @@ class ProcessTransactionsComponent extends React.Component<
                     )}
 
                     {this.renderBottomButton()}
-                </View>
+                </SafeAreaView>
             );
         } else {
             return null;

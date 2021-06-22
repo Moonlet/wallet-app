@@ -764,6 +764,12 @@ export const translation: ITranslations = {
             RequestedRatesCannotBeFulfilled: 'Requested rates cannot be fulfilled',
             MissingPool: 'Missing pool',
             TransactionExpired: 'Transaction has expired'
+        },
+        ContractMethod: {
+            IncreaseAllowance: 'Increase Allowance',
+            SwapExactZILForTokens: 'Swap Exact ZIL For Tokens',
+            SwapExactTokensForZIL: 'Swap Exact Tokens For ZIL',
+            SwapExactTokensForTokens: 'Swap Exact Tokens For Tokens'
         }
     },
     plural: (n: number, ord?: boolean) => {

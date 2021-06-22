@@ -123,13 +123,21 @@ class ProcessTransactionsComponent extends React.Component<
                 });
         }
 
+        // Check fees for insufficient funds
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
                 let insufficientFundsFees = false;
                 let amountNeededToPassTxs = '';
 
+                const blockchain = this.props.selectedAccount.blockchain;
+
+                const blockchainInstance = getBlockchain(blockchain);
+                const nativeCoin = blockchainInstance.config.coin;
+
+                // fees are always paid in native token
                 const token = this.props.selectedAccount.tokens[this.props.chainId][
-                    this.props.transactions[0].token.symbol
+                    nativeCoin
+                    // this.props.transactions[0].token.symbol
                 ];
 
                 const balanceAvailable =
@@ -144,11 +152,7 @@ class ProcessTransactionsComponent extends React.Component<
                     { balanceAvailable }
                 );
 
-                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
-                const tokenConfig = getTokenConfig(
-                    this.props.selectedAccount.blockchain,
-                    token.symbol
-                );
+                const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
                 let txsValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {
@@ -695,11 +699,12 @@ class ProcessTransactionsComponent extends React.Component<
                 : translate('Transaction.processTitleText');
 
         if (this.state.insufficientFundsFees) {
+            // fees are always paid in native token
+            const nativeCoin = getBlockchain(this.props.selectedAccount.blockchain).config.coin;
+
             title = translate('Validator.disableSignMessage', {
                 amount: this.state.amountNeededToPassTxs,
-                token: this.props.transactions.length
-                    ? this.props.transactions[0].token.symbol
-                    : 'Token'
+                token: this.props.transactions.length ? nativeCoin : 'Token'
             });
         }
 

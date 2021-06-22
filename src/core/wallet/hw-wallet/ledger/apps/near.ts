@@ -11,8 +11,6 @@ import { PublicKey } from 'near-api-js/lib/utils';
 import { base_decode } from 'near-api-js/lib/utils/serialize';
 import { NearTransactionActionType } from '../../../../blockchain/near/types';
 import BN from 'bn.js';
-// import Long from 'long';
-// import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
 
 function bip32PathToBytes(path) {
     const parts = path.split('/');

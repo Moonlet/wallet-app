@@ -140,6 +140,8 @@ class ProcessTransactionsComponent extends React.Component<
                     // this.props.transactions[0].token.symbol
                 ];
 
+                const tokenConfig = getTokenConfig(blockchain, token.symbol);
+
                 const balanceAvailable =
                     this.props.transactions[0].amount === '0'
                         ? undefined
@@ -151,8 +153,6 @@ class ProcessTransactionsComponent extends React.Component<
                     this.props.chainId,
                     { balanceAvailable }
                 );
-
-                const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
                 let txsValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {

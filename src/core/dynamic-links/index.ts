@@ -6,7 +6,6 @@ import { NavigationService } from '../../navigation/navigation-service';
 import { getChainId } from '../../redux/preferences/selectors';
 import { setSelectedBlockchain } from '../../redux/wallets/actions';
 import { Blockchain } from '../blockchain/types';
-import { IValidator } from '../blockchain/types/stats';
 import { getNrPendingTransactions, getSelectedAccount } from '../../redux/wallets/selectors';
 import { ITokenState } from '../../redux/wallets/state';
 import { store } from '../../redux/config';
@@ -42,22 +41,6 @@ export class DynamicLinksService {
 
             const chainId = getChainId(this.state, blockchain);
 
-            // @ts-ignore
-            const reduxValidators = this.state.validators;
-
-            const validators =
-                reduxValidators &&
-                reduxValidators[blockchain] &&
-                reduxValidators[blockchain][chainId as string];
-
-            let validator: IValidator;
-
-            if (validators && Array.isArray(validators) && validators.length > 0) {
-                validator = validators.find(
-                    v => v.id.toLowerCase() === validatorAddress.toLowerCase()
-                );
-            }
-
             const selectedAccount = getSelectedAccount(this.state);
 
             if (!selectedAccount) {
@@ -71,23 +54,18 @@ export class DynamicLinksService {
 
             const token: ITokenState = selectedAccount.tokens[chainId][tokenSymbol];
 
-            if (validator) {
-                const hasPendingTransactions = getNrPendingTransactions(this.state);
-
-                NavigationService.navigate('Validator', {
-                    blockchain,
-                    validator,
-                    accountIndex: selectedAccount.index,
-                    token,
-                    canPerformAction: !hasPendingTransactions
-                });
-            } else {
-                SentryCaptureException(
-                    new Error(
-                        `Dynamic Links - no validator, blockchain: ${blockchain}, tokenSymbol: ${tokenSymbol}, validatorAddress: ${validatorAddress}`
-                    )
-                );
-            }
+            NavigationService.popToTop();
+            NavigationService.navigate('Validator', {
+                blockchain,
+                undefined, // validator
+                accountIndex: selectedAccount.index,
+                token,
+                canPerformAction: !getNrPendingTransactions(this.state), // hasPendingTransactions
+                options: {
+                    validatorAddress,
+                    tokenSymbol
+                }
+            });
         } else {
             SentryCaptureException(
                 new Error(`Dynamic Links - navigateValidatorAddress, invalid params: ${params}`)
@@ -98,12 +76,12 @@ export class DynamicLinksService {
     private stakeValidatorAddress(params: any) {
         const blockchain = String(params?.blockchain)?.toUpperCase() as Blockchain;
         const validatorAddress = params?.validatorAddress;
-        // const tokenSymbol = String(params?.token)?.toUpperCase();
 
         if (blockchain && validatorAddress) {
             // make sure `blockchain` is selected
             store.dispatch(setSelectedBlockchain(blockchain));
 
+            NavigationService.popToTop();
             NavigationService.navigate('SmartScreen', {
                 context: {
                     screen: 'StakeNow',
@@ -132,6 +110,7 @@ export class DynamicLinksService {
             // make sure `blockchain` is selected
             store.dispatch(setSelectedBlockchain(blockchain));
 
+            NavigationService.popToTop();
             NavigationService.navigate('SmartScreen', {
                 context: {
                     screen: 'StakeNow',
@@ -156,17 +135,13 @@ export class DynamicLinksService {
         const dl = dynamicLinks();
 
         this.onLinkListener = dl.onLink(link => {
-            // console.log('onLink', link);
             this.handleDynamicLink(link);
         });
 
-        // // application is in a background state or has fully quit
+        // application is in a background state or has fully quit
         dl.getInitialLink().then(link => {
-            // console.log('getInitialLink', link);
             this.handleDynamicLink(link);
         });
-
-        // Linking.getInitialURL().then(value => console.log('Linking', value));
     }
 
     // app is in the foreground state
@@ -183,7 +158,7 @@ export class DynamicLinksService {
                 ]
             });
         } else {
-            // console.log(`Invalid link url, link:${link}`);
+            // Invalid link url, link:${link}`
         }
     }
 
@@ -230,7 +205,6 @@ export class DynamicLinksService {
 
     private processPath(path: string, handlers: any, urlParams = {}) {
         const pathsPatterns = Object.keys(handlers);
-        // console.log(path, handlers, urlParams);
         for (const pathPattern of pathsPatterns) {
             if (typeof handlers[pathPattern] === 'function') {
                 const params = this.parsePath(path, pathPattern);

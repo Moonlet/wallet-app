@@ -49,6 +49,13 @@ interface INavigationParams {
     transaction: IBlockchainTransaction;
 }
 
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    return {
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        chainId: getChainId(state, ownProps.blockchain)
+    };
+};
+
 interface IState {
     zilRewards: {
         gZil: string;
@@ -167,23 +174,24 @@ class TransactionDetailsComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
-        const transaction = this.props.transaction;
-        const account = this.props.account;
+        const { account, transaction, styles } = this.props;
 
         const date = new Date(transaction.date.created);
 
-        const blockchainInstance = getBlockchain(account.blockchain);
+        const blockchain = account.blockchain;
+
+        const blockchainInstance = getBlockchain(blockchain);
         const coin = blockchainInstance.config.coin;
         const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
 
-        const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol || coin);
+        const tokenConfig = getTokenConfig(blockchain, transaction?.token?.symbol || coin);
+        const nativeCoinTokenConfig = getTokenConfig(blockchain, coin);
         const tokenType = transaction?.token?.type;
 
         let recipient =
             tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20
-                ? formatAddress(transaction.data.params[0], account.blockchain)
-                : formatAddress(transaction.toAddress, account.blockchain);
+                ? formatAddress(transaction.data.params[0], blockchain)
+                : formatAddress(transaction.toAddress, blockchain);
 
         if (transaction?.additionalInfo?.validatorName) {
             recipient = transaction.additionalInfo.validatorName;
@@ -202,6 +210,9 @@ class TransactionDetailsComponent extends React.Component<
 
         if (tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20) {
             transactionType = Capitalize(transaction.data.method);
+            if (!!transaction.additionalInfo?.swap) {
+                transactionType = translate(`ContractMethod.${transaction.data.method}`);
+            }
         }
 
         if (transaction?.additionalInfo?.posAction) {
@@ -283,7 +294,7 @@ class TransactionDetailsComponent extends React.Component<
                             <Amount
                                 style={styles.textPrimary}
                                 amount={amount}
-                                blockchain={account.blockchain}
+                                blockchain={blockchain}
                                 token={transaction?.token?.symbol || coin}
                                 tokenDecimals={tokenConfig.decimals}
                             />
@@ -297,9 +308,9 @@ class TransactionDetailsComponent extends React.Component<
                             <Amount
                                 style={styles.textPrimary}
                                 amount={this.state.txFees.feeTotal}
-                                blockchain={account.blockchain}
-                                token={transaction?.token?.symbol || coin}
-                                tokenDecimals={tokenConfig.decimals}
+                                blockchain={blockchain}
+                                token={coin}
+                                tokenDecimals={nativeCoinTokenConfig.decimals}
                             />
                             <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
                         </View>
@@ -398,13 +409,6 @@ class TransactionDetailsComponent extends React.Component<
         );
     }
 }
-
-export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
-    return {
-        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
-    };
-};
 
 export const TransactionDetails = smartConnect(TransactionDetailsComponent, [
     connect(mapStateToProps, undefined),

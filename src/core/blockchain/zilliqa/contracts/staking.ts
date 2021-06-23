@@ -403,13 +403,19 @@ export class Staking {
 
         let gasLimitBasedOnCycles = 3450; // default value
         if (nrCyclesPassed >= 365) {
-            gasLimitBasedOnCycles = 35200;
+            gasLimitBasedOnCycles = 50000;
         } else if (nrCyclesPassed >= 180) {
-            gasLimitBasedOnCycles = 19800;
+            gasLimitBasedOnCycles = 30000;
+        } else if (nrCyclesPassed >= 90) {
+            gasLimitBasedOnCycles = 25000;
+        } else if (nrCyclesPassed >= 60) {
+            gasLimitBasedOnCycles = 20000;
         } else if (nrCyclesPassed >= 30) {
-            gasLimitBasedOnCycles = 11000;
+            gasLimitBasedOnCycles = 15000;
+        } else if (nrCyclesPassed >= 14) {
+            gasLimitBasedOnCycles = 10000;
         } else if (nrCyclesPassed >= 7) {
-            gasLimitBasedOnCycles = 5000;
+            gasLimitBasedOnCycles = 7000;
         } else if (nrCyclesPassed >= 3) {
             gasLimitBasedOnCycles = 3500;
         } else if (nrCyclesPassed >= 2) {

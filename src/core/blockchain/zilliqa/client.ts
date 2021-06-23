@@ -91,6 +91,16 @@ export class Client extends BlockchainGenericClient {
 
                     if (errorMsg.includes('MissingPool'))
                         error = { message: translate('Errors.MissingPool') };
+
+                    if (errorMsg.includes('code : (Int32 -2))'))
+                        error = { message: translate('Errors.Err2') };
+
+                    if (errorMsg.includes('code : (Int32 -3))'))
+                        error = { message: translate('Errors.Err3') };
+
+                    if (errorMsg.includes('Ran out of gas')) {
+                        error = { message: translate('Errors.OutOfGas') };
+                    }
                 }
             }
 

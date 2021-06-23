@@ -1,5 +1,6 @@
 import React from 'react';
 import { Animated, Easing, ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Text, Button } from '../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
@@ -123,14 +124,24 @@ class ProcessTransactionsComponent extends React.Component<
                 });
         }
 
+        // Check fees for insufficient funds
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
                 let insufficientFundsFees = false;
                 let amountNeededToPassTxs = '';
 
+                const blockchain = this.props.selectedAccount.blockchain;
+
+                const blockchainInstance = getBlockchain(blockchain);
+                const nativeCoin = blockchainInstance.config.coin;
+
+                // fees are always paid in native token
                 const token = this.props.selectedAccount.tokens[this.props.chainId][
-                    this.props.transactions[0].token.symbol
+                    nativeCoin
+                    // this.props.transactions[0].token.symbol
                 ];
+
+                const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
                 const balanceAvailable =
                     this.props.transactions[0].amount === '0'
@@ -142,12 +153,6 @@ class ProcessTransactionsComponent extends React.Component<
                     token,
                     this.props.chainId,
                     { balanceAvailable }
-                );
-
-                const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
-                const tokenConfig = getTokenConfig(
-                    this.props.selectedAccount.blockchain,
-                    token.symbol
                 );
 
                 let txsValue = new BigNumber(0);
@@ -695,17 +700,18 @@ class ProcessTransactionsComponent extends React.Component<
                 : translate('Transaction.processTitleText');
 
         if (this.state.insufficientFundsFees) {
+            // fees are always paid in native token
+            const nativeCoin = getBlockchain(this.props.selectedAccount.blockchain).config.coin;
+
             title = translate('Validator.disableSignMessage', {
                 amount: this.state.amountNeededToPassTxs,
-                token: this.props.transactions.length
-                    ? this.props.transactions[0].token.symbol
-                    : 'Token'
+                token: this.props.transactions.length ? nativeCoin : 'Token'
             });
         }
 
         if (this.props.isVisible) {
             return (
-                <View style={styles.container}>
+                <SafeAreaView style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.defaultHeaderContainer}>
                             {!this.props.signingInProgress && !this.props.signingCompleted && (
@@ -749,7 +755,7 @@ class ProcessTransactionsComponent extends React.Component<
                     )}
 
                     {this.renderBottomButton()}
-                </View>
+                </SafeAreaView>
             );
         } else {
             return null;

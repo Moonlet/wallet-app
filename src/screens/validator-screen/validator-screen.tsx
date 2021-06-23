@@ -85,12 +85,19 @@ const HeaderTitleComponent = (
     if (validator) {
         return (
             <View style={{ flexDirection: 'row' }}>
-                <SmartImage source={{ uri: validator.icon }} style={props.styles.navigationImage} />
-                <View style={{ flexDirection: 'column' }}>
+                {validator.icon !== '' && (
+                    <SmartImage
+                        source={{ uri: validator.icon }}
+                        style={props.styles.navigationImage}
+                    />
+                )}
+                <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Text style={props.styles.labelName}>
                         {formatValidatorName(validator.name, 15)}
                     </Text>
-                    <Text style={props.styles.website}>{validator.website}</Text>
+                    {validator.website !== '' && (
+                        <Text style={props.styles.website}>{validator.website}</Text>
+                    )}
                 </View>
             </View>
         );

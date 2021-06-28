@@ -7,13 +7,13 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { normalize } from '../../styles/dimensions';
 import { IconValues } from '../icon/values';
 
-export interface IExternalProps {
+interface IExternalProps {
     placeholderText: string;
     onChangeText: (text: string) => void;
     onClose: () => void;
 }
 
-export const SearchInputComponent = (
+const SearchInputComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const [fieldInput, setFieldInput] = React.useState<string>('');

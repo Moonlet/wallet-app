@@ -22,7 +22,8 @@ export default (theme: ITheme) =>
         input: {
             flex: 1,
             fontSize: normalizeFontAndLineHeight(15),
-            color: theme.colors.text
+            color: theme.colors.text,
+            padding: 0
         },
         closeIconContainer: {
             paddingLeft: BASE_DIMENSION,

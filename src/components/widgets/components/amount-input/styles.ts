@@ -23,7 +23,8 @@ export default (theme: ITheme) =>
             flex: 1,
             color: theme.colors.text,
             paddingRight: BASE_DIMENSION * 2,
-            fontSize: normalizeFontAndLineHeight(15)
+            fontSize: normalizeFontAndLineHeight(15),
+            padding: 0
         },
         row: {
             flexDirection: 'row'

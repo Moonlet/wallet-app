@@ -7,7 +7,7 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { translate } from '../../../../core/i18n';
 import { Button, Text } from '../../../../library';
 import { NavigationService } from '../../../../navigation/navigation-service';
-import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
+import { normalize } from '../../../../styles/dimensions';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { connect } from 'react-redux';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
@@ -62,11 +62,11 @@ const mapDispatchToProps = {
     updateTokenOrder
 };
 
-export const navigationOptions = () => ({
+const navigationOptions = () => ({
     title: translate('App.labels.addToken')
 });
 
-export class AddTokenScreenComponent extends React.Component<
+class AddTokenScreenComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
@@ -232,7 +232,7 @@ export class AddTokenScreenComponent extends React.Component<
                 <Button
                     primary
                     onPress={() => NavigationService.navigate('ManageToken', {})}
-                    wrapperStyle={{ marginHorizontal: BASE_DIMENSION * 2 }}
+                    wrapperStyle={styles.addButton}
                     disabled={!getBlockchain(this.props.blockchain).config.ui.enableTokenManagement}
                 >
                     {translate('App.labels.addToken')}

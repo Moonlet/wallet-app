@@ -19,6 +19,7 @@ export const translation: ITranslations = {
                 amount: 'Amount',
                 average: 'Average',
                 balance: 'Balance',
+                blockHash: 'Block Hash',
                 cancel: 'Cancel',
                 canceled: 'Canceled',
                 cheap: 'Cheap',
@@ -110,6 +111,9 @@ export const translation: ITranslations = {
                 refreshing: 'Refreshing',
                 remove: 'Remove',
                 removeAccount: 'Remove account',
+                removeTransaction: 'Remove transaction',
+                removeTransactionDetails:
+                    'This action will remove the transaction from MoonletWallet. This will still remain on the blockchain network.',
                 retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',

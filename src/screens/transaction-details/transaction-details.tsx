@@ -6,7 +6,7 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../library';
+import { Button, Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
@@ -37,13 +37,15 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
+import { removeTransaction, updateTransactionFromBlockchain } from '../../redux/wallets/actions';
+import { NavigationService } from '../../navigation/navigation-service';
 
 interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     txRedux: IBlockchainTransaction;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
+    removeTransaction: typeof removeTransaction;
 }
 
 interface INavigationParams {
@@ -61,7 +63,8 @@ const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
 };
 
 const mapDispatchToProps = {
-    updateTransactionFromBlockchain
+    updateTransactionFromBlockchain,
+    removeTransaction
 };
 
 interface IState {
@@ -200,6 +203,37 @@ class TransactionDetailsComponent extends React.Component<
         openURL(url);
     }
 
+    private renderRow(title: string, body: string) {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.rowContainer}>
+                <Text style={styles.textPrimary}>{title}</Text>
+                <Text style={styles.textSecondary}>{body}</Text>
+            </View>
+        );
+    }
+
+    private removeTransaction() {
+        Dialog.alert(
+            translate('App.labels.removeTransaction'),
+            translate('App.labels.removeTransactionDetails'),
+            {
+                text: translate('App.labels.cancel'),
+                onPress: () => {
+                    //
+                }
+            },
+            {
+                text: translate('App.labels.ok'),
+                onPress: () => {
+                    this.props.removeTransaction(this.state.transaction.id);
+                    NavigationService.goBack();
+                }
+            }
+        );
+    }
+
     public render() {
         const { account, styles } = this.props;
         const { transaction } = this.state;
@@ -274,23 +308,16 @@ class TransactionDetailsComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={styles.scrollConainter}
                     showsVerticalScrollIndicator={false}
                 >
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>
-                            {`${moment(date).format('L')}, ${moment(date).format('LTS')}`}
-                        </Text>
-                        <Text style={styles.textSecondary}>
-                            {translate('App.labels.dateAndTime')}
-                        </Text>
-                    </View>
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>{transactionType}</Text>
-                        <Text style={styles.textSecondary}>
-                            {translate('Transaction.transactionType')}
-                        </Text>
-                    </View>
+                    {this.renderRow(
+                        `${moment(date).format('L')}, ${moment(date).format('LTS')}`,
+                        translate('App.labels.dateAndTime')
+                    )}
+
+                    {this.renderRow(transactionType, translate('Transaction.transactionType'))}
+
                     {isZilRewardsFlow ? (
                         <View>
                             {/* ZILLIQA ZIL and gZIL rewards */}
@@ -344,42 +371,26 @@ class TransactionDetailsComponent extends React.Component<
                         </View>
                     )}
 
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>
-                            {translate(
-                                `Transaction.statusValue.${Capitalize(
-                                    transaction.status.toString()
-                                )}`
-                            )}
-                        </Text>
-                        <Text style={styles.textSecondary}>
-                            {translate('Transaction.transactionStatus')}
-                        </Text>
-                    </View>
-
-                    {this.state.errorMessage?.message && (
-                        <View style={styles.rowContainer}>
-                            <Text style={styles.textPrimary}>
-                                {this.state.errorMessage.message}
-                            </Text>
-                            <Text style={styles.textSecondary}>
-                                {translate('App.labels.errorMessage')}
-                            </Text>
-                        </View>
+                    {this.renderRow(
+                        translate(
+                            `Transaction.statusValue.${Capitalize(transaction.status.toString())}`
+                        ),
+                        translate('Transaction.transactionStatus')
                     )}
 
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>
-                            {formatAddress(transaction.address, account.blockchain)}
-                        </Text>
-                        <Text style={styles.textSecondary}>{translate('App.labels.sender')}</Text>
-                    </View>
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textPrimary}>{recipient}</Text>
-                        <Text style={styles.textSecondary}>
-                            {translate('App.labels.recipient')}
-                        </Text>
-                    </View>
+                    {this.state.errorMessage?.message &&
+                        this.renderRow(
+                            this.state.errorMessage.message,
+                            translate('App.labels.errorMessage')
+                        )}
+
+                    {this.renderRow(
+                        formatAddress(transaction.address, account.blockchain),
+                        translate('App.labels.sender')
+                    )}
+
+                    {this.renderRow(recipient, translate('App.labels.recipient'))}
+
                     <TouchableOpacity
                         testID={'transaction-id'}
                         style={styles.transactionIdContainer}
@@ -399,14 +410,10 @@ class TransactionDetailsComponent extends React.Component<
                             style={styles.icon}
                         />
                     </TouchableOpacity>
-                    {account.blockchain !== Blockchain.SOLANA && (
-                        <View style={styles.rowContainer}>
-                            <Text style={styles.textPrimary}>{transaction.nonce}</Text>
-                            <Text style={styles.textSecondary}>
-                                {translate('Transaction.nonce')}
-                            </Text>
-                        </View>
-                    )}
+
+                    {account.blockchain !== Blockchain.SOLANA &&
+                        this.renderRow(String(transaction.nonce), translate('Transaction.nonce'))}
+
                     {account.blockchain === Blockchain.SOLANA &&
                         transaction?.additionalInfo?.currentBlockHash && (
                             <TouchableOpacity
@@ -428,10 +435,20 @@ class TransactionDetailsComponent extends React.Component<
                                     >
                                         {transaction.additionalInfo.currentBlockHash}
                                     </Text>
-                                    <Text style={styles.textSecondary}>{`Block Hash`}</Text>
+                                    <Text style={styles.textSecondary}>
+                                        {translate('App.labels.blockHash')}
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         )}
+
+                    <Button
+                        style={styles.removeTxButton}
+                        textStyle={styles.removeTxButtonText}
+                        onPress={() => this.removeTransaction()}
+                    >
+                        {translate('App.labels.removeTransaction')}
+                    </Button>
                 </ScrollView>
             </View>
         );

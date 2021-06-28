@@ -18,7 +18,7 @@ import {
     TransactionType,
     IFeeOptions
 } from '../../core/blockchain/types';
-import { getAccount } from '../../redux/wallets/selectors';
+import { getAccount, getSelectedAccountTransaction } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -37,10 +37,13 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 
 interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    txRedux: IBlockchainTransaction;
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 interface INavigationParams {
@@ -52,11 +55,17 @@ interface INavigationParams {
 const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId: getChainId(state, ownProps.blockchain),
+        txRedux: getSelectedAccountTransaction(state, ownProps.transaction.id)
     };
 };
 
+const mapDispatchToProps = {
+    updateTransactionFromBlockchain
+};
+
 interface IState {
+    transaction: IBlockchainTransaction;
     zilRewards: {
         gZil: string;
         zil: string;
@@ -88,6 +97,7 @@ class TransactionDetailsComponent extends React.Component<
         super(props);
 
         this.state = {
+            transaction: props.transaction,
             zilRewards: undefined,
             txFees: undefined,
             errorMessage: undefined
@@ -95,15 +105,25 @@ class TransactionDetailsComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        const { account, transaction } = this.props;
+        const { account, chainId } = this.props;
+        const { transaction } = this.state;
         const { blockchain } = account;
+
+        if (transaction.status === TransactionStatus.DROPPED) {
+            this.props.updateTransactionFromBlockchain(
+                transaction.id,
+                blockchain,
+                chainId,
+                transaction.broadcastedOnBlock
+            );
+        }
 
         if (blockchain === Blockchain.ZILLIQA) {
             const blockchainConfig = getBlockchain(blockchain);
-            const zilClient = blockchainConfig.getClient(this.props.chainId) as ZilliqaClient;
+            const zilClient = blockchainConfig.getClient(chainId) as ZilliqaClient;
 
             try {
-                const txFees = await zilClient.getTransactionFees(this.props.transaction.id);
+                const txFees = await zilClient.getTransactionFees(transaction.id);
                 if (txFees) this.setState({ txFees });
             } catch (error) {
                 SentryCaptureException(
@@ -113,9 +133,7 @@ class TransactionDetailsComponent extends React.Component<
 
             try {
                 if (transaction?.additionalInfo?.swap) {
-                    const errorMessage = await zilClient.getTransactionErrorMessage(
-                        this.props.transaction.id
-                    );
+                    const errorMessage = await zilClient.getTransactionErrorMessage(transaction.id);
 
                     if (errorMessage) this.setState({ errorMessage });
                 }
@@ -131,7 +149,7 @@ class TransactionDetailsComponent extends React.Component<
 
                     if (raw?._tag === 'WithdrawStakeRewards') {
                         const zilRewards = await zilClient.fetchRewardsForTransaction(
-                            this.props.transaction.id
+                            transaction.id
                         );
 
                         // ZIL
@@ -165,16 +183,26 @@ class TransactionDetailsComponent extends React.Component<
         }
     }
 
+    public componentDidUpdate(prevProps: INavigationParams & IReduxProps) {
+        if (
+            this.props.txRedux &&
+            JSON.stringify(this.props.txRedux) !== JSON.stringify(prevProps.txRedux)
+        ) {
+            this.setState({ transaction: this.props.txRedux });
+        }
+    }
+
     public goToExplorer() {
         const url = getBlockchain(this.props.account.blockchain)
             .networks.filter(n => n.chainId === this.props.chainId)[0]
-            .explorer.getTransactionUrl(this.props.transaction.id);
+            .explorer.getTransactionUrl(this.state.transaction.id);
 
         openURL(url);
     }
 
     public render() {
-        const { account, transaction, styles } = this.props;
+        const { account, styles } = this.props;
+        const { transaction } = this.state;
 
         const date = new Date(transaction.date.created);
 
@@ -411,7 +439,7 @@ class TransactionDetailsComponent extends React.Component<
 }
 
 export const TransactionDetails = smartConnect(TransactionDetailsComponent, [
-    connect(mapStateToProps, undefined),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

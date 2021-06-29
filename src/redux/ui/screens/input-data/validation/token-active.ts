@@ -27,7 +27,7 @@ export const tokenActiveWallet = (
         const screenInputData =
             screenKey && state.ui.screens.inputData && state.ui.screens.inputData[screenKey];
 
-        symbol = screenInputData?.data?.swapToken1?.symbol;
+        symbol = screenInputData?.data && screenInputData?.data[field]?.symbol;
     }
 
     const tokens = account.tokens[chainId];

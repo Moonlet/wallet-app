@@ -54,7 +54,7 @@ const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
-        validators: getValidators(state, ownProps.blockchain, chainId, PosBasicActionType.DELEGATE),
+        validators: getValidators(state, ownProps.blockchain, chainId),
         hasPendingTransactions: getNrPendingTransactions(state)
     };
 };

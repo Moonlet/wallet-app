@@ -6,6 +6,7 @@ import { ITransactionRequestState } from './transaction-request/state';
 import { IValidatorsState } from './validators/state';
 import { IProcessTransactionsState } from './process-transactions/state';
 import { IStatsState } from './stats/state';
+import { IDelegatedValidatorsState } from './delegated-validators/state';
 
 export interface IUiState {
     screens: IScreensState;
@@ -15,6 +16,6 @@ export interface IUiState {
     transactionRequest: ITransactionRequestState;
     processTransactions: IProcessTransactionsState;
     validators: IValidatorsState;
-    delegatedValidators: IValidatorsState;
+    delegatedValidators: IDelegatedValidatorsState;
     stats: IStatsState;
 }

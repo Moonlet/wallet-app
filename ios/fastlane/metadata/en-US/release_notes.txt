@@ -1,6 +1,6 @@
-Team's log. Stardate 2106.09:
+Team's log. Stardate 2106.24:
 
-This update includes bug fixes and several other improvements.
+This is a major milestone since we are releasing the complete ZIL swap feature and the deep link validator page for SOL. Also we have some fixes ready for Claim operation. Overall we pushed Moonlet to the new heights, improving the whole experience.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

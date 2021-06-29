@@ -5,6 +5,7 @@ import {
     WALLET_DELETE,
     ACCOUNT_GET_BALANCE,
     TRANSACTION_PUBLISHED,
+    TRANSACTION_REMOVE,
     ACCOUNT_ADD,
     ACCOUNT_REMOVE,
     WALLET_CHANGE_NAME,
@@ -378,6 +379,16 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     walletPublicKey: action.data.walletPublicKey
                 }
             };
+
+        case TRANSACTION_REMOVE:
+            if (
+                state[action.data.walletId] &&
+                state[action.data.walletId].transactions &&
+                state[action.data.walletId].transactions[action.data.transaction.id]
+            ) {
+                delete state[action.data.walletId].transactions[action.data.transaction.id];
+            }
+            return { ...state };
 
         default:
             break;

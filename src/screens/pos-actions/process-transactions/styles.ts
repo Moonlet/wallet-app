@@ -6,7 +6,6 @@ import {
     BORDER_RADIUS,
     LETTER_SPACING
 } from '../../../styles/dimensions';
-import { CONTAINER_TOP_PADDING } from '../../transaction-request/styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -17,8 +16,7 @@ export default (theme: ITheme) =>
             left: 0,
             right: 0,
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            paddingTop: CONTAINER_TOP_PADDING
+            backgroundColor: theme.colors.appBackground
         },
         screenTitle: {
             fontSize: normalizeFontAndLineHeight(22),

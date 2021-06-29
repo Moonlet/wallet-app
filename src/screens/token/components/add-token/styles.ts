@@ -30,6 +30,10 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
+        addButton: {
+            marginHorizontal: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION
+        },
 
         // Swipeable left actions
         leftActionsContainer: {

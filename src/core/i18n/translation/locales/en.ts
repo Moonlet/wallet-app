@@ -19,6 +19,7 @@ export const translation: ITranslations = {
                 amount: 'Amount',
                 average: 'Average',
                 balance: 'Balance',
+                blockHash: 'Block Hash',
                 cancel: 'Cancel',
                 canceled: 'Canceled',
                 cheap: 'Cheap',
@@ -110,6 +111,9 @@ export const translation: ITranslations = {
                 refreshing: 'Refreshing',
                 remove: 'Remove',
                 removeAccount: 'Remove account',
+                removeTransaction: 'Remove transaction',
+                removeTransactionDetails:
+                    'This action will remove the transaction from MoonletWallet. This will still remain on the blockchain network.',
                 retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',
@@ -763,7 +767,16 @@ export const translation: ITranslations = {
         Errors: {
             RequestedRatesCannotBeFulfilled: 'Requested rates cannot be fulfilled',
             MissingPool: 'Missing pool',
-            TransactionExpired: 'Transaction has expired'
+            TransactionExpired: 'Transaction has expired',
+            Err2: 'Insufficient balance to authorise transaction',
+            Err3: 'Insufficient allowance to authorise transaction',
+            OutOfGas: 'Ran out of gas'
+        },
+        ContractMethod: {
+            IncreaseAllowance: 'Increase Allowance',
+            SwapExactZILForTokens: 'Swap Exact ZIL For Tokens',
+            SwapExactTokensForZIL: 'Swap Exact Tokens For ZIL',
+            SwapExactTokensForTokens: 'Swap Exact Tokens For Tokens'
         }
     },
     plural: (n: number, ord?: boolean) => {

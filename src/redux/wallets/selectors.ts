@@ -128,6 +128,41 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
     return [];
 };
 
+export const getSelectedAccountTransaction = (
+    state: IReduxState,
+    txId: string
+): IBlockchainTransaction => {
+    const selectedWallet = getSelectedWallet(state);
+    const selectedAccount = getSelectedAccount(state);
+    const blockchain = getSelectedBlockchain(state);
+    const chainId = getChainId(state, blockchain);
+
+    if (selectedWallet === undefined || selectedAccount === undefined || blockchain === undefined)
+        return undefined;
+
+    const account: IAccountState = selectedWallet.accounts.find(
+        acc => acc.index === selectedAccount.index && acc.blockchain === selectedAccount.blockchain
+    );
+
+    const addressToLowercase = account.address.toLowerCase();
+
+    const transactions = selectedWallet.transactions;
+    if (transactions) {
+        return Object.values(selectedWallet.transactions).find(
+            tx =>
+                tx.id.toLowerCase() === txId.toLowerCase() &&
+                (tx.address.toLowerCase() === addressToLowercase ||
+                    tx.toAddress.toLowerCase() === addressToLowercase ||
+                    (tx.data?.params &&
+                        tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
+                tx.blockchain === blockchain &&
+                tx.chainId === chainId
+        );
+    }
+
+    return undefined;
+};
+
 export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccountState[] => {
     const chainId = getChainId(state, blockchain);
     const accounts = getSelectedWallet(state).accounts.filter(account => {

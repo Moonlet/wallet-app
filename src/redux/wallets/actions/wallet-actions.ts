@@ -88,6 +88,7 @@ export const WALLET_CHANGE_NAME = 'WALLET_CHANGE_NAME';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const TRANSACTION_UPSERT = 'TRANSACTION_UPSERT';
+export const TRANSACTION_REMOVE = 'TRANSACTION_REMOVE';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
@@ -650,6 +651,25 @@ export const signMessage = (
             translate('LoadingModal.GENERIC_ERROR_MSG_SIGN')
         );
     }
+};
+
+export const removeTransaction = (transactionHash: string) => async (
+    dispatch,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    const selectedWallet: IWalletState = getSelectedWallet(state);
+
+    dispatch({
+        type: TRANSACTION_REMOVE,
+        data: {
+            walletId: selectedWallet.id,
+            transaction: {
+                id: transactionHash
+            }
+        }
+    });
 };
 
 export const sendTransferTransaction = (

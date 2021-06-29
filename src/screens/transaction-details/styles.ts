@@ -13,6 +13,10 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT
         },
+        scrollConainter: {
+            flexGrow: 1,
+            paddingBottom: BASE_DIMENSION * 2
+        },
         rowContainer: {
             flexDirection: 'column',
             paddingVertical: BASE_DIMENSION,
@@ -41,5 +45,11 @@ export default (theme: ITheme) =>
         icon: {
             color: theme.colors.accent,
             alignSelf: 'center'
+        },
+        removeTxButton: {
+            borderColor: theme.colors.error
+        },
+        removeTxButtonText: {
+            color: theme.colors.error
         }
     });

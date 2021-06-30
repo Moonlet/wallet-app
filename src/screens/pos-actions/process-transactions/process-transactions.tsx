@@ -396,7 +396,8 @@ class ProcessTransactionsComponent extends React.Component<
             Animated.timing(this.iconSpinValue, {
                 toValue: 1,
                 duration: 2000,
-                easing: Easing.linear
+                easing: Easing.linear,
+                useNativeDriver: true
             })
         ).start();
     }

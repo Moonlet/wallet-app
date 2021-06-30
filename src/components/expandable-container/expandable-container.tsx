@@ -36,7 +36,8 @@ export class ExpandableContainerComponent extends React.Component<
         Animated.timing(this.state.height, {
             easing: Easing.inOut(Easing.ease),
             duration: 300,
-            toValue: 0
+            toValue: 0,
+            useNativeDriver: true
         }).start();
     }
 
@@ -44,7 +45,8 @@ export class ExpandableContainerComponent extends React.Component<
         Animated.timing(this.state.height, {
             easing: Easing.inOut(Easing.ease),
             duration: 270,
-            toValue: this.state.maxHeight
+            toValue: this.state.maxHeight,
+            useNativeDriver: true
         }).start();
     }
 

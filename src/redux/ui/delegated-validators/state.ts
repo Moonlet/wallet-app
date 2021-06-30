@@ -1,6 +1,6 @@
 import { IValidator } from '../../../core/blockchain/types/stats';
 
-export interface IValidatorsState {
+export interface IDelegatedValidatorsState {
     [blockchain: string]: {
         [chainId: string]: IValidator[];
     };

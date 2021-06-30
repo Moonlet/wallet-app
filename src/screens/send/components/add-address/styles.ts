@@ -23,7 +23,8 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            fontSize: normalizeFontAndLineHeight(15)
+            fontSize: normalizeFontAndLineHeight(15),
+            padding: 0
         },
         inputBox: {
             height: BASE_DIMENSION * 5,

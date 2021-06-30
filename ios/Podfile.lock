@@ -387,9 +387,9 @@ PODS:
     - React
   - RNScreens (2.7.0):
     - React
-  - RNSentry (1.4.5):
-    - React
-    - Sentry (~> 5.1.4)
+  - RNSentry (2.6.0):
+    - React-Core
+    - Sentry (= 7.0.0)
   - RNSVG (12.1.0):
     - React
   - RNVectorIcons (6.6.0):
@@ -400,9 +400,9 @@ PODS:
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
-  - Sentry (5.1.10):
-    - Sentry/Core (= 5.1.10)
-  - Sentry/Core (5.1.10)
+  - Sentry (7.0.0):
+    - Sentry/Core (= 7.0.0)
+  - Sentry/Core (7.0.0)
   - TouchID (4.4.1):
     - React
   - Yoga (1.14.0)
@@ -680,15 +680,15 @@ SPEC CHECKSUMS:
   RNKeychain: a5623de13ec5378bfb8035422e3dee4fa538660d
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
+  RNSentry: a2b02b326ae4fce91ce7c57d3f7dcf8df4f72269
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
-  Sentry: 8715e88b813bde9ad37aead365d5b04ac7302153
+  Sentry: 89d26e036063b9cb9caa59b6951dd2f8277aa13b
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: d8c572ddec8d05b7dba08e4e5f1924004a177078
 
 PODFILE CHECKSUM: a6e8615190ce90b71dcc59e5cd9bee93ce00e34f
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

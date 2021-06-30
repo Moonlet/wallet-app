@@ -40,7 +40,6 @@
         "@react-native-community/push-notification-ios": "^1.8.0",
         "@react-native-firebase/app": "^11.5.0",
         "@react-native-firebase/database": "^11.5.0",
-        "@react-native-firebase/dynamic-links": "^11.5.0",
         "@react-native-firebase/messaging": "^11.5.0",
         "@react-native-firebase/remote-config": "^11.5.0",
         "@react-native-firebase/storage": "^11.5.0",

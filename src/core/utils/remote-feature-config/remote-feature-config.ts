@@ -85,6 +85,11 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         return true;
     }
 
+    if (feature === RemoteFeature.IMPROVED_NONCE) {
+        // TODO: cleanup project of improved nonce
+        return true;
+    }
+
     if (feature !== RemoteFeature.TC_VERSION)
         return (
             featuresConfig[feature]?.length > 0 &&

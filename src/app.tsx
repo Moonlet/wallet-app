@@ -35,7 +35,7 @@ import { ContextScreen } from './components/widgets/types';
 import { fetchScreenData } from './redux/ui/screens/data/actions';
 import { InfoModal } from './components/info-modal/info-modal';
 import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
-import { DynamicLinks } from './core/dynamic-links';
+import { UniversalLinks } from './core/universal-links';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -97,7 +97,7 @@ export default class App extends React.Component<{}, IState> {
 
         if (appReady && !this.notificationsConfigured) {
             Notifications.configure();
-            DynamicLinks.configure(store.getState());
+            UniversalLinks.configure(store.getState());
 
             this.notificationsConfigured = true;
         }
@@ -141,7 +141,7 @@ export default class App extends React.Component<{}, IState> {
     public componentWillUnmount() {
         AppState.removeEventListener('change', this.handleAppStateChange);
         Notifications.removeListeners();
-        DynamicLinks.removeListeners();
+        UniversalLinks.removeListeners();
     }
 
     public async showPasswordModal() {

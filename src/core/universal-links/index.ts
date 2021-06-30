@@ -1,4 +1,4 @@
-import dynamicLinks from '@react-native-firebase/dynamic-links';
+import { Linking } from 'react-native';
 import { URL, URLSearchParams } from 'react-native-url-polyfill';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { IReduxState } from '../../redux/state';
@@ -10,7 +10,7 @@ import { getNrPendingTransactions, getSelectedAccount } from '../../redux/wallet
 import { ITokenState } from '../../redux/wallets/state';
 import { store } from '../../redux/config';
 
-export class DynamicLinksService {
+export class UniversalLinksService {
     private onLinkListener = null;
     private state: IReduxState = null;
 
@@ -132,34 +132,29 @@ export class DynamicLinksService {
     public async configure(state: IReduxState) {
         this.state = state;
 
-        const dl = dynamicLinks();
-
-        this.onLinkListener = dl.onLink(link => {
-            this.handleDynamicLink(link);
+        this.onLinkListener = Linking.addEventListener('url', ({ url }) => {
+            this.handleDynamicLink(url);
         });
 
-        // application is in a background state or has fully quit
-        dl.getInitialLink().then(link => {
-            this.handleDynamicLink(link);
+        Linking.getInitialURL().then(url => {
+            this.handleDynamicLink(url);
         });
     }
 
-    // app is in the foreground state
-    public async handleDynamicLink(link: any) {
-        if (link?.url) {
-            this.processUrl(link.url, this.handlers, {
-                protocol: ['https:'],
-                host: [
-                    'moonlet.io',
-                    'moonlet.xyz',
-                    'moonletwallet.com',
-                    'moonlet.app',
-                    'moonlet.link'
-                ]
-            });
-        } else {
-            // Invalid link url, link:${link}`
-        }
+    public async handleDynamicLink(url: string) {
+        this.processUrl(url, this.handlers, {
+            protocol: ['https:'],
+            host: [
+                'moonlet.io',
+                'moonlet.xyz',
+                'moonletwallet.com',
+                'moonlet.app',
+                'moonlet.link',
+                'fire.moonlet.dev',
+                'wallet.moonlet.dev',
+                'wallet.moonlet.app'
+            ]
+        });
     }
 
     public removeListeners() {
@@ -247,9 +242,7 @@ export class DynamicLinksService {
             }
         }
 
-        let path = u?.pathname;
-
-        if (path && String(path).startsWith('/links')) path = path.replace('/links', '');
+        const path = u?.pathname;
 
         const searchParams = new URLSearchParams(url);
 
@@ -257,4 +250,4 @@ export class DynamicLinksService {
     }
 }
 
-export const DynamicLinks = new DynamicLinksService();
+export const UniversalLinks = new UniversalLinksService();

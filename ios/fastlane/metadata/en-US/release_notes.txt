@@ -1,6 +1,6 @@
-Team's log. Stardate 2106.24:
+Team's log. Stardate 2106.30:
 
-This is a major milestone since we are releasing the complete ZIL swap feature and the deep link validator page for SOL. Also we have some fixes ready for Claim operation. Overall we pushed Moonlet to the new heights, improving the whole experience.
+We pushed live a fix for dropped transactions issue. Also we added a remove transaction button on transaction details page and fixed the bug on My Stakes tab. Some improvements were added for token swap, since we had some glitches there. Let's hope for the best user experience.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

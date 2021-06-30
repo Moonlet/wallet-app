@@ -37,7 +37,7 @@
 	<string>1061</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
-		<string>https://moonlet.link/</string>
+		<string>https://wallet.moonlet.app/</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>

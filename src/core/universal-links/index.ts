@@ -144,19 +144,22 @@ export class UniversalLinksService {
     }
 
     public async handleDynamicLink(url: string) {
-        this.processUrl(url, this.handlers, {
-            protocol: ['https:'],
-            host: [
-                'moonlet.io',
-                'moonlet.xyz',
-                'moonletwallet.com',
-                'moonlet.app',
-                'moonlet.link',
-                'fire.moonlet.dev',
-                'wallet.moonlet.dev',
-                'wallet.moonlet.app'
-            ]
-        });
+        url &&
+            this.processUrl(url, this.handlers, {
+                protocol: ['https:'],
+                host: [
+                    'wallet.moonlet.app',
+                    'wallet.moonlet.dev',
+
+                    'moonlet.io',
+                    'moonlet.xyz',
+                    'moonletwallet.com',
+                    'moonlet.app',
+                    'moonlet.link',
+
+                    'fire.moonlet.dev'
+                ]
+            });
     }
 
     public removeListeners() {

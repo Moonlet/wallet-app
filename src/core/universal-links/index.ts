@@ -15,18 +15,20 @@ export class UniversalLinksService {
     private state: IReduxState = null;
 
     private handlers = {
-        '/:blockchain/:token/validator/:validatorAddress': params => {
-            this.navigateValidatorAddress(params);
-        },
-        '/:blockchain/:token/stake/:validatorAddress': params => {
-            this.stakeValidatorAddress(params);
+        '/stake': params => {
+            // TODO: implement later on
         },
         '/:blockchain/stake': params => {
             this.blockchainStake(params);
         },
-        '/stake': params => {
-            // TODO: implement later on
-            // console.log('stakeDefault', params);
+        '/:blockchain/:token/validator/:validatorAddress': params => {
+            this.navigateValidatorAddress(params);
+        },
+        '/:blockchain/:token/stake': params => {
+            this.blockchainStake(params);
+        },
+        '/:blockchain/:token/stake/:validatorAddress': params => {
+            this.stakeValidatorAddress(params);
         }
     };
 

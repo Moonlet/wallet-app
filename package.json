@@ -3,7 +3,6 @@
     "version": "1.4.46",
     "private": true,
     "scripts": {
-        "install": "yarn --ignore-engines",
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
         "android": "yarn run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
@@ -23,7 +22,7 @@
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
-        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh && ./scripts/fix_images_ios_14.sh && ./scripts/cjs-update.sh",
+        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh && ./scripts/cjs-update.sh",
         "detox:build:ios": "detox build -c ios.beta",
         "detox:test:ios": "detox test -c ios.beta",
         "detox:build:android": "detox build -c android.emu.beta",
@@ -50,7 +49,7 @@
         "@solana/web3.js": "^0.87.1",
         "@types/bech32": "^1.1.2",
         "@types/dotenv": "^8.2.0",
-        "@types/react-native-vector-icons": "^6.4.4",
+        "@types/react-native-vector-icons": "^6.4.7",
         "@types/redux-logger": "^3.0.7",
         "@types/secp256k1": "^3.5.2",
         "@zilliqa-js/account": "^3.0.0",
@@ -89,7 +88,7 @@
         "klona": "^1.1.1",
         "ledger-cosmos-js": "^2.1.7",
         "lodash": "^4.17.20",
-        "lottie-react-native": "^3.3.2",
+        "lottie-react-native": "^4.0.2",
         "metro-config": "^0.58.0",
         "modal-enhanced-react-native-web": "^0.2.0",
         "moment": "^2.24.0",
@@ -127,7 +126,7 @@
         "react-native-touch-id": "^4.4.1",
         "react-native-udp": "^4.1.2",
         "react-native-url-polyfill": "^1.3.0",
-        "react-native-vector-icons": "^6.6.0",
+        "react-native-vector-icons": "^8.1.0",
         "react-native-web": "^0.11.7",
         "react-native-web-linear-gradient": "^1.0.5",
         "react-native-web-lottie": "^1.2.0",
@@ -147,7 +146,7 @@
         "reselect": "^4.0.0",
         "secp256k1": "^3.8.0",
         "tweetnacl": "^1.0.2",
-        "uuid": "^8.3.2",
+        "uuid": "^3.3.3",
         "vm-browserify": "^1.1.0",
         "webext-redux": "^2.1.7",
         "webextension-polyfill-ts": "^0.14.0"
@@ -206,9 +205,6 @@
     },
     "jest": {
         "preset": "react-native"
-    },
-    "yarn": {
-        "args": ["--ignore-engines"]
     },
     "husky": {
         "hooks": {

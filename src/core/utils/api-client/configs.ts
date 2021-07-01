@@ -1,5 +1,8 @@
 import { ApiClient } from './api-client';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 export class ConfigsApiClient {
     constructor(private apiClient: ApiClient) {}
@@ -10,6 +13,12 @@ export class ConfigsApiClient {
                 keys
             });
         } catch (err) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    keys
+                })
+            });
+
             SentryCaptureException(new Error(JSON.stringify(err)));
             return err;
         }

@@ -1,4 +1,7 @@
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 import { Blockchain } from '../../blockchain/types';
 import { ApiClient } from './api-client';
 
@@ -30,6 +33,14 @@ export class GovernanceApiClient {
 
             return response?.result;
         } catch (err) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    ...payload,
+                    authorIpfsHash,
+                    user
+                })
+            });
+
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }

@@ -1,5 +1,8 @@
 import { ApiClient } from './api-client';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 import { Blockchain } from '../../blockchain/types';
 import { PosBasicActionType } from '../../blockchain/types/token';
 import { IAccountState } from '../../../redux/wallets/state';
@@ -24,6 +27,15 @@ export class ValidatorsApiClient {
 
             return response?.result?.data;
         } catch (err) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    blockchain,
+                    chainId,
+                    address,
+                    posAction
+                })
+            });
+
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }
@@ -45,6 +57,14 @@ export class ValidatorsApiClient {
                 return undefined;
             }
         } catch (err) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    blockchain: account.blockchain,
+                    address: account.address,
+                    chainId
+                })
+            });
+
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }
@@ -60,6 +80,14 @@ export class ValidatorsApiClient {
             if (response.result) {
                 return response.result.data;
             } else {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        blockchain: account.blockchain,
+                        address: account.address,
+                        chainId
+                    })
+                });
+
                 SentryCaptureException(
                     new Error(JSON.stringify(response || 'Get validators voted failed'))
                 );
@@ -88,6 +116,16 @@ export class ValidatorsApiClient {
             if (response.result) {
                 return response.result.data;
             } else {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        blockchain,
+                        address,
+                        chainId,
+                        appVersion: DeviceInfo.getVersion(),
+                        validatorId
+                    })
+                });
+
                 SentryCaptureException(
                     new Error(JSON.stringify(response || 'Get validators voted failed'))
                 );

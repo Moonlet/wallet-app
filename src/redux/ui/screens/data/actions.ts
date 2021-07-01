@@ -113,9 +113,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
                 })
             });
 
-            SentryCaptureException(
-                new Error(`Fetch /walletUi/screen/widgets, ${screenResponse?.message}`)
-            );
+            SentryCaptureException(new Error(`Cannot fetch widgets, ${screenResponse?.message}`));
         }
     } catch (error) {
         // handle error
@@ -136,7 +134,7 @@ export const fetchScreenData = (context: IScreenContext) => async (
             })
         });
 
-        SentryCaptureException(new Error(`Fetch /walletUi/screen/widgets, ${error?.message}`));
+        SentryCaptureException(new Error(`Cannot fetch widgets, ${error?.message}`));
     }
 };
 

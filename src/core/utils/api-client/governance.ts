@@ -32,16 +32,19 @@ export class GovernanceApiClient {
             });
 
             return response?.result;
-        } catch (err) {
+        } catch (error) {
             SentryAddBreadcrumb({
                 message: JSON.stringify({
-                    ...payload,
-                    authorIpfsHash,
-                    user
+                    data: {
+                        ...payload,
+                        authorIpfsHash,
+                        user
+                    },
+                    error
                 })
             });
 
-            SentryCaptureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(`Cannot send governance vote, ${error?.message}`));
         }
     }
 }

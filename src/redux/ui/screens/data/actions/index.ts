@@ -110,7 +110,7 @@ export const handleDynamicCta = (
         if (data?.cta) {
             handleCta(data.cta, { flowId })(dispatch, getState);
         } else {
-            throw new Error(`no data cta, ${screenResponse}`);
+            throw new Error(`No data cta, ${screenResponse}`);
         }
     } catch (error) {
         // handle error
@@ -121,7 +121,7 @@ export const handleDynamicCta = (
             })
         });
 
-        SentryCaptureException(new Error(`Fetch /walletUi/screen/cta, ${error?.message}`));
+        SentryCaptureException(new Error(`Cannot fetch cta, ${error?.message}`));
     }
 };
 

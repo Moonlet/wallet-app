@@ -12,15 +12,19 @@ export class ConfigsApiClient {
             return this.apiClient.http.post('/configs', {
                 keys
             });
-        } catch (err) {
+        } catch (error) {
             SentryAddBreadcrumb({
                 message: JSON.stringify({
-                    keys
+                    data: {
+                        keys
+                    },
+                    error
                 })
             });
 
-            SentryCaptureException(new Error(JSON.stringify(err)));
-            return err;
+            SentryCaptureException(new Error(`Cannot get api configs, ${error?.message}`));
+
+            return error;
         }
     }
 }

@@ -177,6 +177,23 @@ export class ClientUtils implements IClientUtils {
                     status = txData.success ? TransactionStatus.SUCCESS : TransactionStatus.FAILED;
                 } else if (txData.status >= 10) {
                     status = TransactionStatus.FAILED;
+                } else if ([1, 2, 4, 5, 6].indexOf(txData.status) >= 0) {
+                    let currentBlockNumber = context?.currentBlockNumber;
+                    if (!currentBlockNumber) {
+                        currentBlockNumber = await this.client
+                            .getCurrentBlock()
+                            .then(res => res.number);
+                    }
+
+                    if (
+                        currentBlockNumber &&
+                        context?.broadcastedOnBlock &&
+                        currentBlockNumber - context?.broadcastedOnBlock > 5 &&
+                        Math.ceil(currentBlockNumber / 100) >
+                            Math.ceil(context?.broadcastedOnBlock / 100)
+                    ) {
+                        status = TransactionStatus.DROPPED;
+                    }
                 }
             } else {
                 // tx not present

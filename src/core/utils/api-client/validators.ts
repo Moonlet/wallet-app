@@ -26,17 +26,20 @@ export class ValidatorsApiClient {
             });
 
             return response?.result?.data;
-        } catch (err) {
+        } catch (error) {
             SentryAddBreadcrumb({
                 message: JSON.stringify({
-                    blockchain,
-                    chainId,
-                    address,
-                    posAction
+                    data: {
+                        blockchain,
+                        chainId,
+                        address,
+                        posAction
+                    },
+                    error
                 })
             });
 
-            SentryCaptureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(`Cannot fetch validators, ${error?.message}`));
         }
     }
 
@@ -48,24 +51,29 @@ export class ValidatorsApiClient {
                 chainId
             });
 
-            if (response.result) {
+            if (response?.result?.data) {
                 return response.result.data;
             } else {
                 SentryCaptureException(
-                    new Error(JSON.stringify(response || 'Get delegate stats failed'))
+                    new Error(`Cannot fetch account delegate stats, no response data`)
                 );
                 return undefined;
             }
-        } catch (err) {
+        } catch (error) {
             SentryAddBreadcrumb({
                 message: JSON.stringify({
-                    blockchain: account.blockchain,
-                    address: account.address,
-                    chainId
+                    data: {
+                        blockchain: account.blockchain,
+                        address: account.address,
+                        chainId
+                    },
+                    error
                 })
             });
 
-            SentryCaptureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(
+                new Error(`Cannot fetch account delegate stats, ${error?.message}`)
+            );
         }
     }
 
@@ -77,24 +85,40 @@ export class ValidatorsApiClient {
                 chainId
             });
 
-            if (response.result) {
+            if (response?.result?.data) {
                 return response.result.data;
             } else {
                 SentryAddBreadcrumb({
                     message: JSON.stringify({
-                        blockchain: account.blockchain,
-                        address: account.address,
-                        chainId
+                        data: {
+                            blockchain: account.blockchain,
+                            address: account.address,
+                            chainId
+                        },
+                        response
                     })
                 });
 
                 SentryCaptureException(
-                    new Error(JSON.stringify(response || 'Get validators voted failed'))
+                    new Error(`Cannot fetch delegated validators, no response data`)
                 );
                 return undefined;
             }
-        } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+        } catch (error) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        blockchain: account.blockchain,
+                        address: account.address,
+                        chainId
+                    },
+                    error
+                })
+            });
+
+            SentryCaptureException(
+                new Error(`Cannot fetch delegated validators, ${error?.message}`)
+            );
         }
     }
 

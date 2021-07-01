@@ -121,7 +121,7 @@ export const handleDynamicCta = (
             })
         });
 
-        SentryCaptureException(new Error('Fetch /walletUi/screen/cta'));
+        SentryCaptureException(new Error(`Fetch /walletUi/screen/cta, ${error?.message}`));
     }
 };
 

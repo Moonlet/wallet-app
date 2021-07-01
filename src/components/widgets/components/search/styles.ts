@@ -24,6 +24,7 @@ export default (theme: ITheme) =>
         inputText: {
             flex: 1,
             color: theme.colors.text,
+            padding: 0,
             paddingRight: BASE_DIMENSION * 2,
             fontSize: normalizeFontAndLineHeight(15)
         },

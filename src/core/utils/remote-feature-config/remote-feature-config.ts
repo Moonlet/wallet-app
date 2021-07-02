@@ -28,31 +28,21 @@ export const getRemoteConfigFeatures = async () => {
 
         await config.fetch(duration);
 
-        const activated = await config.fetchAndActivate();
+        await config.fetchAndActivate();
 
-        if (activated) {
-            // Ensures the last activated config are available to the getters.
-            await config.ensureInitialized();
+        // Ensures the last activated config are available to the getters.
+        await config.ensureInitialized();
 
-            const all = config.getAll();
-            const allKeys = Object.keys(all);
+        const all = config.getAll();
+        const allKeys = Object.keys(all);
 
-            for (const key of allKeys) {
-                const val = all[key].asString();
-                try {
-                    featuresConfig[key] = JSON.parse(val);
-                } catch {
-                    featuresConfig[key] = val;
-                }
+        for (const key of allKeys) {
+            const val = all[key].asString();
+            try {
+                featuresConfig[key] = JSON.parse(val);
+            } catch {
+                featuresConfig[key] = val;
             }
-        } else {
-            // Set default values
-            for (const feature of Object.values(RemoteFeature)) {
-                featuresConfig[feature] = [];
-            }
-            featuresConfig[RemoteFeature.TC_VERSION] = 0;
-
-            SentryCaptureException(new Error('Remote config not activated'));
         }
     } catch (error) {
         // Set default values

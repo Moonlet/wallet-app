@@ -1,5 +1,8 @@
 import { ApiClient } from './api-client';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 export class ConfigsApiClient {
     constructor(private apiClient: ApiClient) {}
@@ -9,9 +12,19 @@ export class ConfigsApiClient {
             return this.apiClient.http.post('/configs', {
                 keys
             });
-        } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
-            return err;
+        } catch (error) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        keys
+                    },
+                    error
+                })
+            });
+
+            SentryCaptureException(new Error(`Cannot get api configs, ${error?.message}`));
+
+            return error;
         }
     }
 }

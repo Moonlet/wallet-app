@@ -55,8 +55,9 @@ export class ValidatorsApiClient {
                 return response.result.data;
             } else {
                 SentryCaptureException(
-                    new Error(`Cannot fetch account delegate stats, no response data`)
+                    new Error(`Cannot fetch account delegate stats, no response data, ${response}`)
                 );
+
                 return undefined;
             }
         } catch (error) {
@@ -100,8 +101,9 @@ export class ValidatorsApiClient {
                 });
 
                 SentryCaptureException(
-                    new Error(`Cannot fetch delegated validators, no response data`)
+                    new Error(`Cannot fetch delegated validators, no response data, ${response}`)
                 );
+
                 return undefined;
             }
         } catch (error) {
@@ -137,7 +139,7 @@ export class ValidatorsApiClient {
                 validatorId
             });
 
-            if (response.result) {
+            if (response?.result?.data) {
                 return response.result.data;
             } else {
                 SentryAddBreadcrumb({
@@ -151,12 +153,32 @@ export class ValidatorsApiClient {
                 });
 
                 SentryCaptureException(
-                    new Error(JSON.stringify(response || 'Get validators voted failed'))
+                    new Error(
+                        `Cannot get balance validators, /walletUi/account/balance, no response data, ${response}`
+                    )
                 );
+
                 return undefined;
             }
-        } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+        } catch (error) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        blockchain,
+                        address,
+                        chainId,
+                        appVersion: DeviceInfo.getVersion(),
+                        validatorId
+                    },
+                    error
+                })
+            });
+
+            SentryCaptureException(
+                new Error(
+                    `Cannot get balance validators, /walletUi/account/balance, ${error?.message}`
+                )
+            );
         }
     }
 }

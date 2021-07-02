@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ScrollView, Clipboard } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { Text, TabSelect } from '../../library';
 import { Button } from '../../library/button/button';
 import stylesProvider from './styles';

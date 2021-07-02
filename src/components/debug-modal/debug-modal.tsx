@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, Clipboard, Platform, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';

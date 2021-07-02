@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Clipboard, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Text, Button } from '../../library';

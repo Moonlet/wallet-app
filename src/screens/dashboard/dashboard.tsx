@@ -436,7 +436,7 @@ export class DashboardScreenComponent extends React.Component<
                     scrollEventThrottle={16}
                     onScroll={Animated.event(
                         [{ nativeEvent: { contentOffset: { y: this.animationValue } } }],
-                        { useNativeDriver: true }
+                        { useNativeDriver: false }
                     )}
                     alwaysBounceVertical={false}
                 >

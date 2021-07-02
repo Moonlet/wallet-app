@@ -108,6 +108,7 @@
         "react-native-draggable-flatlist": "^2.0.1",
         "react-native-fab-pie": "^1.0.0",
         "react-native-fast-image": "^7.0.2",
+        "react-native-fs": "^2.18.0",
         "react-native-gesture-handler": "^1.5.1",
         "react-native-keyboard-aware-scroll-view": "^0.9.1",
         "react-native-keychain": "^5.0.1",
@@ -211,7 +212,13 @@
         }
     },
     "lint-staged": {
-        "*.{ts,tsx,scss,json,js}": ["yarn run prettier", "git add"],
-        "*.{ts,tsx}": ["yarn run lint", "git add"]
+        "*.{ts,tsx,scss,json,js}": [
+            "yarn run prettier",
+            "git add"
+        ],
+        "*.{ts,tsx}": [
+            "yarn run lint",
+            "git add"
+        ]
     }
 }

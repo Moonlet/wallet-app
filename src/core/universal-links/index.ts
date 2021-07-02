@@ -12,7 +12,7 @@ import { store } from '../../redux/config';
 
 export class UniversalLinksService {
     private onLinkListener = null;
-    private state: IReduxState = null;
+    private getState: () => IReduxState = () => ({} as any);
 
     private handlers = {
         '/stake': params => {
@@ -41,9 +41,9 @@ export class UniversalLinksService {
             // make sure `blockchain` is selected
             store.dispatch(setSelectedBlockchain(blockchain));
 
-            const chainId = getChainId(this.state, blockchain);
+            const chainId = getChainId(this.getState(), blockchain);
 
-            const selectedAccount = getSelectedAccount(this.state);
+            const selectedAccount = getSelectedAccount(this.getState());
 
             if (!selectedAccount) {
                 SentryCaptureException(
@@ -62,7 +62,7 @@ export class UniversalLinksService {
                 undefined, // validator
                 accountIndex: selectedAccount.index,
                 token,
-                canPerformAction: !getNrPendingTransactions(this.state), // hasPendingTransactions
+                canPerformAction: !getNrPendingTransactions(this.getState()), // hasPendingTransactions
                 options: {
                     validatorAddress,
                     tokenSymbol
@@ -131,8 +131,8 @@ export class UniversalLinksService {
         }
     }
 
-    public async configure(state: IReduxState) {
-        this.state = state;
+    public async configure(getState: () => IReduxState) {
+        this.getState = getState;
 
         this.onLinkListener = Linking.addEventListener('url', ({ url }) => {
             this.handleDynamicLink(url);

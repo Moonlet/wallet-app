@@ -10106,11 +10106,6 @@ istanbul-reports@^2.2.6:
   dependencies:
     html-escaper "^2.0.0"
 
-jail-monkey@^2.3.2:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/jail-monkey/-/jail-monkey-2.5.0.tgz#a38de9bac9d7fdc3034d03dbaddceaf1323ac1d9"
-  integrity sha512-z5xZZ7My25RELBIPFgYWfEmtcPQm8fHxQWJ5uq1g0gfyv7xclDely8Sicv43dtOGZjvpDqjhBm/sgHuQJ2hd3A==
-
 jayson@^3.0.1:
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/jayson/-/jayson-3.6.4.tgz#9e9d1ba2a75d811f254bceff61a096772fa04832"

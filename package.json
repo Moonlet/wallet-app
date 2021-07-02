@@ -82,7 +82,6 @@
         "hoist-non-react-statics": "^3.3.0",
         "immutable": "^3.8.2",
         "intl": "^1.2.5",
-        "jail-monkey": "^2.3.2",
         "js-sha256": "^0.9.0",
         "klona": "^1.1.1",
         "ledger-cosmos-js": "^2.1.7",
@@ -212,13 +211,7 @@
         }
     },
     "lint-staged": {
-        "*.{ts,tsx,scss,json,js}": [
-            "yarn run prettier",
-            "git add"
-        ],
-        "*.{ts,tsx}": [
-            "yarn run lint",
-            "git add"
-        ]
+        "*.{ts,tsx,scss,json,js}": ["yarn run prettier", "git add"],
+        "*.{ts,tsx}": ["yarn run lint", "git add"]
     }
 }

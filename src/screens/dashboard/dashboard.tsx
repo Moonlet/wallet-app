@@ -434,9 +434,10 @@ export class DashboardScreenComponent extends React.Component<
                     ]}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
-                    onScroll={Animated.event([
-                        { nativeEvent: { contentOffset: { y: this.animationValue } } }
-                    ])}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: this.animationValue } } }],
+                        { useNativeDriver: true }
+                    )}
                     alwaysBounceVertical={false}
                 >
                     <TokenDashboard

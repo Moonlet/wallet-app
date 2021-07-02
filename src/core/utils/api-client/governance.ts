@@ -1,4 +1,7 @@
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 import { Blockchain } from '../../blockchain/types';
 import { ApiClient } from './api-client';
 
@@ -29,8 +32,19 @@ export class GovernanceApiClient {
             });
 
             return response?.result;
-        } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+        } catch (error) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        ...payload,
+                        authorIpfsHash,
+                        user
+                    },
+                    error
+                })
+            });
+
+            SentryCaptureException(new Error(`Cannot send governance vote, ${error?.message}`));
         }
     }
 }

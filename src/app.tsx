@@ -97,7 +97,7 @@ export default class App extends React.Component<{}, IState> {
 
         if (appReady && !this.notificationsConfigured) {
             Notifications.configure();
-            UniversalLinks.configure(store.getState());
+            UniversalLinks.configure(store.getState);
 
             this.notificationsConfigured = true;
         }

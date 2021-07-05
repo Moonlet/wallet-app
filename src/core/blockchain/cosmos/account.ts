@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
 import HDNode from 'hdkey';
-import bech32 from 'bech32';
+import { bech32 } from 'bech32';
 import { createHash } from 'crypto';
 import secp256k1 from 'secp256k1';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';

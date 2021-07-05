@@ -44,9 +44,10 @@
         "@react-native-firebase/messaging": "^11.5.0",
         "@react-native-firebase/remote-config": "^11.5.0",
         "@react-native-firebase/storage": "^11.5.0",
-
         "@sentry/browser": "^6.8.0",
         "@sentry/react-native": "^2.6.0",
+        "uuid": "^8.3.2",
+
         "@solana/web3.js": "^0.87.1",
         "@types/bech32": "^1.1.2",
         "@types/dotenv": "^8.2.0",
@@ -147,7 +148,6 @@
         "reselect": "^4.0.0",
         "secp256k1": "^3.8.0",
         "tweetnacl": "^1.0.2",
-        "uuid": "^3.3.3",
         "vm-browserify": "^1.1.0",
         "webext-redux": "^2.1.7",
         "webextension-polyfill-ts": "^0.14.0"
@@ -174,8 +174,8 @@
         "@types/react-test-renderer": "^17.0.1",
         "react-dom": "^17.0.2",
         "@types/redux": "^3.6.0",
+        "@types/uuid": "^8.3.1",
 
-        "@types/uuid": "^3.4.5",
         "babel-eslint": "^10.0.3",
         "babel-jest": "^24.9.0",
         "babel-loader": "^8.0.6",

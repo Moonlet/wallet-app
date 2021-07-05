@@ -13,7 +13,7 @@ import { IWalletState, IAccountState, ITokenState, AccountType } from '../state'
 import { IAction } from '../../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../../state';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { storeEncrypted, deleteFromStorage } from '../../../core/secure/storage/storage';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';

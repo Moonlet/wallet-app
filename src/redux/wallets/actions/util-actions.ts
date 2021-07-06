@@ -315,39 +315,30 @@ const waitTransactionConfirmations = async (
                 transaction.confirmations.numConfirmations ===
                 transaction.confirmations.numConfirmationsNeeded
             ) {
-                const status = await client.utils.getTransactionStatus(txHash, {
-                    address
-                });
+                const status = await client.utils.getTransactionStatus(txHash);
 
-                txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
+                if (status !== TransactionStatus.DROPPED) {
+                    txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
 
-                switch (status) {
-                    case TransactionStatus.SUCCESS:
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(
-                                txIndex,
-                                TransactionStatus.SUCCESS
-                            )
-                        );
-                        return resolve(true);
+                    switch (status) {
+                        case TransactionStatus.SUCCESS:
+                            dispatch(
+                                updateProcessTransactionStatusForIndex(
+                                    txIndex,
+                                    TransactionStatus.SUCCESS
+                                )
+                            );
+                            return resolve(true);
 
-                    case TransactionStatus.FAILED:
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(
-                                txIndex,
-                                TransactionStatus.FAILED
-                            )
-                        );
-                        return reject();
-
-                    case TransactionStatus.DROPPED:
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(
-                                txIndex,
-                                TransactionStatus.DROPPED
-                            )
-                        );
-                        return resolve(true);
+                        case TransactionStatus.FAILED:
+                            dispatch(
+                                updateProcessTransactionStatusForIndex(
+                                    txIndex,
+                                    TransactionStatus.FAILED
+                                )
+                            );
+                            return reject();
+                    }
                 }
             }
         }, 1000);

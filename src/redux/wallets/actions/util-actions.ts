@@ -315,24 +315,39 @@ const waitTransactionConfirmations = async (
                 transaction.confirmations.numConfirmations ===
                 transaction.confirmations.numConfirmationsNeeded
             ) {
-                const tx = await client.utils.getTransaction(txHash, {
+                const status = await client.utils.getTransactionStatus(txHash, {
                     address
                 });
 
                 txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
 
-                if (tx.status === TransactionStatus.SUCCESS) {
-                    dispatch(
-                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.SUCCESS)
-                    );
-                    return resolve(true);
-                }
+                switch (status) {
+                    case TransactionStatus.SUCCESS:
+                        dispatch(
+                            updateProcessTransactionStatusForIndex(
+                                txIndex,
+                                TransactionStatus.SUCCESS
+                            )
+                        );
+                        return resolve(true);
 
-                if (tx.status === TransactionStatus.FAILED) {
-                    dispatch(
-                        updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED)
-                    );
-                    return reject();
+                    case TransactionStatus.FAILED:
+                        dispatch(
+                            updateProcessTransactionStatusForIndex(
+                                txIndex,
+                                TransactionStatus.FAILED
+                            )
+                        );
+                        return reject();
+
+                    case TransactionStatus.DROPPED:
+                        dispatch(
+                            updateProcessTransactionStatusForIndex(
+                                txIndex,
+                                TransactionStatus.DROPPED
+                            )
+                        );
+                        return resolve(true);
                 }
             }
         }, 1000);

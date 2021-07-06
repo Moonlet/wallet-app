@@ -17,11 +17,14 @@ export class ClientUtils implements IClientUtils {
         hash: string,
         options: { address: string }
     ): Promise<IBlockchainTransaction> {
-        return this.client.http
-            .jsonRpc('getConfirmedTransaction', [hash, 'json'])
-            .then(response =>
-                this.buildTransactionFromBlockchain(response.result, options.address)
-            );
+        return (
+            this.client.http
+                // TODO: migrate to `getTransaction` before mainnet update to 1.8
+                .jsonRpc('getConfirmedTransaction', [hash, 'json'])
+                .then(response =>
+                    this.buildTransactionFromBlockchain(response.result, options.address)
+                )
+        );
     }
 
     async buildTransactionFromBlockchain(txData, address: string): Promise<IBlockchainTransaction> {
@@ -111,12 +114,59 @@ export class ClientUtils implements IClientUtils {
         };
     }
 
-    async getTransactionStatus(
+    public async getTransactionStatus(
         hash: string,
-        context?: { txData?: any; currentBlockNumber?: number; token?: ITokenConfigState }
+        context?: {
+            txData?: any;
+            broadcastedOnBlock?: number;
+            currentBlockNumber?: number;
+            token?: ITokenConfigState;
+        }
     ): Promise<TransactionStatus> {
-        return context?.txData?.meta?.err === null
-            ? TransactionStatus.SUCCESS
-            : TransactionStatus.FAILED;
+        let status = TransactionStatus.PENDING;
+
+        if (context?.txData) {
+            status =
+                !context?.txData?.meta?.err === null
+                    ? TransactionStatus.SUCCESS
+                    : TransactionStatus.FAILED;
+        } else {
+            let confirmedTxRes;
+
+            try {
+                // supported for solana-core v1.7 or newer
+                confirmedTxRes = await this.client.http.jsonRpc('getTransaction', [hash, 'json']);
+                if (String(confirmedTxRes?.error?.message).includes('Method not found')) {
+                    // reset this to use fallback on older version
+                    confirmedTxRes = null;
+                }
+            } catch {
+                // reset this to use fallback on older version
+                confirmedTxRes = null;
+            }
+
+            if (!confirmedTxRes) {
+                try {
+                    // fallback, deprecated, expected to be removed in solana-core v1.8
+                    confirmedTxRes = await this.client.http.jsonRpc('getConfirmedTransaction', [
+                        hash,
+                        'json'
+                    ]);
+                } catch (error) {
+                    // TODO: consider implementing dropped status
+                }
+            }
+
+            if (confirmedTxRes?.result?.meta) {
+                status =
+                    confirmedTxRes?.result?.meta?.err === null
+                        ? TransactionStatus.SUCCESS
+                        : TransactionStatus.FAILED;
+            } else {
+                // TODO: consider implementing dropped status
+            }
+        }
+
+        return status;
     }
 }

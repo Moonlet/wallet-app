@@ -26,7 +26,7 @@ import {
 } from '@sentry/browser';
 import { IExtensionMessage } from '../communication/extension';
 import { getBgPort } from '../communication/bg-port.extension';
-import klona from 'klona';
+import { klona } from 'klona';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {

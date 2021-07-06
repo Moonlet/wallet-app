@@ -55,7 +55,7 @@ export class HttpClient {
         try {
             const res = await resPromise;
             if (res.status === 200) {
-                return res.json();
+                return await res.json(); // added await intentionally, to fail if json is invalid, so it will retry
             } else if (retries > 0) {
                 await delay(500);
                 return this.jsonRpc(method, params, retries - 1);

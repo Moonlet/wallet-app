@@ -53,17 +53,17 @@ export class Client extends BlockchainGenericClient {
     public async getTransactionFees(txHash: string): Promise<ITransactionFees> {
         try {
             // TODO: migrate to `getTransaction` before mainnet update to 1.8
-            const confirmedTxRess = await this.http.jsonRpc('getConfirmedTransaction', [
+            const confirmedTxRes = await this.http.jsonRpc('getConfirmedTransaction', [
                 txHash,
                 'json'
             ]);
 
-            if (confirmedTxRess?.result?.meta?.fee) {
+            if (confirmedTxRes?.result?.meta?.fee) {
                 return {
                     gasPrice: '0',
                     gasLimit: '0',
                     gasUsed: '0',
-                    feeTotal: confirmedTxRess?.result?.meta?.fee
+                    feeTotal: confirmedTxRes?.result?.meta?.fee
                 };
             } else {
                 return;

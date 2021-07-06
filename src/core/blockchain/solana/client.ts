@@ -16,6 +16,7 @@ import { ClientUtils } from './client-utils';
 import { Connection } from '@solana/web3.js/src/connection';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
+import { SplClient } from './tokens/spl-client';
 
 export class Client extends BlockchainGenericClient {
     private connection;
@@ -26,6 +27,7 @@ export class Client extends BlockchainGenericClient {
         this.utils = new ClientUtils(this);
         this.connection = new Connection(this.network.url);
         this.contracts[Contracts.STAKING] = new Staking(this);
+        this.tokens[TokenType.SPL] = new SplClient(this);
     }
 
     public async getBalance(address: string): Promise<IBalance> {

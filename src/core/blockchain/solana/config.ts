@@ -6,6 +6,8 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
 import { IconValues } from '../../../components/icon/values';
+import { USDC_MAINNET, USDC_TESTNET } from './tokens/usdc';
+import { USDT_MAINNET } from './tokens/usdt';
 
 export const SOL_NATIVE: ITokenConfigState = {
     name: 'Solana',
@@ -96,7 +98,15 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'NA',
     droppedTxBlocksThreshold: 360,
     iconComponent: SolIcon,
-    autoAddedTokensSymbols: {},
+    autoAddedTokensSymbols: {
+        '1': {
+            USDT: USDT_MAINNET,
+            USDC: USDC_MAINNET
+        },
+        '3': {
+            USDC: USDC_TESTNET
+        }
+    },
     tokens: {
         SOL: SOL_NATIVE
     },

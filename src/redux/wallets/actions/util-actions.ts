@@ -317,7 +317,7 @@ const waitTransactionConfirmations = async (
             ) {
                 const status = await client.utils.getTransactionStatus(txHash);
 
-                if (status !== TransactionStatus.DROPPED) {
+                if (status !== TransactionStatus.PENDING) {
                     txWaitConfirmationsInterval && clearInterval(txWaitConfirmationsInterval);
 
                     switch (status) {

@@ -63,9 +63,14 @@ export class HttpClient {
                 return res.json();
             }
         } catch (e) {
-            return resPromise.then(response => {
-                return response.json();
-            });
+            if (retries > 0) {
+                await delay(500);
+                return this.jsonRpc(method, params, retries - 1);
+            } else {
+                return resPromise.then(response => {
+                    return response.json();
+                });
+            }
         }
     }
 }

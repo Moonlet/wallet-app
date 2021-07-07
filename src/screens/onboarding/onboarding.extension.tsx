@@ -10,7 +10,7 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import QRCode from 'qrcode';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web.extension';
 
-const navigationOptions = () => ({ header: null });
+const navigationOptions = () => ({ headerShown: false });
 
 export class OnboardingScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>

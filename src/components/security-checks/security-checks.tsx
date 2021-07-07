@@ -6,7 +6,7 @@ import { Deferred } from '../../core/utils/deferred';
 import { Button } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { SafeAreaView } from 'react-navigation';
+import SafeAreaView, { SafeAreaProvider } from 'react-native-safe-area-view';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import SpyImage from '../../assets/images/svg/spy.svg';
 import stylesProvider from './styles';
@@ -101,41 +101,43 @@ export class SecurityChecksComponent extends React.Component<
                 animationOutTiming={5}
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
-                <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
-                    <View style={styles.content}>
-                        <Text style={[styles.textStyle, styles.title]}>
-                            {translate('SecurityChecks.title')}
-                        </Text>
+                <SafeAreaProvider>
+                    <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
+                        <View style={styles.content}>
+                            <Text style={[styles.textStyle, styles.title]}>
+                                {translate('SecurityChecks.title')}
+                            </Text>
 
-                        <View style={styles.imageContainerStyle}>
-                            <SmartImage
-                                resizeMode={ResizeMode.contain}
-                                source={{ iconComponent: SpyImage }}
-                                style={styles.imageStyle}
-                            />
-                            <Text style={[styles.textStyle, styles.message]}>
-                                {translate(
-                                    `SecurityChecks.${Platform.OS}.${this.state.warningType}`
-                                )}
-                            </Text>
-                            <Text style={[styles.textStyle, styles.warning]}>
-                                {translate('SecurityChecks.ownRisk')}
-                            </Text>
+                            <View style={styles.imageContainerStyle}>
+                                <SmartImage
+                                    resizeMode={ResizeMode.contain}
+                                    source={{ iconComponent: SpyImage }}
+                                    style={styles.imageStyle}
+                                />
+                                <Text style={[styles.textStyle, styles.message]}>
+                                    {translate(
+                                        `SecurityChecks.${Platform.OS}.${this.state.warningType}`
+                                    )}
+                                </Text>
+                                <Text style={[styles.textStyle, styles.warning]}>
+                                    {translate('SecurityChecks.ownRisk')}
+                                </Text>
+                            </View>
+
+                            <Button
+                                testID="button-understand"
+                                wrapperStyle={styles.bottomButton}
+                                primary
+                                onPress={() => this.continue()}
+                            >
+                                <Translate
+                                    text="App.labels.continue"
+                                    style={{ color: theme.colors.appBackground }}
+                                />
+                            </Button>
                         </View>
-
-                        <Button
-                            testID="button-understand"
-                            wrapperStyle={styles.bottomButton}
-                            primary
-                            onPress={() => this.continue()}
-                        >
-                            <Translate
-                                text="App.labels.continue"
-                                style={{ color: theme.colors.appBackground }}
-                            />
-                        </Button>
-                    </View>
-                </SafeAreaView>
+                    </SafeAreaView>
+                </SafeAreaProvider>
             </Modal>
         );
     }

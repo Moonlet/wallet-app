@@ -37,7 +37,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({
     title: translate('DashboardMenu.transactionHistory'),
-    headerLeft: (
+    headerLeft: () => (
         <HeaderLeft
             testID="go-back"
             icon={IconValues.ARROW_LEFT}

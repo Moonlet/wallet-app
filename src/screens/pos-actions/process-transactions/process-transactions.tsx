@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Easing, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import SafeAreaView, { SafeAreaProvider } from 'react-native-safe-area-view';
 import { Text, Button } from '../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
@@ -712,51 +712,57 @@ class ProcessTransactionsComponent extends React.Component<
 
         if (this.props.isVisible) {
             return (
-                <SafeAreaView style={styles.container}>
-                    <View style={styles.header}>
-                        <View style={styles.defaultHeaderContainer}>
-                            {!this.props.signingInProgress && !this.props.signingCompleted && (
-                                <HeaderLeft
-                                    testID="go-back"
-                                    icon={IconValues.ARROW_LEFT}
-                                    onPress={this.onPressBackButton}
-                                />
-                            )}
+                <SafeAreaProvider>
+                    <SafeAreaView style={styles.container}>
+                        <View style={styles.header}>
+                            <View style={styles.defaultHeaderContainer}>
+                                {!this.props.signingInProgress && !this.props.signingCompleted && (
+                                    <HeaderLeft
+                                        testID="go-back"
+                                        icon={IconValues.ARROW_LEFT}
+                                        onPress={this.onPressBackButton}
+                                    />
+                                )}
+                            </View>
+                            <View style={styles.headerTitleContainer}>
+                                <Text style={styles.headerTitleStyle}>
+                                    {translate('Transaction.signTransactions')}
+                                </Text>
+                            </View>
+                            <View style={styles.defaultHeaderContainer} />
                         </View>
-                        <View style={styles.headerTitleContainer}>
-                            <Text style={styles.headerTitleStyle}>
-                                {translate('Transaction.signTransactions')}
-                            </Text>
-                        </View>
-                        <View style={styles.defaultHeaderContainer} />
-                    </View>
 
-                    <Text
-                        style={
-                            this.state.insufficientFundsFees ? styles.errorFundsTitle : styles.title
-                        }
-                    >
-                        {title}
-                    </Text>
-
-                    {this.props.transactions.length ? (
-                        <ScrollView
-                            ref={ref => (this.scrollViewRef = ref)}
-                            contentContainerStyle={styles.contentScrollView}
-                            onLayout={event =>
-                                this.setState({
-                                    txContainerHeight: event.nativeEvent.layout.height
-                                })
+                        <Text
+                            style={
+                                this.state.insufficientFundsFees
+                                    ? styles.errorFundsTitle
+                                    : styles.title
                             }
                         >
-                            {this.props.transactions.map((tx, index) => this.renderCard(tx, index))}
-                        </ScrollView>
-                    ) : (
-                        <LoadingIndicator />
-                    )}
+                            {title}
+                        </Text>
 
-                    {this.renderBottomButton()}
-                </SafeAreaView>
+                        {this.props.transactions.length ? (
+                            <ScrollView
+                                ref={ref => (this.scrollViewRef = ref)}
+                                contentContainerStyle={styles.contentScrollView}
+                                onLayout={event =>
+                                    this.setState({
+                                        txContainerHeight: event.nativeEvent.layout.height
+                                    })
+                                }
+                            >
+                                {this.props.transactions.map((tx, index) =>
+                                    this.renderCard(tx, index)
+                                )}
+                            </ScrollView>
+                        ) : (
+                            <LoadingIndicator />
+                        )}
+
+                        {this.renderBottomButton()}
+                    </SafeAreaView>
+                </SafeAreaProvider>
             );
         } else {
             return null;

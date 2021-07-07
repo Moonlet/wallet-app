@@ -148,8 +148,8 @@ const UnreadNotifCircle = () => (
 
 const navigationOptions = ({ navigation, theme }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
-    headerLeft: <HeaderIcon />,
-    headerRight: (
+    headerLeft: () => <HeaderIcon />,
+    headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
                 testID="wallets-icon"

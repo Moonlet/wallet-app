@@ -30,7 +30,7 @@ interface IState {
     copyDeviceIdLeft: number;
 }
 
-const navigationOptions = () => ({ header: null });
+const navigationOptions = () => ({ headerShown: false });
 
 export class OnboardingScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,

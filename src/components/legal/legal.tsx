@@ -13,8 +13,8 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
 import { normalize, ICON_SIZE } from '../../styles/dimensions';
-import { SafeAreaView } from 'react-navigation';
 import { IconValues } from '../icon/values';
+import SafeAreaView, { SafeAreaProvider } from 'react-native-safe-area-view';
 
 interface IExternalProps {
     onAccept: () => void;
@@ -46,78 +46,82 @@ export const LegalComponent = (
         return <PrivacyPolicy showClose onClose={() => setShowPrivacyPolicy(false)} />;
     } else
         return (
-            <SafeAreaView
-                testID="legal-modal"
-                forceInset={{ bottom: 'never' }}
-                style={props.styles.container}
-            >
-                {props.showClose && (
-                    <TouchableOpacity
-                        onPress={() => props.onClose && props.onClose()}
-                        style={props.styles.iconContainer}
-                    >
-                        <Icon
-                            name={IconValues.ARROW_LEFT}
-                            size={ICON_SIZE}
-                            style={props.styles.backIcon}
-                        />
-                    </TouchableOpacity>
-                )}
+            <SafeAreaProvider>
+                <SafeAreaView
+                    testID="legal-modal"
+                    forceInset={{ bottom: 'never' }}
+                    style={props.styles.container}
+                >
+                    {props.showClose && (
+                        <TouchableOpacity
+                            onPress={() => props.onClose && props.onClose()}
+                            style={props.styles.iconContainer}
+                        >
+                            <Icon
+                                name={IconValues.ARROW_LEFT}
+                                size={ICON_SIZE}
+                                style={props.styles.backIcon}
+                            />
+                        </TouchableOpacity>
+                    )}
 
-                <View style={props.styles.topContainer}>
-                    <Text style={props.styles.walletTc}>{translate('CreateWalletTc.body')}</Text>
-                    <Image
-                        resizeMode="contain"
-                        source={require('../../assets/images/png/document.png')}
-                        style={props.styles.docImage}
-                    />
-                </View>
-                <View style={props.styles.bottomContainer}>
-                    <TouchableOpacity
-                        style={props.styles.rowContainer}
-                        onPress={() => setShowTC(true)}
-                    >
-                        <Text style={props.styles.text} large>
-                            {translate('App.labels.tc')}
+                    <View style={props.styles.topContainer}>
+                        <Text style={props.styles.walletTc}>
+                            {translate('CreateWalletTc.body')}
                         </Text>
-                        <Icon
-                            name={IconValues.CHEVRON_RIGHT}
-                            size={normalize(16)}
-                            style={props.styles.icon}
+                        <Image
+                            resizeMode="contain"
+                            source={require('../../assets/images/png/document.png')}
+                            style={props.styles.docImage}
                         />
-                    </TouchableOpacity>
+                    </View>
+                    <View style={props.styles.bottomContainer}>
+                        <TouchableOpacity
+                            style={props.styles.rowContainer}
+                            onPress={() => setShowTC(true)}
+                        >
+                            <Text style={props.styles.text} large>
+                                {translate('App.labels.tc')}
+                            </Text>
+                            <Icon
+                                name={IconValues.CHEVRON_RIGHT}
+                                size={normalize(16)}
+                                style={props.styles.icon}
+                            />
+                        </TouchableOpacity>
 
-                    <View style={props.styles.divider} />
+                        <View style={props.styles.divider} />
 
-                    <TouchableOpacity
-                        style={props.styles.rowContainer}
-                        onPress={() => setShowPrivacyPolicy(true)}
-                    >
-                        <Text style={props.styles.text} large>
-                            {translate('App.labels.privacyPolicy')}
-                        </Text>
-                        <Icon
-                            name={IconValues.CHEVRON_RIGHT}
-                            size={normalize(16)}
-                            style={props.styles.icon}
-                        />
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={props.styles.rowContainer}
+                            onPress={() => setShowPrivacyPolicy(true)}
+                        >
+                            <Text style={props.styles.text} large>
+                                {translate('App.labels.privacyPolicy')}
+                            </Text>
+                            <Icon
+                                name={IconValues.CHEVRON_RIGHT}
+                                size={normalize(16)}
+                                style={props.styles.icon}
+                            />
+                        </TouchableOpacity>
 
-                    <View style={props.styles.divider} />
+                        <View style={props.styles.divider} />
 
-                    <Button
-                        testID="legal-accept-button"
-                        wrapperStyle={props.styles.bottomButton}
-                        primary
-                        onPress={() => {
-                            props.appSetAcceptedTcVersion(props.tcLatestVersion);
-                            props.onAccept();
-                        }}
-                    >
-                        {translate('App.labels.accept')}
-                    </Button>
-                </View>
-            </SafeAreaView>
+                        <Button
+                            testID="legal-accept-button"
+                            wrapperStyle={props.styles.bottomButton}
+                            primary
+                            onPress={() => {
+                                props.appSetAcceptedTcVersion(props.tcLatestVersion);
+                                props.onAccept();
+                            }}
+                        >
+                            {translate('App.labels.accept')}
+                        </Button>
+                    </View>
+                </SafeAreaView>
+            </SafeAreaProvider>
         );
 };
 

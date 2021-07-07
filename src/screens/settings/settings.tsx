@@ -57,7 +57,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({
     title: translate('App.labels.settings'),
-    headerLeft: <HeaderIcon />
+    headerLeft: () => <HeaderIcon />
 });
 
 export class SettingsScreenComponent extends React.Component<

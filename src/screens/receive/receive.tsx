@@ -34,7 +34,7 @@ const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
 };
 
 const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    headerLeft: () => <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.receive')
 });
 

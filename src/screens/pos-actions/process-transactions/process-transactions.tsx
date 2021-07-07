@@ -712,7 +712,7 @@ class ProcessTransactionsComponent extends React.Component<
 
         if (this.props.isVisible) {
             return (
-                <SafeAreaProvider>
+                <SafeAreaProvider style={styles.container}>
                     <SafeAreaView style={styles.container}>
                         <View style={styles.header}>
                             <View style={styles.defaultHeaderContainer}>

@@ -5,6 +5,7 @@ import {
     Contracts,
     IBalance,
     IBlockInfo,
+    ITransactionFees,
     TransactionType
 } from '../types';
 import { BigNumber } from 'bignumber.js';
@@ -46,6 +47,29 @@ export class Client extends BlockchainGenericClient {
                 available: new BigNumber(0),
                 detailed: {}
             };
+        }
+    }
+
+    public async getTransactionFees(txHash: string): Promise<ITransactionFees> {
+        try {
+            // TODO: migrate to `getTransaction` before mainnet update to 1.8
+            const confirmedTxRes = await this.http.jsonRpc('getConfirmedTransaction', [
+                txHash,
+                'json'
+            ]);
+
+            if (confirmedTxRes?.result?.meta?.fee) {
+                return {
+                    gasPrice: '0',
+                    gasLimit: '0',
+                    gasUsed: '0',
+                    feeTotal: confirmedTxRes?.result?.meta?.fee
+                };
+            } else {
+                return;
+            }
+        } catch (error) {
+            throw new Error(error);
         }
     }
 

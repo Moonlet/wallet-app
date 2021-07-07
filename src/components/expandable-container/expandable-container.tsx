@@ -37,7 +37,7 @@ export class ExpandableContainerComponent extends React.Component<
             easing: Easing.inOut(Easing.ease),
             duration: 300,
             toValue: 0,
-            useNativeDriver: true
+            useNativeDriver: false
         }).start();
     }
 
@@ -46,7 +46,7 @@ export class ExpandableContainerComponent extends React.Component<
             easing: Easing.inOut(Easing.ease),
             duration: 270,
             toValue: this.state.maxHeight,
-            useNativeDriver: true
+            useNativeDriver: false
         }).start();
     }
 

@@ -209,7 +209,11 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                         })
                     });
 
-                    SentryCaptureException(new Error('Error signAndSendTransactions, no txHash'));
+                    SentryCaptureException(
+                        new Error(
+                            `Failed to broadcast transaction on ${account.blockchain}, no txHash`
+                        )
+                    );
 
                     error = true;
                     dispatch(setProcessTxCompleted(true, true));
@@ -253,7 +257,9 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
         });
 
         SentryCaptureException(
-            new Error(`Error signAndSendTransactions, ${errorMessage?.message}`)
+            new Error(
+                `Failed to broadcast transaction on ${account.blockchain}, ${errorMessage?.message}, ${errorMessage?.code}`
+            )
         );
 
         const atLeastOneTransactionBroadcasted = transactionsBroadcasted(

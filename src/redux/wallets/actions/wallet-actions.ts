@@ -855,7 +855,11 @@ export const sendTransaction = (
             })
         });
 
-        SentryCaptureException(new Error(`Error sendTransaction, ${res?.message}`));
+        SentryCaptureException(
+            new Error(
+                `Failed to broadcast transaction on ${account.blockchain}, ${res?.message}, ${res?.code}`
+            )
+        );
 
         const errorMessage = res?.error || 'GENERIC_ERROR';
 

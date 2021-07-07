@@ -839,9 +839,24 @@ export const sendTransaction = (
             }
             return;
         } else {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    transactions: transaction,
+                    message: 'No txHash'
+                })
+            });
+
             throw new Error('GENERIC_ERROR');
         }
     } catch (res) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error: res
+            })
+        });
+
+        SentryCaptureException(new Error(`Error sendTransaction, ${res?.message}`));
+
         const errorMessage = res?.error || 'GENERIC_ERROR';
 
         if (appWallet.type === WalletType.HD) {

@@ -203,8 +203,13 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     }
                 } else {
                     SentryAddBreadcrumb({
-                        message: JSON.stringify({ transactions: transaction })
+                        message: JSON.stringify({
+                            transactions: transaction,
+                            message: 'No txHash'
+                        })
                     });
+
+                    SentryCaptureException(new Error('Error signAndSendTransactions, no txHash'));
 
                     error = true;
                     dispatch(setProcessTxCompleted(true, true));
@@ -214,6 +219,12 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     );
                 }
             } catch (err) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        error: err
+                    })
+                });
+
                 error = true;
                 dispatch(setProcessTxCompleted(true, true));
                 dispatch(updateProcessTransactionStatusForIndex(txIndex, TransactionStatus.FAILED));
@@ -235,7 +246,15 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             dispatch(setProcessTxCompleted(true, false));
         }
     } catch (errorMessage) {
-        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error: errorMessage
+            })
+        });
+
+        SentryCaptureException(
+            new Error(`Error signAndSendTransactions, ${errorMessage?.message}`)
+        );
 
         const atLeastOneTransactionBroadcasted = transactionsBroadcasted(
             getState().ui.processTransactions.data.txs

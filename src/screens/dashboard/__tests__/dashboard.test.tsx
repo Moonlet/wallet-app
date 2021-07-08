@@ -75,24 +75,24 @@ const props: IProps & IReduxProps = {
 jest.useFakeTimers();
 
 describe('dashboard screen component', () => {
-    beforeAll(() => {
-        jest.mock('react-native/Libraries/Animated/src/Animated.js', () => {
-            const ActualAnimated = jest.requireActual(
-                'react-native/Libraries/Animated/src/Animated.js'
-            );
-            return {
-                ...ActualAnimated,
-                timing: (value: any, config: any) => {
-                    return {
-                        start: (callback: any) => {
-                            value.setValue(config.toValue);
-                            callback && callback();
-                        }
-                    };
-                }
-            };
-        });
-    });
+    // beforeAll(() => {
+    //     jest.mock('react-native/Libraries/Animated/src/Animated.js', () => {
+    //         const ActualAnimated = jest.requireActual(
+    //             'react-native/Libraries/Animated/src/Animated.js'
+    //         );
+    //         return {
+    //             ...ActualAnimated,
+    //             timing: (value: any, config: any) => {
+    //                 return {
+    //                     start: (callback: any) => {
+    //                         value.setValue(config.toValue);
+    //                         callback && callback();
+    //                     }
+    //                 };
+    //             }
+    //         };
+    //     });
+    // });
 
     it('renders correctly', () => {
         // const wrapper = shallow(<DashboardScreenComponent {...props} />);

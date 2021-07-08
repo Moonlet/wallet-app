@@ -14,15 +14,6 @@ jest.mock('../../../core/secure/storage/storage', () => {
     };
 });
 
-jest.mock('uuid/v4', () => {
-    return {
-        __esModule: true,
-        default: () => 'uuid'
-    };
-});
-
-const flushPromises = () => new Promise(setImmediate);
-
 describe('wallet actions', () => {
     test('addWallet actions return correct object', () => {
         // @ts-ignore

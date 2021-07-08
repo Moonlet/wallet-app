@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`header go back button renders correctly 1`] = `
-"<TouchableOpacity testID=\\"header-left\\" onPress={[Function: mockConstructor]} style={{...}} activeOpacity={0.2}>
+"<ForwardRef testID=\\"header-left\\" onPress={[Function: mockConstructor] { _isMockFunction: true, getMockImplementation: [Function (anonymous)], mock: Object [Object: null prototype] { calls: [], instances: [], invocationCallOrder: [], results: [] }, mockClear: [Function (anonymous)], mockReset: [Function (anonymous)], mockRestore: [Function (anonymous)], mockReturnValueOnce: [Function (anonymous)], mockResolvedValueOnce: [Function (anonymous)], mockRejectedValueOnce: [Function (anonymous)], mockReturnValue: [Function (anonymous)], mockResolvedValue: [Function (anonymous)], mockRejectedValue: [Function (anonymous)], mockImplementationOnce: [Function (anonymous)], mockImplementation: [Function (anonymous)], mockReturnThis: [Function (anonymous)], mockName: [Function (anonymous)], getMockName: [Function (anonymous)] }} style={{...}}>
   <View style={{...}}>
     <Icon name=\\"settings\\" size={44} style={{...}} allowFontScaling={false} />
   </View>
   <withTheme(TextComponent) style={{...}}>
     text
   </withTheme(TextComponent)>
-</TouchableOpacity>"
+</ForwardRef>"
 `;

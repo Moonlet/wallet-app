@@ -1,6 +1,6 @@
-Team's log. Stardate 2106.30:
+Team's log. Stardate 2107.08:
 
-We pushed live a fix for dropped transactions issue. Also we added a remove transaction button on transaction details page and fixed the bug on My Stakes tab. Some improvements were added for token swap, since we had some glitches there. Let's hope for the best user experience.
+We had to get some fixes live for ZIL, SOL and ETH since some bugs were present on transaction status, pending transactions, and adjusted claiming fees. Let's hope for the best user experience.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

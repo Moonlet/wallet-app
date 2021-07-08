@@ -33,11 +33,15 @@ import { TokenType } from '../../core/blockchain/types/token';
 import { Capitalize } from '../../core/utils/format-string';
 import { TransactionStatus } from '../../core/wallet/types';
 import { Client as ZilliqaClient } from '../../core/blockchain/zilliqa/client';
+import { Client as SolanaClient } from '../../core/blockchain/solana/client';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 import { removeTransaction, updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { NavigationService } from '../../navigation/navigation-service';
 
@@ -128,22 +132,39 @@ class TransactionDetailsComponent extends React.Component<
 
             try {
                 const txFees = await zilClient.getTransactionFees(transaction.id);
-                if (txFees) this.setState({ txFees });
+                txFees && this.setState({ txFees });
             } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            txId: transaction.id
+                        },
+                        error
+                    })
+                });
+
                 SentryCaptureException(
-                    new Error(JSON.stringify({ event: 'getTransactionFees', error }))
+                    new Error(`Fetch ZIL getTransactionFees, ${error?.message}`)
                 );
             }
 
             try {
                 if (transaction?.additionalInfo?.swap) {
                     const errorMessage = await zilClient.getTransactionErrorMessage(transaction.id);
-
-                    if (errorMessage) this.setState({ errorMessage });
+                    errorMessage && this.setState({ errorMessage });
                 }
             } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            txId: transaction.id
+                        },
+                        error
+                    })
+                });
+
                 SentryCaptureException(
-                    new Error(JSON.stringify({ event: 'getTransactionErrorMessage', error }))
+                    new Error(`Fetch ZIL getTransactionErrorMessage, ${error?.message}`)
                 );
             }
 
@@ -183,6 +204,29 @@ class TransactionDetailsComponent extends React.Component<
                 } catch {
                     this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
                 }
+            }
+        }
+
+        if (blockchain === Blockchain.SOLANA) {
+            const blockchainConfig = getBlockchain(blockchain);
+            const solClient = blockchainConfig.getClient(chainId) as SolanaClient;
+
+            try {
+                const txFees = await solClient.getTransactionFees(transaction.id);
+                txFees && this.setState({ txFees });
+            } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            txId: transaction.id
+                        },
+                        error
+                    })
+                });
+
+                SentryCaptureException(
+                    new Error(`Fetch SOL getTransactionFees, ${error?.message}`)
+                );
             }
         }
     }
@@ -367,6 +411,7 @@ class TransactionDetailsComponent extends React.Component<
                                 blockchain={blockchain}
                                 token={coin}
                                 tokenDecimals={nativeCoinTokenConfig.decimals}
+                                uiDecimals={6}
                             />
                             <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
                         </View>

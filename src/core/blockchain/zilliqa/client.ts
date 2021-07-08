@@ -35,6 +35,7 @@ export class Client extends BlockchainGenericClient {
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
         this.utils = new ClientUtils(this);
         this.contracts[Contracts.STAKING] = new Staking(this);
+        this.http.jsonRpcRetriesFailedRequests = 2;
     }
 
     public async getTransactionFees(txHash: string): Promise<ITransactionFees> {

@@ -1,3 +1,5 @@
+import { delay } from './time';
+
 const defaultHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json'
@@ -5,12 +7,23 @@ const defaultHeaders = {
 
 export class HttpClient {
     private lastId: number = 0;
+
+    public jsonRpcRetriesFailedRequests = 0; // if >0 it will retry requests with status code != 200
+
     constructor(private url: string) {}
 
     public async get(path: string): Promise<any> {
         return fetch(this.url + path).then(async res => {
             const response = await res.json();
             return response;
+        });
+    }
+
+    public async rawPost(path: string, body): Promise<Response> {
+        return fetch(this.url + path, {
+            method: 'POST',
+            headers: defaultHeaders,
+            body: JSON.stringify(body)
         });
     }
 
@@ -24,9 +37,12 @@ export class HttpClient {
         });
     }
 
-    public async jsonRpc(method: string, params: any = []): Promise<any> {
+    public async jsonRpc(
+        method: string,
+        params: any = [],
+        retries = this.jsonRpcRetriesFailedRequests
+    ): Promise<any> {
         const id = this.lastId++;
-
         const body = {
             jsonrpc: '2.0',
             id,
@@ -34,8 +50,27 @@ export class HttpClient {
             params: typeof params !== 'object' || params === null ? [params] : params
         };
 
-        return this.post('', body).then(async res => {
-            return res;
-        });
+        const resPromise = this.rawPost('', body);
+
+        try {
+            const res = await resPromise;
+            if (res.status === 200) {
+                return await res.json(); // added await intentionally, to fail if json is invalid, so it will retry
+            } else if (retries > 0) {
+                await delay(500);
+                return this.jsonRpc(method, params, retries - 1);
+            } else {
+                return res.json();
+            }
+        } catch (e) {
+            if (retries > 0) {
+                await delay(500);
+                return this.jsonRpc(method, params, retries - 1);
+            } else {
+                return resPromise.then(response => {
+                    return response.json();
+                });
+            }
+        }
     }
 }

@@ -4,7 +4,10 @@ import { storeEncrypted, readEncrypted, deleteFromStorage } from '../storage/sto
 import DeviceInfo from 'react-native-device-info';
 import uuidv4 from 'uuid/v4';
 import { Platform } from 'react-native';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 const defaultOptions = {
     serviceEncryption: 'com.moonlet.encryption',
@@ -48,8 +51,14 @@ export const setBaseEncryptionKey = async () => {
             securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(new Error(`Failed to set base encryption key, ${error?.message}`));
     }
 };
 
@@ -68,8 +77,14 @@ export const getBaseEncryptionKey = async () => {
                 'getBaseEncryptionKey: Keychain.getGenericPassword returns falsy value'
             );
         }
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(new Error(`Failed to get base encryption key, ${error?.message}`));
     }
 
     return password;
@@ -79,8 +94,14 @@ export const clearEncryptionKey = async () => {
     try {
         deleteFromStorage(KEY_PIN_SAMPLE);
         await Keychain.resetGenericPassword({ service: defaultOptions.serviceEncryption });
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(new Error(`Failed to clear encryption key, ${error?.message}`));
     }
 };
 
@@ -112,8 +133,14 @@ export const setPinCode = async (pinCode: string) => {
             accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(new Error(`Failed to set pin, ${error?.message}`));
     }
 };
 
@@ -154,8 +181,14 @@ export const getPinCode = async () => {
 export const clearPinCode = async () => {
     try {
         await Keychain.resetGenericPassword({ service: defaultOptions.servicePin });
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(new Error(`Failed to clean pin code, ${error?.message}`));
     }
 };
 
@@ -171,9 +204,18 @@ export const setWalletCredentialsKey = async (
             securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
-        throw new Error(err);
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(
+            new Error(`Failed to set wallet credentials key, ${error?.message}`)
+        );
+
+        throw new Error(error);
     }
 };
 
@@ -193,8 +235,16 @@ export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<
                 'getWalletCredentialsKey: Keychain.getGenericPassword returns falsy value'
             );
         }
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(
+            new Error(`Failed to get wallet credentials key, ${error?.message}`)
+        );
     }
 
     return password;
@@ -203,7 +253,15 @@ export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<
 export const clearWalletCredentialsKey = async (walletPublicKey: string) => {
     try {
         await Keychain.resetGenericPassword({ service: walletPublicKey });
-    } catch (err) {
-        SentryCaptureException(new Error(JSON.stringify(err)));
+    } catch (error) {
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error
+            })
+        });
+
+        SentryCaptureException(
+            new Error(`Failed to clear wallet credentials key, ${error?.message}`)
+        );
     }
 };

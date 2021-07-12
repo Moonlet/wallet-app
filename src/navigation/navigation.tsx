@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator, TransitionPresets } from 'react-navigation-stack';
@@ -116,8 +116,11 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         color: themes[theme].colors.text,
         letterSpacing: LETTER_SPACING,
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        alignSelf: 'center'
     },
+
+    headerRight: () => <View />,
 
     headerLeft: () =>
         navigation.dangerouslyGetParent().state.index > 0 && (

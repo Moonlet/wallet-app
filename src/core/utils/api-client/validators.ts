@@ -54,6 +54,17 @@ export class ValidatorsApiClient {
             if (response?.result?.data) {
                 return response.result.data;
             } else {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            blockchain: account.blockchain,
+                            address: account.address,
+                            chainId
+                        },
+                        response
+                    })
+                });
+
                 SentryCaptureException(
                     new Error(`Cannot fetch account delegate stats, no response data, ${response}`)
                 );
@@ -144,11 +155,14 @@ export class ValidatorsApiClient {
             } else {
                 SentryAddBreadcrumb({
                     message: JSON.stringify({
-                        blockchain,
-                        address,
-                        chainId,
-                        appVersion: DeviceInfo.getVersion(),
-                        validatorId
+                        data: {
+                            blockchain,
+                            address,
+                            chainId,
+                            appVersion: DeviceInfo.getVersion(),
+                            validatorId
+                        },
+                        response
                     })
                 });
 

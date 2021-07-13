@@ -106,14 +106,15 @@ export const fetchScreenData = (context: IScreenContext) => async (
         });
 
         if (!screenResponse?.result?.data) {
-            SentryAddBreadcrumb({
-                message: JSON.stringify({
-                    request: body,
-                    screenResponse
-                })
-            });
+            SentryAddBreadcrumb({ message: JSON.stringify({ request: body }) });
+            SentryAddBreadcrumb({ message: JSON.stringify({ screenResponse }) });
+            SentryAddBreadcrumb({ message: JSON.stringify({ code: screenResponse?.code }) });
 
-            SentryCaptureException(new Error(`Cannot fetch widgets, ${screenResponse?.message}`));
+            SentryCaptureException(
+                new Error(
+                    `Cannot fetch widgets, ${screenResponse?.message}, ${screenResponse?.code}`
+                )
+            );
         }
     } catch (error) {
         // handle error
@@ -127,14 +128,13 @@ export const fetchScreenData = (context: IScreenContext) => async (
             }
         });
 
-        SentryAddBreadcrumb({
-            message: JSON.stringify({
-                request: body,
-                error
-            })
-        });
+        SentryAddBreadcrumb({ message: JSON.stringify({ request: body }) });
+        SentryAddBreadcrumb({ message: JSON.stringify({ error }) });
+        SentryAddBreadcrumb({ message: JSON.stringify({ code: error?.code }) });
 
-        SentryCaptureException(new Error(`Cannot fetch widgets, ${error?.message}`));
+        SentryCaptureException(
+            new Error(`Cannot fetch widgets, ${error?.message}, ${error?.code}`)
+        );
     }
 };
 

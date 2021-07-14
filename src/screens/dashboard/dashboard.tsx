@@ -112,7 +112,7 @@ const MyTitle = ({ text }) => (
         style={{
             flex: 1,
             fontSize: normalizeFontAndLineHeight(20),
-            lineHeight: normalizeFontAndLineHeight(25),
+            lineHeight: normalizeFontAndLineHeight(44),
             letterSpacing: LETTER_SPACING,
             textAlign: 'center'
         }}

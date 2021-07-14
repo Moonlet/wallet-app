@@ -107,17 +107,17 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     headerStyle: {
         backgroundColor: themes[theme].colors.appBackground,
         elevation: 0,
-        borderBottomWidth: 0
+        borderBottomWidth: 0,
+        shadowColor: 'transparent'
     },
     headerTitleStyle: {
-        flex: 1,
+        // flex: 1,
         fontSize: normalizeFontAndLineHeight(22),
         lineHeight: normalizeFontAndLineHeight(28),
         color: themes[theme].colors.text,
         letterSpacing: LETTER_SPACING,
         textAlign: 'center',
-        fontWeight: 'bold',
-        alignSelf: 'center'
+        fontWeight: 'bold'
     },
 
     headerRight: () => <View />,
@@ -318,7 +318,8 @@ export const SettingsNavigation = createStackNavigator(
         defaultNavigationOptions: defaultStackNavigationOptions,
         navigationOptions: ({ navigation }) => ({
             tabBarVisible: navigation.state.index < 1,
-            headerTitleAlign: 'center'
+            headerTitleAlign: 'center',
+            headerVisible: false
         })
     }
 );
@@ -464,6 +465,7 @@ export const navigationConfig = {
     Settings: {
         screen: SettingsNavigation,
         headerTransparent: true,
+
         navigationOptions: () => ({
             tabBarIcon: menuIcon(IconValues.SETTINGS)
         })

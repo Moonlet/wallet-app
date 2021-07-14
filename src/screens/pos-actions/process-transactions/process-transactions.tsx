@@ -397,7 +397,7 @@ class ProcessTransactionsComponent extends React.Component<
                 toValue: 1,
                 duration: 2000,
                 easing: Easing.linear,
-                useNativeDriver: true
+                useNativeDriver: false
             })
         ).start();
     }

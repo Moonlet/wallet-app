@@ -110,16 +110,17 @@ export const handleDynamicCta = (
         if (data?.cta) {
             handleCta(data.cta, { flowId })(dispatch, getState);
         } else {
-            throw new Error(`No data cta, ${screenResponse}`);
+            SentryAddBreadcrumb({ message: JSON.stringify({ request: body }) });
+            SentryAddBreadcrumb({ message: JSON.stringify({ screenResponse }) });
+            SentryAddBreadcrumb({ message: JSON.stringify({ code: screenResponse?.code }) });
+
+            throw new Error(`No data cta, ${screenResponse?.message}`);
         }
     } catch (error) {
         // handle error
-        SentryAddBreadcrumb({
-            message: JSON.stringify({
-                request: body,
-                error
-            })
-        });
+        SentryAddBreadcrumb({ message: JSON.stringify({ request: body }) });
+        SentryAddBreadcrumb({ message: JSON.stringify({ error }) });
+        SentryAddBreadcrumb({ message: JSON.stringify({ code: error?.code }) });
 
         SentryCaptureException(new Error(`Cannot fetch cta, ${error?.message}`));
     }

@@ -8,7 +8,10 @@ import { getChainId } from '../preferences/selectors';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { ApiClient } from '../../core/utils/api-client/api-client';
 import { flattenObject } from '../utils/helpers';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 export const ADD_TOKEN = 'ADD_TOKEN';
 export const UPDATE_TOKEN_CONTRACT_ADDRESS = 'UPDATE_TOKEN_CONTRACT_ADDRESS';
@@ -44,6 +47,7 @@ export const updateTokenContracts = () => async (
     if (state.tokens) {
         const flatObject = flattenObject(state.tokens, 2);
         const keys = [];
+
         Object.keys(flatObject).map(key => {
             const strings = key.split('.');
             strings.splice(strings.length - 1, 0, 'tokens');
@@ -68,7 +72,15 @@ export const updateTokenContracts = () => async (
                 });
             }
         } catch (error) {
-            SentryCaptureException(new Error(JSON.stringify(error)));
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    error
+                })
+            });
+
+            SentryCaptureException(
+                new Error(`Failed to update token contracts, ${error?.message}`)
+            );
         }
     }
 };

@@ -5,7 +5,7 @@ import {
     IExtensionMessage,
     IExtensionResponse
 } from './extension';
-import uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 const bgPort = browser.runtime.connect('', { name: ConnectionPort.BACKGROUND });
 
@@ -16,7 +16,7 @@ export const getBgPort = () => {
 export const bgPortRequest = (request: IExtensionRequest): Promise<IExtensionResponse> => {
     return new Promise((resolve, reject) => {
         const reqMessage: IExtensionMessage = {
-            id: uuid(),
+            id: uuidv4(),
             target: 'MOONLET_EXTENSION',
             type: 'REQUEST',
             request

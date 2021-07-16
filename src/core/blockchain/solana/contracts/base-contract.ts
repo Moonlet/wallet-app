@@ -52,6 +52,7 @@ export const buildBaseTransaction = async (
 };
 
 function hash(h, v) {
+    // @ts-ignore
     h.update(CryptoJS.lib.WordArray.create(Buffer.from(v)));
 }
 

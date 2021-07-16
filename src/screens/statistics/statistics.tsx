@@ -16,7 +16,7 @@ export const mapStateToProps = () => {
 };
 
 export const navigationOptions = () => ({
-    headerLeft: <HeaderIcon />,
+    headerLeft: () => <HeaderIcon />,
     title: translate('App.labels.statistics')
 });
 

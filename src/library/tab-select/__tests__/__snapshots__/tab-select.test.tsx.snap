@@ -2,14 +2,14 @@
 
 exports[`library checkbox renders correctly 1`] = `
 "<View style={{...}}>
-  <TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
+  <ForwardRef onPress={[Function: onPress]} style={{...}}>
     <withTheme(TextComponent) style={{...}} />
-  </TouchableOpacity>
-  <TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
+  </ForwardRef>
+  <ForwardRef onPress={[Function: onPress]} style={{...}}>
     <withTheme(TextComponent) style={{...}} />
-  </TouchableOpacity>
-  <TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
+  </ForwardRef>
+  <ForwardRef onPress={[Function: onPress]} style={{...}}>
     <withTheme(TextComponent) style={{...}} />
-  </TouchableOpacity>
+  </ForwardRef>
 </View>"
 `;

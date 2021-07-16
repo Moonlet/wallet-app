@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, View, TextInput, Clipboard, TouchableOpacity } from 'react-native';
+import { Image, View, TextInput, TouchableOpacity } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { Text, Button } from '../../../../library';
 import stylesProvider from './styles';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';

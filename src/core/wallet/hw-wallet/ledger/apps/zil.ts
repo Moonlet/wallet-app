@@ -3,8 +3,6 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
 import BigNumber from 'bignumber.js';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
-// import Long from 'long';
-// import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
 
 export class Zil {
     private app = null;

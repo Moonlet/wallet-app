@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Icon } from '../components/icon/icon';
 import { COLORS } from '../styles/colors';
-import { StackViewStyleInterpolator } from 'react-navigation-stack';
 import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 import NewIcon from '../assets/images/svg/new.svg';
 
@@ -39,11 +38,3 @@ export const menuIconWithNewLabel = (icon: string) => ({ focused }: any) => (
         />
     </View>
 );
-
-// remove animation when transitioning to any of `noAnimationScreens`
-export const removeAnimation = (noAnimationScreens: string[]) => sceneProps => {
-    if (noAnimationScreens.indexOf(sceneProps.scene.route.routeName) !== -1) {
-        return null;
-    }
-    return StackViewStyleInterpolator.forHorizontal(sceneProps);
-};

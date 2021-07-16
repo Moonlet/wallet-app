@@ -41,6 +41,9 @@ export class NetworkOptionsComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
+    private toggleTestNet() {
+        this.props.toggleTestNet();
+    }
 
     public render() {
         const { styles, theme, testNet, networksOptions, navigation } = this.props;
@@ -52,7 +55,7 @@ export class NetworkOptionsComponent extends React.Component<
                     <View style={styles.switch}>
                         <Switch
                             testID="toggle-testnet"
-                            onValueChange={() => this.props.toggleTestNet()}
+                            onValueChange={() => this.toggleTestNet()}
                             value={testNet}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,

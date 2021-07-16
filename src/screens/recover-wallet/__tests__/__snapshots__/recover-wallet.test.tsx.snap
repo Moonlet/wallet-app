@@ -86,7 +86,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </View>
   </View>
   <View>
-    <ScrollViewMock horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} contentContainerStyle={{...}} keyboardShouldPersistTaps=\\"handled\\" />
+    <ScrollView horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} contentContainerStyle={{...}} keyboardShouldPersistTaps=\\"handled\\" />
   </View>
   <withTheme(ButtonComponent) testID=\\"paste-button\\" onPress={[Function: onPress]} style={{...}}>
     Paste

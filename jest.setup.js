@@ -59,6 +59,10 @@ jest.mock('react-native-device-info', () => {
     };
 });
 
+jest.mock('@react-native-community/clipboard', () => ({
+    setString: jest.fn()
+}));
+
 NativeModules.RNRandomBytes = {
     randomBytes: jest.fn(randomBytes)
 };

@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { BiometryType, biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
-import { SafeAreaView } from 'react-navigation';
+import SafeAreaView, { SafeAreaProvider } from 'react-native-safe-area-view';
 import DeviceInfo from 'react-native-device-info';
 import { IconValues } from '../../../icon/values';
 
@@ -285,71 +285,77 @@ export class PasswordPinComponent extends React.Component<
         const { styles } = this.props;
 
         return (
-            <SafeAreaView
-                testID="password-pin-screen"
-                forceInset={{ bottom: 'never' }}
-                style={styles.container}
-            >
-                <Image
-                    style={styles.logoImage}
-                    source={require('../../../../assets/images/png/moonlet_space_gray.png')}
-                />
-                {this.props.allowBackButton && (
-                    <TouchableOpacity
-                        onPress={() => this.props.onBackButtonTap()}
-                        style={styles.backIconContainer}
-                    >
-                        <Icon name={IconValues.CLOSE} size={ICON_SIZE} style={styles.backIcon} />
-                    </TouchableOpacity>
-                )}
-                <View style={styles.headerContainer}>
-                    <Text style={styles.title}>{this.props.title}</Text>
-                    <Text style={styles.subTitle}>{this.props.subtitle}</Text>
-                    {this.renderInputDots()}
+            <SafeAreaProvider>
+                <SafeAreaView
+                    testID="password-pin-screen"
+                    forceInset={{ bottom: 'never' }}
+                    style={styles.container}
+                >
+                    <Image
+                        style={styles.logoImage}
+                        source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                    />
+                    {this.props.allowBackButton && (
+                        <TouchableOpacity
+                            onPress={() => this.props.onBackButtonTap()}
+                            style={styles.backIconContainer}
+                        >
+                            <Icon
+                                name={IconValues.CLOSE}
+                                size={ICON_SIZE}
+                                style={styles.backIcon}
+                            />
+                        </TouchableOpacity>
+                    )}
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.title}>{this.props.title}</Text>
+                        <Text style={styles.subTitle}>{this.props.subtitle}</Text>
+                        {this.renderInputDots()}
 
-                    <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
-                </View>
+                        <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
+                    </View>
 
-                <View style={styles.digitsLayout}>
-                    {this.renderRow(digitsLayout[0], 0)}
-                    <LinearGradient
-                        colors={[
-                            this.props.theme.colors.gradientLight,
-                            this.props.theme.colors.gradientDark,
-                            this.props.theme.colors.gradientLight
-                        ]}
-                        locations={[0.16, 0.5, 0.84]}
-                        angle={90}
-                        useAngle={true}
-                        style={styles.selectorGradientContainer}
-                    />
-                    {this.renderRow(digitsLayout[1], 1)}
-                    <LinearGradient
-                        colors={[
-                            this.props.theme.colors.gradientLight,
-                            this.props.theme.colors.gradientDark,
-                            this.props.theme.colors.gradientLight
-                        ]}
-                        locations={[0.16, 0.5, 0.84]}
-                        angle={90}
-                        useAngle={true}
-                        style={styles.selectorGradientContainer}
-                    />
-                    {this.renderRow(digitsLayout[2], 2)}
-                    <LinearGradient
-                        colors={[
-                            this.props.theme.colors.gradientLight,
-                            this.props.theme.colors.gradientDark,
-                            this.props.theme.colors.gradientLight
-                        ]}
-                        locations={[0.16, 0.5, 0.84]}
-                        angle={90}
-                        useAngle={true}
-                        style={styles.selectorGradientContainer}
-                    />
-                    {this.renderFooterRow()}
-                </View>
-            </SafeAreaView>
+                    <View style={styles.digitsLayout}>
+                        {this.renderRow(digitsLayout[0], 0)}
+                        <LinearGradient
+                            colors={[
+                                this.props.theme.colors.gradientLight,
+                                this.props.theme.colors.gradientDark,
+                                this.props.theme.colors.gradientLight
+                            ]}
+                            locations={[0.16, 0.5, 0.84]}
+                            angle={90}
+                            useAngle={true}
+                            style={styles.selectorGradientContainer}
+                        />
+                        {this.renderRow(digitsLayout[1], 1)}
+                        <LinearGradient
+                            colors={[
+                                this.props.theme.colors.gradientLight,
+                                this.props.theme.colors.gradientDark,
+                                this.props.theme.colors.gradientLight
+                            ]}
+                            locations={[0.16, 0.5, 0.84]}
+                            angle={90}
+                            useAngle={true}
+                            style={styles.selectorGradientContainer}
+                        />
+                        {this.renderRow(digitsLayout[2], 2)}
+                        <LinearGradient
+                            colors={[
+                                this.props.theme.colors.gradientLight,
+                                this.props.theme.colors.gradientDark,
+                                this.props.theme.colors.gradientLight
+                            ]}
+                            locations={[0.16, 0.5, 0.84]}
+                            angle={90}
+                            useAngle={true}
+                            style={styles.selectorGradientContainer}
+                        />
+                        {this.renderFooterRow()}
+                    </View>
+                </SafeAreaView>
+            </SafeAreaProvider>
         );
     }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator, StackViewTransitionConfigs } from 'react-navigation-stack';
+import { createStackNavigator, TransitionPresets } from 'react-navigation-stack';
 import { createSwitchNavigator } from 'react-navigation';
 
 import { darkTheme } from '../styles/themes/dark-theme';
@@ -107,10 +107,11 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     headerStyle: {
         backgroundColor: themes[theme].colors.appBackground,
         elevation: 0,
-        borderBottomWidth: 0
+        borderBottomWidth: 0,
+        shadowColor: 'transparent'
     },
     headerTitleStyle: {
-        flex: 1,
+        // flex: 1,
         fontSize: normalizeFontAndLineHeight(22),
         lineHeight: normalizeFontAndLineHeight(28),
         color: themes[theme].colors.text,
@@ -118,13 +119,18 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         textAlign: 'center',
         fontWeight: 'bold'
     },
-    headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
-        <HeaderLeft
-            testID="go-back"
-            icon={IconValues.ARROW_LEFT}
-            onPress={() => navigation.goBack(null)}
-        />
-    )
+
+    headerRight: () => <View />,
+
+    headerLeft: () =>
+        navigation.dangerouslyGetParent().state.index > 0 && (
+            <HeaderLeft
+                testID="go-back"
+                icon={IconValues.ARROW_LEFT}
+                onPress={() => navigation.goBack(null)}
+            />
+        ),
+    ...TransitionPresets.SlideFromRightIOS
 });
 
 // wallet navigation stack
@@ -242,11 +248,11 @@ export const WalletNavigation = createStackNavigator(
     {
         initialRouteName: 'Dashboard',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center',
+
         navigationOptions: ({ navigation }) => ({
-            tabBarVisible: navigation.state.index < 1
-        }),
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+            tabBarVisible: navigation.state.index < 1,
+            headerTitleAlign: 'center'
+        })
     }
 );
 
@@ -310,11 +316,11 @@ export const SettingsNavigation = createStackNavigator(
     {
         initialRouteName: 'Settings',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
-            tabBarVisible: navigation.state.index < 1
-        }),
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+            tabBarVisible: navigation.state.index < 1,
+            headerTitleAlign: 'center',
+            headerVisible: false
+        })
     }
 );
 
@@ -328,11 +334,10 @@ export const ScanNavigation = createStackNavigator(
     {
         initialRouteName: 'SmartScan',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
-            tabBarVisible: navigation.state.index < 1
-        }),
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+            tabBarVisible: navigation.state.index < 1,
+            headerTitleAlign: 'center'
+        })
     }
 );
 
@@ -344,7 +349,7 @@ export const PromotionsNavigation = createStackNavigator(
                 context: { screen: 'Promotions' },
                 navigationOptions: {
                     title: 'Promotions',
-                    headerLeft: <HeaderIcon />
+                    headerLeft: () => <HeaderIcon />
                 }
             }
         },
@@ -429,11 +434,10 @@ export const PromotionsNavigation = createStackNavigator(
     {
         initialRouteName: 'SmartScreen',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
-            tabBarVisible: navigation.state.index < 1
-        }),
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+            tabBarVisible: navigation.state.index < 1,
+            headerTitleAlign: 'center'
+        })
     }
 );
 
@@ -461,6 +465,7 @@ export const navigationConfig = {
     Settings: {
         screen: SettingsNavigation,
         headerTransparent: true,
+
         navigationOptions: () => ({
             tabBarIcon: menuIcon(IconValues.SETTINGS)
         })
@@ -500,8 +505,9 @@ export const OnboardingNavigation = createStackNavigator(
     {
         initialRouteName: 'Onboarding',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center',
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+        navigationOptions: () => ({
+            headerTitleAlign: 'center'
+        })
     }
 );
 

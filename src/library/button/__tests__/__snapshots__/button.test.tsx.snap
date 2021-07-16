@@ -2,10 +2,10 @@
 
 exports[`library button renders correctly 1`] = `
 "<View testID=\\"buttonWrapper\\" style={{...}}>
-  <TouchableOpacity testID=\\"button\\" disabled={[undefined]} onPress={[undefined]} onPressIn={[undefined]} onPressOut={[undefined]} style={{...}} activeOpacity={0.2}>
+  <ForwardRef testID=\\"button\\" disabled={[undefined]} onPress={[undefined]} onPressIn={[undefined]} onPressOut={[undefined]} style={{...}}>
     <withTheme(TextComponent) style={{...}}>
       dummy
     </withTheme(TextComponent)>
-  </TouchableOpacity>
+  </ForwardRef>
 </View>"
 `;

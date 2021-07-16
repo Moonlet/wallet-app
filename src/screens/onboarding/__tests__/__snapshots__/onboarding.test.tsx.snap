@@ -3,9 +3,9 @@
 exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View testID=\\"onboarding-screen\\" style={{...}}>
   <View style={{...}}>
-    <TouchableOpacity activeOpacity={1} onPress={[Function: onPress]}>
+    <ForwardRef activeOpacity={1} onPress={[Function: onPress]}>
       <Image style={{...}} source={{...}} />
-    </TouchableOpacity>
+    </ForwardRef>
     <View style={{...}}>
       <withTheme(TextComponent) style={{...}}>
         Welcome to Moonlet!

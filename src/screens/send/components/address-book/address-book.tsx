@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    View,
-    Image,
-    TouchableOpacity,
-    SafeAreaView,
-    SectionList,
-    SectionListData
-} from 'react-native';
+import { View, Image, TouchableOpacity, SectionList, SectionListData } from 'react-native';
 import stylesProvider from './styles';
 import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -25,6 +18,7 @@ import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { HintsScreen, HintsComponent } from '../../../../redux/app/state';
 import { updateDisplayedHint } from '../../../../redux/app/actions';
 import { IconValues } from '../../../../components/icon/values';
+import SafeAreaView, { SafeAreaProvider } from 'react-native-safe-area-view';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactState>>;
@@ -187,16 +181,18 @@ export class AddressBookComponent extends React.Component<
             );
         } else {
             return (
-                <SafeAreaView style={styles.container}>
-                    <SectionList
-                        sections={contacts}
-                        keyExtractor={item => `${item.blockchain}|${item.address}`}
-                        renderItem={({ item, index }) => this.renderContact(item, index)}
-                        renderSectionHeader={({ section: { title } }) => (
-                            <Text style={styles.sectionTitle}>{title}</Text>
-                        )}
-                    />
-                </SafeAreaView>
+                <SafeAreaProvider>
+                    <SafeAreaView style={styles.container}>
+                        <SectionList
+                            sections={contacts}
+                            keyExtractor={item => `${item.blockchain}|${item.address}`}
+                            renderItem={({ item, index }) => this.renderContact(item, index)}
+                            renderSectionHeader={({ section: { title } }) => (
+                                <Text style={styles.sectionTitle}>{title}</Text>
+                            )}
+                        />
+                    </SafeAreaView>
+                </SafeAreaProvider>
             );
         }
     }

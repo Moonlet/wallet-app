@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, Clipboard } from 'react-native';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { Icon } from '../../components/icon/icon';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
@@ -84,7 +85,7 @@ interface IState {
 }
 
 const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    headerLeft: () => <HeaderLeftClose navigation={navigation} />,
     title: translate('Transaction.transactionDetails')
 });
 

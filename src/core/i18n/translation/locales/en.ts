@@ -133,6 +133,7 @@ export const translation: ITranslations = {
                 signMessage: 'Sign message',
                 simple: 'Simple',
                 simpleSetup: 'Simple setup',
+                somethingWrong: 'Something went wrong. Please try again',
                 standard: 'Standard',
                 stake: 'Stake',
                 staked: 'Staked',

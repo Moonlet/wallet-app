@@ -171,4 +171,12 @@ export class Client extends BlockchainGenericClient {
     public async getMinimumAmountDelegate(): Promise<BigNumber> {
         return new BigNumber(0);
     }
+
+    public async isActiveToken(
+        contractAddress: string,
+        accountAddress: string,
+        tokenType: TokenType
+    ) {
+        return this.tokens[tokenType].isActive(contractAddress, accountAddress);
+    }
 }

@@ -7,6 +7,8 @@ export class SplClient {
 
     public async getBalance(contractAddress: string, accountAddress: string): Promise<IBalance> {
         try {
+            // getTokenAccountBalance
+
             const balanceRes = await this.client.http.jsonRpc('getTokenAccountsByOwner', [
                 accountAddress,
                 {
@@ -31,11 +33,33 @@ export class SplClient {
                 total: new BigNumber(balance),
                 available: new BigNumber(balance)
             };
-        } catch {
+        } catch (error) {
             return {
                 total: new BigNumber(0),
                 available: new BigNumber(0)
             };
+        }
+    }
+
+    public async isActive(contractAddress: string, accountAddress: string): Promise<boolean> {
+        try {
+            const balanceRes = await this.client.http.jsonRpc('getTokenAccountsByOwner', [
+                accountAddress,
+                {
+                    mint: contractAddress
+                },
+                {
+                    encoding: 'jsonParsed'
+                }
+            ]);
+
+            return (
+                balanceRes?.result?.value &&
+                Array.isArray(balanceRes.result.value) &&
+                balanceRes.result.value.length >= 1
+            );
+        } catch (error) {
+            throw error;
         }
     }
 }

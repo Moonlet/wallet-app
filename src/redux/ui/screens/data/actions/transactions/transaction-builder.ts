@@ -111,7 +111,8 @@ export const buildContractCallTransaction = async (
                             type: SolanaTransactionInstructionType.CREATE_ASSOCIATED_TOKEN_ACCOUNT,
                             instructions: params.additionalInfo.instructions,
                             currentBlockHash: blockHash,
-                            posAction: PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT
+                            posAction: PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+                            tokenSymbol: params.additionalInfo.tokenSymbol
                         };
                         break;
                 }

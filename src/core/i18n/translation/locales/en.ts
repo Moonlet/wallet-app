@@ -10,6 +10,7 @@ export const translation: ITranslations = {
                 account: 'Account',
                 accounts: 'Accounts',
                 activate: 'Activate',
+                activated: 'Activated',
                 add: 'Add',
                 addToken: 'Add token',
                 advanced: 'Advanced',

@@ -83,7 +83,9 @@ const mapDispatchToProps = {
 };
 
 interface IState {
-    isActive: boolean;
+    splToken: {
+        state: 'default' | 'inactive' | 'active';
+    };
 }
 
 class DefaultTokenScreenComponent extends React.Component<
@@ -99,7 +101,7 @@ class DefaultTokenScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            isActive: true
+            splToken: undefined
         };
     }
 
@@ -110,6 +112,12 @@ class DefaultTokenScreenComponent extends React.Component<
         const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
         if (blockchain === Blockchain.SOLANA && tokenConfig.type === TokenType.SPL) {
+            this.setState({
+                splToken: {
+                    state: 'default'
+                }
+            });
+
             const client = getBlockchain(blockchain).getClient(chainId);
 
             try {
@@ -119,7 +127,11 @@ class DefaultTokenScreenComponent extends React.Component<
                     TokenType.SPL
                 );
 
-                this.setState({ isActive });
+                this.setState({
+                    splToken: {
+                        state: isActive ? 'active' : 'inactive'
+                    }
+                });
             } catch (error) {
                 //
             }
@@ -153,7 +165,8 @@ class DefaultTokenScreenComponent extends React.Component<
                 params: {
                     posAction: PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
                     baseAccountKey: account.address,
-                    mint: tokenConfig.contractAddress
+                    mint: tokenConfig.contractAddress,
+                    tokenSymbol: token.symbol
                 }
             });
 
@@ -271,13 +284,19 @@ class DefaultTokenScreenComponent extends React.Component<
                             {translate('App.labels.receive')}
                         </Button>
 
-                        {!this.state.isActive && (
+                        {this.state.splToken && (
                             <Button
                                 style={styles.button}
                                 wrapperStyle={{ flex: 1 }}
                                 onPress={() => this.activateSolanaSplToken()}
+                                disabledSecondary={
+                                    this.state.splToken.state === 'default' ||
+                                    this.state.splToken.state === 'active'
+                                }
                             >
-                                {translate('App.labels.activate')}
+                                {this.state.splToken.state === 'active'
+                                    ? translate('App.labels.activated')
+                                    : translate('App.labels.activate')}
                             </Button>
                         )}
 

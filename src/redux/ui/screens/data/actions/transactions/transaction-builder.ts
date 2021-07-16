@@ -199,7 +199,7 @@ export const buildContractCallTransaction = async (
             token: tokenConfig,
             address: account.address,
             publicKey: account.publicKey,
-            toAddress: contractAddress || '',
+            toAddress: contractAddress,
             amount: params.amount,
             feeOptions,
             broadcastedOnBlock: blockInfo.number,

@@ -45,6 +45,10 @@ export abstract class BlockchainGenericClient {
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
     public abstract getMinimumAmountDelegate(): Promise<BigNumber>;
 
+    public async getCurrentBlockHash(): Promise<string> {
+        return null;
+    }
+
     public canPerformAction(
         action: PosBasicActionType,
         options: {

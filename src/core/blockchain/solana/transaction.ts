@@ -25,6 +25,7 @@ import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
 import { getBlockchain } from '../blockchain-factory';
+import { Token } from '@solana/spl-token';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -52,6 +53,14 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();
                 transaction.add(tx.additionalInfo.instructions[0]);
+                break;
+
+            case SolanaTransactionInstructionType.CREATE_ASSOCIATED_TOKEN_ACCOUNT:
+                transaction = new Transaction();
+                let instructions: any = tx.additionalInfo.instructions;
+                instructions = instructions.map(i => new PublicKey(i));
+                // @ts-ignore
+                transaction.add(Token.createAssociatedTokenAccountInstruction(...instructions));
                 break;
         }
 

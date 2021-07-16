@@ -13,8 +13,13 @@ import { IReduxState } from '../../../../../state';
 import { getSelectedAccount } from '../../../../../wallets/selectors';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
-import { ContractMethod, TokenType } from '../../../../../../core/blockchain/types/token';
+import {
+    ContractMethod,
+    PosBasicActionType,
+    TokenType
+} from '../../../../../../core/blockchain/types/token';
 import abi from 'ethereumjs-abi';
+import { SolanaTransactionInstructionType } from '../../../../../../core/blockchain/solana/types';
 
 const contractCallFunctionsWhitelist = {
     [Blockchain.ZILLIQA]: [
@@ -23,7 +28,8 @@ const contractCallFunctionsWhitelist = {
         ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL,
         ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
     ],
-    [Blockchain.ETHEREUM]: [ContractMethod.INCREASE_ALLOWANCE, ContractMethod.DELEGATE]
+    [Blockchain.ETHEREUM]: [ContractMethod.INCREASE_ALLOWANCE, ContractMethod.DELEGATE],
+    [Blockchain.SOLANA]: [ContractMethod.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT]
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -87,6 +93,7 @@ export const buildContractCallTransaction = async (
                     params: dataParams
                 });
                 break;
+
             case Blockchain.ETHEREUM:
                 raw =
                     '0x' +
@@ -94,6 +101,23 @@ export const buildContractCallTransaction = async (
                         .simpleEncode(params.additionalInfo.contractMethodSignature, ...dataParams)
                         .toString('hex');
                 break;
+
+            case Blockchain.SOLANA: {
+                switch (params.additionalInfo.posAction) {
+                    case PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT:
+                        const blockHash = await client.getCurrentBlockHash();
+
+                        params.additionalInfo = {
+                            type: SolanaTransactionInstructionType.CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+                            instructions: params.additionalInfo.instructions,
+                            currentBlockHash: blockHash,
+                            posAction: PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT
+                        };
+                        break;
+                }
+
+                break;
+            }
         }
 
         let feeOptions: IFeeOptions;
@@ -128,17 +152,37 @@ export const buildContractCallTransaction = async (
         }
 
         if (fetchFeesBackup === true) {
-            feeOptions = await client.getFees(
-                TransactionType.CONTRACT_CALL,
-                {
-                    from: account.address,
-                    to: '',
-                    amount: params.amount,
-                    contractAddress,
-                    raw
-                },
-                account.blockchain === Blockchain.ZILLIQA ? TokenType.ZRC2 : TokenType.ERC20 // TODO change this when implementing other blockchains
-            );
+            try {
+                let tokenType: TokenType;
+
+                switch (account.blockchain) {
+                    case Blockchain.ZILLIQA:
+                        tokenType = TokenType.ZRC2;
+                        break;
+
+                    case Blockchain.SOLANA:
+                        tokenType = TokenType.SPL;
+                        break;
+
+                    default:
+                        tokenType = TokenType.ERC20;
+                        break;
+                }
+
+                feeOptions = await client.getFees(
+                    TransactionType.CONTRACT_CALL,
+                    {
+                        from: account.address,
+                        to: '',
+                        amount: params.amount,
+                        contractAddress,
+                        raw
+                    },
+                    tokenType
+                );
+            } catch (error) {
+                //
+            }
         }
 
         return {

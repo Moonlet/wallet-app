@@ -125,5 +125,8 @@ export enum Contracts {
     // CELO
     LOCKED_GOLD = 'LOCKED_GOLD',
     ELECTION = 'ELECTION',
-    ACCOUNTS = 'ACCOUNTS'
+    ACCOUNTS = 'ACCOUNTS',
+
+    // SOLANA
+    SPL = 'SPL'
 }

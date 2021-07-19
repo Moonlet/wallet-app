@@ -37,7 +37,7 @@ export class Solana implements IHardwareWalletApp {
     ): Promise<any> => {
         const client = SolanaBlockchain.getClient(tx.chainId) as SolanaClient;
 
-        let transaction;
+        let transaction: Transaction;
 
         switch (tx.additionalInfo.type) {
             case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
@@ -58,7 +58,9 @@ export class Solana implements IHardwareWalletApp {
 
             case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();
-                transaction.add(tx.additionalInfo.instructions[0]);
+                for (const i of tx.additionalInfo.instructions) {
+                    transaction.add(i);
+                }
                 break;
         }
 

@@ -54,7 +54,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
             case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();
-                transaction.add(tx.additionalInfo.instructions[0]);
+                for (const i of tx.additionalInfo.instructions) {
+                    transaction.add(i);
+                }
                 break;
 
             case SolanaTransactionInstructionType.CREATE_ASSOCIATED_TOKEN_ACCOUNT:
@@ -371,6 +373,15 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                         type: SolanaTransactionInstructionType.TRANSFER,
                         instructions: [
+                            // Token not created
+                            // Token.createAssociatedTokenAccountInstruction(
+                            //     ASSOCIATED_TOKEN_PROGRAM_ID,
+                            //     TOKEN_PROGRAM_ID,
+                            //     new PublicKey(mint),
+                            //     new PublicKey(destination), // associatedAddress
+                            //     new PublicKey(tx.toAddress), // owner
+                            //     new PublicKey(tx.account.address) // payer
+                            // ),
                             // @ts-ignore
                             Token.createTransferCheckedInstruction(
                                 TOKEN_PROGRAM_ID,

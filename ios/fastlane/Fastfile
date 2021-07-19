@@ -60,6 +60,12 @@ platform :ios do
         "signingStyle": "manual",
         compileBitcode: false
       })
+
+    app_store_connect_api_key(
+        key_id:  ENV['APPSTORE_KEY_ID'],
+        issuer_id:  ENV['APPSTORE_ISSUER_ID'],
+        key_filepath: "AuthKey.p8"
+      )
     
     
     pilot(

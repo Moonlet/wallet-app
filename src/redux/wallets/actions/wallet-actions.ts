@@ -688,24 +688,36 @@ export const sendTransferTransaction = (
     const blockchainInstance = getBlockchain(account.blockchain);
     const tokenConfig = getTokenConfig(account.blockchain, token);
 
-    const tx = await blockchainInstance.transaction.buildTransferTransaction({
-        chainId,
-        account,
-        toAddress,
-        amount: blockchainInstance.account.amountToStd(amount, tokenConfig.decimals).toFixed(),
-        token,
-        feeOptions: {
-            gasPrice: feeOptions.gasPrice.toString(),
-            gasLimit: feeOptions.gasLimit.toString()
-        },
-        extraFields
-    });
+    try {
+        const tx = await blockchainInstance.transaction.buildTransferTransaction({
+            chainId,
+            account,
+            toAddress,
+            amount: blockchainInstance.account.amountToStd(amount, tokenConfig.decimals).toFixed(),
+            token,
+            feeOptions: {
+                gasPrice: feeOptions.gasPrice.toString(),
+                gasLimit: feeOptions.gasLimit.toString()
+            },
+            extraFields
+        });
 
-    sendTransaction(tx, {
-        sendResponse,
-        goBack,
-        navigation
-    })(dispatch, getState);
+        sendTransaction(tx, {
+            sendResponse,
+            goBack,
+            navigation
+        })(dispatch, getState);
+    } catch (res) {
+        const errorMessage = res?.error || 'GENERIC_ERROR';
+
+        const message =
+            translate('LoadingModal.' + errorMessage, {
+                app: account.blockchain,
+                coin: res?.coin || blockchainInstance.config.coin
+            }) || translate('LoadingModal.GENERIC_ERROR');
+
+        Dialog.info(translate('LoadingModal.txFailed'), message);
+    }
 };
 
 export const sendTransaction = (

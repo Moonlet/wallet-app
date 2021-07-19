@@ -530,7 +530,11 @@ export const translation: ITranslations = {
                 'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.',
             GOVERNANCE_SIGN: 'Signing vote',
             GOVERNANCE_VOTING: 'Sending vote',
-            GOVERNANCE_VOTED: 'Voted successfully'
+            GOVERNANCE_VOTED: 'Voted successfully',
+            SPL_INVALID_ADDRESS:
+                'Something went wrong while validating the addresses. Please try again.',
+            SPL_INACTIVE_ADDRESS:
+                'The destination address account does not have an active {{coin}} token.'
         },
         SecurityChecks: {
             title: 'Security Warning!',

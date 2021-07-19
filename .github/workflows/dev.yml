@@ -130,7 +130,7 @@ jobs:
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: Generate p8 File
         run: |
-          echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/fastlane/AuthKey.p8
+          echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Cache node modules

@@ -12,6 +12,7 @@ import v12 from './012';
 import v13 from './013';
 import v14 from './014';
 import v15 from './015';
+import v16 from './016';
 
 export const migrations: any = {
     /**
@@ -69,5 +70,9 @@ export const migrations: any = {
     /**
      * Update validators redux - 21 Jun 2021
      */
-    15: v15
+    15: v15,
+    /**
+     * Add SOL SPL coins - 19 Jul 2021
+     */
+    16: v16
 };

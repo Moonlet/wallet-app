@@ -26,7 +26,8 @@ module.exports = (async () => {
             sourceExts: [...sourceExts, 'svg'],
             extraNodeModules: {
                 ...require('node-libs-react-native'),
-                vm: require.resolve('vm-browserify')
+                vm: require.resolve('vm-browserify'),
+                fs: require.resolve('react-native-fs')
             }
         }
     };

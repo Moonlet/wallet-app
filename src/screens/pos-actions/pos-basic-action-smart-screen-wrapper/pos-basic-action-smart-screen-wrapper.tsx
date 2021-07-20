@@ -5,7 +5,7 @@ import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withNavigationParams } from '../../../navigation/with-navigation-params';
 import { IThemeProps, withTheme } from '../../../core/theme/with-theme';
-import klona from 'klona';
+import { klona } from 'klona';
 import {
     handleDynamicCta,
     IHandleCtaActionContext

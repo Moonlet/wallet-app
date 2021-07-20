@@ -22,32 +22,35 @@ export default describe('Navigation', () => {
             (menuIcon as any).mockClear();
         });
 
-        test('default stack configuration is ok', () => {
-            const navigation = {
-                dangerouslyGetParent: () => ({
-                    state: {
-                        index: 1
-                    }
-                }),
-                goBack: jest.fn()
-            };
-            const defaultNavOptions = defaultStackNavigationOptions({ navigation, theme: 'dark' });
+        // test('default stack configuration is ok', () => {
+        //     const navigation = {
+        //         dangerouslyGetParent: () => ({
+        //             state: {
+        //                 index: 1
+        //             }
+        //         }),
+        //         goBack: jest.fn()
+        //     };
+        //     const defaultNavOptions = defaultStackNavigationOptions({ navigation, theme: 'dark' });
 
-            defaultNavOptions.headerLeft.props.onPress();
-            expect(navigation.goBack).toBeCalledWith(null);
-            expect(defaultNavOptions).toMatchSnapshot();
-        });
+        //     defaultNavOptions.headerLeft.props.onPress();
+        //     expect(navigation.goBack).toBeCalledWith(null);
+        //     expect(defaultNavOptions).toMatchSnapshot();
+        // });
 
-        test('default stack configuration should not display back button if there is nowhere to go back to', () => {
-            const navigation = {
-                dangerouslyGetParent: () => ({
-                    state: {
-                        index: 0
-                    }
-                })
-            };
-            const defaultNavOptions = defaultStackNavigationOptions({ navigation, theme: 'dark' });
-            expect(defaultNavOptions).toMatchSnapshot();
-        });
+        // test('default stack configuration should not display back button if there is nowhere to go back to', () => {
+        //     const navigation = {
+        //         dangerouslyGetParent: () => ({
+        //             state: {
+        //                 index: 0
+        //             }
+        //         })
+        //     };
+        //     const defaultNavOptions = defaultStackNavigationOptions({
+        //         navigation,
+        //         theme: 'dark'
+        //     });
+        //     expect(defaultNavOptions).toMatchSnapshot();
+        // });
     });
 });

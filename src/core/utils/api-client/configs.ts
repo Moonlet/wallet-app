@@ -18,7 +18,8 @@ export class ConfigsApiClient {
                     data: {
                         keys
                     },
-                    error
+                    error,
+                    code: error?.code
                 })
             });
 

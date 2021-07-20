@@ -69,7 +69,7 @@ const mapDispatchToProps = {
 };
 
 const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    headerLeft: () => <HeaderLeftClose navigation={navigation} />,
     title: translate('Wallets.manageWallets')
 });
 

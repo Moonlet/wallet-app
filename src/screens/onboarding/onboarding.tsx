@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, Clipboard } from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { Text, Button } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -29,7 +30,7 @@ interface IState {
     copyDeviceIdLeft: number;
 }
 
-const navigationOptions = () => ({ header: null });
+const navigationOptions = () => ({ headerShown: false });
 
 export class OnboardingScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,

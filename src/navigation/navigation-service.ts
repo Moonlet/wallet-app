@@ -43,9 +43,7 @@ export const NavigationService = (() => {
         navigator?.dispatch(
             StackActions.pop({
                 n: count,
-                immediate: options?.immediate,
-                prune: options?.prune,
-                key: options?.key
+                immediate: options?.immediate
             })
         );
     };

@@ -33,6 +33,10 @@ class TotalBalanceComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
 
+    private toggleCumulativeBalance() {
+        this.props.toggleCumulativeBalance();
+    }
+
     public render() {
         const { cumulativeBalance, styles, theme } = this.props;
 
@@ -42,7 +46,7 @@ class TotalBalanceComponent extends React.Component<
                     <Text style={styles.cumulativeText}>{translate('App.labels.cumulative')}</Text>
                     <View style={styles.switch}>
                         <Switch
-                            onValueChange={() => this.props.toggleCumulativeBalance()}
+                            onValueChange={() => this.toggleCumulativeBalance()}
                             value={cumulativeBalance}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,

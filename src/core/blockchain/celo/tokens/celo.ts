@@ -1,7 +1,7 @@
 import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
 import BigNumber from 'bignumber.js';
-import klona from 'klona';
+import { klona } from 'klona';
 import { Platform } from 'react-native';
 
 export const CELO_GOLD_NATIVE: ITokenConfigState = {

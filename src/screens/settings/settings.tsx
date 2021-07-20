@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Switch, TouchableOpacity, Platform, Clipboard } from 'react-native';
+import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -56,7 +57,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({
     title: translate('App.labels.settings'),
-    headerLeft: <HeaderIcon />
+    headerLeft: () => <HeaderIcon />
 });
 
 export class SettingsScreenComponent extends React.Component<

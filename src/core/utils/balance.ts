@@ -44,6 +44,8 @@ export const calculateBalance = (
                     new BigNumber(amountConverted),
                     blockchainCoinTokenConfig.decimals
                 );
+
+                if (amount.isNaN()) amount = new BigNumber(0);
             }
 
             // Consider Cumulative Balance

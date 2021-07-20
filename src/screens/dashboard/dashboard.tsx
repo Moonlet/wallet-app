@@ -112,7 +112,7 @@ const MyTitle = ({ text }) => (
         style={{
             flex: 1,
             fontSize: normalizeFontAndLineHeight(20),
-            lineHeight: normalizeFontAndLineHeight(25),
+            lineHeight: normalizeFontAndLineHeight(44),
             letterSpacing: LETTER_SPACING,
             textAlign: 'center'
         }}
@@ -148,8 +148,8 @@ const UnreadNotifCircle = () => (
 
 const navigationOptions = ({ navigation, theme }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
-    headerLeft: <HeaderIcon />,
-    headerRight: (
+    headerLeft: () => <HeaderIcon />,
+    headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
                 testID="wallets-icon"
@@ -434,9 +434,10 @@ export class DashboardScreenComponent extends React.Component<
                     ]}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
-                    onScroll={Animated.event([
-                        { nativeEvent: { contentOffset: { y: this.animationValue } } }
-                    ])}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: this.animationValue } } }],
+                        { useNativeDriver: false }
+                    )}
                     alwaysBounceVertical={false}
                 >
                     <TokenDashboard

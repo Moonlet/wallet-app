@@ -22,7 +22,7 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { calculateBalance } from '../../../core/utils/balance';
 import { Amount } from '../../../components/amount/amount';
 import { IExtensionRequest } from '../../../core/communication/extension';
-import klona from 'klona';
+import { klona } from 'klona';
 
 interface IExternalProps {
     request: IExtensionRequest;

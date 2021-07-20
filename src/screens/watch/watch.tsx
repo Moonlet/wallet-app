@@ -9,7 +9,7 @@ import { Text } from '../../library';
 import { SkeletonRow } from '../../components/skeleton-row/skeleton-row';
 
 export const navigationOptions = () => ({
-    headerLeft: <HeaderIcon />,
+    headerLeft: () => <HeaderIcon />,
     title: translate('App.labels.watch')
 });
 

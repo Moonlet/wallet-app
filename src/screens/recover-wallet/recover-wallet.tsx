@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ScrollView, Clipboard } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { Text, TabSelect } from '../../library';
 import { Button } from '../../library/button/button';
 import stylesProvider from './styles';
@@ -19,7 +20,10 @@ import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 interface IState {
     mnemonic: string[];
@@ -132,13 +136,28 @@ export class RecoverWalletScreenComponent extends React.Component<
             });
             this.createWallet(currentPassword);
         } catch (err) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    err
+                })
+            });
+
             try {
                 const newPassword = await PasswordModal.createPassword();
                 this.createWallet(newPassword);
-            } catch (err) {
-                SentryCaptureException(new Error(JSON.stringify(err)));
-                return Promise.reject(err);
+            } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        error
+                    })
+                });
+
+                SentryCaptureException(new Error(`Cannot recover wallet, ${error?.message}`));
+                return Promise.reject(error);
             }
+
+            SentryCaptureException(new Error(`Cannot recover wallet, ${err?.message}`));
+            return Promise.reject(err);
         }
     }
 

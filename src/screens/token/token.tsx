@@ -98,7 +98,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
         const TokenIconComponent = tokenIcon.iconComponent;
 
         return (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <SmartImage
                     source={{
                         iconComponent: TokenIconComponent,

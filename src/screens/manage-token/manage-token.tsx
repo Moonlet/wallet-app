@@ -68,7 +68,7 @@ const mapDispatchToProps = {
 };
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    headerLeft: () => <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.addToken')
 });
 

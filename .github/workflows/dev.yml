@@ -32,16 +32,16 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
+      - name: Yarn install
+        run: yarn
       - name: Generate icons
-        run: npm run generate-icons
+        run: yarn run generate-icons
       - name: Generate firebase web config file
         run: |
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: Run unit tests
-        run: npm test
+        run: yarn test
       - name: Upload coverage to Codecov
         env:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
@@ -93,12 +93,12 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
+      - name: Yarn install
+        run: yarn
       - name: Get sign ssh-keys
         run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
       - name: Generate fonts and icons
-        run: npm run generate-icons
+        run: yarn run generate-icons
       - name: Run fastlane beta
         run: cd android/fastlane && bundle exec fastlane beta
         env:
@@ -135,12 +135,12 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
+      - name: Yarn install
+        run: yarn
       - name: Cocoapods install
         run: cd ios && pod install
       - name: Generate fonts and icons
-        run: npm run generate-icons
+        run: yarn run generate-icons
       - name: Run fastlane beta
         run: xcversion select 12.0.1 && cd ios/fastlane && SPACESHIP_SKIP_2FA_UPGRADE=1 bundle exec fastlane beta
         env:

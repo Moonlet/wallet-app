@@ -37,7 +37,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({
     title: translate('DashboardMenu.transactionHistory'),
-    headerLeft: (
+    headerLeft: () => (
         <HeaderLeft
             testID="go-back"
             icon={IconValues.ARROW_LEFT}
@@ -46,13 +46,19 @@ const navigationOptions = () => ({
     )
 });
 
-const TransactionsHistoryScreenComponent = (
-    props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
-) => {
-    const updateTransactions = () => {
-        props.transactions?.map((transaction: IBlockchainTransaction) => {
+class TransactionsHistoryScreenComponent extends React.Component<
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
+> {
+    static navigationOptions = navigationOptions;
+
+    public componentDidMount() {
+        this.updateTransactions();
+    }
+
+    private updateTransactions() {
+        this.props.transactions?.map((transaction: IBlockchainTransaction) => {
             if (transaction.status === TransactionStatus.PENDING) {
-                props.updateTransactionFromBlockchain(
+                this.props.updateTransactionFromBlockchain(
                     transaction.id,
                     transaction.blockchain,
                     transaction.chainId,
@@ -60,24 +66,22 @@ const TransactionsHistoryScreenComponent = (
                 );
             }
         });
-    };
+    }
 
-    React.useEffect(() => updateTransactions(), []);
-
-    return (
-        <View style={props.styles.container}>
-            <TestnetBadge />
-            <TransactionsHistoryList
-                transactions={props.transactions}
-                account={props.selectedAccount}
-                navigation={props.navigation}
-                onRefresh={() => updateTransactions()}
-            />
-        </View>
-    );
-};
-
-TransactionsHistoryScreenComponent.navigationOptions = navigationOptions;
+    public render() {
+        return (
+            <View style={this.props.styles.container}>
+                <TestnetBadge />
+                <TransactionsHistoryList
+                    transactions={this.props.transactions}
+                    account={this.props.selectedAccount}
+                    navigation={this.props.navigation}
+                    onRefresh={() => this.updateTransactions()}
+                />
+            </View>
+        );
+    }
+}
 
 export const TransactionsHistoryScreen = smartConnect(TransactionsHistoryScreenComponent, [
     connect(mapStateToProps, mapDispatchToProps),

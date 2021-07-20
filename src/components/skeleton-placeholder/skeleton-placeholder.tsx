@@ -23,7 +23,7 @@ export class SkeletonPlaceholderComponent extends React.Component<
                 toValue: 1,
                 duration: this.props?.speed || 700,
                 easing: Easing.ease,
-                useNativeDriver: true
+                useNativeDriver: false
             })
         ).start();
     }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Clipboard } from 'react-native';
+import { View } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { Text, Checkbox } from '../../library';
 import { NavigationActions } from 'react-navigation';
 import { Button } from '../../library/button/button';

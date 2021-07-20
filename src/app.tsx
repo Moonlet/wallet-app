@@ -36,6 +36,7 @@ import { fetchScreenData } from './redux/ui/screens/data/actions';
 import { InfoModal } from './components/info-modal/info-modal';
 import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
 import { UniversalLinks } from './core/universal-links';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -187,39 +188,42 @@ export default class App extends React.Component<{}, IState> {
         if (bgRequest) {
             return <ExtensionBackgroundRequest />;
         } else {
+            // SafeAreaProvider used to prevent header form jumping off
             return (
-                <AppContainer
-                    ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
-                    theme="dark"
-                    onNavigationStateChange={(_, newState) => {
-                        if (!isEqual(this.state.navigationState, newState)) {
-                            this.setState({ navigationState: newState });
+                <SafeAreaProvider>
+                    <AppContainer
+                        ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
+                        theme="dark"
+                        onNavigationStateChange={(_, newState) => {
+                            if (!isEqual(this.state.navigationState, newState)) {
+                                this.setState({ navigationState: newState });
 
-                            const currentRoute = NavigationService.getCurrentRouteWithParams();
+                                const currentRoute = NavigationService.getCurrentRouteWithParams();
 
-                            // Sentry Breadcrumbs
-                            currentRoute &&
-                                currentRoute?.routeName &&
-                                addBreadcrumb({
-                                    message: JSON.stringify({
-                                        route: currentRoute.routeName,
-                                        params:
-                                            currentRoute?.params &&
-                                            filterObjectProps(currentRoute.params, [
-                                                'blockchain',
-                                                'accountIndex',
-                                                'step',
-                                                'appNetworks',
-                                                'transaction',
-                                                'wallet.selectedBlockchain',
-                                                'wallet.type',
-                                                'wallet.hwOptions'
-                                            ])
-                                    })
-                                });
-                        }
-                    }}
-                />
+                                // Sentry Breadcrumbs
+                                currentRoute &&
+                                    currentRoute?.routeName &&
+                                    addBreadcrumb({
+                                        message: JSON.stringify({
+                                            route: currentRoute.routeName,
+                                            params:
+                                                currentRoute?.params &&
+                                                filterObjectProps(currentRoute.params, [
+                                                    'blockchain',
+                                                    'accountIndex',
+                                                    'step',
+                                                    'appNetworks',
+                                                    'transaction',
+                                                    'wallet.selectedBlockchain',
+                                                    'wallet.type',
+                                                    'wallet.hwOptions'
+                                                ])
+                                        })
+                                    });
+                            }
+                        }}
+                    />
+                </SafeAreaProvider>
             );
         }
     }

@@ -54,7 +54,6 @@ platform :ios do
     else
       match(api_key: api_key,type: "appstore")
     end
- 
 
     
 
@@ -89,10 +88,14 @@ platform :ios do
     increment_version_number(version_number: package["version"])
     increment_build_number(build_number: number_of_commits)
 
+    api_key = app_store_connect_api_key(
+      key_id:  ENV['APPSTORE_KEY_ID'],
+      issuer_id:  ENV['APPSTORE_ISSUER_ID'],
+      key_filepath: "AuthKey.p8"
+    )
 
-   # File.write("metadata/en-US/release_notes.txt", changelog)  - this is for whats new in this version....
 
-    match(type: "appstore")
+    match(api_key: api_key, type: "appstore")
     if is_ci
       create_keychain(
         name: "CI",
@@ -104,17 +107,16 @@ platform :ios do
       )
 
       match(
+        api_key: api_key,
         type: "appstore",
         keychain_name: "CI",
         keychain_password: ENV['KEYCHAIN_TOKEN']
       )
 
     else
-      match(type: "appstore")
+      match(api_key: api_key, type: "appstore")
     end
  
-    get_push_certificate(app_identifier: "com.moonlet")
-
     gym(workspace: "Moonlet.xcworkspace", 
       scheme: "Moonlet", 
       export_method: "app-store",
@@ -126,7 +128,7 @@ platform :ios do
         compileBitcode: false
       })
     
-      upload_to_app_store(force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: false, 
+      upload_to_app_store(api_key: api_key, force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: false, 
         submission_information: { add_id_info_uses_idfa: false })
   
 

@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - fastlane
 
 name: Beta build & deploy
 jobs:

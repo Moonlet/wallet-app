@@ -55,7 +55,6 @@ platform :ios do
       match(api_key: api_key,type: "appstore")
     end
  
-    get_push_certificate(api_key: api_key, app_identifier: "com.moonlet.beta")
 
     
 

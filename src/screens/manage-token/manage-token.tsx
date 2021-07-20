@@ -33,24 +33,20 @@ import { ITokenConfigState } from '../../redux/tokens/state';
 import { addToken } from '../../redux/tokens/actions';
 import { CONFIG } from '../../config';
 import { SearchInput } from '../../components/search-input/search-input';
-import { bind } from 'bind-decorator';
 import { IconValues } from '../../components/icon/values';
 import { XSGD_MAINNET } from '../../core/blockchain/zilliqa/tokens/xsgd';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { NavigationService } from '../../navigation/navigation-service';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
-export interface IReduxProps {
+interface IReduxProps {
     selectedAccount: IAccountState;
     addToken: typeof addToken;
     chainId: ChainIdType;
     tokens: ITokenConfigState;
-}
-
-interface IState {
-    fieldInput: string;
-    token: ITokenConfigState;
-    showError: boolean;
-    isLoading: boolean;
-    isTokenSelected: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -67,12 +63,20 @@ const mapDispatchToProps = {
     addToken
 };
 
-export const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation }: any) => ({
     headerLeft: () => <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.addToken')
 });
 
-export class ManageTokenComponent extends React.Component<
+interface IState {
+    fieldInput: string;
+    token: ITokenConfigState;
+    showError: boolean;
+    isLoading: boolean;
+    isTokenSelected: boolean;
+}
+
+class ManageTokenComponent extends React.Component<
     IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -92,7 +96,7 @@ export class ManageTokenComponent extends React.Component<
         };
     }
 
-    public getTokenType(blockchain: Blockchain) {
+    private getTokenType(blockchain: Blockchain) {
         switch (blockchain) {
             case Blockchain.ETHEREUM:
                 return TokenType.ERC20;
@@ -100,12 +104,15 @@ export class ManageTokenComponent extends React.Component<
             case Blockchain.ZILLIQA:
                 return TokenType.ZRC2;
 
+            case Blockchain.SOLANA:
+                return TokenType.SPL;
+
             default:
                 return TokenType.ZRC2;
         }
     }
 
-    public getReduxTokenSymbol = (): string => {
+    private getReduxTokenSymbol = (): string => {
         if (this.props.tokens) {
             const filterResult = Object.keys(this.props.tokens).filter(
                 key =>
@@ -119,7 +126,7 @@ export class ManageTokenComponent extends React.Component<
         return undefined;
     };
 
-    public convertTokenToState(staticToken: any, blockchainToken: any) {
+    private convertTokenToState(staticToken: any, blockchainToken: any) {
         // TODO enforce this after eth callContract is fixed
         // if (blockchainToken) {
         if (blockchainToken) {
@@ -156,7 +163,7 @@ export class ManageTokenComponent extends React.Component<
         // }
     }
 
-    public async isContractAddress(input: string) {
+    private async isContractAddress(input: string) {
         const blockchainInstance = getBlockchain(this.props.selectedAccount.blockchain);
         try {
             const response = await blockchainInstance
@@ -173,7 +180,7 @@ export class ManageTokenComponent extends React.Component<
         }
     }
 
-    public async findToken() {
+    private async findToken() {
         this.setState({ isLoading: true });
         const blockchain = this.props.selectedAccount.blockchain;
         const tokenSymbol = this.getReduxTokenSymbol();
@@ -204,8 +211,22 @@ export class ManageTokenComponent extends React.Component<
                     staticToken = await getTokenInfo[0].json();
                 }
                 blockchainToken = getTokenInfo[1];
-            } catch {
-                //
+            } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            blockchain,
+                            tokenSymbol,
+                            staticToken,
+                            blockchainToken
+                        },
+                        error
+                    })
+                });
+
+                SentryCaptureException(
+                    new Error(`Cannot find token, ${blockchain}, ${error?.message}`)
+                );
             }
         } else {
             try {
@@ -221,8 +242,22 @@ export class ManageTokenComponent extends React.Component<
                 } else {
                     this.setState({ showError: true, isLoading: false });
                 }
-            } catch {
-                //
+            } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            blockchain,
+                            tokenSymbol,
+                            staticToken,
+                            blockchainToken
+                        },
+                        error
+                    })
+                });
+
+                SentryCaptureException(
+                    new Error(`Cannot find token, ${blockchain}, ${error?.message}`)
+                );
             }
         }
 
@@ -236,16 +271,19 @@ export class ManageTokenComponent extends React.Component<
 
     public saveToken() {
         this.props.addToken(this.props.selectedAccount, this.state.token);
-        this.props.navigation.goBack();
+        NavigationService.goBack();
     }
 
-    @bind
-    public onSearchInput(text: string) {
-        this.setState({ fieldInput: text, isTokenSelected: false });
+    private onSearchInput(text: string) {
+        this.setState({
+            fieldInput: text,
+            token: undefined,
+            showError: false,
+            isTokenSelected: false
+        });
     }
 
-    @bind
-    public onClose() {
+    private onClose() {
         this.setState({
             fieldInput: undefined,
             token: undefined,
@@ -266,9 +304,10 @@ export class ManageTokenComponent extends React.Component<
                     <View style={styles.inputContainer}>
                         <SearchInput
                             placeholderText={translate('Token.searchToken')}
-                            onChangeText={this.onSearchInput}
-                            onClose={this.onClose}
+                            onChangeText={(text: string) => this.onSearchInput(text)}
+                            onClose={() => this.onClose()}
                         />
+
                         {this.state.isLoading && <LoadingIndicator />}
 
                         {this.state.token && this.state.token?.symbol && (
@@ -282,9 +321,9 @@ export class ManageTokenComponent extends React.Component<
                             >
                                 <SmartImage source={this.state.token?.icon} />
                                 <View style={styles.accountInfoContainer}>
-                                    <Text
-                                        style={styles.tokenNameText}
-                                    >{`${this.state.token.name} (${this.state.token.symbol})`}</Text>
+                                    <Text style={styles.tokenNameText}>
+                                        {`${this.state.token.name} (${this.state.token.symbol})`}
+                                    </Text>
                                     <Text style={styles.tokenAddressText}>
                                         {`${translate('App.labels.contract')}: ${formatAddress(
                                             this.state.token.contractAddress,

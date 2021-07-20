@@ -710,6 +710,18 @@ export const sendTransferTransaction = (
     } catch (res) {
         const errorMessage = res?.error || 'GENERIC_ERROR';
 
+        SentryAddBreadcrumb({
+            message: JSON.stringify({
+                error: res
+            })
+        });
+
+        SentryCaptureException(
+            new Error(
+                `Failed to send transfer transaction on ${account.blockchain}, ${res?.message}, ${res?.code}`
+            )
+        );
+
         const message =
             translate('LoadingModal.' + errorMessage, {
                 app: account.blockchain,

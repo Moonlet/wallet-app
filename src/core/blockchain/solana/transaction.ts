@@ -25,7 +25,7 @@ import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
 import { getBlockchain } from '../blockchain-factory';
-import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 
@@ -304,45 +304,42 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 let source: string;
                 let destination: string;
+                let destinationActive: boolean;
 
                 const mint = tokenInfo.contractAddress;
 
                 try {
-                    const destinationActive = await client.isActiveToken(
+                    destinationActive = await client.isActiveToken(
                         mint,
                         tx.toAddress,
                         TokenType.SPL
                     );
-                    if (!destinationActive) {
+
+                    const sourceRes = await apiClient.post(
+                        '/blockchain/solana/spl/associatedAddress',
+                        {
+                            owner: tx.account.address,
+                            mint
+                        }
+                    );
+                    source = sourceRes?.result?.data;
+
+                    const destinationRes = await apiClient.post(
+                        '/blockchain/solana/spl/associatedAddress',
+                        {
+                            owner: tx.toAddress,
+                            mint
+                        }
+                    );
+                    destination = destinationRes?.result?.data;
+
+                    if (!source || !destination) {
                         await LoadingModal.close();
-                        return Promise.reject({
-                            error: 'SPL_INACTIVE_ADDRESS',
-                            coin: tokenInfo.symbol
-                        });
+                        return Promise.reject({ error: 'SPL_INVALID_ADDRESS' });
                     }
                 } catch (error) {
                     await LoadingModal.close();
-                    throw new error();
-                }
-
-                const sourceRes = await apiClient.post('/blockchain/solana/spl/associatedAddress', {
-                    owner: tx.account.address,
-                    mint
-                });
-                source = sourceRes?.result?.data;
-
-                const destinationRes = await apiClient.post(
-                    '/blockchain/solana/spl/associatedAddress',
-                    {
-                        owner: tx.toAddress,
-                        mint
-                    }
-                );
-                destination = destinationRes?.result?.data;
-
-                if (!source || !destination) {
-                    await LoadingModal.close();
-                    return Promise.reject({ error: 'SPL_INVALID_ADDRESS' });
+                    throw error;
                 }
 
                 await LoadingModal.close();
@@ -374,14 +371,15 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         type: SolanaTransactionInstructionType.TRANSFER,
                         instructions: [
                             // Token not created
-                            // Token.createAssociatedTokenAccountInstruction(
-                            //     ASSOCIATED_TOKEN_PROGRAM_ID,
-                            //     TOKEN_PROGRAM_ID,
-                            //     new PublicKey(mint),
-                            //     new PublicKey(destination), // associatedAddress
-                            //     new PublicKey(tx.toAddress), // owner
-                            //     new PublicKey(tx.account.address) // payer
-                            // ),
+                            !destinationActive &&
+                                Token.createAssociatedTokenAccountInstruction(
+                                    ASSOCIATED_TOKEN_PROGRAM_ID,
+                                    TOKEN_PROGRAM_ID,
+                                    new PublicKey(mint),
+                                    new PublicKey(destination), // associatedAddress
+                                    new PublicKey(tx.toAddress), // owner
+                                    new PublicKey(tx.account.address) // payer
+                                ),
                             // @ts-ignore
                             Token.createTransferCheckedInstruction(
                                 TOKEN_PROGRAM_ID,

@@ -167,7 +167,7 @@ export class ClientUtils implements IClientUtils {
         const methodNameHex = data.substring(2, 10);
 
         switch (methodNameHex) {
-            case abi.methodID('increaseAllowance', ['address', 'uint256']).toString('hex'):
+            case abi.methodID('approve', ['address', 'uint256']).toString('hex'):
                 return MethodSignature.INCREASE_ALLOWANCE;
             case abi.methodID('delegate', ['address', 'uint256']).toString('hex'):
                 return MethodSignature.DELEGATE;

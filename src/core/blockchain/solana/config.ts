@@ -6,6 +6,13 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
 import { IconValues } from '../../../components/icon/values';
+// import { USDC_MAINNET, USDC_TESTNET } from './tokens/usdc';
+// import { USDT_MAINNET } from './tokens/usdt';
+// import { BTC_MAINNET } from './tokens/btc';
+// import { ETH_MAINNET } from './tokens/eth';
+// import { SRM_MAINNET } from './tokens/srm';
+// import { LINK_MAINNET } from './tokens/link';
+// import { UNI_MAINNET } from './tokens/uni';
 
 export const SOL_NATIVE: ITokenConfigState = {
     name: 'Solana',
@@ -96,7 +103,20 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'NA',
     droppedTxBlocksThreshold: 360,
     iconComponent: SolIcon,
-    autoAddedTokensSymbols: {},
+    autoAddedTokensSymbols: {
+        // '1': {
+        //     USDT: USDT_MAINNET,
+        //     USDC: USDC_MAINNET,
+        //     BTC: BTC_MAINNET,
+        //     ETH: ETH_MAINNET,
+        //     SRM: SRM_MAINNET,
+        //     LINK: LINK_MAINNET,
+        //     UNI: UNI_MAINNET
+        // },
+        // '3': {
+        //     USDC: USDC_TESTNET
+        // }
+    },
     tokens: {
         SOL: SOL_NATIVE
     },
@@ -105,7 +125,8 @@ export const config: IBlockchainConfig = {
         defaults: {
             gasPrice: new BigNumber(10000000),
             gasLimit: {
-                [TokenType.NATIVE]: new BigNumber(1)
+                [TokenType.NATIVE]: new BigNumber(1),
+                [TokenType.SPL]: new BigNumber(1)
             }
         },
         ui: {

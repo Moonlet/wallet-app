@@ -347,6 +347,11 @@ class ProcessTransactionsComponent extends React.Component<
                 topText = translate('Validator.unselectStakingPool');
                 break;
             }
+            case PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT: {
+                topText = `${translate('App.labels.activate')} ${tx.additionalInfo.tokenSymbol}`;
+                middleText = '0.00203928 SOL used for rent';
+                break;
+            }
             default: {
                 middleText = '';
                 topText = amount;

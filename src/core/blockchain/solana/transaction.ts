@@ -25,6 +25,9 @@ import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
 import { getBlockchain } from '../blockchain-factory';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { ApiClient } from '../../utils/api-client/api-client';
+import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -51,7 +54,17 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
             case SolanaTransactionInstructionType.TRANSFER:
                 transaction = new Transaction();
-                transaction.add(tx.additionalInfo.instructions[0]);
+                for (const i of tx.additionalInfo.instructions) {
+                    transaction.add(i);
+                }
+                break;
+
+            case SolanaTransactionInstructionType.CREATE_ASSOCIATED_TOKEN_ACCOUNT:
+                transaction = new Transaction();
+                let instructions: any = tx.additionalInfo.instructions;
+                instructions = instructions.map(i => new PublicKey(i));
+                // @ts-ignore
+                transaction.add(Token.createAssociatedTokenAccountInstruction(...instructions));
                 break;
         }
 
@@ -283,40 +296,143 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         const blockHash = await client.getCurrentBlockHash();
         const blockInfo = await client.getCurrentBlock();
 
-        return {
-            date: {
-                created: Date.now(),
-                signed: Date.now(),
-                broadcasted: Date.now(),
-                confirmed: Date.now()
-            },
-            blockchain: tx.account.blockchain,
-            chainId: tx.chainId,
-            type: TransactionType.TRANSFER,
-            token: tokenInfo,
+        switch (tokenInfo.type) {
+            case TokenType.SPL: {
+                await LoadingModal.open();
 
-            address: tx.account.address,
-            publicKey: tx.account.publicKey,
+                const apiClient = new ApiClient().http;
 
-            toAddress: tx.toAddress,
-            amount: tx.amount,
-            feeOptions: tx.feeOptions,
-            broadcastedOnBlock: blockInfo?.number,
-            nonce: 0, // not used
-            status: TransactionStatus.PENDING,
-            additionalInfo: {
-                currentBlockHash: blockHash,
+                let source: string;
+                let destination: string;
+                let destinationActive: boolean;
 
-                type: SolanaTransactionInstructionType.TRANSFER,
-                instructions: [
-                    SystemProgram.transfer({
-                        fromPubkey: new PublicKey(tx.account.address),
-                        toPubkey: new PublicKey(tx.toAddress),
-                        lamports: tx.amount
-                    })
-                ]
+                const mint = tokenInfo.contractAddress;
+
+                try {
+                    destinationActive = await client.isActiveToken(
+                        mint,
+                        tx.toAddress,
+                        TokenType.SPL
+                    );
+
+                    const sourceRes = await apiClient.post(
+                        '/blockchain/solana/spl/associatedAddress',
+                        {
+                            owner: tx.account.address,
+                            mint
+                        }
+                    );
+                    source = sourceRes?.result?.data;
+
+                    const destinationRes = await apiClient.post(
+                        '/blockchain/solana/spl/associatedAddress',
+                        {
+                            owner: tx.toAddress,
+                            mint
+                        }
+                    );
+                    destination = destinationRes?.result?.data;
+
+                    if (!source || !destination) {
+                        await LoadingModal.close();
+                        return Promise.reject({ error: 'SPL_INVALID_ADDRESS' });
+                    }
+                } catch (error) {
+                    await LoadingModal.close();
+                    throw error;
+                }
+
+                await LoadingModal.close();
+
+                return {
+                    date: {
+                        created: Date.now(),
+                        signed: Date.now(),
+                        broadcasted: Date.now(),
+                        confirmed: Date.now()
+                    },
+                    blockchain: tx.account.blockchain,
+                    chainId: tx.chainId,
+                    type: TransactionType.TRANSFER,
+                    token: tokenInfo,
+
+                    address: tx.account.address,
+                    publicKey: tx.account.publicKey,
+
+                    toAddress: tx.toAddress,
+                    amount: tx.amount,
+                    feeOptions: tx.feeOptions,
+                    broadcastedOnBlock: blockInfo?.number,
+                    nonce: 0, // not used
+                    status: TransactionStatus.PENDING,
+                    additionalInfo: {
+                        currentBlockHash: blockHash,
+
+                        type: SolanaTransactionInstructionType.TRANSFER,
+                        instructions: [
+                            // Token not created
+                            !destinationActive &&
+                                Token.createAssociatedTokenAccountInstruction(
+                                    ASSOCIATED_TOKEN_PROGRAM_ID,
+                                    TOKEN_PROGRAM_ID,
+                                    new PublicKey(mint),
+                                    new PublicKey(destination), // associatedAddress
+                                    new PublicKey(tx.toAddress), // owner
+                                    new PublicKey(tx.account.address) // payer
+                                ),
+                            // @ts-ignore
+                            Token.createTransferCheckedInstruction(
+                                TOKEN_PROGRAM_ID,
+                                new PublicKey(source), // source
+                                new PublicKey(tokenInfo.contractAddress), // mint
+                                new PublicKey(destination), // destination
+                                new PublicKey(tx.account.address), // owner
+                                [], // multiSigners
+                                Number(tx.amount), // amount
+                                tokenInfo.decimals // decimals
+                            )
+                        ]
+                    }
+                };
             }
-        };
+
+            default:
+                // case TokenType.NATIVE:
+                return {
+                    date: {
+                        created: Date.now(),
+                        signed: Date.now(),
+                        broadcasted: Date.now(),
+                        confirmed: Date.now()
+                    },
+                    blockchain: tx.account.blockchain,
+                    chainId: tx.chainId,
+                    type: TransactionType.TRANSFER,
+                    token: tokenInfo,
+
+                    address: tx.account.address,
+                    publicKey: tx.account.publicKey,
+
+                    toAddress: tx.toAddress,
+                    amount: tx.amount,
+                    feeOptions: tx.feeOptions,
+                    broadcastedOnBlock: blockInfo?.number,
+                    nonce: 0, // not used
+                    status: TransactionStatus.PENDING,
+                    additionalInfo: {
+                        currentBlockHash: blockHash,
+
+                        type: SolanaTransactionInstructionType.TRANSFER,
+                        instructions: [
+                            SystemProgram.transfer({
+                                fromPubkey: new PublicKey(tx.account.address),
+                                toPubkey: new PublicKey(tx.toAddress),
+                                lamports: tx.amount
+                            })
+                        ]
+                    }
+                };
+        }
     }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {

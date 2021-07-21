@@ -1,7 +1,8 @@
 export enum TokenType {
     NATIVE = 'NATIVE',
     ERC20 = 'ERC20',
-    ZRC2 = 'ZRC2'
+    ZRC2 = 'ZRC2',
+    SPL = 'SPL'
 }
 
 export enum TokenScreenComponentType {
@@ -53,6 +54,7 @@ export enum PosBasicActionType {
     SOLANA_STAKEACCOUNT_WITHDRAW = 'SOLANA_STAKEACCOUNT_WITHDRAW',
     SOLANA_STAKEACCOUNT_UNSTAKE = 'SOLANA_STAKEACCOUNT_UNSTAKE',
     SOLANA_CREATE_AND_DELEGATE_STAKE_ACCOUNT = 'SOLANA_CREATE_AND_DELEGATE_STAKE_ACCOUNT',
+    SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT',
 
     // GRT allowance
     INCREASE_ALLOWANCE = 'INCREASE_ALLOWANCE'
@@ -69,5 +71,6 @@ export enum ContractMethod {
     SWAP_EXACT_TOKENS_FOR_ZIL = 'SwapExactTokensForZIL',
     SWAP_EXACT_TOKENS_FOR_TOKENS = 'SwapExactTokensForTokens',
     DELEGATE = 'Delegate',
-    UNDELEGATE = 'Undelegate'
+    UNDELEGATE = 'Undelegate',
+    SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'SolanaCreateAssociatedTokenAccount'
 }

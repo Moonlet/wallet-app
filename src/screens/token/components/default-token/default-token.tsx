@@ -30,6 +30,18 @@ import {
     remoteFeatureSwapContainsToken,
     RemoteFeature
 } from '../../../../core/utils/remote-feature-config';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { ApiClient } from '../../../../core/utils/api-client/api-client';
+import { sendTransactions } from '../../../../redux/ui/screens/data/actions/transactions';
+import { PosBasicActionType, TokenType } from '../../../../core/blockchain/types/token';
+import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
+import { Dialog } from '../../../../components/dialog/dialog';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { Client as SolanaClient } from '../../../../core/blockchain/solana/client';
 
 interface IProps {
     accountIndex: number;
@@ -46,6 +58,7 @@ interface IReduxProps {
     chainId: ChainIdType;
     canSend: boolean;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
+    sendTransactions: typeof sendTransactions;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -65,12 +78,66 @@ const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    updateTransactionFromBlockchain
+    updateTransactionFromBlockchain,
+    sendTransactions
 };
 
+interface IState {
+    splToken: {
+        state: 'default' | 'inactive' | 'active';
+    };
+}
+
 class DefaultTokenScreenComponent extends React.Component<
-    INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    constructor(
+        props: INavigationProps &
+            IProps &
+            IReduxProps &
+            IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+
+        this.state = {
+            splToken: undefined
+        };
+    }
+
+    public async componentDidMount() {
+        const { account, chainId, token } = this.props;
+        const { blockchain } = account;
+
+        const tokenConfig = getTokenConfig(blockchain, token.symbol);
+
+        if (blockchain === Blockchain.SOLANA && tokenConfig.type === TokenType.SPL) {
+            this.setState({
+                splToken: {
+                    state: 'default'
+                }
+            });
+
+            const client = getBlockchain(blockchain).getClient(chainId);
+
+            try {
+                const isActive = await (client as SolanaClient).isActiveToken(
+                    tokenConfig.contractAddress,
+                    account.address,
+                    TokenType.SPL
+                );
+
+                this.setState({
+                    splToken: {
+                        state: isActive ? 'active' : 'inactive'
+                    }
+                });
+            } catch (error) {
+                //
+            }
+        }
+    }
+
     private updateTransactionFromBlockchain() {
         this.props.transactions?.map((transaction: IBlockchainTransaction) => {
             if (transaction.status === TransactionStatus.PENDING) {
@@ -82,6 +149,97 @@ class DefaultTokenScreenComponent extends React.Component<
                 );
             }
         });
+    }
+
+    private async activateSolanaSplToken() {
+        await LoadingModal.open();
+
+        const { account, chainId, token } = this.props;
+
+        const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
+
+        try {
+            const response = await new ApiClient().http.post('/transactions/buildParams', {
+                blockchain: Blockchain.SOLANA,
+                chainId,
+                params: {
+                    posAction: PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+                    baseAccountKey: account.address,
+                    mint: tokenConfig.contractAddress,
+                    tokenSymbol: token.symbol
+                }
+            });
+
+            const tx = response?.result?.data;
+            if (tx)
+                this.props.sendTransactions({
+                    action: {
+                        type: undefined,
+                        params: {
+                            params: [tx]
+                        }
+                    }
+                });
+            else {
+                await Dialog.info(
+                    translate('App.labels.warning'),
+                    translate('App.labels.somethingWrong')
+                );
+
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            blockchain: Blockchain.SOLANA,
+                            chainId,
+                            params: {
+                                posAction:
+                                    PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+                                baseAccountKey: account.address,
+                                mint: tokenConfig.contractAddress
+                            }
+                        }
+                    })
+                });
+
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        api: response
+                    })
+                });
+
+                SentryCaptureException(
+                    new Error(`Cannot create associated token account, ${token.symbol}`)
+                );
+            }
+        } catch (error) {
+            await Dialog.info(
+                translate('App.labels.warning'),
+                translate('App.labels.somethingWrong')
+            );
+
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        blockchain: Blockchain.SOLANA,
+                        chainId,
+                        params: {
+                            posAction: PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+                            baseAccountKey: account.address,
+                            mint: tokenConfig.contractAddress
+                        }
+                    },
+                    error
+                })
+            });
+
+            SentryCaptureException(
+                new Error(
+                    `Cannot create associated token account, ${token.symbol}, ${error?.message}`
+                )
+            );
+        }
+
+        await LoadingModal.close();
     }
 
     public render() {
@@ -125,6 +283,22 @@ class DefaultTokenScreenComponent extends React.Component<
                         >
                             {translate('App.labels.receive')}
                         </Button>
+
+                        {this.state.splToken && (
+                            <Button
+                                style={styles.button}
+                                wrapperStyle={{ flex: 1 }}
+                                onPress={() => this.activateSolanaSplToken()}
+                                disabledSecondary={
+                                    this.state.splToken.state === 'default' ||
+                                    this.state.splToken.state === 'active'
+                                }
+                            >
+                                {this.state.splToken.state === 'active'
+                                    ? translate('App.labels.activated')
+                                    : translate('App.labels.activate')}
+                            </Button>
+                        )}
 
                         {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
                             token?.symbol &&

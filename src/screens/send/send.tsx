@@ -352,7 +352,9 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
-    private async splActiveToken() {
+    private async checkSplTokenActive() {
+        this.setState({ isLoading: true });
+
         const { blockchain } = this.props.account;
         const tokenConfig = getTokenConfig(blockchain, this.props.token.symbol);
         const mint = tokenConfig.contractAddress;
@@ -450,7 +452,7 @@ export class SendScreenComponent extends React.Component<
                         tokenInfo.type === TokenType.SPL &&
                         activeIndex === 1
                     ) {
-                        this.setState({ isLoading: true }, () => this.splActiveToken());
+                        this.checkSplTokenActive();
                     }
                 }}
             >

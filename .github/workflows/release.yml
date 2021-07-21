@@ -37,12 +37,12 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
+      - name: Yarn install
+        run: yarn
       - name: Get sign ssh-keys
         run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
       - name: Generate fonts and icons
-        run: npm run generate-icons
+        run: yarn run generate-icons
       - name: Run fastlane deploy
         run: cd android/fastlane && bundle exec fastlane deploy
         env:
@@ -71,6 +71,9 @@ jobs:
           echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+      - name: Generate p8 File
+        run: |
+          echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Cache node modules
@@ -79,22 +82,24 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
+      - name: Yarn install
+        run: yarn
       - name: Cocoapods install
         run: cd ios && pod install
       - name: Generate fonts and icons
-        run: npm run generate-icons
+        run: yarn run generate-icons
       - name: Run fastlane deploy
-        run: xcversion select 12.0.1 && cd ios/fastlane && SPACESHIP_SKIP_2FA_UPGRADE=1 bundle exec fastlane deploy
+        run: xcversion select 12.0.1 && cd ios/fastlane && bundle exec fastlane deploy
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          # FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: " "
-          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+          # DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: " "
+          # FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
 
   # deploy-ext-chrome:
   #   name: Chrome extension

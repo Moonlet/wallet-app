@@ -10,6 +10,7 @@ export const translation: ITranslations = {
                 account: 'Account',
                 accounts: 'Accounts',
                 activate: 'Activate',
+                activateAccount: 'Activate account',
                 activated: 'Activated',
                 add: 'Add',
                 addToken: 'Add token',
@@ -115,6 +116,7 @@ export const translation: ITranslations = {
                 removeTransaction: 'Remove transaction',
                 removeTransactionDetails:
                     'This action will remove the transaction from MoonletWallet. This will still remain on the blockchain network.',
+                rent: 'Rent',
                 retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',
@@ -327,8 +329,10 @@ export const translation: ITranslations = {
             editContactName: 'Edit name',
             reviewTransaction: 'Review transaction on your hardware wallet',
             addAddress: 'Add\naddress',
-
-            confirmTransaction: 'Confirm\ntransaction'
+            confirmTransaction: 'Confirm\ntransaction',
+            activateAccount: 'Activate your account',
+            activateAccountDetails:
+                'In order to be able to use your account you need to activate it. This will trigger a rent cost which can be recovered once you decide to deactivate it.'
         },
 
         AccountSettings: {

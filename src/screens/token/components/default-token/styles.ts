@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../../../styles/dimensions';
+import { ph, pw } from '../../../../styles';
+import {
+    BASE_DIMENSION,
+    LETTER_SPACING,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -37,5 +42,32 @@ export default (theme: ITheme) =>
             opacity: 0.87,
             fontWeight: 'bold',
             marginLeft: BASE_DIMENSION * 2
+        },
+        emptySection: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center'
+        },
+        logoImage: {
+            height: ph(20),
+            width: pw(50),
+            alignSelf: 'center',
+            resizeMode: 'contain',
+            marginBottom: BASE_DIMENSION * 2
+        },
+        emptySectionTitle: {
+            fontWeight: 'bold',
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
+            textAlign: 'center',
+            letterSpacing: LETTER_SPACING,
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION
+        },
+        emptySectionSubtitle: {
+            lineHeight: normalizeFontAndLineHeight(22),
+            color: theme.colors.textTertiary,
+            textAlign: 'center',
+            paddingHorizontal: BASE_DIMENSION * 2
         }
     });

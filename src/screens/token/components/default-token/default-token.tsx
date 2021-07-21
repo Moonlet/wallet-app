@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Platform } from 'react-native';
+import { View, ScrollView, Platform, Image } from 'react-native';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState, ITokenState } from '../../../../redux/wallets/state';
 import {
@@ -11,7 +11,7 @@ import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
-import { Button } from '../../../../library';
+import { Button, Text } from '../../../../library';
 import { translate, Translate } from '../../../../core/i18n';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { AccountAddress } from '../../../../components/account-address/account-address';
@@ -42,6 +42,8 @@ import {
 import { Dialog } from '../../../../components/dialog/dialog';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { Client as SolanaClient } from '../../../../core/blockchain/solana/client';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { BASE_DIMENSION } from '../../../../styles/dimensions';
 
 interface IProps {
     accountIndex: number;
@@ -252,93 +254,114 @@ class DefaultTokenScreenComponent extends React.Component<
                     showsVerticalScrollIndicator={false}
                 >
                     <AccountAddress account={account} token={token} />
-                    <View style={styles.buttonsContainer}>
-                        <Button
-                            testID="send-button"
-                            style={styles.button}
-                            wrapperStyle={{ flex: 1 }}
-                            // disabled={!this.props.canSend} // TODO
-                            onPress={() => {
-                                navigation.navigate('Send', {
-                                    accountIndex: account.index,
-                                    blockchain: account.blockchain,
-                                    token
-                                });
-                            }}
-                        >
-                            {translate('App.labels.send')}
-                        </Button>
 
-                        <Button
-                            testID="receive-button"
-                            style={styles.button}
-                            wrapperStyle={{ flex: 1 }}
-                            onPress={() => {
-                                navigation.navigate('Receive', {
-                                    accountIndex: account.index,
-                                    blockchain: account.blockchain,
-                                    token
-                                });
-                            }}
-                        >
-                            {translate('App.labels.receive')}
-                        </Button>
-
-                        {this.state.splToken && (
-                            <Button
-                                style={styles.button}
-                                wrapperStyle={{ flex: 1 }}
-                                onPress={() => this.activateSolanaSplToken()}
-                                disabledSecondary={
-                                    this.state.splToken.state === 'default' ||
-                                    this.state.splToken.state === 'active'
-                                }
-                            >
-                                {this.state.splToken.state === 'active'
-                                    ? translate('App.labels.activated')
-                                    : translate('App.labels.activate')}
-                            </Button>
-                        )}
-
-                        {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
-                            token?.symbol &&
-                            remoteFeatureSwapContainsToken(token.symbol) && (
+                    {this.state.splToken?.state === 'default' ? (
+                        <LoadingIndicator />
+                    ) : (
+                        <View style={{ flex: 1 }}>
+                            <View style={styles.buttonsContainer}>
                                 <Button
+                                    testID="send-button"
                                     style={styles.button}
                                     wrapperStyle={{ flex: 1 }}
-                                    onPress={() =>
-                                        NavigationService.navigate('SmartScreen', {
-                                            context: {
-                                                screen: 'Swap',
-                                                step: 'SwapEnterAmount',
-                                                key: 'swap-enter-amount',
-                                                params: { token: token.symbol }
-                                            },
-                                            navigationOptions: {
-                                                title: translate('App.labels.swap')
-                                            },
-                                            newFlow: true,
-                                            resetScreen: true
-                                        })
-                                    }
+                                    // disabled={!this.props.canSend} // TODO
+                                    onPress={() => {
+                                        navigation.navigate('Send', {
+                                            accountIndex: account.index,
+                                            blockchain: account.blockchain,
+                                            token
+                                        });
+                                    }}
+                                    disabledSecondary={this.state.splToken?.state === 'inactive'}
                                 >
-                                    {translate('App.labels.swap')}
+                                    {translate('App.labels.send')}
                                 </Button>
-                            )}
-                    </View>
 
-                    <View>
-                        <Translate
-                            text="App.labels.transactions"
-                            style={styles.transactionsTitle}
-                        />
-                        <TransactionsHistoryList
-                            transactions={transactions}
-                            account={account}
-                            navigation={navigation}
-                            onRefresh={() => this.updateTransactionFromBlockchain()}
-                        />
-                    </View>
+                                <Button
+                                    testID="receive-button"
+                                    style={styles.button}
+                                    wrapperStyle={{ flex: 1 }}
+                                    onPress={() => {
+                                        navigation.navigate('Receive', {
+                                            accountIndex: account.index,
+                                            blockchain: account.blockchain,
+                                            token
+                                        });
+                                    }}
+                                >
+                                    {translate('App.labels.receive')}
+                                </Button>
+
+                                {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
+                                    token?.symbol &&
+                                    remoteFeatureSwapContainsToken(token.symbol) && (
+                                        <Button
+                                            style={styles.button}
+                                            wrapperStyle={{ flex: 1 }}
+                                            onPress={() =>
+                                                NavigationService.navigate('SmartScreen', {
+                                                    context: {
+                                                        screen: 'Swap',
+                                                        step: 'SwapEnterAmount',
+                                                        key: 'swap-enter-amount',
+                                                        params: { token: token.symbol }
+                                                    },
+                                                    navigationOptions: {
+                                                        title: translate('App.labels.swap')
+                                                    },
+                                                    newFlow: true,
+                                                    resetScreen: true
+                                                })
+                                            }
+                                        >
+                                            {translate('App.labels.swap')}
+                                        </Button>
+                                    )}
+                            </View>
+
+                            {this.state.splToken?.state === 'inactive' ? (
+                                <View style={{ flex: 1 }}>
+                                    <View style={styles.emptySection}>
+                                        <Image
+                                            style={styles.logoImage}
+                                            source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                                        />
+
+                                        <Text style={styles.emptySectionTitle}>
+                                            {translate('Send.activateAccount')}
+                                        </Text>
+                                        <Text style={styles.emptySectionSubtitle}>
+                                            {translate('Send.activateAccountDetails')}
+                                        </Text>
+                                    </View>
+
+                                    <View style={{ marginBottom: BASE_DIMENSION * 4 }}>
+                                        <Button
+                                            style={styles.button}
+                                            wrapperStyle={{ flex: 1 }}
+                                            primary
+                                            onPress={() => this.activateSolanaSplToken()}
+                                        >
+                                            {translate('App.labels.activateAccount')}
+                                        </Button>
+                                    </View>
+                                </View>
+                            ) : (
+                                <View>
+                                    <Translate
+                                        text="App.labels.transactions"
+                                        style={styles.transactionsTitle}
+                                    />
+                                    <TransactionsHistoryList
+                                        transactions={transactions}
+                                        account={account}
+                                        navigation={navigation}
+                                        onRefresh={() => this.updateTransactionFromBlockchain()}
+                                    />
+                                </View>
+                            )}
+                        </View>
+                    )}
                 </ScrollView>
             </View>
         );

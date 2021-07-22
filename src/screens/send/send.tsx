@@ -51,6 +51,13 @@ import {
     availableFunds,
     availableAmount
 } from '../../core/utils/available-funds';
+import { TokenType } from '../../core/blockchain/types/token';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { Client as SolanaClient } from '../../core/blockchain/solana/client';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 interface IHeaderStep {
     step: number;
@@ -100,12 +107,15 @@ interface IState {
     headerSteps: IHeaderStep[];
     insufficientFundsFees: boolean;
     availableAmount: string;
+    isLoading: boolean;
+    splActiveToken: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: () => <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.send')
 });
+
 export class SendScreenComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IReduxProps &
@@ -135,7 +145,9 @@ export class SendScreenComponent extends React.Component<
                 { step: 3, title: translate('Send.confirmTransaction'), active: false }
             ],
             insufficientFundsFees: false,
-            availableAmount: '0'
+            availableAmount: '0',
+            isLoading: false,
+            splActiveToken: false
         };
     }
 
@@ -340,10 +352,49 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
+    private async checkSplTokenActive() {
+        this.setState({ isLoading: true });
+
+        const { blockchain } = this.props.account;
+        const tokenConfig = getTokenConfig(blockchain, this.props.token.symbol);
+        const mint = tokenConfig.contractAddress;
+
+        try {
+            const client = getBlockchain(blockchain).getClient(this.props.chainId) as SolanaClient;
+
+            const splActiveToken = await client.isActiveToken(
+                mint,
+                this.state.toAddress,
+                TokenType.SPL
+            );
+
+            this.setState({ splActiveToken });
+        } catch (error) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        token: this.props.token.symbol,
+                        mint,
+                        toAddress: this.state.toAddress
+                    },
+                    error
+                })
+            });
+
+            SentryCaptureException(
+                new Error(`Cannot get spl active token, ${tokenConfig.symbol}, ${error?.message}`)
+            );
+        }
+
+        this.setState({ isLoading: false });
+    }
+
     private renderBottomConfirm() {
         const { resolvedAddress } = this.state;
+        const { blockchain } = this.props.account;
+
         const activeIndex = findIndex(this.state.headerSteps, ['active', true]);
-        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
+        const tokenConfig = getTokenConfig(blockchain, this.props.token.symbol);
 
         let disableButton: boolean;
         switch (activeIndex) {
@@ -389,6 +440,19 @@ export class SendScreenComponent extends React.Component<
                         steps[activeIndex + 1].active = true;
 
                         this.setState({ headerSteps: steps });
+                    }
+
+                    const tokenInfo = getTokenConfig(
+                        this.props.account.blockchain,
+                        this.props.token.symbol
+                    );
+
+                    if (
+                        blockchain === Blockchain.SOLANA &&
+                        tokenInfo.type === TokenType.SPL &&
+                        activeIndex === 1
+                    ) {
+                        this.checkSplTokenActive();
                     }
                 }}
             >
@@ -456,6 +520,8 @@ export class SendScreenComponent extends React.Component<
         );
         const feeTokenSymbol = config.feeOptions.gasPriceToken;
 
+        const tokenInfo = getTokenConfig(blockchain, this.props.token.symbol);
+
         return (
             <View key="confirmTransaction" style={styles.confirmTransactionContainer}>
                 <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
@@ -495,6 +561,21 @@ export class SendScreenComponent extends React.Component<
                     />
                 </View>
 
+                {blockchain === Blockchain.SOLANA &&
+                    tokenInfo.type === TokenType.SPL &&
+                    !this.state.splActiveToken && (
+                        <View>
+                            <Text style={styles.receipientLabel}>
+                                {translate('App.labels.rent')}
+                            </Text>
+                            <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
+                                <Text style={styles.confirmTransactionText}>
+                                    {'0.00203928 SOL'}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
                 {extraFields && extraFields.map(value => this.renderExtraFields(value))}
             </View>
         );
@@ -523,25 +604,27 @@ export class SendScreenComponent extends React.Component<
                                     steps[activeIndex].active = false;
                                     steps[selectedIdex].active = true;
                                 }
-
-                                this.setState({ headerSteps: steps });
                             }}
                         />
 
-                        {headerSteps.map((step, index) => {
-                            if (step.active) {
-                                switch (index) {
-                                    case 0:
-                                        return this.renderAddAddressContainer();
-                                    case 1:
-                                        return this.renderEnterAmount();
-                                    case 2:
-                                        return this.renderConfirmTransaction();
-                                    default:
-                                        return null;
+                        {this.state.isLoading ? (
+                            <LoadingIndicator />
+                        ) : (
+                            headerSteps.map((step, index) => {
+                                if (step.active) {
+                                    switch (index) {
+                                        case 0:
+                                            return this.renderAddAddressContainer();
+                                        case 1:
+                                            return this.renderEnterAmount();
+                                        case 2:
+                                            return this.renderConfirmTransaction();
+                                        default:
+                                            return null;
+                                    }
                                 }
-                            }
-                        })}
+                            })
+                        )}
                     </View>
                 </KeyboardAwareScrollView>
 

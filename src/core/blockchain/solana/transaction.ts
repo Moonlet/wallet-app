@@ -28,6 +28,7 @@ import { getBlockchain } from '../blockchain-factory';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
+import { TransactionInstruction } from '@solana/web3.js';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -344,6 +345,36 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 await LoadingModal.close();
 
+                const instructions: TransactionInstruction[] = [];
+
+                if (!destinationActive) {
+                    // Token not created
+                    instructions.push(
+                        Token.createAssociatedTokenAccountInstruction(
+                            ASSOCIATED_TOKEN_PROGRAM_ID,
+                            TOKEN_PROGRAM_ID,
+                            new PublicKey(mint),
+                            new PublicKey(destination), // associatedAddress
+                            new PublicKey(tx.toAddress), // owner
+                            new PublicKey(tx.account.address) // payer
+                        )
+                    );
+                }
+
+                instructions.push(
+                    // @ts-ignore
+                    Token.createTransferCheckedInstruction(
+                        TOKEN_PROGRAM_ID,
+                        new PublicKey(source), // source
+                        new PublicKey(tokenInfo.contractAddress), // mint
+                        new PublicKey(destination), // destination
+                        new PublicKey(tx.account.address), // owner
+                        [], // multiSigners
+                        Number(tx.amount), // amount
+                        tokenInfo.decimals // decimals
+                    )
+                );
+
                 return {
                     date: {
                         created: Date.now(),
@@ -369,29 +400,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         currentBlockHash: blockHash,
 
                         type: SolanaTransactionInstructionType.TRANSFER,
-                        instructions: [
-                            // Token not created
-                            !destinationActive &&
-                                Token.createAssociatedTokenAccountInstruction(
-                                    ASSOCIATED_TOKEN_PROGRAM_ID,
-                                    TOKEN_PROGRAM_ID,
-                                    new PublicKey(mint),
-                                    new PublicKey(destination), // associatedAddress
-                                    new PublicKey(tx.toAddress), // owner
-                                    new PublicKey(tx.account.address) // payer
-                                ),
-                            // @ts-ignore
-                            Token.createTransferCheckedInstruction(
-                                TOKEN_PROGRAM_ID,
-                                new PublicKey(source), // source
-                                new PublicKey(tokenInfo.contractAddress), // mint
-                                new PublicKey(destination), // destination
-                                new PublicKey(tx.account.address), // owner
-                                [], // multiSigners
-                                Number(tx.amount), // amount
-                                tokenInfo.decimals // decimals
-                            )
-                        ]
+                        instructions
                     }
                 };
             }

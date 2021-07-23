@@ -142,12 +142,22 @@ export class Client extends BlockchainGenericClient {
                           )
                         : await this.estimateGas(data.from, data.to);
                 }
+                case TransactionType.CONTRACT_CALL: {
+                    results = await this.estimateGas(
+                        data.from,
+                        data.to,
+                        data.contractAddress,
+                        new BigNumber(data.amount),
+                        data.raw
+                    );
+                }
             }
             let presets: {
                 standard: BigNumber;
                 fast: BigNumber;
                 fastest: BigNumber;
             };
+
             if (results[1]) {
                 const response = results[1];
 

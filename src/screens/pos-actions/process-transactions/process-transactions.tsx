@@ -172,7 +172,7 @@ class ProcessTransactionsComponent extends React.Component<
                 });
 
                 const txAmountWithFees = blockchainInstance.account.amountFromStd(
-                    txsValue,
+                    txsValue.plus(feesValue),
                     tokenConfig.decimals
                 );
 

@@ -84,6 +84,7 @@ interface IState {
     cardHeight: number;
     txContainerHeight: number;
     insufficientFundsFees: boolean;
+    warningFeesToHigh: boolean;
     amountNeededToPassTxs: string;
 }
 
@@ -102,6 +103,7 @@ class ProcessTransactionsComponent extends React.Component<
             cardHeight: undefined,
             txContainerHeight: undefined,
             insufficientFundsFees: false,
+            warningFeesToHigh: false,
             amountNeededToPassTxs: ''
         };
         this.scrollViewRef = React.createRef();
@@ -156,20 +158,25 @@ class ProcessTransactionsComponent extends React.Component<
                 );
 
                 let txsValue = new BigNumber(0);
+                let delegationTxValue = new BigNumber(0);
+                let feesValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {
                     if (
                         transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
                         transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
-                    )
+                    ) {
                         txsValue = txsValue.plus(transaction.amount);
-                    txsValue = txsValue.plus(transaction.feeOptions?.feeTotal || '0');
+                        delegationTxValue = txsValue.plus(transaction.amount);
+                    }
+                    feesValue = feesValue.plus(transaction.feeOptions?.feeTotal || '0');
                 });
 
-                const txAmount = blockchainInstance.account.amountFromStd(
+                const txAmountWithFees = blockchainInstance.account.amountFromStd(
                     txsValue,
                     tokenConfig.decimals
                 );
-                if (txAmount.isGreaterThan(amount)) {
+
+                if (txAmountWithFees.isGreaterThan(amount)) {
                     insufficientFundsFees = true;
 
                     amountNeededToPassTxs = blockchainInstance.account
@@ -177,6 +184,18 @@ class ProcessTransactionsComponent extends React.Component<
                         .toFixed(2);
 
                     this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                }
+
+                const txAmount = blockchainInstance.account.amountFromStd(
+                    delegationTxValue,
+                    tokenConfig.decimals
+                );
+                const feesAmount = blockchainInstance.account.amountFromStd(
+                    delegationTxValue,
+                    tokenConfig.decimals
+                );
+                if (feesAmount.isGreaterThan(txAmount)) {
+                    this.setState({ warningFeesToHigh: true });
                 }
             }
         }
@@ -713,6 +732,8 @@ class ProcessTransactionsComponent extends React.Component<
                 amount: this.state.amountNeededToPassTxs,
                 token: this.props.transactions.length ? nativeCoin : 'Token'
             });
+        } else if (this.state.warningFeesToHigh) {
+            title = translate('Validator.warningFeesToHigh');
         }
 
         if (this.props.isVisible) {
@@ -741,6 +762,8 @@ class ProcessTransactionsComponent extends React.Component<
                             style={
                                 this.state.insufficientFundsFees
                                     ? styles.errorFundsTitle
+                                    : this.state.warningFeesToHigh
+                                    ? styles.warningFeesTitle
                                     : styles.title
                             }
                         >

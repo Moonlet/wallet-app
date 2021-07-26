@@ -157,7 +157,6 @@ class ProcessTransactionsComponent extends React.Component<
                     { balanceAvailable }
                 );
 
-                let txsValue = new BigNumber(0);
                 let delegationTxValue = new BigNumber(0);
                 let feesValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {
@@ -165,14 +164,17 @@ class ProcessTransactionsComponent extends React.Component<
                         transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
                         transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
                     ) {
-                        txsValue = txsValue.plus(transaction.amount);
-                        delegationTxValue = txsValue.plus(transaction.amount);
+                        delegationTxValue = delegationTxValue.plus(transaction.amount);
                     }
                     feesValue = feesValue.plus(transaction.feeOptions?.feeTotal || '0');
                 });
 
+                const txAmount = blockchainInstance.account.amountFromStd(
+                    delegationTxValue,
+                    tokenConfig.decimals
+                );
                 const txAmountWithFees = blockchainInstance.account.amountFromStd(
-                    txsValue.plus(feesValue),
+                    delegationTxValue.plus(feesValue),
                     tokenConfig.decimals
                 );
 
@@ -180,18 +182,17 @@ class ProcessTransactionsComponent extends React.Component<
                     insufficientFundsFees = true;
 
                     amountNeededToPassTxs = blockchainInstance.account
-                        .amountFromStd(new BigNumber(txsValue.minus(amount)), tokenConfig.decimals)
+                        .amountFromStd(
+                            new BigNumber(delegationTxValue.minus(amount)),
+                            tokenConfig.decimals
+                        )
                         .toFixed(2);
 
                     this.setState({ amountNeededToPassTxs, insufficientFundsFees });
                 }
 
-                const txAmount = blockchainInstance.account.amountFromStd(
-                    delegationTxValue,
-                    tokenConfig.decimals
-                );
                 const feesAmount = blockchainInstance.account.amountFromStd(
-                    delegationTxValue,
+                    feesValue,
                     tokenConfig.decimals
                 );
                 if (feesAmount.isGreaterThan(txAmount)) {

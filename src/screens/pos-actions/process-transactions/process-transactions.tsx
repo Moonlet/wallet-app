@@ -177,6 +177,8 @@ class ProcessTransactionsComponent extends React.Component<
                                     ? transaction.data.params[1]
                                     : transaction.data.params[0];
                             delegationTxValue = delegationTxValue.plus(amount);
+                        } else {
+                            delegationTxValue = delegationTxValue.plus(transaction.amount);
                         }
                     }
                     feesValue = feesValue.plus(transaction.feeOptions?.feeTotal || '0');

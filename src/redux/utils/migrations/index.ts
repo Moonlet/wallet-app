@@ -72,7 +72,7 @@ export const migrations: any = {
      */
     15: v15,
     /**
-     * Add SOL SPL coins - 19 Jul 2021
+     * Add SOL SPL coins - 27 Jul 2021
      */
     16: v16
 };

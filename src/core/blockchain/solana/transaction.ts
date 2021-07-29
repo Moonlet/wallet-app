@@ -1,5 +1,6 @@
 import {
     AbstractBlockchainTransactionUtils,
+    Blockchain,
     Contracts,
     IBlockchainTransaction,
     IPosTransaction,
@@ -26,6 +27,7 @@ import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
 import { getBlockchain } from '../blockchain-factory';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { TokenSwap, TOKEN_SWAP_PROGRAM_ID } from '@solana/spl-token-swap';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { TransactionInstruction } from '@solana/web3.js';
@@ -66,6 +68,104 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 instructions = instructions.map(i => new PublicKey(i));
                 // @ts-ignore
                 transaction.add(Token.createAssociatedTokenAccountInstruction(...instructions));
+                break;
+
+            case SolanaTransactionInstructionType.SWAP:
+                transaction = new Transaction();
+
+                const baseAccountKey: PublicKey = new PublicKey(
+                    '9AVaowib8ePah1VdJft6mgZtYQcHgLA4y1TAEV22Jhan'
+                );
+
+                const amountIn = tx.additionalInfo.swap.fromTokenAmount;
+                const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
+
+                const {
+                    // authority,
+                    fromAccount,
+                    toAccount
+                } = tx.additionalInfo.pubkeys;
+
+                const blockchainInstance = getBlockchain(Blockchain.SOLANA);
+
+                const amtIn = Number(
+                    blockchainInstance.account.amountToStd(amountIn, 6).toFixed(0)
+                );
+                const amtOut = Number(
+                    blockchainInstance.account.amountToStd(minimumAmountOut, 6).toFixed(0)
+                );
+
+                // console.log(amtIn, amtOut);
+
+                const usdc = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
+                const srm = new PublicKey('SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt');
+
+                // Token: Approve
+                transaction.add(
+                    Token.createApproveInstruction(
+                        TOKEN_PROGRAM_ID,
+                        new PublicKey(fromAccount), // account
+                        usdc, // delegate
+                        baseAccountKey, // owner
+                        [], // multiSigners
+                        amtIn
+                    )
+                );
+
+                // Raydium Liquidity Pool Program V4
+                // const liquidityPool: PublicKey = new PublicKey(
+                //     '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
+                // );
+
+                // Raydium LP Token V4 (SRM-USDC)
+                const pool: PublicKey = new PublicKey(
+                    '9XnZd82j34KxNLgQfz29jGbYdxsYznTWRpvZE3SRE7JG'
+                );
+
+                // const tokenSwapAccount = new PublicKey();
+                // const tokenSwapAccount = new Account();
+
+                // Token Swap: Swap
+                transaction.add(
+                    TokenSwap.swapInstruction(
+                        // tokenSwapAccount.publicKey,
+                        // new PublicKey(authority),
+
+                        // pool,
+                        usdc,
+                        baseAccountKey,
+                        //
+
+                        baseAccountKey, // userTransferAuthority
+
+                        new PublicKey(fromAccount), // userSource
+                        usdc, // poolSource
+                        srm, // poolDestination
+                        new PublicKey(toAccount), // userDestination User's destination token account
+
+                        pool, // poolToken,
+
+                        baseAccountKey, // feeAccount
+                        baseAccountKey, // hostFeeAccount - Host account to gather fees
+
+                        TOKEN_SWAP_PROGRAM_ID,
+                        TOKEN_PROGRAM_ID,
+
+                        amtIn, // 100000, //  0.1, // amountIn,
+                        amtOut //   90661 // 3 // minimumAmountOut
+                    )
+                );
+
+                // Token: Revoke
+                transaction.add(
+                    Token.createRevokeInstruction(
+                        TOKEN_PROGRAM_ID,
+                        new PublicKey(fromAccount), // account
+                        baseAccountKey, // owner
+                        []
+                    )
+                );
+
                 break;
         }
 

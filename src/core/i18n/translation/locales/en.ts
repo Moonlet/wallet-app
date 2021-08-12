@@ -667,7 +667,9 @@ export const translation: ITranslations = {
             minimumUnstakeTitle: 'Adjust your amount',
             minimumUnstake: 'You can either unstake the entire value or less than {{lowerThen}}',
             adjustRestake:
-                'You need to adjust the value you want to restake to be higher then  {{higherThen}} per validator'
+                'You need to adjust the value you want to restake to be higher then  {{higherThen}} per validator',
+            warningFeesToHigh:
+                'Please note that the value of the maximum estimated fees are higher than the value of your amount that you want to stake.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

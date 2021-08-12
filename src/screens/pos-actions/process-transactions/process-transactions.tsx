@@ -37,6 +37,8 @@ import { Dialog } from '../../../components/dialog/dialog';
 import { availableAmount } from '../../../core/utils/available-funds';
 import { signAndSendTransactions } from '../../../redux/wallets/actions/util-actions';
 import { PercentageCircle } from '../../../components/widgets/components/progress-circle/progress-circle';
+import { IExchangeRates } from '../../../redux/market/state';
+import { convertAmount } from '../../../core/utils/balance';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -54,6 +56,7 @@ interface IReduxProps {
     createAccount: IAccountState;
     addAccount: typeof addAccount;
     setSelectedAccount: typeof setSelectedAccount;
+    exchangeRates: IExchangeRates;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -69,7 +72,8 @@ const mapStateToProps = (state: IReduxState) => {
         selectedWallet: getSelectedWallet(state),
         selectedAccount,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
-        accountTransactions: getSelectedAccountTransactions(state) || []
+        accountTransactions: getSelectedAccountTransactions(state) || [],
+        exchangeRates: state.market.exchangeRates
     };
 };
 
@@ -84,6 +88,7 @@ interface IState {
     cardHeight: number;
     txContainerHeight: number;
     insufficientFundsFees: boolean;
+    warningFeesToHigh: boolean;
     amountNeededToPassTxs: string;
 }
 
@@ -102,6 +107,7 @@ class ProcessTransactionsComponent extends React.Component<
             cardHeight: undefined,
             txContainerHeight: undefined,
             insufficientFundsFees: false,
+            warningFeesToHigh: false,
             amountNeededToPassTxs: ''
         };
         this.scrollViewRef = React.createRef();
@@ -135,48 +141,123 @@ class ProcessTransactionsComponent extends React.Component<
                 const blockchainInstance = getBlockchain(blockchain);
                 const nativeCoin = blockchainInstance.config.coin;
 
-                // fees are always paid in native token
-                const token = this.props.selectedAccount.tokens[this.props.chainId][
-                    nativeCoin
+                const nativeTokenConfig = getTokenConfig(blockchain, nativeCoin);
+                const tokenConfig = getTokenConfig(
+                    blockchain,
+                    this.props.transactions[0].token.symbol
+                );
+
+                const transactionTokenState = this.props.selectedAccount.tokens[this.props.chainId][
+                    tokenConfig.symbol
                     // this.props.transactions[0].token.symbol
                 ];
-
-                const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
                 const balanceAvailable =
                     this.props.transactions[0].amount === '0'
                         ? undefined
                         : this.props.transactions[0].amount;
 
-                const amount = await availableAmount(
+                const avbAmount = await availableAmount(
                     this.props.selectedAccount,
-                    token,
+                    transactionTokenState,
                     this.props.chainId,
                     { balanceAvailable }
                 );
 
-                let txsValue = new BigNumber(0);
+                let delegationTxValue = new BigNumber(0);
+                let feesValue = new BigNumber(0);
                 this.props.transactions.map(transaction => {
                     if (
                         transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
                         transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
-                    )
-                        txsValue = txsValue.plus(transaction.amount);
-                    txsValue = txsValue.plus(transaction.feeOptions?.feeTotal || '0');
+                    ) {
+                        if (transaction.amount === '0' && transaction.data?.params) {
+                            const amount =
+                                transaction.data.params.length > 1
+                                    ? transaction.data.params[1]
+                                    : transaction.data.params[0];
+                            delegationTxValue = delegationTxValue.plus(amount);
+                        } else {
+                            delegationTxValue = delegationTxValue.plus(transaction.amount);
+                        }
+                    }
+                    feesValue = feesValue.plus(transaction.feeOptions?.feeTotal || '0');
                 });
 
                 const txAmount = blockchainInstance.account.amountFromStd(
-                    txsValue,
+                    delegationTxValue,
                     tokenConfig.decimals
                 );
-                if (txAmount.isGreaterThan(amount)) {
-                    insufficientFundsFees = true;
 
-                    amountNeededToPassTxs = blockchainInstance.account
-                        .amountFromStd(new BigNumber(txsValue.minus(amount)), tokenConfig.decimals)
-                        .toFixed(2);
+                const feesAmount = blockchainInstance.account.amountFromStd(
+                    feesValue,
+                    nativeTokenConfig.decimals
+                );
 
-                    this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                if (tokenConfig.symbol.toLowerCase() === nativeTokenConfig.symbol.toLowerCase()) {
+                    const txAmountWithFees = txAmount.plus(
+                        blockchainInstance.account.amountFromStd(
+                            delegationTxValue.plus(feesValue),
+                            tokenConfig.decimals
+                        )
+                    );
+                    if (txAmountWithFees.isGreaterThan(avbAmount)) {
+                        insufficientFundsFees = true;
+
+                        amountNeededToPassTxs = blockchainInstance.account
+                            .amountFromStd(
+                                new BigNumber(delegationTxValue.minus(avbAmount)),
+                                tokenConfig.decimals
+                            )
+                            .toFixed(2);
+
+                        this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                    }
+
+                    if (feesAmount.isGreaterThan(txAmount) && txAmount.isGreaterThan(0)) {
+                        this.setState({ warningFeesToHigh: true });
+                    }
+                } else {
+                    if (feesAmount.isGreaterThan(avbAmount)) {
+                        insufficientFundsFees = true;
+
+                        amountNeededToPassTxs = blockchainInstance.account
+                            .amountFromStd(
+                                new BigNumber(delegationTxValue.minus(avbAmount)),
+                                tokenConfig.decimals
+                            )
+                            .toFixed(2);
+
+                        this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                    }
+
+                    if (txAmount.isGreaterThan(0)) {
+                        const feesConverted = convertAmount(
+                            blockchain,
+                            this.props.exchangeRates,
+                            blockchainInstance.account
+                                .amountToStd(feesAmount.toFixed(4), nativeTokenConfig.decimals)
+                                .toFixed(),
+                            nativeTokenConfig.symbol,
+                            'USD',
+                            nativeTokenConfig.decimals // irelevant since its to USD
+                        );
+
+                        const txAmountConverted = convertAmount(
+                            blockchain,
+                            this.props.exchangeRates,
+                            blockchainInstance.account
+                                .amountToStd(txAmount.toFixed(4), tokenConfig.decimals)
+                                .toFixed(),
+                            tokenConfig.symbol,
+                            'USD',
+                            tokenConfig.decimals // irelevant since its to USD
+                        );
+
+                        if (feesConverted.isGreaterThan(txAmountConverted)) {
+                            this.setState({ warningFeesToHigh: true });
+                        }
+                    }
                 }
             }
         }
@@ -715,6 +796,8 @@ class ProcessTransactionsComponent extends React.Component<
                 amount: this.state.amountNeededToPassTxs,
                 token: this.props.transactions.length ? nativeCoin : 'Token'
             });
+        } else if (this.state.warningFeesToHigh) {
+            title = translate('Validator.warningFeesToHigh');
         }
 
         if (this.props.isVisible) {
@@ -743,6 +826,8 @@ class ProcessTransactionsComponent extends React.Component<
                             style={
                                 this.state.insufficientFundsFees
                                     ? styles.errorFundsTitle
+                                    : this.state.warningFeesToHigh
+                                    ? styles.warningFeesTitle
                                     : styles.title
                             }
                         >

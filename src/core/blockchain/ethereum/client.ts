@@ -195,10 +195,9 @@ export class Client extends BlockchainGenericClient {
 
             const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
             const gasLimit =
-                // results[0].result
-                //     ? new BigNumber(parseInt(results[0].result, 16))
-                //     :
-                config.feeOptions.defaults.gasLimit[tokenType];
+                results[0] && results[0].result
+                    ? new BigNumber(parseInt(results[0].result, 16))
+                    : config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
                 gasPrice: gasPrice.toString(),
@@ -234,21 +233,27 @@ export class Client extends BlockchainGenericClient {
     ): Promise<any> {
         let gasEstimatePromise;
         if (contractAddress) {
-            gasEstimatePromise = this.http
-                .jsonRpc('eth_estimateGas', [
-                    {
-                        from,
-                        to: contractAddress,
-                        data
-                    }
-                ])
-                .then(res => {
-                    if (res.result) {
-                        res.result =
-                            '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
-                        return res;
-                    }
-                });
+            let params;
+
+            if (data) {
+                params = {
+                    ...params,
+                    data
+                };
+            } else {
+                params = {
+                    from,
+                    to: contractAddress
+                };
+            }
+
+            gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ params }]).then(res => {
+                if (res.result) {
+                    res.result =
+                        '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
+                    return res;
+                }
+            });
         } else {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);
         }

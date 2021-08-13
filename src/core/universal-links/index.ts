@@ -87,8 +87,14 @@ export class UniversalLinksService {
             NavigationService.navigate('SmartScreen', {
                 context: {
                     screen: 'StakeNow',
-                    step: 'SelectStakeAccount',
-                    key: 'select-stake-account',
+                    step:
+                        blockchain === Blockchain.SOLANA
+                            ? 'SelectStakeAccount'
+                            : 'StakeNowEnterAmountValidators',
+                    key:
+                        blockchain === Blockchain.SOLANA
+                            ? 'select-stake-account'
+                            : 'stake-now-enter-amount-validators',
                     params: {
                         validatorId: validatorAddress
                     }

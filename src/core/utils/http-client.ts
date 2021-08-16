@@ -1,8 +1,7 @@
 import { delay } from './time';
 import {
     addBreadcrumb as SentryAddBreadcrumb,
-    captureException as SentryCaptureException,
-    setTags as SentrySetTags
+    captureException as SentryCaptureException
 } from '@sentry/react-native';
 
 const defaultHeaders = {
@@ -25,18 +24,31 @@ export class HttpClient {
 
             if (response.status !== 200) {
                 // Sentry
-                SentrySetTags({ url, status: response.status });
                 SentryAddBreadcrumb({ message: JSON.stringify(response.headers) });
                 SentryAddBreadcrumb({ message: JSON.stringify(response.statusText) });
-                SentryCaptureException(`GET request failed to ${url} with ${response.status}`);
+                SentryCaptureException(
+                    new Error(`GET request failed to ${url} with ${response.status}`),
+                    {
+                        tags: {
+                            url,
+                            status: response.status
+                        }
+                    }
+                );
             }
 
             return response.json();
         } catch (error) {
             // Sentry
-            SentrySetTags({ url });
             SentryAddBreadcrumb({ message: JSON.stringify(error) });
-            SentryCaptureException(`GET request failed to ${url} with ${error?.message}`);
+            SentryCaptureException(
+                new Error(`GET request failed to ${url} with ${error?.message}`),
+                {
+                    tags: {
+                        url
+                    }
+                }
+            );
 
             return Promise.reject(error);
         }
@@ -62,19 +74,32 @@ export class HttpClient {
 
             if (response.status !== 200) {
                 // Sentry
-                SentrySetTags({ url, status: response.status });
                 SentryAddBreadcrumb({ message: JSON.stringify(response.headers) });
                 SentryAddBreadcrumb({ message: JSON.stringify(response.statusText) });
-                SentryCaptureException(`POST request failed to ${url} with ${response.status}`);
+                SentryCaptureException(
+                    new Error(`POST request failed to ${url} with ${response.status}`),
+                    {
+                        tags: {
+                            url,
+                            status: response.status
+                        }
+                    }
+                );
             }
 
             return response.json();
         } catch (error) {
             // Sentry
-            SentrySetTags({ url });
             SentryAddBreadcrumb({ message: JSON.stringify(error) }); // error
             SentryAddBreadcrumb({ message: JSON.stringify(body) }); // body
-            SentryCaptureException(`POST request failed to ${url} with ${error?.message}`);
+            SentryCaptureException(
+                new Error(`POST request failed to ${url} with ${error?.message}`),
+                {
+                    tags: {
+                        url
+                    }
+                }
+            );
 
             return Promise.reject(error);
         }
@@ -102,7 +127,6 @@ export class HttpClient {
                 return await res.json(); // added await intentionally, to fail if json is invalid, so it will retry
             } else if (retries > 0) {
                 // Sentry
-                SentrySetTags({ url: res.url, status: res.status });
                 SentryAddBreadcrumb({
                     message: JSON.stringify({
                         headers: res.headers
@@ -116,13 +140,20 @@ export class HttpClient {
                         retries
                     })
                 });
-                SentryCaptureException(`JsonRpc request failed to ${res.url} with ${res.status}`);
+                SentryCaptureException(
+                    new Error(`JsonRpc request failed to ${res.url} with ${res.status}`),
+                    {
+                        tags: {
+                            url: res.url,
+                            status: res.status
+                        }
+                    }
+                );
 
                 await delay(500);
                 return this.jsonRpc(method, params, retries - 1);
             } else {
                 // Sentry
-                SentrySetTags({ url: res.url, status: res.status });
                 SentryAddBreadcrumb({
                     message: JSON.stringify({
                         headers: res.headers
@@ -136,15 +167,28 @@ export class HttpClient {
                         retries
                     })
                 });
-                SentryCaptureException(`JsonRpc request failed to ${res.url} with ${res.status}`);
+                SentryCaptureException(
+                    new Error(`JsonRpc request failed to ${res.url} with ${res.status}`),
+                    {
+                        tags: {
+                            url: res.url,
+                            status: res.status
+                        }
+                    }
+                );
 
                 return res.json();
             }
         } catch (error) {
             // Sentry
-            SentrySetTags({ method, params: JSON.stringify(params), retries });
             SentryAddBreadcrumb({ message: JSON.stringify(error) });
-            SentryCaptureException(`JsonRpc request failed with ${error.message}`);
+            SentryCaptureException(new Error(`JsonRpc request failed with ${error.message}`), {
+                tags: {
+                    method,
+                    params: JSON.stringify(params),
+                    retries
+                }
+            });
 
             if (retries > 0) {
                 await delay(500);

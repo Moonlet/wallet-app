@@ -31,7 +31,7 @@
     },
     "dependencies": {
         "@ethersproject/abi": "^5.0.5",
-        "@ledgerhq/hw-app-eth": "^5.49.0",
+        "@ledgerhq/hw-app-eth": "^6.4.1",
         "@ledgerhq/react-native-hid": "^4.78.0",
         "@ledgerhq/react-native-hw-transport-ble": "^4.78.0",
         "@react-native-community/async-storage": "^1.12.1",

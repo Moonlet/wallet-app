@@ -23,6 +23,7 @@ import { HttpClient } from '../../utils/http-client';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { Staking } from './contracts/staking';
 import { MethodSignature } from './types';
+import { getContract } from './contracts/base-contract';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -122,7 +123,6 @@ export class Client extends BlockchainGenericClient {
     ): Promise<IFeeOptions> {
         try {
             let results = {};
-
             switch (transactionType) {
                 case TransactionType.TRANSFER: {
                     results = data.contractAddress
@@ -193,11 +193,21 @@ export class Client extends BlockchainGenericClient {
                 }
             }
 
+            const contractAddressStaking = await getContract(this.chainId, Contracts.STAKING);
+
             const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
-            const gasLimit =
+            let gasLimit =
                 results[0] && results[0].result
                     ? new BigNumber(parseInt(results[0].result, 16))
                     : config.feeOptions.defaults.gasLimit[tokenType];
+
+            // TODO - find a way to get the exact gaslimit for GRT staking
+            if (
+                data.contractAddress &&
+                data.contractAddress.toLowerCase() === contractAddressStaking.toLowerCase()
+            ) {
+                gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+            }
 
             return {
                 gasPrice: gasPrice.toString(),
@@ -235,25 +245,27 @@ export class Client extends BlockchainGenericClient {
         if (contractAddress) {
             let params;
 
+            params = {
+                from,
+                to: contractAddress
+            };
+
             if (data) {
                 params = {
                     ...params,
                     data
                 };
-            } else {
-                params = {
-                    from,
-                    to: contractAddress
-                };
             }
 
-            gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ params }]).then(res => {
-                if (res.result) {
-                    res.result =
-                        '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
-                    return res;
-                }
-            });
+            gasEstimatePromise = this.http
+                .jsonRpc('eth_estimateGas', [{ params }, 'latest'])
+                .then(res => {
+                    if (res.result) {
+                        res.result =
+                            '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
+                        return res;
+                    }
+                });
         } else {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);
         }

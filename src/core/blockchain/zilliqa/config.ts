@@ -241,6 +241,6 @@ export const config: IBlockchainConfig = {
         }
     ],
     amountToKeepInAccount: {
-        [AccountType.DEFAULT]: new BigNumber(10).pow(13).multipliedBy(4) // 40 ZIL
+        [AccountType.DEFAULT]: new BigNumber(10).pow(13).multipliedBy(3) // 30 ZIL
     }
 };

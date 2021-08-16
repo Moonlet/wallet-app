@@ -63,6 +63,7 @@ export default class App extends React.Component<{}, IState> {
     private unsub: any;
     private notificationsConfigured: boolean = false;
     private securityChecksDone: boolean = true;
+    private universalLinksConfigured: boolean = false;
 
     constructor(props: any) {
         super(props);
@@ -98,7 +99,6 @@ export default class App extends React.Component<{}, IState> {
 
         if (appReady && !this.notificationsConfigured) {
             Notifications.configure();
-            UniversalLinks.configure(store.getState);
 
             this.notificationsConfigured = true;
         }
@@ -112,6 +112,13 @@ export default class App extends React.Component<{}, IState> {
                 this.showPasswordModal();
             }
         });
+    };
+
+    public handleNavigationLoaded = () => {
+        if (!this.universalLinksConfigured) {
+            UniversalLinks.configure(store.getState);
+            this.universalLinksConfigured = true;
+        }
     };
 
     public componentDidMount() {
@@ -192,7 +199,10 @@ export default class App extends React.Component<{}, IState> {
             return (
                 <SafeAreaProvider>
                     <AppContainer
-                        ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
+                        ref={(nav: any) => {
+                            NavigationService.setTopLevelNavigator(nav);
+                            this.handleNavigationLoaded();
+                        }}
                         theme="dark"
                         onNavigationStateChange={(_, newState) => {
                             if (!isEqual(this.state.navigationState, newState)) {

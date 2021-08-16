@@ -538,7 +538,11 @@ export const translation: ITranslations = {
             SPL_INVALID_ADDRESS:
                 'Something went wrong while validating the addresses. Please try again.',
             SPL_INACTIVE_ADDRESS:
-                'The destination address account does not have an active {{coin}} token.'
+                'The destination address account does not have an active {{coin}} token.',
+            GAS_PRICE_TOO_LOW:
+                'Gas price is lower than minimum allowable. Increase gas price and try again!',
+            GAS_LIMIT_TOO_LOW:
+                'Gas limit is lower than minimum allowable. Increase gas limit and try again!'
         },
         SecurityChecks: {
             title: 'Security Warning!',

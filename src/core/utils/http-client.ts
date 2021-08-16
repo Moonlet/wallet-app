@@ -80,8 +80,6 @@ export class HttpClient {
         }
     }
 
-    // Request to failed with status code
-
     public async jsonRpc(
         method: string,
         params: any = [],
@@ -100,30 +98,44 @@ export class HttpClient {
         try {
             const res = await resPromise;
 
-            const sentryTags = {
-                url: res.url,
-                status: res.status,
-                method,
-                params: JSON.stringify(params),
-                retries
-            };
-
             if (res.status === 200) {
                 return await res.json(); // added await intentionally, to fail if json is invalid, so it will retry
             } else if (retries > 0) {
                 // Sentry
-                SentrySetTags(sentryTags);
-                SentryAddBreadcrumb({ message: JSON.stringify(res.headers) });
-                SentryAddBreadcrumb({ message: JSON.stringify(res.statusText) });
+                SentrySetTags({ url: res.url, status: res.status });
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        headers: res.headers
+                    })
+                });
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        statusText: res.statusText,
+                        method,
+                        params: JSON.stringify(params),
+                        retries
+                    })
+                });
                 SentryCaptureException(`JsonRpc request failed to ${res.url} with ${res.status}`);
 
                 await delay(500);
                 return this.jsonRpc(method, params, retries - 1);
             } else {
                 // Sentry
-                SentrySetTags(sentryTags);
-                SentryAddBreadcrumb({ message: JSON.stringify(res.headers) });
-                SentryAddBreadcrumb({ message: JSON.stringify(res.statusText) });
+                SentrySetTags({ url: res.url, status: res.status });
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        headers: res.headers
+                    })
+                });
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        statusText: res.statusText,
+                        method,
+                        params: JSON.stringify(params),
+                        retries
+                    })
+                });
                 SentryCaptureException(`JsonRpc request failed to ${res.url} with ${res.status}`);
 
                 return res.json();

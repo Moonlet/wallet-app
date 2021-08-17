@@ -662,8 +662,9 @@ export const translation: ITranslations = {
                     'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Unstake or Withdraw.'
             },
             cannotInitiateTxTitle: 'You have pending transactions',
+            notEnoughTokensFees: `You don't have enough funds to pay for network fees.`,
             disableSignMessage:
-                'Your {{token}} available balance is low. Transactions will fail. Top-up at least {{amount}} {{token}} amount to be able to pay for network fees.',
+                'You might have staked, unstaked or reward funds, but in order to be able to broadcast this transaction you need to have available funds and top up at least {{amount}} {{token}}. No need to open a ticket!',
             cannotInitiateTxMessage:
                 'Please make sure all transactions are finalised before initiating a new one.',
             lowFundsWarning: 'Low balance warning!',

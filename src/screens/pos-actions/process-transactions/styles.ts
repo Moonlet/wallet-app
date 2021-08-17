@@ -39,8 +39,8 @@ export default (theme: ITheme) =>
         errorFundsTitle: {
             fontSize: normalizeFontAndLineHeight(17),
             lineHeight: normalizeFontAndLineHeight(22),
-            fontWeight: '600',
-            color: 'red',
+            fontWeight: '400',
+            color: theme.colors.error,
             marginBottom: BASE_DIMENSION * 4,
             paddingHorizontal: BASE_DIMENSION * 2,
             textAlign: 'center'

@@ -779,9 +779,9 @@ class ProcessTransactionsComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, theme } = this.props;
 
-        let title =
+        let title: any =
             this.props.selectedWallet?.type === WalletType.HW
                 ? translate('Transaction.processTitleTextLedger')
                 : translate('Transaction.processTitleText');
@@ -790,10 +790,20 @@ class ProcessTransactionsComponent extends React.Component<
             // fees are always paid in native token
             const nativeCoin = getBlockchain(this.props.selectedAccount.blockchain).config.coin;
 
-            title = translate('Validator.disableSignMessage', {
-                amount: this.state.amountNeededToPassTxs,
-                token: this.props.transactions.length ? nativeCoin : 'Token'
-            });
+            title = (
+                <React.Fragment>
+                    <Text style={styles.errorFundsTitle}>
+                        {translate('Validator.notEnoughTokensFees')}
+                    </Text>
+                    <Text style={[styles.errorFundsTitle, { color: theme.colors.textSecondary }]}>
+                        {' ' +
+                            translate('Validator.disableSignMessage', {
+                                amount: this.state.amountNeededToPassTxs,
+                                token: this.props.transactions.length ? nativeCoin : 'Token'
+                            })}
+                    </Text>
+                </React.Fragment>
+            );
         } else if (this.state.warningFeesToHigh) {
             title = translate('Validator.warningFeesToHigh');
         }

@@ -264,7 +264,7 @@ class DefaultTokenScreenComponent extends React.Component<
                                     testID="send-button"
                                     style={styles.button}
                                     wrapperStyle={{ flex: 1 }}
-                                    // disabled={!this.props.canSend} // TODO OOOOOOOO0
+                                    // disabled={!this.props.canSend} // TODO OOOOOOOO00
                                     onPress={() => {
                                         navigation.navigate('Send', {
                                             accountIndex: account.index,

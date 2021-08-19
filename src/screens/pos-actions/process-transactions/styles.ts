@@ -28,17 +28,17 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 4
         },
         title: {
-            fontSize: normalizeFontAndLineHeight(17),
+            fontSize: normalizeFontAndLineHeight(16),
             lineHeight: normalizeFontAndLineHeight(22),
-            fontWeight: '600',
+            fontWeight: '400',
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION * 4,
-            paddingHorizontal: BASE_DIMENSION * 6,
+            paddingHorizontal: BASE_DIMENSION * 2,
             textAlign: 'center'
         },
         errorFundsTitle: {
-            fontSize: normalizeFontAndLineHeight(17),
-            lineHeight: normalizeFontAndLineHeight(22),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(21),
             fontWeight: '400',
             color: theme.colors.error,
             marginBottom: BASE_DIMENSION * 4,
@@ -86,7 +86,7 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary
         },
         bottomText: {
-            fontSize: normalizeFontAndLineHeight(15),
+            fontSize: normalizeFontAndLineHeight(12),
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textTertiary
         },

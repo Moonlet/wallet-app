@@ -125,7 +125,7 @@ export class ClientUtils implements IClientUtils {
         }
     ): Promise<TransactionStatus> {
         let status: TransactionStatus = TransactionStatus.PENDING;
-        let hasErrorMessage: boolean = false;
+        let containsErrorMessage: boolean = false;
 
         if (context?.txData) {
             status =
@@ -143,12 +143,12 @@ export class ClientUtils implements IClientUtils {
                     // reset this to use fallback on older version
                     confirmedTxRes = null;
 
-                    hasErrorMessage = true;
+                    containsErrorMessage = true;
                 } else if (confirmedTxRes?.error?.message) {
-                    hasErrorMessage = true;
+                    containsErrorMessage = true;
                 }
             } catch {
-                hasErrorMessage = true;
+                containsErrorMessage = true;
 
                 // reset this to use fallback on older version
                 confirmedTxRes = null;
@@ -163,12 +163,12 @@ export class ClientUtils implements IClientUtils {
                     ]);
 
                     if (confirmedTxRes?.error?.message) {
-                        hasErrorMessage = true;
+                        containsErrorMessage = true;
                     } else {
-                        hasErrorMessage = false;
+                        containsErrorMessage = false;
                     }
                 } catch {
-                    hasErrorMessage = true;
+                    containsErrorMessage = true;
                 }
             }
 

@@ -160,7 +160,9 @@ class ProcessTransactionsComponent extends React.Component<
 
                 let txValueToUseFromAmountStd = new BigNumber(0);
                 let feesAmountStd = new BigNumber(0);
-                this.props.transactions.map(transaction => {
+                let isStakeAction = false;
+
+                for (const transaction of this.props.transactions) {
                     if (
                         transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
                         transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE ||
@@ -181,8 +183,14 @@ class ProcessTransactionsComponent extends React.Component<
                         }
                     }
 
+                    if (
+                        transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
+                        transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
+                    ) {
+                        isStakeAction = true;
+                    }
                     feesAmountStd = feesAmountStd.plus(transaction.feeOptions?.feeTotal || '0');
-                });
+                }
 
                 const feesAmount = blockchainInstance.account.amountFromStd(
                     feesAmountStd,
@@ -202,7 +210,8 @@ class ProcessTransactionsComponent extends React.Component<
 
                     if (
                         feesAmount.isGreaterThan(txValueToUseFromAmount) &&
-                        txValueToUseFromAmount.isGreaterThan(0)
+                        txValueToUseFromAmount.isGreaterThan(0) &&
+                        isStakeAction === true
                     ) {
                         warningFeesToHigh = true;
                     }
@@ -233,7 +242,10 @@ class ProcessTransactionsComponent extends React.Component<
                             tokenConfig.decimals // irelevant since its to USD
                         );
 
-                        if (feesConverted.isGreaterThan(txAmountConverted)) {
+                        if (
+                            feesConverted.isGreaterThan(txAmountConverted) &&
+                            isStakeAction === true
+                        ) {
                             warningFeesToHigh = true;
                         }
                     }

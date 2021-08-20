@@ -135,6 +135,7 @@ class ProcessTransactionsComponent extends React.Component<
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
                 let insufficientFundsFees = false;
+                let warningFeesToHigh = false;
 
                 const blockchain = this.props.selectedAccount.blockchain;
                 const blockchainInstance = getBlockchain(blockchain);
@@ -203,7 +204,7 @@ class ProcessTransactionsComponent extends React.Component<
                         feesAmount.isGreaterThan(txValueToUseFromAmount) &&
                         txValueToUseFromAmount.isGreaterThan(0)
                     ) {
-                        this.setState({ warningFeesToHigh: true });
+                        warningFeesToHigh = true;
                     }
                 } else {
                     if (txValueToUseFromAmount.isGreaterThan(0)) {
@@ -233,12 +234,12 @@ class ProcessTransactionsComponent extends React.Component<
                         );
 
                         if (feesConverted.isGreaterThan(txAmountConverted)) {
-                            this.setState({ warningFeesToHigh: true });
+                            warningFeesToHigh = true;
                         }
                     }
                 }
 
-                this.setState({ insufficientFundsFees });
+                this.setState({ insufficientFundsFees, warningFeesToHigh });
             }
         }
     }

@@ -197,8 +197,6 @@ class ProcessTransactionsComponent extends React.Component<
 
                     if (txAmountWithFees.isGreaterThan(accountAvailableAmountForFees)) {
                         insufficientFundsFees = true;
-
-                        this.setState({ insufficientFundsFees });
                     }
 
                     if (
@@ -239,6 +237,8 @@ class ProcessTransactionsComponent extends React.Component<
                         }
                     }
                 }
+
+                this.setState({ insufficientFundsFees });
             }
         }
     }

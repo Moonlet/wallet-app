@@ -1,6 +1,6 @@
-Team's log. Stardate 2108.19:
+Team's log. Stardate 2108.20:
 
-We discovered that the latest version of react native and gradle had some issues with task order of execution that caused the crash when Android app opened. This has been fixed with this release.
+This release comes with a fix for low balance message which was wrong. As well some improved guidelines in case your balance is low.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

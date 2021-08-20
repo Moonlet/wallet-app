@@ -9,6 +9,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
 import { PublicKey } from '@solana/web3.js/src/publickey';
 import { decode as bs58Decode } from 'bs58';
+import { getBlockchain } from '../blockchain-factory';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -123,7 +124,8 @@ export class ClientUtils implements IClientUtils {
             token?: ITokenConfigState;
         }
     ): Promise<TransactionStatus> {
-        let status = TransactionStatus.PENDING;
+        let status: TransactionStatus = TransactionStatus.PENDING;
+        let hasErrorMessage: boolean = false;
 
         if (context?.txData) {
             status =
@@ -136,11 +138,18 @@ export class ClientUtils implements IClientUtils {
             try {
                 // supported for solana-core v1.7 or newer
                 confirmedTxRes = await this.client.http.jsonRpc('getTransaction', [hash, 'json']);
+
                 if (String(confirmedTxRes?.error?.message).includes('Method not found')) {
                     // reset this to use fallback on older version
                     confirmedTxRes = null;
+
+                    hasErrorMessage = true;
+                } else if (confirmedTxRes?.error?.message) {
+                    hasErrorMessage = true;
                 }
             } catch {
+                hasErrorMessage = true;
+
                 // reset this to use fallback on older version
                 confirmedTxRes = null;
             }
@@ -152,8 +161,14 @@ export class ClientUtils implements IClientUtils {
                         hash,
                         'json'
                     ]);
-                } catch (error) {
-                    // TODO: consider implementing dropped status
+
+                    if (confirmedTxRes?.error?.message) {
+                        hasErrorMessage = true;
+                    } else {
+                        hasErrorMessage = false;
+                    }
+                } catch {
+                    hasErrorMessage = true;
                 }
             }
 
@@ -162,9 +177,25 @@ export class ClientUtils implements IClientUtils {
                     confirmedTxRes?.result?.meta?.err === null
                         ? TransactionStatus.SUCCESS
                         : TransactionStatus.FAILED;
-            } else {
-                // TODO: consider implementing dropped status
             }
+        }
+
+        try {
+            const blockchainInstance = getBlockchain(Blockchain.SOLANA);
+            const droppedTxBlocksThreshold = blockchainInstance.config.droppedTxBlocksThreshold;
+
+            const currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
+
+            // Transaction dropped
+            if (
+                currentBlockNumber &&
+                context?.broadcastedOnBlock &&
+                currentBlockNumber - context?.broadcastedOnBlock > droppedTxBlocksThreshold
+            ) {
+                status = TransactionStatus.DROPPED;
+            }
+        } catch {
+            //
         }
 
         return status;

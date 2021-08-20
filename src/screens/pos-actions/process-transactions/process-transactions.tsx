@@ -39,6 +39,7 @@ import { signAndSendTransactions } from '../../../redux/wallets/actions/util-act
 import { PercentageCircle } from '../../../components/widgets/components/progress-circle/progress-circle';
 import { IExchangeRates } from '../../../redux/market/state';
 import { convertAmount } from '../../../core/utils/balance';
+import { isSwapTx } from '../../../core/utils/swap';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -134,104 +135,80 @@ class ProcessTransactionsComponent extends React.Component<
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
                 let insufficientFundsFees = false;
-                let amountNeededToPassTxs = '';
 
                 const blockchain = this.props.selectedAccount.blockchain;
-
                 const blockchainInstance = getBlockchain(blockchain);
                 const nativeCoin = blockchainInstance.config.coin;
-
                 const nativeTokenConfig = getTokenConfig(blockchain, nativeCoin);
                 const tokenConfig = getTokenConfig(
                     blockchain,
-                    this.props.transactions[0].token.symbol
+                    isSwapTx(this.props.transactions[0])
+                        ? this.props.transactions[0].additionalInfo.swap.fromTokenSymbol
+                        : this.props.transactions[0].token.symbol
                 );
-
-                const transactionTokenState = this.props.selectedAccount.tokens[this.props.chainId][
-                    tokenConfig.symbol
-                    // this.props.transactions[0].token.symbol
+                const nativeTokenState = this.props.selectedAccount.tokens[this.props.chainId][
+                    nativeTokenConfig.symbol
                 ];
 
-                const balanceAvailable =
-                    this.props.transactions[0].amount === '0'
-                        ? undefined
-                        : this.props.transactions[0].amount;
-
-                const avbAmount = await availableAmount(
+                const accountAvailableAmountForFees = await availableAmount(
                     this.props.selectedAccount,
-                    transactionTokenState,
+                    nativeTokenState,
                     this.props.chainId,
-                    { balanceAvailable }
+                    {}
                 );
 
-                let delegationTxValue = new BigNumber(0);
-                let feesValue = new BigNumber(0);
+                let txValueToUseFromAmountStd = new BigNumber(0);
+                let feesAmountStd = new BigNumber(0);
                 this.props.transactions.map(transaction => {
                     if (
                         transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
-                        transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
+                        transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE ||
+                        (isSwapTx(transaction) &&
+                            transaction.additionalInfo.swap.fromTokenSymbol ===
+                                nativeTokenConfig.symbol)
                     ) {
                         if (transaction.amount === '0' && transaction.data?.params) {
                             const amount =
                                 transaction.data.params.length > 1
                                     ? transaction.data.params[1]
                                     : transaction.data.params[0];
-                            delegationTxValue = delegationTxValue.plus(amount);
+                            txValueToUseFromAmountStd = txValueToUseFromAmountStd.plus(amount);
                         } else {
-                            delegationTxValue = delegationTxValue.plus(transaction.amount);
+                            txValueToUseFromAmountStd = txValueToUseFromAmountStd.plus(
+                                transaction.amount
+                            );
                         }
                     }
-                    feesValue = feesValue.plus(transaction.feeOptions?.feeTotal || '0');
+
+                    feesAmountStd = feesAmountStd.plus(transaction.feeOptions?.feeTotal || '0');
                 });
 
-                const txAmount = blockchainInstance.account.amountFromStd(
-                    delegationTxValue,
+                const feesAmount = blockchainInstance.account.amountFromStd(
+                    feesAmountStd,
+                    nativeTokenConfig.decimals
+                );
+                const txValueToUseFromAmount = blockchainInstance.account.amountFromStd(
+                    txValueToUseFromAmountStd,
                     tokenConfig.decimals
                 );
 
-                const feesAmount = blockchainInstance.account.amountFromStd(
-                    feesValue,
-                    nativeTokenConfig.decimals
-                );
-
                 if (tokenConfig.symbol.toLowerCase() === nativeTokenConfig.symbol.toLowerCase()) {
-                    const txAmountWithFees = txAmount.plus(
-                        blockchainInstance.account.amountFromStd(
-                            delegationTxValue.plus(feesValue),
-                            tokenConfig.decimals
-                        )
-                    );
-                    if (txAmountWithFees.isGreaterThan(avbAmount)) {
+                    const txAmountWithFees = txValueToUseFromAmount.plus(feesAmount);
+
+                    if (txAmountWithFees.isGreaterThan(accountAvailableAmountForFees)) {
                         insufficientFundsFees = true;
 
-                        amountNeededToPassTxs = blockchainInstance.account
-                            .amountFromStd(
-                                new BigNumber(delegationTxValue.minus(avbAmount)),
-                                tokenConfig.decimals
-                            )
-                            .toFixed(2);
-
-                        this.setState({ amountNeededToPassTxs, insufficientFundsFees });
+                        this.setState({ insufficientFundsFees });
                     }
 
-                    if (feesAmount.isGreaterThan(txAmount) && txAmount.isGreaterThan(0)) {
+                    if (
+                        feesAmount.isGreaterThan(txValueToUseFromAmount) &&
+                        txValueToUseFromAmount.isGreaterThan(0)
+                    ) {
                         this.setState({ warningFeesToHigh: true });
                     }
                 } else {
-                    if (feesAmount.isGreaterThan(avbAmount)) {
-                        insufficientFundsFees = true;
-
-                        amountNeededToPassTxs = blockchainInstance.account
-                            .amountFromStd(
-                                new BigNumber(delegationTxValue.minus(avbAmount)),
-                                tokenConfig.decimals
-                            )
-                            .toFixed(2);
-
-                        this.setState({ amountNeededToPassTxs, insufficientFundsFees });
-                    }
-
-                    if (txAmount.isGreaterThan(0)) {
+                    if (txValueToUseFromAmount.isGreaterThan(0)) {
                         const feesConverted = convertAmount(
                             blockchain,
                             this.props.exchangeRates,
@@ -247,7 +224,10 @@ class ProcessTransactionsComponent extends React.Component<
                             blockchain,
                             this.props.exchangeRates,
                             blockchainInstance.account
-                                .amountToStd(txAmount.toFixed(4), tokenConfig.decimals)
+                                .amountToStd(
+                                    txValueToUseFromAmount.toFixed(4),
+                                    tokenConfig.decimals
+                                )
                                 .toFixed(),
                             tokenConfig.symbol,
                             'USD',
@@ -571,14 +551,6 @@ class ProcessTransactionsComponent extends React.Component<
             }
         }
 
-        const isSwapTx =
-            tx.additionalInfo?.swap &&
-            (tx.additionalInfo?.swap.contractMethod === ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL ||
-                tx.additionalInfo?.swap.contractMethod ===
-                    ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS ||
-                tx.additionalInfo?.swap.contractMethod ===
-                    ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS);
-
         return (
             <View
                 key={index + '-view-key'}
@@ -607,7 +579,7 @@ class ProcessTransactionsComponent extends React.Component<
                     <View style={styles.cardTextContainer}>
                         <Text style={styles.topText}>{topText}</Text>
                         {middleText !== '' && (
-                            <Text style={[isSwapTx ? styles.topText : styles.middleText]}>
+                            <Text style={[isSwapTx(tx) ? styles.topText : styles.middleText]}>
                                 {middleText}
                             </Text>
                         )}

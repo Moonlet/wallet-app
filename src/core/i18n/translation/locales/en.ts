@@ -87,6 +87,7 @@ export const translation: ITranslations = {
                 locking: 'Locking',
                 low: 'Low',
                 maxFees: 'Max.Fees',
+                maxBlockchainFees: 'Max. Blockchain Fees',
                 maybeLater: 'Maybe later',
                 message: 'Message',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
@@ -153,6 +154,7 @@ export const translation: ITranslations = {
                 tc: 'Terms of Service',
                 to: 'To',
                 tools: 'Tools',
+                topUp: 'Top-up',
                 theRequested: 'the requested',
                 transaction: 'transaction',
                 transactions: 'Transactions',
@@ -383,7 +385,8 @@ export const translation: ITranslations = {
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
             processTitleText:
-                'Please sign all transactions in order to start broadcasting to the blockchain network',
+                'The fees mentioned below are blockchain maximum possible fees and are required to process the transaction on the blockchain network level. ',
+            processTitleText2: 'Moonlet does not act as an intermediary or profit from these fees.',
             processTitleCompletedText:
                 'Some transactions may still pe pending on the blokchain, it is safe to continue. You can check the status of the transactions at any time in Transactions section.',
             processTitleErrorText:
@@ -662,8 +665,13 @@ export const translation: ITranslations = {
                     'Notice: Moonlet keeps a minimum of {{amount}} {{token}} in your account for future transactions like Stake, Unstake or Withdraw.'
             },
             cannotInitiateTxTitle: 'You have pending transactions',
+            notEnoughTokensFees1: `Your available balance is low and you can not cover the blockchain network fees.`,
+            notEnoughTokensFees2: `You might have staked, unstaked or reward funds, but you don't have available funds to cover the blockchain maximum possible fees.`,
+            notEnoughTokensFees3: `Please top up! Otherwise this transaction could fail.`,
+            notEnoughTokensFees4: `Your available balance is low`,
+            notEnoughTokensFees5: `You can not cover the blockchain network fees. Please top up otherwise this transaction could fail.`,
             disableSignMessage:
-                'Your {{token}} available balance is low. Transactions will fail. Top-up at least {{amount}} {{token}} amount to be able to pay for network fees.',
+                'You might have staked, unstaked or reward funds, but in order to be able to broadcast this transaction you need to have available funds and top up at least {{amount}} {{token}}. No need to open a ticket!',
             cannotInitiateTxMessage:
                 'Please make sure all transactions are finalised before initiating a new one.',
             lowFundsWarning: 'Low balance warning!',

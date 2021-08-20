@@ -28,7 +28,7 @@ import {
 import { PosBasicActionType, ContractMethod } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
-import { IAccountState, IWalletState } from '../../../redux/wallets/state';
+import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { bind } from 'bind-decorator';
 import { addAccount, setSelectedAccount } from '../../../redux/wallets/actions';
@@ -613,7 +613,7 @@ class ProcessTransactionsComponent extends React.Component<
                         )}
                         {bottomText !== '' && (
                             <Text style={styles.bottomText}>
-                                {translate('App.labels.maxFees') + ': ' + bottomText}
+                                {translate('App.labels.maxBlockchainFees') + ': ' + bottomText}
                             </Text>
                         )}
                     </View>
@@ -702,8 +702,45 @@ class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private signAllTransactions() {
-        // sign all transactions - HD wallet
-        this.props.signAndSendTransactions();
+        if (this.state.insufficientFundsFees) {
+            Dialog.alert(
+                translate('Validator.notEnoughTokensFees4'),
+                translate('Validator.notEnoughTokensFees5'),
+                {
+                    text: translate('App.labels.topUp'),
+                    onPress: () => {
+                        const account = this.props.selectedAccount;
+                        const blockchain = account.blockchain;
+
+                        const blockchainInstance = getBlockchain(blockchain);
+                        const nativeCoin = blockchainInstance.config.coin;
+
+                        const token: ITokenState = this.props.selectedAccount.tokens[
+                            this.props.chainId
+                        ][nativeCoin];
+
+                        this.props.closeProcessTransactions();
+                        NavigationService.popToTop();
+
+                        NavigationService.navigate('Receive', {
+                            accountIndex: account.index,
+                            blockchain,
+                            token
+                        });
+                    }
+                },
+                {
+                    text: translate('App.labels.sign'),
+                    onPress: () => {
+                        // sign all transactions - HD wallet
+                        this.props.signAndSendTransactions();
+                    }
+                }
+            );
+        } else {
+            // sign all transactions - HD wallet
+            this.props.signAndSendTransactions();
+        }
     }
 
     public renderBottomButton() {
@@ -728,7 +765,7 @@ class ProcessTransactionsComponent extends React.Component<
                         primary
                         onPress={this.signAllTransactions}
                         wrapperStyle={styles.continueButton}
-                        disabled={this.props.signingInProgress || this.state.insufficientFundsFees}
+                        disabled={this.props.signingInProgress}
                     >
                         {translate('Transaction.signAll')}
                     </Button>
@@ -779,21 +816,34 @@ class ProcessTransactionsComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, theme } = this.props;
 
-        let title =
-            this.props.selectedWallet?.type === WalletType.HW
-                ? translate('Transaction.processTitleTextLedger')
-                : translate('Transaction.processTitleText');
+        let title: any = (
+            <React.Fragment>
+                <Text style={styles.title}>{translate('Transaction.processTitleText')}</Text>
+                <Text style={[styles.title, { color: theme.colors.positive }]}>
+                    {translate('Transaction.processTitleText2')}
+                </Text>
+            </React.Fragment>
+        );
 
         if (this.state.insufficientFundsFees) {
             // fees are always paid in native token
-            const nativeCoin = getBlockchain(this.props.selectedAccount.blockchain).config.coin;
+            // const nativeCoin = getBlockchain(this.props.selectedAccount.blockchain).config.coin;
 
-            title = translate('Validator.disableSignMessage', {
-                amount: this.state.amountNeededToPassTxs,
-                token: this.props.transactions.length ? nativeCoin : 'Token'
-            });
+            title = (
+                <React.Fragment>
+                    <Text style={styles.errorFundsTitle}>
+                        {translate('Validator.notEnoughTokensFees1')}
+                    </Text>
+                    <Text style={[styles.errorFundsTitle, { color: theme.colors.textSecondary }]}>
+                        {' ' + translate('Validator.notEnoughTokensFees2')}
+                    </Text>
+                    <Text style={styles.errorFundsTitle}>
+                        {' ' + translate('Validator.notEnoughTokensFees3')}
+                    </Text>
+                </React.Fragment>
+            );
         } else if (this.state.warningFeesToHigh) {
             title = translate('Validator.warningFeesToHigh');
         }

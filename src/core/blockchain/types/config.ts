@@ -115,6 +115,7 @@ export interface IBlockchainConfig {
 
 export enum Contracts {
     STAKING = 'STAKING',
+    GRT_TOKEN = 'GRT_TOKEN',
 
     // SWAP
     ZILSWAP = 'ZILSWAP',

@@ -17,13 +17,17 @@ export const fetchContracts = async (chainId: ChainIdType) => {
     // TODO - fetch from blockchain
 
     const keyStaking = `ethereum.${chainId}.staking.contract`;
+    const keyGrt = `ethereum.${chainId}.tokens.GRT`;
 
     try {
-        const configs = await new ApiClient().configs.getConfigs([keyStaking]);
+        const configs = await new ApiClient().configs.getConfigs([keyStaking, keyGrt]);
+
         const values = {
             ...contracts[chainId],
-            [Contracts.STAKING]: configs.result[keyStaking]
+            [Contracts.STAKING]: configs.result[keyStaking],
+            [Contracts.GRT_TOKEN]: configs.result[keyGrt]
         };
+
         return values;
     } catch (error) {
         SentryCaptureException(new Error(JSON.stringify(error)));
@@ -43,7 +47,7 @@ export const getContract = async (
     chainId: ChainIdType,
     contractType: Contracts
 ): Promise<string> => {
-    return getEthContracts(chainId).then(zilContracts => zilContracts[contractType]);
+    return getEthContracts(chainId).then(ethContracts => ethContracts[contractType]);
 };
 
 export const buildBaseTransaction = async (

@@ -7,16 +7,19 @@ import {
     ITransferTransaction,
     TransactionType
 } from '../types';
-
 import { TransactionStatus } from '../../wallet/types';
 import { PosBasicActionType, TokenType } from '../types/token';
 import { Solana } from '.';
 import { Client as SolanaClient } from './client';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-import { StakeProgram } from '@solana/web3.js/src/stake-program';
-import { SystemProgram } from '@solana/web3.js/src/system-program';
-import { PublicKey } from '@solana/web3.js/src/publickey';
-import { Account } from '@solana/web3.js/src/account';
+import {
+    Account,
+    PublicKey,
+    SystemProgram,
+    StakeProgram,
+    Keypair,
+    TransactionInstruction
+} from '@solana/web3.js';
 import { Transaction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from './types';
 import { decode as bs58Decode } from 'bs58';
@@ -26,17 +29,27 @@ import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
 import { getBlockchain } from '../blockchain-factory';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { TokenSwap, TOKEN_SWAP_PROGRAM_ID } from '@solana/spl-token-swap';
+import {
+    AccountLayout,
+    ASSOCIATED_TOKEN_PROGRAM_ID,
+    Token,
+    TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-import { TransactionInstruction } from '@solana/web3.js';
+import { getPoolByTokenMintAddresses } from 'raydium-ui/src/utils/pools';
+import { solanaSwapInstruction } from './transaction-utils';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const account = new Account(bs58Decode(privateKey));
+
         const client = Solana.getClient(tx.chainId) as SolanaClient;
+
         let transaction;
+
+        const newAccount = Keypair.generate();
+        // const newAccountSigner = new Account(Buffer.from(newAccount.secretKey));
 
         switch (tx.additionalInfo.type) {
             case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
@@ -73,18 +86,10 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             case SolanaTransactionInstructionType.SWAP:
                 transaction = new Transaction();
 
-                const baseAccountKey: PublicKey = new PublicKey(
-                    '9AVaowib8ePah1VdJft6mgZtYQcHgLA4y1TAEV22Jhan'
-                );
-
                 const amountIn = tx.additionalInfo.swap.fromTokenAmount;
                 const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
 
-                const {
-                    // authority,
-                    fromAccount,
-                    toAccount
-                } = tx.additionalInfo.pubkeys;
+                const { fromAccount, toAccount, fromToken, toToken } = tx.additionalInfo.pubkeys;
 
                 const blockchainInstance = getBlockchain(Blockchain.SOLANA);
 
@@ -95,64 +100,62 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     blockchainInstance.account.amountToStd(minimumAmountOut, 6).toFixed(0)
                 );
 
-                // console.log(amtIn, amtOut);
+                const fromTokenMint = new PublicKey(fromToken);
+                // const toTokenMint = new PublicKey(toToken);
 
-                const usdc = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
-                const srm = new PublicKey('SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt');
+                const poolInfo = getPoolByTokenMintAddresses(fromToken, toToken);
+
+                const owner: PublicKey = new PublicKey(tx.address);
+
+                // Create account
+                transaction.add(
+                    SystemProgram.createAccount({
+                        fromPubkey: owner,
+                        newAccountPubkey: newAccount.publicKey,
+                        lamports: 2039280, // balanceNeeded,
+                        space: AccountLayout.span,
+                        programId: SystemProgram.programId
+                    })
+                );
+
+                // Token: Initialize Account
+                transaction.add(
+                    Token.createInitAccountInstruction(
+                        TOKEN_PROGRAM_ID,
+                        fromTokenMint, // mint
+                        newAccount.publicKey,
+                        owner
+                    )
+                );
+                // initializeAccount({
+                //     account: newAccount.publicKey,
+                //     mint: usdc,
+                //     owner
+                // });
 
                 // Token: Approve
                 transaction.add(
                     Token.createApproveInstruction(
                         TOKEN_PROGRAM_ID,
                         new PublicKey(fromAccount), // account
-                        usdc, // delegate
-                        baseAccountKey, // owner
+                        fromTokenMint, // delegate
+                        owner,
                         [], // multiSigners
                         amtIn
                     )
                 );
 
-                // Raydium Liquidity Pool Program V4
-                // const liquidityPool: PublicKey = new PublicKey(
-                //     '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
-                // );
-
-                // Raydium LP Token V4 (SRM-USDC)
-                const pool: PublicKey = new PublicKey(
-                    '9XnZd82j34KxNLgQfz29jGbYdxsYznTWRpvZE3SRE7JG'
-                );
-
-                // const tokenSwapAccount = new PublicKey();
-                // const tokenSwapAccount = new Account();
-
-                // Token Swap: Swap
+                // Swap
                 transaction.add(
-                    TokenSwap.swapInstruction(
-                        // tokenSwapAccount.publicKey,
-                        // new PublicKey(authority),
+                    solanaSwapInstruction(
+                        poolInfo,
 
-                        // pool,
-                        usdc,
-                        baseAccountKey,
-                        //
+                        new PublicKey(fromAccount), // UserSourceTokenAccount
+                        new PublicKey(toAccount), // UserDestTokenAccount
 
-                        baseAccountKey, // userTransferAuthority
-
-                        new PublicKey(fromAccount), // userSource
-                        usdc, // poolSource
-                        srm, // poolDestination
-                        new PublicKey(toAccount), // userDestination User's destination token account
-
-                        pool, // poolToken,
-
-                        baseAccountKey, // feeAccount
-                        baseAccountKey, // hostFeeAccount - Host account to gather fees
-
-                        TOKEN_SWAP_PROGRAM_ID,
-                        TOKEN_PROGRAM_ID,
-
-                        amtIn, // 100000, //  0.1, // amountIn,
-                        amtOut //   90661 // 3 // minimumAmountOut
+                        owner,
+                        amtIn,
+                        amtOut
                     )
                 );
 
@@ -161,7 +164,18 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     Token.createRevokeInstruction(
                         TOKEN_PROGRAM_ID,
                         new PublicKey(fromAccount), // account
-                        baseAccountKey, // owner
+                        owner,
+                        []
+                    )
+                );
+
+                // Token: Close account
+                transaction.add(
+                    Token.createCloseAccountInstruction(
+                        TOKEN_PROGRAM_ID,
+                        newAccount.publicKey,
+                        owner,
+                        owner,
                         []
                     )
                 );
@@ -171,6 +185,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
         transaction.recentBlockhash = await client.getCurrentBlockHash();
 
+        // newAccountSigner
         transaction.sign(...[account]);
 
         return transaction.serialize();
@@ -536,7 +551,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                             SystemProgram.transfer({
                                 fromPubkey: new PublicKey(tx.account.address),
                                 toPubkey: new PublicKey(tx.toAddress),
-                                lamports: tx.amount
+                                lamports: Number(tx.amount)
                             })
                         ]
                     }

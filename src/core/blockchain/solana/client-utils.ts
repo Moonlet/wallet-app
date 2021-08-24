@@ -55,7 +55,7 @@ export class ClientUtils implements IClientUtils {
         const txInstruction: TransactionInstruction = {
             data: Buffer.from(bs58Decode(instruction.data)),
             programId,
-            keys: [new PublicKey(fromAddress), new PublicKey(toAddress), programId]
+            keys: [] // TODO [new PublicKey(fromAddress), new PublicKey(toAddress), programId]
         };
 
         let type = '';

@@ -78,7 +78,7 @@ export class Staking {
                 newAccountPubkey: stakePubkey,
                 basePubkey: baseAccountKey,
                 seed: `stake:${tx.extraFields.stakeAccountIndex}`,
-                lamports: tx.amount,
+                lamports: Number(tx.amount),
                 space: StakeProgram.space,
                 programId: StakeProgram.programId
             })

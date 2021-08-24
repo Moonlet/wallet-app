@@ -17,4 +17,10 @@ mv node_modules/@solana/web3.js/node_modules/superstruct/lib/index.cjs node_modu
 mv node_modules/@solana/web3.js/node_modules/superstruct/lib/index.cjs.map node_modules/@solana/web3.js/node_modules/superstruct/lib/index.js.map
 awk '{sub("index.cjs", "index.js")}1' node_modules/@solana/web3.js/node_modules/superstruct/package.json > tmp.json && mv tmp.json node_modules/@solana/web3.js/node_modules/superstruct/package.json
 
+echo "Patching superstruct from raydium-ui solana web3 node_modules...";
+
+mv node_modules/raydium-ui/node_modules/superstruct/lib/index.cjs node_modules/raydium-ui/node_modules/superstruct/lib/index.js
+mv node_modules/raydium-ui/node_modules/superstruct/lib/index.cjs.map node_modules/raydium-ui/node_modules/superstruct/lib/index.js.map
+awk '{sub("index.cjs", "index.js")}1' node_modules/raydium-ui/node_modules/superstruct/package.json > tmp.json && mv tmp.json node_modules/raydium-ui/node_modules/superstruct/package.json
+
 echo "Done";

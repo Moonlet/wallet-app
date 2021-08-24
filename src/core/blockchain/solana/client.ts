@@ -14,13 +14,14 @@ import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
-import { Connection } from '@solana/web3.js/src/connection';
+import { Connection } from '@solana/web3.js';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { SplClient } from './tokens/spl-client';
 
 export class Client extends BlockchainGenericClient {
-    private connection;
+    private connection: Connection;
+
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 

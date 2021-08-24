@@ -190,10 +190,9 @@ export class ClientUtils implements IClientUtils {
             }
 
             if (confirmedTxRes?.result?.meta) {
-                status =
-                    confirmedTxRes?.result?.meta?.err === null
-                        ? TransactionStatus.SUCCESS
-                        : TransactionStatus.FAILED;
+                status = !confirmedTxRes?.result?.meta?.err
+                    ? TransactionStatus.SUCCESS
+                    : TransactionStatus.FAILED;
             }
         }
 

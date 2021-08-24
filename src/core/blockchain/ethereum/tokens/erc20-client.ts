@@ -10,28 +10,24 @@ export class Erc20Client {
 
     public async getBalance(contractAddress, accountAddress): Promise<IBalance> {
         if (isFeatureActive(RemoteFeature.GRT)) {
-            const contractAddressStaking = await getContract(
-                this.client.chainId,
-                Contracts.STAKING
-            );
-
-            if (contractAddressStaking === contractAddress)
+            const contractAddressGRT = await getContract(this.client.chainId, Contracts.GRT_TOKEN);
+            if (contractAddressGRT === contractAddress)
                 return this.getStakingBalance(contractAddress, accountAddress);
-        }
+        } else {
+            try {
+                const balance = await this.client.callContract(
+                    contractAddress,
+                    'balanceOf(address):(uint256)',
+                    [accountAddress]
+                );
 
-        try {
-            const balance = await this.client.callContract(
-                contractAddress,
-                'balanceOf(address):(uint256)',
-                [accountAddress]
-            );
-
-            return {
-                total: new BigNumber(balance as string) || new BigNumber(0),
-                available: new BigNumber(balance as string) || new BigNumber(0)
-            };
-        } catch {
-            return { total: new BigNumber(0), available: new BigNumber(0) };
+                return {
+                    total: new BigNumber(balance as string) || new BigNumber(0),
+                    available: new BigNumber(balance as string) || new BigNumber(0)
+                };
+            } catch {
+                return { total: new BigNumber(0), available: new BigNumber(0) };
+            }
         }
     }
 

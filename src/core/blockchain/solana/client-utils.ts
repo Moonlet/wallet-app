@@ -188,6 +188,7 @@ export class ClientUtils implements IClientUtils {
 
             // Transaction dropped
             if (
+                containsErrorMessage &&
                 currentBlockNumber &&
                 context?.broadcastedOnBlock &&
                 currentBlockNumber - context?.broadcastedOnBlock > droppedTxBlocksThreshold

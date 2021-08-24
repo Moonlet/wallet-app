@@ -135,6 +135,7 @@ class ProcessTransactionsComponent extends React.Component<
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
                 let insufficientFundsFees = false;
+                let warningFeesToHigh = false;
 
                 const blockchain = this.props.selectedAccount.blockchain;
                 const blockchainInstance = getBlockchain(blockchain);
@@ -159,7 +160,9 @@ class ProcessTransactionsComponent extends React.Component<
 
                 let txValueToUseFromAmountStd = new BigNumber(0);
                 let feesAmountStd = new BigNumber(0);
-                this.props.transactions.map(transaction => {
+                let isStakeAction = false;
+
+                for (const transaction of this.props.transactions) {
                     if (
                         transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
                         transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE ||
@@ -180,8 +183,14 @@ class ProcessTransactionsComponent extends React.Component<
                         }
                     }
 
+                    if (
+                        transaction.additionalInfo?.posAction === PosBasicActionType.STAKE ||
+                        transaction.additionalInfo?.posAction === PosBasicActionType.DELEGATE
+                    ) {
+                        isStakeAction = true;
+                    }
                     feesAmountStd = feesAmountStd.plus(transaction.feeOptions?.feeTotal || '0');
-                });
+                }
 
                 const feesAmount = blockchainInstance.account.amountFromStd(
                     feesAmountStd,
@@ -197,15 +206,14 @@ class ProcessTransactionsComponent extends React.Component<
 
                     if (txAmountWithFees.isGreaterThan(accountAvailableAmountForFees)) {
                         insufficientFundsFees = true;
-
-                        this.setState({ insufficientFundsFees });
                     }
 
                     if (
                         feesAmount.isGreaterThan(txValueToUseFromAmount) &&
-                        txValueToUseFromAmount.isGreaterThan(0)
+                        txValueToUseFromAmount.isGreaterThan(0) &&
+                        isStakeAction === true
                     ) {
-                        this.setState({ warningFeesToHigh: true });
+                        warningFeesToHigh = true;
                     }
                 } else {
                     if (txValueToUseFromAmount.isGreaterThan(0)) {
@@ -234,11 +242,16 @@ class ProcessTransactionsComponent extends React.Component<
                             tokenConfig.decimals // irelevant since its to USD
                         );
 
-                        if (feesConverted.isGreaterThan(txAmountConverted)) {
-                            this.setState({ warningFeesToHigh: true });
+                        if (
+                            feesConverted.isGreaterThan(txAmountConverted) &&
+                            isStakeAction === true
+                        ) {
+                            warningFeesToHigh = true;
                         }
                     }
                 }
+
+                this.setState({ insufficientFundsFees, warningFeesToHigh });
             }
         }
     }

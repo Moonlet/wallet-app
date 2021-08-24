@@ -125,7 +125,6 @@ export class ClientUtils implements IClientUtils {
         }
     ): Promise<TransactionStatus> {
         let status: TransactionStatus = TransactionStatus.PENDING;
-        let containsErrorMessage: boolean = false;
 
         if (context?.txData) {
             status =
@@ -135,6 +134,14 @@ export class ClientUtils implements IClientUtils {
         } else {
             let confirmedTxRes;
 
+            const droppedTxBlocksThreshold = getBlockchain(Blockchain.SOLANA).config
+                .droppedTxBlocksThreshold;
+            const currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
+            const currentBlockPassedThreshold =
+                currentBlockNumber &&
+                context?.broadcastedOnBlock &&
+                currentBlockNumber - context?.broadcastedOnBlock > droppedTxBlocksThreshold;
+
             try {
                 // supported for solana-core v1.7 or newer
                 confirmedTxRes = await this.client.http.jsonRpc('getTransaction', [hash, 'json']);
@@ -142,16 +149,22 @@ export class ClientUtils implements IClientUtils {
                 if (String(confirmedTxRes?.error?.message).includes('Method not found')) {
                     // reset this to use fallback on older version
                     confirmedTxRes = null;
+                }
 
-                    containsErrorMessage = true;
-                } else if (confirmedTxRes?.error?.message) {
-                    containsErrorMessage = true;
+                // Transaction dropped
+                if (
+                    (!confirmedTxRes?.result || confirmedTxRes?.error?.message) &&
+                    currentBlockPassedThreshold
+                ) {
+                    status = TransactionStatus.DROPPED;
                 }
             } catch {
-                containsErrorMessage = true;
-
                 // reset this to use fallback on older version
                 confirmedTxRes = null;
+
+                if (currentBlockPassedThreshold) {
+                    status = TransactionStatus.DROPPED;
+                }
             }
 
             if (!confirmedTxRes) {
@@ -161,15 +174,19 @@ export class ClientUtils implements IClientUtils {
                         hash,
                         'json'
                     ]);
-
-                    if (confirmedTxRes?.error?.message) {
-                        containsErrorMessage = true;
-                    } else {
-                        containsErrorMessage = false;
-                    }
                 } catch {
-                    containsErrorMessage = true;
+                    if (currentBlockPassedThreshold) {
+                        status = TransactionStatus.DROPPED;
+                    }
                 }
+            }
+
+            // Transaction dropped
+            if (
+                (!confirmedTxRes?.result || confirmedTxRes?.error?.message) &&
+                currentBlockPassedThreshold
+            ) {
+                status = TransactionStatus.DROPPED;
             }
 
             if (confirmedTxRes?.result?.meta) {
@@ -178,25 +195,6 @@ export class ClientUtils implements IClientUtils {
                         ? TransactionStatus.SUCCESS
                         : TransactionStatus.FAILED;
             }
-        }
-
-        try {
-            const blockchainInstance = getBlockchain(Blockchain.SOLANA);
-            const droppedTxBlocksThreshold = blockchainInstance.config.droppedTxBlocksThreshold;
-
-            const currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
-
-            // Transaction dropped
-            if (
-                containsErrorMessage &&
-                currentBlockNumber &&
-                context?.broadcastedOnBlock &&
-                currentBlockNumber - context?.broadcastedOnBlock > droppedTxBlocksThreshold
-            ) {
-                status = TransactionStatus.DROPPED;
-            }
-        } catch {
-            //
         }
 
         return status;

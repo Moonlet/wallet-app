@@ -101,7 +101,7 @@ export const config: IBlockchainConfig = {
     derivationType: DerivationType.HD_KEY_ED25519,
     coin: 'SOL',
     defaultUnit: 'NA',
-    droppedTxBlocksThreshold: 600,
+    droppedTxBlocksThreshold: 360,
     iconComponent: SolIcon,
     autoAddedTokensSymbols: {
         // '1': {

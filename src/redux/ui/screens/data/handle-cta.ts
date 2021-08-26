@@ -1519,6 +1519,14 @@ const handleCtaAction = async (
                 token = account.tokens[chainId][blockchainConfig.config.coin];
             }
 
+            if (
+                blockchain &&
+                action?.params?.params?.token &&
+                typeof action?.params?.params?.token === 'string'
+            ) {
+                token = account.tokens[chainId][action.params.params.token];
+            }
+
             const screen = action.params?.params?.screen || action.params?.screen;
             const screenKey = action.params?.params?.context?.key;
 

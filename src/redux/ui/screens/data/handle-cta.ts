@@ -1012,7 +1012,8 @@ const handleCtaAction = async (
                                 title: 'Stake now',
                                 headerStyle: {
                                     backgroundColor: '#005067',
-                                    borderBottomWidth: 0
+                                    borderBottomWidth: 0,
+                                    shadowColor: 'transparent'
                                 }
                             },
                             background: {

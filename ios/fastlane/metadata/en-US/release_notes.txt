@@ -1,6 +1,6 @@
-Team's log. Stardate 2108.20:
+Team's log. Stardate 2108.26:
 
-This release comes with a fix for low balance message which was wrong. As well some improved guidelines in case your balance is low.
+We are happy to let you know that with this fresh new release we support The Graph Network and you can start to delegate your GRT tokens to your favourite indexers or nodes.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

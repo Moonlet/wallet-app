@@ -1012,7 +1012,8 @@ const handleCtaAction = async (
                                 title: 'Stake now',
                                 headerStyle: {
                                     backgroundColor: '#005067',
-                                    borderBottomWidth: 0
+                                    borderBottomWidth: 0,
+                                    shadowColor: 'transparent'
                                 }
                             },
                             background: {
@@ -1517,6 +1518,14 @@ const handleCtaAction = async (
             if (blockchain && action?.params?.params?.token === true) {
                 const blockchainConfig = getBlockchain(blockchain);
                 token = account.tokens[chainId][blockchainConfig.config.coin];
+            }
+
+            if (
+                blockchain &&
+                action?.params?.params?.token &&
+                typeof action?.params?.params?.token === 'string'
+            ) {
+                token = account.tokens[chainId][action.params.params.token];
             }
 
             const screen = action.params?.params?.screen || action.params?.screen;

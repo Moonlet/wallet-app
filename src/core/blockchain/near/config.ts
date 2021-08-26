@@ -36,8 +36,26 @@ const accountCTA = {
         title: 'App.labels.stakeNow',
         iconName: IconValues.VOTE,
         navigateTo: {
-            screen: 'QuickStakeSelectValidator', // 'PosQuickDelegate',
-            params: { actionText: 'App.labels.stakeNow' }
+            screen: 'SmartScreen',
+            params: {
+                context: {
+                    screen: 'StakeNow',
+                    step: 'StakeEnterAmount',
+                    key: 'stake-enter-amount'
+                },
+                navigationOptions: {
+                    title: 'Stake now',
+                    headerStyle: {
+                        backgroundColor: '#005067',
+                        borderBottomWidth: 0,
+                        shadowColor: 'transparent'
+                    }
+                },
+                background: {
+                    gradient: ['#005067', '#061529']
+                },
+                newFlow: true
+            }
         }
     }
 };

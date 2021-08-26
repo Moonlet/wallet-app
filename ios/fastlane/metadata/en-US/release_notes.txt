@@ -1,6 +1,6 @@
-Team's log. Stardate 2108.16:
+Team's log. Stardate 2108.26:
 
-We pushed live a bunch of fixes, as follow: fixed Solana locked accounts end period, fixed the total balance based on Activating and Deactivating status, launching the tier based fee policy on Zilliqa swap and had some patches here and there.
+We are happy to let you know that with this fresh new release we support The Graph Network and you can start to delegate your GRT tokens to your favourite indexers or nodes.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

@@ -50,11 +50,19 @@ const accountCTA = {
             params: {
                 context: {
                     screen: 'StakeNow',
-                    step: 'StakeSelectValidator',
-                    key: 'stake-now-select-validator'
+                    step: 'StakeToMoonlet',
+                    key: 'stake-to-moonlet'
                 },
                 navigationOptions: {
-                    title: 'Stake now'
+                    title: 'Stake now',
+                    headerStyle: {
+                        backgroundColor: '#005067',
+                        borderBottomWidth: 0,
+                        shadowColor: 'transparent'
+                    }
+                },
+                background: {
+                    gradient: ['#005067', '#061529']
                 },
                 newFlow: true
             }

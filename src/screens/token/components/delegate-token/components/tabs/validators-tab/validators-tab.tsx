@@ -9,8 +9,6 @@ import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
 import { IValidator, CardActionType } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/types';
-import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
-import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { IAccountState, ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
@@ -126,8 +124,8 @@ class ValidatorsTabComponent extends React.Component<
         const { styles } = this.props;
         const { validators } = this.state;
 
-        const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
-        const mainCta = tokenUiConfig.accountCTA.mainCta;
+        // const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
+        // const mainCta = tokenUiConfig.accountCTA.mainCta;
 
         return (
             <View style={styles.container}>
@@ -160,7 +158,7 @@ class ValidatorsTabComponent extends React.Component<
                         />
                     )}
                 </View>
-                <View style={styles.bottomContainer}>
+                {/* <View style={styles.bottomContainer}>
                     <CtaGroup
                         mainCta={mainCta}
                         params={{
@@ -171,7 +169,7 @@ class ValidatorsTabComponent extends React.Component<
                             canPerformAction: !this.props.hasPendingTransactions
                         }}
                     />
-                </View>
+                </View> */}
             </View>
         );
     }

@@ -17,7 +17,6 @@ import {
     PublicKey,
     SystemProgram,
     StakeProgram,
-    Keypair,
     TransactionInstruction
 } from '@solana/web3.js';
 import { Transaction } from '@solana/web3.js/src/transaction';
@@ -29,12 +28,7 @@ import { splitStake } from '../../utils/balance';
 import BigNumber from 'bignumber.js';
 import { selectStakeAccounts } from './contracts/base-contract';
 import { getBlockchain } from '../blockchain-factory';
-import {
-    AccountLayout,
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    Token,
-    TOKEN_PROGRAM_ID
-} from '@solana/spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { getPoolByTokenMintAddresses } from 'raydium-ui/src/utils/pools';
@@ -47,9 +41,6 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
         const client = Solana.getClient(tx.chainId) as SolanaClient;
 
         let transaction;
-
-        const newAccount = Keypair.generate();
-        // const newAccountSigner = new Account(Buffer.from(newAccount.secretKey));
 
         switch (tx.additionalInfo.type) {
             case SolanaTransactionInstructionType.CREATE_ACCOUNT_WITH_SEED:
@@ -89,69 +80,70 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const amountIn = tx.additionalInfo.swap.fromTokenAmount;
                 const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
 
-                const { fromAccount, toAccount, fromToken, toToken } = tx.additionalInfo.pubkeys;
+                const {
+                    fromAccount,
+                    toAccount,
+                    commissionAccount,
+                    fromToken,
+                    toToken
+                }: {
+                    fromAccount: {
+                        key: string;
+                    };
+                    toAccount: {
+                        key: string;
+                        active: boolean;
+                    };
+                    commissionAccount: {
+                        key: string;
+                        active: boolean;
+                        owner: string;
+                    };
+                    fromToken: string;
+                    toToken: string;
+                } = tx.additionalInfo.pubkeys;
 
                 const blockchainInstance = getBlockchain(Blockchain.SOLANA);
 
                 const amtIn = Number(
-                    blockchainInstance.account.amountToStd(amountIn, 6).toFixed(0)
+                    blockchainInstance.account
+                        .amountToStd(amountIn, tx.additionalInfo.fromTokenDecimals)
+                        .toFixed(0)
                 );
                 const amtOut = Number(
-                    blockchainInstance.account.amountToStd(minimumAmountOut, 6).toFixed(0)
+                    blockchainInstance.account
+                        .amountToStd(minimumAmountOut, tx.additionalInfo.toTokenDecimals)
+                        .toFixed(0)
                 );
 
                 const fromTokenMint = new PublicKey(fromToken);
-                // const toTokenMint = new PublicKey(toToken);
+                const toTokenMint = new PublicKey(toToken);
 
                 const poolInfo = getPoolByTokenMintAddresses(fromToken, toToken);
 
                 const owner: PublicKey = new PublicKey(tx.address);
 
-                // Create account
-                transaction.add(
-                    SystemProgram.createAccount({
-                        fromPubkey: owner,
-                        newAccountPubkey: newAccount.publicKey,
-                        lamports: 2039280, // balanceNeeded,
-                        space: AccountLayout.span,
-                        programId: SystemProgram.programId
-                    })
-                );
-
-                // Token: Initialize Account
-                transaction.add(
-                    Token.createInitAccountInstruction(
-                        TOKEN_PROGRAM_ID,
-                        fromTokenMint, // mint
-                        newAccount.publicKey,
-                        owner
-                    )
-                );
-                // initializeAccount({
-                //     account: newAccount.publicKey,
-                //     mint: usdc,
-                //     owner
-                // });
-
-                // Token: Approve
-                transaction.add(
-                    Token.createApproveInstruction(
-                        TOKEN_PROGRAM_ID,
-                        new PublicKey(fromAccount), // account
-                        fromTokenMint, // delegate
-                        owner,
-                        [], // multiSigners
-                        amtIn
-                    )
-                );
+                if (!toAccount.active) {
+                    // Token not created
+                    transaction.add(
+                        Token.createAssociatedTokenAccountInstruction(
+                            ASSOCIATED_TOKEN_PROGRAM_ID,
+                            TOKEN_PROGRAM_ID,
+                            toTokenMint, // mint
+                            new PublicKey(toAccount.key), // associatedAddress
+                            owner,
+                            owner // payer
+                        )
+                    );
+                }
 
                 // Swap
                 transaction.add(
                     solanaSwapInstruction(
                         poolInfo,
 
-                        new PublicKey(fromAccount), // UserSourceTokenAccount
-                        new PublicKey(toAccount), // UserDestTokenAccount
+                        new PublicKey(fromAccount.key), // UserSourceTokenAccount
+                        new PublicKey(toAccount.key), // UserDestTokenAccount
 
                         owner,
                         amtIn,
@@ -159,33 +151,54 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     )
                 );
 
-                // Token: Revoke
-                transaction.add(
-                    Token.createRevokeInstruction(
-                        TOKEN_PROGRAM_ID,
-                        new PublicKey(fromAccount), // account
-                        owner,
-                        []
-                    )
-                );
+                // Moonlet Swap Commission
 
-                // Token: Close account
-                transaction.add(
-                    Token.createCloseAccountInstruction(
-                        TOKEN_PROGRAM_ID,
-                        newAccount.publicKey,
-                        owner,
-                        owner,
-                        []
-                    )
-                );
+                const moonletSwapCommission = tx.additionalInfo.moonletSwapCommission;
+
+                if (tx.additionalInfo.swap.fromTokenSymbol === blockchainInstance.config.coin) {
+                    // SOL
+                    // SystemProgram.transfer({
+                    //     fromPubkey: new PublicKey(tx.account.address),
+                    //     toPubkey: new PublicKey(tx.toAddress),
+                    //     lamports: Number(tx.amount)
+                    // });
+                } else {
+                    // SPL tokens
+
+                    if (!commissionAccount.active) {
+                        // Token not created
+                        transaction.add(
+                            Token.createAssociatedTokenAccountInstruction(
+                                ASSOCIATED_TOKEN_PROGRAM_ID,
+                                TOKEN_PROGRAM_ID,
+                                fromTokenMint, // mint
+                                new PublicKey(commissionAccount.key), // associatedAddress
+                                new PublicKey(commissionAccount.owner),
+                                owner // payer
+                            )
+                        );
+                    }
+
+                    transaction.add(
+                        // @ts-ignore
+                        Token.createTransferCheckedInstruction(
+                            TOKEN_PROGRAM_ID,
+                            new PublicKey(fromAccount.key), // source
+                            fromTokenMint, // mint
+                            new PublicKey(commissionAccount.key), // destination
+                            owner,
+                            [], // multiSigners
+                            Number(moonletSwapCommission), // amount
+                            tx.additionalInfo.fromTokenDecimals // decimals
+                        )
+                    );
+                }
 
                 break;
         }
 
         transaction.recentBlockhash = await client.getCurrentBlockHash();
 
-        // newAccountSigner
         transaction.sign(...[account]);
 
         return transaction.serialize();

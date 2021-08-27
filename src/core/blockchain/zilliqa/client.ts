@@ -343,6 +343,18 @@ export class Client extends BlockchainGenericClient {
                     rawResponse: res
                 });
             }
+            if (errorMessage.includes('GasPrice') && errorMessage.includes('lower than minimum')) {
+                return Promise.reject({
+                    error: TransactionMessageText.GAS_PRICE_TOO_LOW,
+                    rawResponse: res
+                });
+            }
+            if (errorMessage.includes('Gas limit') && errorMessage.includes('lower than minimum')) {
+                return Promise.reject({
+                    error: TransactionMessageText.GAS_LIMIT_TOO_LOW,
+                    rawResponse: res
+                });
+            }
 
             return Promise.reject({
                 error: 'GENERIC_ERROR',

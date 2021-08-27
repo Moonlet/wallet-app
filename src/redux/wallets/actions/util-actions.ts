@@ -250,19 +250,19 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             // we need to check if all txs were signed before marking the flow complete.
             dispatch(setProcessTxCompleted(true, false));
         }
-    } catch (errorMessage) {
-        // console.error(errorMessage);
-        SentryAddBreadcrumb({
-            message: JSON.stringify({
-                error: errorMessage
-            })
-        });
+    } catch (err) {
+        // console.error(err);
+        const errorMessage = err?.error;
 
-        SentryCaptureException(
-            new Error(
-                `Failed to broadcast transaction on ${account.blockchain}, ${errorMessage?.message}, ${errorMessage?.code}`
-            )
-        );
+        SentryAddBreadcrumb({ message: JSON.stringify(err) });
+
+        if (errorMessage !== 'LEDGER_SIGN_CANCELLED') {
+            SentryCaptureException(
+                new Error(
+                    `Failed to broadcast transaction on ${account.blockchain}, ${errorMessage}`
+                )
+            );
+        }
 
         const atLeastOneTransactionBroadcasted = transactionsBroadcasted(
             getState().ui.processTransactions.data.txs

@@ -9,10 +9,10 @@ export class Erc20Client {
     constructor(private client: Client) {}
 
     public async getBalance(contractAddress, accountAddress): Promise<IBalance> {
-        if (isFeatureActive(RemoteFeature.GRT)) {
-            const contractAddressGRT = await getContract(this.client.chainId, Contracts.GRT_TOKEN);
-            if (contractAddressGRT === contractAddress)
-                return this.getStakingBalance(contractAddress, accountAddress);
+        const contractAddressGRT = await getContract(this.client.chainId, Contracts.GRT_TOKEN);
+
+        if (contractAddressGRT === contractAddress && isFeatureActive(RemoteFeature.GRT)) {
+            return this.getStakingBalance(contractAddress, accountAddress);
         } else {
             try {
                 const balance = await this.client.callContract(

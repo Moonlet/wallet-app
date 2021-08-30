@@ -30,6 +30,8 @@ import {
 import { fetchValidators } from '../../redux/ui/validators/actions';
 import { PosBasicActionType } from '../../core/blockchain/types/token';
 import { getSelectedAccount } from '../../redux/wallets/selectors';
+import { isBech32 } from '@zilliqa-js/util/dist/validation';
+import { fromBech32Address } from '@zilliqa-js/crypto';
 
 const ONE_HOUR = 60 * 60 * 1000; // ms
 
@@ -75,6 +77,7 @@ const mapDispatchToProps = {
 interface IState {
     validator: IValidator;
     token: ITokenState;
+    validatorAddress: string;
 }
 
 const HeaderTitleComponent = (
@@ -129,9 +132,22 @@ class ValidatorScreenComponent extends React.Component<
     ) {
         super(props);
 
+        let validatorAddress = props.options.validatorAddress;
+
+        if (props.blockchain === Blockchain.ZILLIQA) {
+            try {
+                if (isBech32(validatorAddress)) {
+                    validatorAddress = fromBech32Address(validatorAddress).toLowerCase();
+                }
+            } catch {
+                // no need to handle this
+            }
+        }
+
         this.state = {
             validator: undefined,
-            token: undefined
+            token: undefined,
+            validatorAddress
         };
     }
 
@@ -149,8 +165,11 @@ class ValidatorScreenComponent extends React.Component<
                 !validator ||
                 new Date().getTime() - new Date(this.props.validatorsTimestamp).getTime() > ONE_HOUR
             ) {
-                this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
-                // this.props.fetchDelegatedValidators(this.props.account);
+                this.props.fetchValidators(
+                    this.props.account,
+                    PosBasicActionType.DELEGATE,
+                    this.state.validatorAddress
+                );
             } else if (validator) {
                 this.setState({ validator });
                 this.props.navigation.setParams({ validator });
@@ -178,7 +197,7 @@ class ValidatorScreenComponent extends React.Component<
             this.props.options
         ) {
             return validators.find(
-                v => v.id.toLowerCase() === this.props.options.validatorAddress.toLowerCase()
+                v => v.id.toLowerCase() === this.state.validatorAddress.toLowerCase()
             );
         }
 

@@ -134,14 +134,16 @@ class ValidatorScreenComponent extends React.Component<
 
         let validatorAddress = props?.options?.validatorAddress;
 
-        if (validatorAddress && props.blockchain === Blockchain.ZILLIQA) {
-            try {
-                if (isBech32(validatorAddress)) {
-                    validatorAddress = fromBech32Address(validatorAddress).toLowerCase();
-                }
-            } catch {
-                // no need to handle this
+        try {
+            if (
+                validatorAddress &&
+                props.blockchain === Blockchain.ZILLIQA &&
+                isBech32(validatorAddress)
+            ) {
+                validatorAddress = fromBech32Address(validatorAddress).toLowerCase();
             }
+        } catch {
+            // no need to handle this
         }
 
         this.state = {

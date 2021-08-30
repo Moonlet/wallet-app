@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -132,9 +132,9 @@ class ValidatorScreenComponent extends React.Component<
     ) {
         super(props);
 
-        let validatorAddress = props.options.validatorAddress;
+        let validatorAddress = props?.options?.validatorAddress;
 
-        if (props.blockchain === Blockchain.ZILLIQA) {
+        if (validatorAddress && props.blockchain === Blockchain.ZILLIQA) {
             try {
                 if (isBech32(validatorAddress)) {
                     validatorAddress = fromBech32Address(validatorAddress).toLowerCase();
@@ -210,15 +210,29 @@ class ValidatorScreenComponent extends React.Component<
     }
 
     public render() {
-        const { blockchain, styles } = this.props;
+        const { blockchain, styles, theme } = this.props;
         const { validator, token } = this.state;
 
         const config = getBlockchain(blockchain).config;
 
-        if (!validator || this.props.reduxValidatorsLoading || !token) {
+        if ((!validator && this.props.reduxValidatorsLoading) || !token) {
             return (
                 <View style={styles.container}>
                     <LoadingIndicator />
+                </View>
+            );
+        }
+
+        if (!validator && !this.props.reduxValidatorsLoading) {
+            return (
+                <View style={styles.addressNoExistContainer}>
+                    <Image
+                        style={styles.logoImage}
+                        source={require('../../assets/images/png/moonlet_space_gray.png')}
+                    />
+                    <Text style={[styles.labelName, { color: theme.colors.textSecondary }]}>
+                        {translate('Validator.addressNoExist')}
+                    </Text>
                 </View>
             );
         }

@@ -681,7 +681,8 @@ export const translation: ITranslations = {
             adjustRestake:
                 'You need to adjust the value you want to restake to be higher then  {{higherThen}} per validator',
             warningFeesToHigh:
-                'Please note that the value of the maximum estimated fees are higher than the value of your amount that you want to stake.'
+                'Please note that the value of the maximum estimated fees are higher than the value of your amount that you want to stake.',
+            addressNoExist: `This validator address\ndoesn't exist.`
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

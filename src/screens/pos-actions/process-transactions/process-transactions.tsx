@@ -26,7 +26,7 @@ import {
     getSelectedAccount
 } from '../../../redux/wallets/selectors';
 import { PosBasicActionType, ContractMethod } from '../../../core/blockchain/types/token';
-import { formatValidatorName } from '../../../core/utils/format-string';
+import { Capitalize, formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
@@ -867,7 +867,7 @@ class ProcessTransactionsComponent extends React.Component<
                     <React.Fragment>
                         <Text style={styles.title}>
                             {translate('Transaction.processTitleTextHighFees', {
-                                blockchain: this.props.selectedAccount.blockchain,
+                                blockchain: Capitalize(this.props.selectedAccount.blockchain),
                                 token: tokenConfig.symbol
                             })}
                         </Text>

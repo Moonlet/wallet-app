@@ -854,7 +854,7 @@ class ProcessTransactionsComponent extends React.Component<
             );
         } else if (this.state.warningFeesToHigh) {
             if (
-                this.props.selectedAccount.blockchain === Blockchain.ETHEREUM &&
+                blockchain === Blockchain.ETHEREUM &&
                 this.props.transactions[0] &&
                 this.props.transactions[0].token.symbol
             ) {
@@ -867,7 +867,7 @@ class ProcessTransactionsComponent extends React.Component<
                     <React.Fragment>
                         <Text style={styles.title}>
                             {translate('Transaction.processTitleTextHighFees', {
-                                blockchain: Capitalize(this.props.selectedAccount.blockchain),
+                                blockchain: Capitalize(blockchain),
                                 token: tokenConfig.symbol
                             })}
                         </Text>

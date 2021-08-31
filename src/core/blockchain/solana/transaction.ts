@@ -36,9 +36,12 @@ import { solanaSwapInstruction } from './transaction-utils';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
-        const account = new Account(bs58Decode(privateKey));
+        const account: Account = new Account(bs58Decode(privateKey));
+        const newAccount: Account = new Account();
+        const signers: Account[] = [account];
 
         const client = Solana.getClient(tx.chainId) as SolanaClient;
+        const blockchainInstance = getBlockchain(Blockchain.SOLANA);
 
         let transaction;
 
@@ -77,22 +80,22 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
             case SolanaTransactionInstructionType.SWAP:
                 transaction = new Transaction();
 
-                const amountIn = tx.additionalInfo.swap.fromTokenAmount;
-                const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
-
                 const {
                     fromAccount,
                     toAccount,
                     commissionAccount,
                     fromToken,
-                    toToken
+                    toToken,
+                    solMintAddress
                 }: {
                     fromAccount: {
                         key: string;
+                        isSol: boolean;
                     };
                     toAccount: {
                         key: string;
                         active: boolean;
+                        isSol: boolean;
                     };
                     commissionAccount: {
                         key: string;
@@ -101,9 +104,11 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     };
                     fromToken: string;
                     toToken: string;
+                    solMintAddress: string;
                 } = tx.additionalInfo.pubkeys;
 
-                const blockchainInstance = getBlockchain(Blockchain.SOLANA);
+                const amountIn = tx.additionalInfo.swap.fromTokenAmount;
+                const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
 
                 const amtIn = Number(
                     blockchainInstance.account
@@ -119,18 +124,57 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const fromTokenMint = new PublicKey(fromToken);
                 const toTokenMint = new PublicKey(toToken);
 
-                const poolInfo = getPoolByTokenMintAddresses(fromToken, toToken);
+                const poolInfo = getPoolByTokenMintAddresses(
+                    fromAccount.isSol ? solMintAddress : fromToken,
+                    toAccount.isSol ? solMintAddress : toToken
+                );
 
                 const owner: PublicKey = new PublicKey(tx.address);
 
-                if (!toAccount.active) {
+                const newAccountPublicKey = newAccount.publicKey;
+
+                if (fromAccount.isSol || toAccount.isSol) {
+                    const createAccountLamports = Math.pow(10, 7); // 0.01
+                    // const lamports = fromAccount.isSol ? amtIn : createAccountLamports;
+
+                    // Create Account
+                    transaction.add(
+                        SystemProgram.createAccount({
+                            fromPubkey: owner,
+                            newAccountPubkey: newAccountPublicKey,
+                            lamports: fromAccount.isSol ? amtIn : createAccountLamports,
+                            space: 165, // ACCOUNT_LAYOUT.span,
+                            programId: TOKEN_PROGRAM_ID
+                        })
+                    );
+                    // Transfer sol to the new account
+                    transaction.add(
+                        SystemProgram.transfer({
+                            fromPubkey: owner,
+                            toPubkey: newAccountPublicKey,
+                            lamports: amtIn
+                        })
+                    );
+                    // Token: Init Account - WSOL
+                    transaction.add(
+                        Token.createInitAccountInstruction(
+                            TOKEN_PROGRAM_ID,
+                            fromAccount.isSol ? fromTokenMint : toTokenMint,
+                            newAccountPublicKey,
+                            owner
+                        )
+                    );
+                }
+
+                if (!fromAccount.isSol && !toAccount.isSol && !toAccount.active) {
                     // Token not created
+                    // - only for SPL, not for SOL
                     transaction.add(
                         Token.createAssociatedTokenAccountInstruction(
                             ASSOCIATED_TOKEN_PROGRAM_ID,
                             TOKEN_PROGRAM_ID,
                             toTokenMint, // mint
-                            new PublicKey(toAccount.key), // associatedAddress
+                            new PublicKey(fromAccount.key), // associatedAddress
                             owner,
                             owner // payer
                         )
@@ -142,8 +186,8 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     solanaSwapInstruction(
                         poolInfo,
 
-                        new PublicKey(fromAccount.key), // UserSourceTokenAccount
-                        new PublicKey(toAccount.key), // UserDestTokenAccount
+                        fromAccount.isSol ? newAccountPublicKey : new PublicKey(fromAccount.key), // UserSourceTokenAccount
+                        toAccount.isSol ? newAccountPublicKey : new PublicKey(toAccount.key), // UserDestTokenAccount
 
                         owner,
                         amtIn,
@@ -155,16 +199,17 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 const moonletSwapCommission = tx.additionalInfo.moonletSwapCommission;
 
-                if (tx.additionalInfo.swap.fromTokenSymbol === blockchainInstance.config.coin) {
+                if (fromAccount.isSol) {
                     // SOL
-                    // SystemProgram.transfer({
-                    //     fromPubkey: new PublicKey(tx.account.address),
-                    //     toPubkey: new PublicKey(tx.toAddress),
-                    //     lamports: Number(tx.amount)
-                    // });
+                    transaction.add(
+                        SystemProgram.transfer({
+                            fromPubkey: owner,
+                            toPubkey: new PublicKey(commissionAccount.owner),
+                            lamports: moonletSwapCommission
+                        })
+                    );
                 } else {
                     // SPL tokens
-
                     if (!commissionAccount.active) {
                         // Token not created
                         transaction.add(
@@ -178,7 +223,6 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                             )
                         );
                     }
-
                     transaction.add(
                         // @ts-ignore
                         Token.createTransferCheckedInstruction(
@@ -194,12 +238,26 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
                 }
 
+                if (fromAccount.isSol || toAccount.isSol) {
+                    transaction.add(
+                        Token.createCloseAccountInstruction(
+                            TOKEN_PROGRAM_ID,
+                            newAccountPublicKey,
+                            owner,
+                            owner,
+                            []
+                        )
+                    );
+                }
+
+                signers.push(newAccount);
+
                 break;
         }
 
         transaction.recentBlockhash = await client.getCurrentBlockHash();
 
-        transaction.sign(...[account]);
+        transaction.sign(...signers);
 
         return transaction.serialize();
     }

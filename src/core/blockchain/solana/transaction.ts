@@ -31,7 +31,6 @@ import { getBlockchain } from '../blockchain-factory';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-import { getPoolByTokenMintAddresses } from 'raydium-ui/src/utils/pools';
 import { solanaSwapInstruction } from './transaction-utils';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
@@ -85,8 +84,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     toAccount,
                     commissionAccount,
                     fromToken,
-                    toToken,
-                    solMintAddress
+                    toToken
                 }: {
                     fromAccount: {
                         key: string;
@@ -104,7 +102,6 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     };
                     fromToken: string;
                     toToken: string;
-                    solMintAddress: string;
                 } = tx.additionalInfo.pubkeys;
 
                 const amountIn = tx.additionalInfo.swap.fromTokenAmount;
@@ -124,25 +121,25 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const fromTokenMint = new PublicKey(fromToken);
                 const toTokenMint = new PublicKey(toToken);
 
-                const poolInfo = getPoolByTokenMintAddresses(
-                    fromAccount.isSol ? solMintAddress : fromToken,
-                    toAccount.isSol ? solMintAddress : toToken
-                );
-
                 const owner: PublicKey = new PublicKey(tx.address);
 
                 const newAccountPublicKey = newAccount.publicKey;
 
+                if (!tx.additionalInfo.poolInfo) {
+                    // throw new error
+                    // log in sentry
+                }
+
                 if (fromAccount.isSol || toAccount.isSol) {
                     const createAccountLamports = Math.pow(10, 7); // 0.01
-                    // const lamports = fromAccount.isSol ? amtIn : createAccountLamports;
+                    const lamports = fromAccount.isSol ? amtIn : createAccountLamports;
 
                     // Create Account
                     transaction.add(
                         SystemProgram.createAccount({
                             fromPubkey: owner,
                             newAccountPubkey: newAccountPublicKey,
-                            lamports: fromAccount.isSol ? amtIn : createAccountLamports,
+                            lamports,
                             space: 165, // ACCOUNT_LAYOUT.span,
                             programId: TOKEN_PROGRAM_ID
                         })
@@ -152,7 +149,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         SystemProgram.transfer({
                             fromPubkey: owner,
                             toPubkey: newAccountPublicKey,
-                            lamports: amtIn
+                            lamports
                         })
                     );
                     // Token: Init Account - WSOL
@@ -174,7 +171,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                             ASSOCIATED_TOKEN_PROGRAM_ID,
                             TOKEN_PROGRAM_ID,
                             toTokenMint, // mint
-                            new PublicKey(fromAccount.key), // associatedAddress
+                            new PublicKey(toAccount.key), // associatedAddress
                             owner,
                             owner // payer
                         )
@@ -184,7 +181,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 // Swap
                 transaction.add(
                     solanaSwapInstruction(
-                        poolInfo,
+                        tx.additionalInfo.poolInfo,
 
                         fromAccount.isSol ? newAccountPublicKey : new PublicKey(fromAccount.key), // UserSourceTokenAccount
                         toAccount.isSol ? newAccountPublicKey : new PublicKey(toAccount.key), // UserDestTokenAccount
@@ -250,7 +247,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
                 }
 
-                signers.push(newAccount);
+                if (fromAccount.isSol || toAccount.isSol) {
+                    signers.push(newAccount);
+                }
 
                 break;
         }

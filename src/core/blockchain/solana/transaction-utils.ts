@@ -1,10 +1,9 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { LiquidityPoolInfo } from 'raydium-ui/src/utils/pools';
 import { u8, nu64, struct } from 'buffer-layout';
 
 export const solanaSwapInstruction = (
-    poolInfo: LiquidityPoolInfo,
+    poolInfo: any, // LiquidityPoolInfo,
 
     // user
     userSourceTokenAccount: PublicKey,

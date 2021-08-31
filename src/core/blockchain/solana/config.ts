@@ -11,7 +11,6 @@ import { USDT_MAINNET } from './tokens/usdt';
 import { BTC_MAINNET } from './tokens/btc';
 import { ETH_MAINNET } from './tokens/eth';
 import { SRM_MAINNET } from './tokens/srm';
-import { LINK_MAINNET } from './tokens/link';
 import { RAY_MAINNET } from './tokens/ray';
 
 export const SOL_NATIVE: ITokenConfigState = {
@@ -118,8 +117,7 @@ export const config: IBlockchainConfig = {
             BTC: BTC_MAINNET,
             ETH: ETH_MAINNET,
             SRM: SRM_MAINNET,
-            RAY: RAY_MAINNET,
-            LINK: LINK_MAINNET
+            RAY: RAY_MAINNET
         },
         '3': {
             USDC: USDC_TESTNET

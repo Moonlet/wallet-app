@@ -98,7 +98,6 @@
         "node-libs-react-native": "^1.2.1",
         "puppeteer": "^10.1.0",
         "qrcode": "^1.4.4",
-        "raydium-ui": "^1.0.0",
         "react": "17.0.2",
         "react-native": "0.64.2",
         "react-native-aes-crypto": "^1.3.10",

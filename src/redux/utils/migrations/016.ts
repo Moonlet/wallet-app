@@ -32,7 +32,6 @@ export default (state: any) => {
     state = addToken(state, ETH_MAINNET, activeTokenData);
     state = addToken(state, SRM_MAINNET, activeTokenData);
     state = addToken(state, RAY_MAINNET, activeTokenData);
-    state = addToken(state, LINK_MAINNET, activeTokenData);
 
     // Inactive tokens
     const inactiveTokenData = {
@@ -41,6 +40,7 @@ export default (state: any) => {
         tokenActive: false
     };
 
+    state = addToken(state, LINK_MAINNET, inactiveTokenData);
     state = addToken(state, SUSHI_MAINNET, inactiveTokenData);
     state = addToken(state, YFI_MAINNET, inactiveTokenData);
     state = addToken(state, JPYC_MAINNET, inactiveTokenData);

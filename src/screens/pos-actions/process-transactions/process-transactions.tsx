@@ -14,7 +14,7 @@ import { LoadingIndicator } from '../../../components/loading-indicator/loading-
 import { closeProcessTransactions } from '../../../redux/ui/process-transactions/actions';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
-import { IBlockchainTransaction, ChainIdType } from '../../../core/blockchain/types';
+import { IBlockchainTransaction, ChainIdType, Blockchain } from '../../../core/blockchain/types';
 import { TransactionStatus, WalletType } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
@@ -26,7 +26,7 @@ import {
     getSelectedAccount
 } from '../../../redux/wallets/selectors';
 import { PosBasicActionType, ContractMethod } from '../../../core/blockchain/types/token';
-import { formatValidatorName } from '../../../core/utils/format-string';
+import { Capitalize, formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
@@ -687,6 +687,12 @@ class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private signAllTransactions() {
+        const account = this.props.selectedAccount;
+        const blockchain = account.blockchain;
+
+        const blockchainInstance = getBlockchain(blockchain);
+        const nativeCoin = blockchainInstance.config.coin;
+
         if (this.state.insufficientFundsFees) {
             Dialog.alert(
                 translate('Validator.notEnoughTokensFees4'),
@@ -694,12 +700,6 @@ class ProcessTransactionsComponent extends React.Component<
                 {
                     text: translate('App.labels.topUp'),
                     onPress: () => {
-                        const account = this.props.selectedAccount;
-                        const blockchain = account.blockchain;
-
-                        const blockchainInstance = getBlockchain(blockchain);
-                        const nativeCoin = blockchainInstance.config.coin;
-
                         const token: ITokenState = this.props.selectedAccount.tokens[
                             this.props.chainId
                         ][nativeCoin];
@@ -712,6 +712,28 @@ class ProcessTransactionsComponent extends React.Component<
                             blockchain,
                             token
                         });
+                    }
+                },
+                {
+                    text: translate('App.labels.sign'),
+                    onPress: () => {
+                        // sign all transactions - HD wallet
+                        this.props.signAndSendTransactions();
+                    }
+                }
+            );
+        } else if (this.state.warningFeesToHigh) {
+            const tokenConfig = getTokenConfig(blockchain, this.props.transactions[0].token.symbol);
+
+            Dialog.alert(
+                translate('Validator.stakeAmtLow'),
+                translate('Validator.stakeAmtLowDetails', {
+                    token: tokenConfig.symbol
+                }),
+                {
+                    text: translate('App.labels.cancel'),
+                    onPress: () => {
+                        //
                     }
                 },
                 {
@@ -802,6 +824,7 @@ class ProcessTransactionsComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+        const blockchain = this.props.selectedAccount?.blockchain;
 
         let title: any = (
             <React.Fragment>
@@ -830,7 +853,35 @@ class ProcessTransactionsComponent extends React.Component<
                 </React.Fragment>
             );
         } else if (this.state.warningFeesToHigh) {
-            title = translate('Validator.warningFeesToHigh');
+            if (
+                blockchain === Blockchain.ETHEREUM &&
+                this.props.transactions[0] &&
+                this.props.transactions[0].token.symbol
+            ) {
+                const tokenConfig = getTokenConfig(
+                    blockchain,
+                    this.props.transactions[0].token.symbol
+                );
+
+                title = (
+                    <React.Fragment>
+                        <Text style={styles.title}>
+                            {translate('Transaction.processTitleTextHighFees', {
+                                blockchain: Capitalize(blockchain),
+                                token: tokenConfig.symbol
+                            })}
+                        </Text>
+                        <Text style={[styles.title, { color: theme.colors.error }]}>
+                            {' ' + translate('Transaction.processTitleText3')}
+                        </Text>
+                        <Text style={[styles.title, { color: theme.colors.positive }]}>
+                            {' ' + translate('Transaction.processTitleText2')}
+                        </Text>
+                    </React.Fragment>
+                );
+            } else {
+                title = translate('Validator.warningFeesToHigh');
+            }
         }
 
         if (this.props.isVisible) {

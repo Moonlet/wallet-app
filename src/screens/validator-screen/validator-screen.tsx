@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -30,6 +30,8 @@ import {
 import { fetchValidators } from '../../redux/ui/validators/actions';
 import { PosBasicActionType } from '../../core/blockchain/types/token';
 import { getSelectedAccount } from '../../redux/wallets/selectors';
+import { isBech32 } from '@zilliqa-js/util/dist/validation';
+import { fromBech32Address } from '@zilliqa-js/crypto';
 
 const ONE_HOUR = 60 * 60 * 1000; // ms
 
@@ -75,6 +77,7 @@ const mapDispatchToProps = {
 interface IState {
     validator: IValidator;
     token: ITokenState;
+    validatorAddress: string;
 }
 
 const HeaderTitleComponent = (
@@ -129,9 +132,24 @@ class ValidatorScreenComponent extends React.Component<
     ) {
         super(props);
 
+        let validatorAddress = props?.options?.validatorAddress;
+
+        try {
+            if (
+                validatorAddress &&
+                props.blockchain === Blockchain.ZILLIQA &&
+                isBech32(validatorAddress)
+            ) {
+                validatorAddress = fromBech32Address(validatorAddress).toLowerCase();
+            }
+        } catch {
+            // no need to handle this
+        }
+
         this.state = {
             validator: undefined,
-            token: undefined
+            token: undefined,
+            validatorAddress
         };
     }
 
@@ -149,8 +167,11 @@ class ValidatorScreenComponent extends React.Component<
                 !validator ||
                 new Date().getTime() - new Date(this.props.validatorsTimestamp).getTime() > ONE_HOUR
             ) {
-                this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
-                // this.props.fetchDelegatedValidators(this.props.account);
+                this.props.fetchValidators(
+                    this.props.account,
+                    PosBasicActionType.DELEGATE,
+                    this.state.validatorAddress
+                );
             } else if (validator) {
                 this.setState({ validator });
                 this.props.navigation.setParams({ validator });
@@ -178,7 +199,7 @@ class ValidatorScreenComponent extends React.Component<
             this.props.options
         ) {
             return validators.find(
-                v => v.id.toLowerCase() === this.props.options.validatorAddress.toLowerCase()
+                v => v.id.toLowerCase() === this.state.validatorAddress.toLowerCase()
             );
         }
 
@@ -191,15 +212,29 @@ class ValidatorScreenComponent extends React.Component<
     }
 
     public render() {
-        const { blockchain, styles } = this.props;
+        const { blockchain, styles, theme } = this.props;
         const { validator, token } = this.state;
 
         const config = getBlockchain(blockchain).config;
 
-        if (!validator || this.props.reduxValidatorsLoading || !token) {
+        if ((!validator && this.props.reduxValidatorsLoading) || !token) {
             return (
                 <View style={styles.container}>
                     <LoadingIndicator />
+                </View>
+            );
+        }
+
+        if (!validator && !this.props.reduxValidatorsLoading) {
+            return (
+                <View style={styles.addressNoExistContainer}>
+                    <Image
+                        style={styles.logoImage}
+                        source={require('../../assets/images/png/moonlet_space_gray.png')}
+                    />
+                    <Text style={[styles.labelName, { color: theme.colors.textSecondary }]}>
+                        {translate('Validator.addressNoExist')}
+                    </Text>
                 </View>
             );
         }

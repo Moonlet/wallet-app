@@ -15,14 +15,16 @@ export class ValidatorsApiClient {
         blockchain: Blockchain,
         chainId: string,
         address: string,
-        posAction: PosBasicActionType
+        posAction: PosBasicActionType,
+        validatorAddress?: string
     ) {
         try {
             const response = await this.apiClient.http.post('/walletUi/validators/list', {
                 blockchain,
                 chainId,
                 address,
-                posAction
+                posAction,
+                validatorAddress
             });
 
             return response?.result?.data;

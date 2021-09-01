@@ -1,6 +1,6 @@
-Team's log. Stardate 2108.26:
+Team's log. Stardate 2108.31:
 
-We are happy to let you know that with this fresh new release we support The Graph Network and you can start to delegate your GRT tokens to your favourite indexers or nodes.
+This time we have pushed live some fixes for ERC-20 balance, we removed the Stake now button from Validators tab, we made the validator page load faster and fixed the dynamic links.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

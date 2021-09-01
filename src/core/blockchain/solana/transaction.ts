@@ -263,16 +263,6 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
                 }
 
-                transaction.add(
-                    Token.createCloseAccountInstruction(
-                        TOKEN_PROGRAM_ID,
-                        new PublicKey('6h2tf3qSuSZVx3XxvX6QXsDK9U75ebdZDAwqYFy4hLsG'),
-                        owner,
-                        owner,
-                        []
-                    )
-                );
-
                 if (fromAccount.isSol || toAccount.isSol) {
                     signers.push(newAccount);
                 }

@@ -232,6 +232,8 @@ export const translation: ITranslations = {
             feeTitle: 'Transaction fee',
             gasPrice: 'Gas price',
             gasLimit: 'Gas limit',
+            maxPriorityFeePerGas: 'Max Priority Fee Per Gas',
+            maxFeePerGas: 'Max Fee Per Gas',
             errorGasPrice: 'Invalid Gas Price',
             errorLimitPrice: 'Invalid Gas Limit Price'
         },

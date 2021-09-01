@@ -119,15 +119,15 @@ export const config: IBlockchainConfig = {
                 [TokenType.NATIVE]: new BigNumber(100000)
             },
             gasPricePresets: {
-                low: new BigNumber(0.0025),
-                average: new BigNumber(0.025)
+                standard: new BigNumber(0.0025),
+                fast: new BigNumber(0.025)
             }
         },
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeePresets',
             gasPriceUnit: 'UATOM',
-            defaultPreset: 'low'
+            defaultPreset: 'standard'
         }
     },
     ui: {

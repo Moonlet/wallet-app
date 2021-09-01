@@ -104,7 +104,8 @@ export class Client extends BlockchainGenericClient {
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasPrice =
-            config.feeOptions.defaults.gasPricePresets.low || config.feeOptions.defaults.gasPrice;
+            config.feeOptions.defaults.gasPricePresets.standard ||
+            config.feeOptions.defaults.gasPrice;
         const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();
         const feeTotal = gasPrice.multipliedBy(new BigNumber(gasLimit)).toFixed();
 

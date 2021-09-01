@@ -81,19 +81,23 @@ export interface ITransactionFees {
     gasLimit: string;
     gasUsed: string;
     feeTotal: string;
+    baseFeePerGas?: string;
+    maxFeePerGas?: string;
+    maxPriorityFeePerGas?: string;
 }
 
 export interface IFeeOptions {
     gasPrice?: string;
     gasLimit?: string;
     feeTotal?: string;
+    isEip1559?: boolean;
+    baseFeePerGas?: string;
+    maxFeePerGas?: string;
+    maxPriorityFeePerGas?: string;
     presets?: {
-        cheap?: BigNumber;
         standard?: BigNumber;
         fast?: BigNumber;
         fastest?: BigNumber;
-        low?: BigNumber;
-        average?: BigNumber;
     };
     responseHasDefaults?: boolean;
 }

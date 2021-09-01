@@ -49,12 +49,9 @@ export interface IBlockchainConfig {
                 [tokenType: string]: BigNumber;
             };
             gasPricePresets?: {
-                cheap?: BigNumber;
                 standard?: BigNumber;
                 fast?: BigNumber;
                 fastest?: BigNumber;
-                low?: BigNumber;
-                average?: BigNumber;
             };
         };
         ui: {
@@ -62,7 +59,7 @@ export interface IBlockchainConfig {
             feeComponent: 'FeeTotal' | 'FeePresets';
             feeComponentAdvanced?: 'GasFeeAdvanced';
             gasPriceUnit: string;
-            defaultPreset?: 'cheap' | 'standard' | 'fast' | 'fastest' | 'low' | 'average';
+            defaultPreset?: 'standard' | 'fast' | 'fastest';
         };
     };
     ui: {

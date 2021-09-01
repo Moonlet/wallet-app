@@ -6,7 +6,8 @@ import {
     TransactionType,
     IBalance,
     IFeeOptions,
-    Contracts
+    Contracts,
+    ITransactionFees
 } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
@@ -34,7 +35,7 @@ export class Client extends BlockchainGenericClient {
         this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
-    public getBalance(address: string): Promise<IBalance> {
+    public async getBalance(address: string): Promise<IBalance> {
         return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
             return {
                 total: new BigNumber(res.result, 16),
@@ -76,6 +77,36 @@ export class Client extends BlockchainGenericClient {
                 number: new BigNumber(res.result, 16).toNumber()
             };
         });
+    }
+
+    public async getBaseFeeHistory(): Promise<IBlockInfo> {
+        return this.http.jsonRpc('eth_feeHistory', ['0xA', 'latest', []]).then(res => {
+            return {
+                number: new BigNumber(res.result?.baseFeePerGas[0], 16).toNumber()
+            };
+        });
+    }
+
+    public async getTransactionFees(txHash: string): Promise<ITransactionFees> {
+        try {
+            const confirmedTxRes = await this.utils.getTransaction(txHash);
+
+            if (confirmedTxRes) {
+                return {
+                    gasPrice: confirmedTxRes.feeOptions.gasPrice,
+                    gasLimit: confirmedTxRes.feeOptions.gasLimit,
+                    gasUsed: confirmedTxRes.feeOptions.feeTotal,
+                    feeTotal: confirmedTxRes.feeOptions.feeTotal,
+                    maxFeePerGas: confirmedTxRes.feeOptions.maxFeePerGas || undefined,
+                    maxPriorityFeePerGas:
+                        confirmedTxRes.feeOptions.maxPriorityFeePerGas || undefined
+                };
+            } else {
+                return;
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     public async callContract(contractAddress, methodSignature, params: any[] = []) {

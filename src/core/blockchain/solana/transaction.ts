@@ -32,6 +32,10 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/sp
 import { ApiClient } from '../../utils/api-client/api-client';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { solanaSwapInstruction } from './transaction-utils';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 
 export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -104,8 +108,13 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     toToken: string;
                 } = tx.additionalInfo.pubkeys;
 
-                const amountIn = tx.additionalInfo.swap.fromTokenAmount;
-                const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
+                // amount without commission and with slippage
+                // const amountIn = tx.additionalInfo.swap.fromTokenAmount;
+                // const minimumAmountOut = tx.additionalInfo.swap.toTokenAmount;
+
+                // amount minus commission and with slippage
+                const amountIn = tx.additionalInfo.balances.fromAmount;
+                const minimumAmountOut = tx.additionalInfo.balances.toAmount;
 
                 const amtIn = Number(
                     blockchainInstance.account
@@ -126,8 +135,15 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const newAccountPublicKey = newAccount.publicKey;
 
                 if (!tx.additionalInfo.poolInfo) {
-                    // throw new error
-                    // log in sentry
+                    SentryAddBreadcrumb({ message: JSON.stringify({ tx }) });
+                    SentryAddBreadcrumb({
+                        message: JSON.stringify({ additionalInfo: tx.additionalInfo })
+                    });
+                    SentryCaptureException(
+                        new Error(
+                            `Failed to get poolInfo, ${tx.additionalInfo.swap.fromTokenSymbol} => ${tx.additionalInfo.swap.toTokenSymbol}`
+                        )
+                    );
                 }
 
                 if (fromAccount.isSol || toAccount.isSol) {
@@ -194,7 +210,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 // Moonlet Swap Commission
 
-                const moonletSwapCommission = tx.additionalInfo.moonletSwapCommission;
+                const moonletSwapCommission = tx.additionalInfo.balances.moonletSwapCommissionStd;
 
                 if (fromAccount.isSol) {
                     // SOL
@@ -246,6 +262,16 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         )
                     );
                 }
+
+                transaction.add(
+                    Token.createCloseAccountInstruction(
+                        TOKEN_PROGRAM_ID,
+                        new PublicKey('6h2tf3qSuSZVx3XxvX6QXsDK9U75ebdZDAwqYFy4hLsG'),
+                        owner,
+                        owner,
+                        []
+                    )
+                );
 
                 if (fromAccount.isSol || toAccount.isSol) {
                     signers.push(newAccount);

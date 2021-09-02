@@ -6,7 +6,7 @@
 
 ## Windows
 
-Once you've cloned the repo locally on your machine open a command line/power shell in that folder and run ```yarn``` or ```npm install```, to install the packages for the app.
+Once you've cloned the repo locally on your machine, open a command line/power shell in that folder and run ```yarn``` or ```npm install``` to install the packages for the app.
 
 Next up you need to set the environment variables for Android on your local machine, you can find the instructions on how to do that [here](https://levelup.gitconnected.com/android-react-native-window-setup-how-to-setup-android-environment-for-react-native-app-588aaa13c3a6).
 

@@ -144,8 +144,9 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                 }
 
                 if (fromAccount.isSol || toAccount.isSol) {
-                    const createAccountLamports = Math.pow(10, 7); // 0.01
-                    const lamports = fromAccount.isSol ? amtIn : createAccountLamports;
+                    const lamports = fromAccount.isSol
+                        ? amtIn
+                        : tx.additionalInfo.createAccount.lamports;
 
                     // Create Account
                     transaction.add(
@@ -153,7 +154,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                             fromPubkey: owner,
                             newAccountPubkey: newAccountPublicKey,
                             lamports,
-                            space: 165, // ACCOUNT_LAYOUT.span,
+                            space: tx.additionalInfo.createAccount.space,
                             programId: TOKEN_PROGRAM_ID
                         })
                     );

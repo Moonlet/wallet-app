@@ -13,7 +13,6 @@ Next up you need to set the environment variables for Android on your local mach
 For starting the project you'll need to have an emulator running locally ( e.g. Android Studio ). Once the emulator is running execute ```npm run android``` or ```yarn android``` in a command line.
 
 If you're getting the following error:
-
 ```
 The syntax of the command is incorrect
 error Command failed with exit code 1.

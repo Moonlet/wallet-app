@@ -1,4 +1,5 @@
-import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js/src/publickey';
+import { TransactionInstruction } from '@solana/web3.js/src/transaction';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { u8, nu64, struct } from 'buffer-layout';
 

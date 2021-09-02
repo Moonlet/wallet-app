@@ -301,7 +301,10 @@ class DefaultTokenScreenComponent extends React.Component<
 
                                 {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
                                     token?.symbol &&
-                                    remoteFeatureSwapContainsToken(token.symbol) && (
+                                    remoteFeatureSwapContainsToken(
+                                        account.blockchain,
+                                        token.symbol
+                                    ) && (
                                         <Button
                                             style={styles.button}
                                             wrapperStyle={{ flex: 1 }}

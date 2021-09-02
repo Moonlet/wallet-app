@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import CONFIG from '../../../config';
 import { RemoteFeature } from './types';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { Blockchain } from '../../blockchain/types';
 
 const featuresConfig = {};
 
@@ -57,16 +58,37 @@ export const getRemoteConfigFeatures = async () => {
     return featuresConfig;
 };
 
-export const remoteFeatureSwapContainsToken = (symbol: string): boolean => {
-    if (!symbol) return false;
+/**
+ * solana:sol, solana:eth, zilliqa:port
+ */
+export const remoteFeatureSwapContainsToken = (
+    blockchain: Blockchain,
+    tokenSymbol: string
+): boolean => {
+    if (!blockchain || !tokenSymbol) return false;
 
-    const feature = RemoteFeature.LIST_SWAP_TOKENS_V2;
+    const feature = RemoteFeature.LIST_SWAP_TOKENS_V3;
 
     return (
         featuresConfig &&
         featuresConfig[feature] &&
         featuresConfig[feature]?.length > 0 &&
-        !!featuresConfig[feature].find((el: any) => el.toLowerCase() === symbol.toLowerCase())
+        !!featuresConfig[feature].find((el: any) => {
+            try {
+                const e = el.split(':');
+                return (
+                    e[0].toLowerCase() === blockchain.toLowerCase() &&
+                    e[1].toLowerCase() === tokenSymbol.toLowerCase()
+                );
+            } catch {
+                SentryCaptureException(
+                    new Error(
+                        `Failed to parse remote feature swap contains token ${blockchain}:${tokenSymbol}, ${el}`
+                    )
+                );
+                return false;
+            }
+        })
     );
 };
 

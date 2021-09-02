@@ -12,14 +12,11 @@ import { PosBasicActionType, TokenType } from '../types/token';
 import { Solana } from '.';
 import { Client as SolanaClient } from './client';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-import {
-    Account,
-    PublicKey,
-    SystemProgram,
-    StakeProgram,
-    TransactionInstruction
-} from '@solana/web3.js';
-import { Transaction } from '@solana/web3.js/src/transaction';
+import { Account } from '@solana/web3.js/src/account';
+import { PublicKey } from '@solana/web3.js/src/publickey';
+import { SystemProgram } from '@solana/web3.js/src/system-program';
+import { StakeProgram } from '@solana/web3.js/src/stake-program';
+import { Transaction, TransactionInstruction } from '@solana/web3.js/src/transaction';
 import { SolanaTransactionInstructionType } from './types';
 import { decode as bs58Decode } from 'bs58';
 import { cloneDeep } from 'lodash';

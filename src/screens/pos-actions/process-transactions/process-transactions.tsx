@@ -446,6 +446,7 @@ class ProcessTransactionsComponent extends React.Component<
 
                     break;
 
+                case ContractMethod.SWAP:
                 case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                 case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                 case ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS:

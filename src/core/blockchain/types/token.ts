@@ -57,7 +57,9 @@ export enum PosBasicActionType {
     SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT',
 
     // GRT allowance
-    INCREASE_ALLOWANCE = 'INCREASE_ALLOWANCE'
+    INCREASE_ALLOWANCE = 'INCREASE_ALLOWANCE',
+
+    SWAP = 'SWAP'
 }
 
 export enum SwapType {
@@ -72,5 +74,6 @@ export enum ContractMethod {
     SWAP_EXACT_TOKENS_FOR_TOKENS = 'SwapExactTokensForTokens',
     DELEGATE = 'Delegate',
     UNDELEGATE = 'Undelegate',
-    SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'SolanaCreateAssociatedTokenAccount'
+    SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'SolanaCreateAssociatedTokenAccount',
+    SWAP = 'Swap'
 }

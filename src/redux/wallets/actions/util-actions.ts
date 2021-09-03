@@ -223,6 +223,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
                     );
                 }
             } catch (err) {
+                // console.error(err);
                 SentryAddBreadcrumb({
                     message: JSON.stringify({
                         error: err
@@ -250,6 +251,7 @@ export const signAndSendTransactions = (specificIndex?: number) => async (
             dispatch(setProcessTxCompleted(true, false));
         }
     } catch (err) {
+        // console.error(err);
         const errorMessage = err?.error;
 
         SentryAddBreadcrumb({ message: JSON.stringify(err) });

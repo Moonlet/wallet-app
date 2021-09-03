@@ -1,5 +1,5 @@
 /**
- * Add SOL SPL coins - 19 Jul 2021
+ * Add SOL SPL coins - 27 Jul 2021
  *
  */
 
@@ -31,8 +31,7 @@ export default (state: any) => {
     state = addToken(state, BTC_MAINNET, activeTokenData);
     state = addToken(state, ETH_MAINNET, activeTokenData);
     state = addToken(state, SRM_MAINNET, activeTokenData);
-    state = addToken(state, LINK_MAINNET, activeTokenData);
-    state = addToken(state, UNI_MAINNET, activeTokenData);
+    state = addToken(state, RAY_MAINNET, activeTokenData);
 
     // Inactive tokens
     const inactiveTokenData = {
@@ -41,11 +40,12 @@ export default (state: any) => {
         tokenActive: false
     };
 
-    state = addToken(state, RAY_MAINNET, inactiveTokenData);
+    state = addToken(state, LINK_MAINNET, inactiveTokenData);
     state = addToken(state, SUSHI_MAINNET, inactiveTokenData);
     state = addToken(state, YFI_MAINNET, inactiveTokenData);
     state = addToken(state, JPYC_MAINNET, inactiveTokenData);
     state = addToken(state, FTT_MAINNET, inactiveTokenData);
+    state = addToken(state, UNI_MAINNET, activeTokenData);
 
     return {
         ...state

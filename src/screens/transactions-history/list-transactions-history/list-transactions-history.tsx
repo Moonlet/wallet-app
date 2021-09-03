@@ -162,6 +162,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
                     break;
 
+                case ContractMethod.SWAP:
                 case ContractMethod.SWAP_EXACT_ZIL_FOR_TOKENS:
                 case ContractMethod.SWAP_EXACT_TOKENS_FOR_ZIL:
                 case ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS:
@@ -219,7 +220,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 const accountAddress = account.address.toLowerCase();
                 const address = tx.address.toLowerCase();
 
-                let toAddress = tx.toAddress.toLowerCase();
+                let toAddress = tx.toAddress?.toLowerCase();
 
                 if (tx?.token?.type === TokenType.ZRC2 || tx?.token?.type === TokenType.ERC20) {
                     toAddress = tx.data?.params && tx.data?.params[0];

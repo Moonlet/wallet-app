@@ -1,6 +1,6 @@
-Team's log. Stardate 2108.20:
+Team's log. Stardate 2108.31:
 
-This release comes with a fix for low balance message which was wrong. As well some improved guidelines in case your balance is low.
+This time we have pushed live some fixes for ERC-20 balance, we removed the Stake now button from Validators tab, we made the validator page load faster and fixed the dynamic links.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

@@ -137,7 +137,10 @@ class AccountTabComponent extends React.Component<
 
                             {isFeatureActive(RemoteFeature.SWAP_TOKENS) &&
                                 token?.symbol &&
-                                remoteFeatureSwapContainsToken(token.symbol) && (
+                                remoteFeatureSwapContainsToken(
+                                    this.props.account.blockchain,
+                                    token.symbol
+                                ) && (
                                     <Button
                                         style={styles.button}
                                         wrapperStyle={{ flex: 1 }}

@@ -9,15 +9,19 @@ import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
 import { IValidator, CardActionType } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/types';
-import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
-import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { ITokenState } from '../../../../../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
-import { getNrPendingTransactions } from '../../../../../../../redux/wallets/selectors';
+import {
+    getNrPendingTransactions,
+    getSelectedAccount
+} from '../../../../../../../redux/wallets/selectors';
+import { PosBasicActionType } from '../../../../../../../core/blockchain/types/token';
+import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
+import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 
 interface IExternalProps {
     accountIndex: number;
@@ -27,22 +31,32 @@ interface IExternalProps {
 }
 
 interface IReduxProps {
+    account: IAccountState;
     validators: IValidator[];
     hasPendingTransactions: boolean;
+    fetchValidators: typeof fetchValidators;
+    fetchDelegatedValidators: typeof fetchDelegatedValidators;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
+        account: getSelectedAccount(state),
         validators: getValidators(state, ownProps.blockchain, ownProps.chainId),
         hasPendingTransactions: getNrPendingTransactions(state)
     };
 };
 
+const mapDispatchToProps = {
+    fetchValidators,
+    fetchDelegatedValidators
+};
+
 interface IState {
     validators: IValidator[];
+    apiValidatorsFetched: boolean;
 }
 
-export class ValidatorsTabComponent extends React.Component<
+class ValidatorsTabComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -52,15 +66,21 @@ export class ValidatorsTabComponent extends React.Component<
         props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
-
         this.state = {
-            validators: this.props.validators
+            validators: this.props.validators,
+            apiValidatorsFetched: false
         };
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.validators && this.props.validators !== prevProps.validators) {
             this.setState({ validators: this.props.validators });
+        }
+
+        if (!this.props.validators && !this.state.apiValidatorsFetched) {
+            this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
+            this.props.fetchDelegatedValidators(this.props.account);
+            this.setState({ apiValidatorsFetched: true });
         }
     }
 
@@ -104,8 +124,8 @@ export class ValidatorsTabComponent extends React.Component<
         const { styles } = this.props;
         const { validators } = this.state;
 
-        const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
-        const mainCta = tokenUiConfig.accountCTA.mainCta;
+        // const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
+        // const mainCta = tokenUiConfig.accountCTA.mainCta;
 
         return (
             <View style={styles.container}>
@@ -138,7 +158,7 @@ export class ValidatorsTabComponent extends React.Component<
                         />
                     )}
                 </View>
-                <View style={styles.bottomContainer}>
+                {/* <View style={styles.bottomContainer}>
                     <CtaGroup
                         mainCta={mainCta}
                         params={{
@@ -149,13 +169,13 @@ export class ValidatorsTabComponent extends React.Component<
                             canPerformAction: !this.props.hasPendingTransactions
                         }}
                     />
-                </View>
+                </View> */}
             </View>
         );
     }
 }
 
 export const ValidatorsTab = smartConnect<IExternalProps>(ValidatorsTabComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

@@ -78,7 +78,7 @@ export const getAccountFilteredTransactions = (
             .filter(
                 tx =>
                     (tx.address.toLowerCase() === addressToLowercase ||
-                        tx.toAddress.toLowerCase() === addressToLowercase ||
+                        tx.toAddress?.toLowerCase() === addressToLowercase ||
                         (tx.data?.params &&
                             tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
                     tx.blockchain === blockchain &&
@@ -113,7 +113,7 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
             .filter(
                 tx =>
                     (tx.address.toLowerCase() === addressToLowercase ||
-                        tx.toAddress.toLowerCase() === addressToLowercase ||
+                        tx.toAddress?.toLowerCase() === addressToLowercase ||
                         (tx.data?.params &&
                             tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
                     tx.blockchain === blockchain &&
@@ -152,7 +152,7 @@ export const getSelectedAccountTransaction = (
             tx =>
                 tx.id.toLowerCase() === txId.toLowerCase() &&
                 (tx.address.toLowerCase() === addressToLowercase ||
-                    tx.toAddress.toLowerCase() === addressToLowercase ||
+                    tx.toAddress?.toLowerCase() === addressToLowercase ||
                     (tx.data?.params &&
                         tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
                 tx.blockchain === blockchain &&

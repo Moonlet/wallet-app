@@ -48,7 +48,8 @@ export const CtaGroupComponent = (
                                         {
                                             ...props.otherCtas[0].navigateTo.params,
                                             ...props.params
-                                        }
+                                        },
+                                        props.otherCtas[0].navigateTo?.params?.context?.key
                                     );
                                 } else {
                                     Dialog.alert(
@@ -77,10 +78,14 @@ export const CtaGroupComponent = (
                                         props.params.canPerformAction ||
                                         isFeatureActive(RemoteFeature.IMPROVED_NONCE)
                                     ) {
-                                        NavigationService.navigate(cta.navigateTo.screen, {
-                                            ...cta.navigateTo.params,
-                                            ...props.params
-                                        });
+                                        NavigationService.navigate(
+                                            cta.navigateTo.screen,
+                                            {
+                                                ...cta.navigateTo.params,
+                                                ...props.params
+                                            },
+                                            props.mainCta?.navigateTo?.params?.context?.key
+                                        );
                                     } else {
                                         Dialog.alert(
                                             translate('Validator.cannotInitiateTxTitle'),
@@ -112,10 +117,14 @@ export const CtaGroupComponent = (
                         props.params.canPerformAction ||
                         isFeatureActive(RemoteFeature.IMPROVED_NONCE)
                     ) {
-                        NavigationService.navigate(props.mainCta.navigateTo.screen, {
-                            ...props.mainCta.navigateTo.params,
-                            ...props.params
-                        });
+                        NavigationService.navigate(
+                            props.mainCta.navigateTo.screen,
+                            {
+                                ...props.mainCta.navigateTo.params,
+                                ...props.params
+                            },
+                            props.mainCta?.navigateTo?.params?.context?.key
+                        );
                     } else {
                         Dialog.alert(
                             translate('Validator.cannotInitiateTxTitle'),

@@ -57,6 +57,7 @@ export class Solana implements IHardwareWalletApp {
                 break;
 
             case SolanaTransactionInstructionType.TRANSFER:
+            case SolanaTransactionInstructionType.SWAP:
                 transaction = new Transaction();
                 for (const i of tx.additionalInfo.instructions) {
                     transaction.add(i);

@@ -9,6 +9,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
 import { PublicKey } from '@solana/web3.js/src/publickey';
 import { decode as bs58Decode } from 'bs58';
+import { getBlockchain } from '../blockchain-factory';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -123,7 +124,7 @@ export class ClientUtils implements IClientUtils {
             token?: ITokenConfigState;
         }
     ): Promise<TransactionStatus> {
-        let status = TransactionStatus.PENDING;
+        let status: TransactionStatus = TransactionStatus.PENDING;
 
         if (context?.txData) {
             status =
@@ -133,16 +134,37 @@ export class ClientUtils implements IClientUtils {
         } else {
             let confirmedTxRes;
 
+            const droppedTxBlocksThreshold = getBlockchain(Blockchain.SOLANA).config
+                .droppedTxBlocksThreshold;
+            const currentBlockNumber = await this.client.getCurrentBlock().then(res => res.number);
+            const currentBlockPassedThreshold =
+                currentBlockNumber &&
+                context?.broadcastedOnBlock &&
+                currentBlockNumber - context?.broadcastedOnBlock > droppedTxBlocksThreshold;
+
             try {
                 // supported for solana-core v1.7 or newer
                 confirmedTxRes = await this.client.http.jsonRpc('getTransaction', [hash, 'json']);
+
                 if (String(confirmedTxRes?.error?.message).includes('Method not found')) {
                     // reset this to use fallback on older version
                     confirmedTxRes = null;
                 }
+
+                // Transaction dropped
+                if (
+                    (!confirmedTxRes?.result || confirmedTxRes?.error?.message) &&
+                    currentBlockPassedThreshold
+                ) {
+                    status = TransactionStatus.DROPPED;
+                }
             } catch {
                 // reset this to use fallback on older version
                 confirmedTxRes = null;
+
+                if (currentBlockPassedThreshold) {
+                    status = TransactionStatus.DROPPED;
+                }
             }
 
             if (!confirmedTxRes) {
@@ -152,18 +174,25 @@ export class ClientUtils implements IClientUtils {
                         hash,
                         'json'
                     ]);
-                } catch (error) {
-                    // TODO: consider implementing dropped status
+                } catch {
+                    if (currentBlockPassedThreshold) {
+                        status = TransactionStatus.DROPPED;
+                    }
                 }
             }
 
+            // Transaction dropped
+            if (
+                (!confirmedTxRes?.result || confirmedTxRes?.error?.message) &&
+                currentBlockPassedThreshold
+            ) {
+                status = TransactionStatus.DROPPED;
+            }
+
             if (confirmedTxRes?.result?.meta) {
-                status =
-                    confirmedTxRes?.result?.meta?.err === null
-                        ? TransactionStatus.SUCCESS
-                        : TransactionStatus.FAILED;
-            } else {
-                // TODO: consider implementing dropped status
+                status = !confirmedTxRes?.result?.meta?.err
+                    ? TransactionStatus.SUCCESS
+                    : TransactionStatus.FAILED;
             }
         }
 

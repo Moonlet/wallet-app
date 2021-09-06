@@ -10,7 +10,7 @@ Make sure you download and install NodeJS with the version between 12.X and 14.X
 
 Once you've cloned the repo locally on your machine, open a command line/power shell in that folder and run ```yarn``` to install the packages for the app.
 
-Next up you need to set the environment variables for Android on your local machine, you can find the instructions on their [documentation](https://levelup.gitconnected.com/android-react-native-window-setup-how-to-setup-android-environment-for-react-native-app-588aaa13c3a6).
+Next up you need to set the environment variables for Android on your local machine, you can find the instructions on their [documentation](https://developer.android.com/studio/command-line/variables).
 
 For starting the project you'll need to have an emulator running locally ( e.g. Android Studio ). Once the emulator is running, execute ```yarn android``` in a command line.
 

@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, TypedTransaction } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import SolIcon from '../../../assets/icons/blockchains/sol.svg';
@@ -128,6 +128,10 @@ export const config: IBlockchainConfig = {
     tokens: {
         SOL: SOL_NATIVE
     },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
+    },
     feeOptions: {
         gasPriceToken: 'SOL',
         defaults: {
@@ -140,7 +144,10 @@ export const config: IBlockchainConfig = {
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: {
+                HD: 'GasFeeAdvanced',
+                HW: 'GasFeeAdvanced'
+            },
             gasPriceUnit: 'LA'
         }
     },

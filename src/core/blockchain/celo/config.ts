@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, TypedTransaction } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, PosBasicActionType } from '../types/token';
 import CeloIcon from '../../../assets/icons/blockchains/celo.svg';
@@ -93,6 +93,10 @@ export const config: IBlockchainConfig = {
     tokens: {
         CELO: CELO_GOLD_NATIVE
     },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
+    },
     feeOptions: {
         gasPriceToken: 'CELO',
         defaults: {
@@ -104,9 +108,12 @@ export const config: IBlockchainConfig = {
         ui: {
             availableTokenTypes: [TokenType.ERC20],
             feeComponent: 'FeeTotal',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: {
+                HD: 'GasFeeAdvanced',
+                HW: 'GasFeeAdvanced'
+            },
             gasPriceUnit: 'GWEI',
-            defaultPreset: 'standard'
+            defaultPreset: 'medium'
         }
     },
     ui: {

@@ -10,7 +10,7 @@ import {
 import { TransactionStatus } from '../../../../../../core/wallet/types';
 import { getChainId } from '../../../../../preferences/selectors';
 import { IReduxState } from '../../../../../state';
-import { getSelectedAccount } from '../../../../../wallets/selectors';
+import { getSelectedAccount, getSelectedWallet } from '../../../../../wallets/selectors';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
 import {
@@ -44,6 +44,7 @@ export const buildContractCallTransaction = async (
     const state = getState();
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
+    const walletType = getSelectedWallet(state).type;
 
     const blockchainInstance = getBlockchain(account.blockchain);
 
@@ -179,6 +180,7 @@ export const buildContractCallTransaction = async (
                         contractAddress,
                         raw
                     },
+                    getBlockchain(account.blockchain).config.typedTransaction[walletType],
                     tokenType
                 );
             } catch (error) {

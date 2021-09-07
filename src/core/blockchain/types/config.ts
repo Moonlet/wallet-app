@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { TokenType, IButtonCTA } from './token';
-import { ChainIdType } from '.';
+import { ChainIdType, TypedTransaction } from '.';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IAffiliateBannerType } from '../../../components/affiliate-banner/types';
 
@@ -41,6 +41,10 @@ export interface IBlockchainConfig {
     tokens: {
         [symbol: string]: ITokenConfigState;
     };
+    typedTransaction: {
+        HD: TypedTransaction;
+        HW: TypedTransaction;
+    };
     feeOptions: {
         gasPriceToken: string;
         defaults: {
@@ -49,17 +53,32 @@ export interface IBlockchainConfig {
                 [tokenType: string]: BigNumber;
             };
             gasPricePresets?: {
-                standard?: BigNumber;
-                fast?: BigNumber;
-                fastest?: BigNumber;
+                low?: {
+                    gasPrice?: BigNumber;
+                    maxFeePerGas?: BigNumber;
+                    maxPriorityFeePerGas?: BigNumber;
+                };
+                medium?: {
+                    gasPrice?: BigNumber;
+                    maxFeePerGas?: BigNumber;
+                    maxPriorityFeePerGas?: BigNumber;
+                };
+                high?: {
+                    gasPrice?: BigNumber;
+                    maxFeePerGas?: BigNumber;
+                    maxPriorityFeePerGas?: BigNumber;
+                };
             };
         };
         ui: {
             availableTokenTypes: TokenType[];
             feeComponent: 'FeeTotal' | 'FeePresets';
-            feeComponentAdvanced?: 'GasFeeAdvanced';
+            feeComponentAdvanced?: {
+                HD: 'Eip1559FeesAvanced' | 'GasFeeAdvanced';
+                HW: 'GasFeeAdvanced';
+            };
             gasPriceUnit: string;
-            defaultPreset?: 'standard' | 'fast' | 'fastest';
+            defaultPreset?: 'low' | 'medium' | 'high';
         };
     };
     ui: {

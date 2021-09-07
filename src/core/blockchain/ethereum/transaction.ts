@@ -6,9 +6,9 @@ import {
     IPosTransaction,
     Contracts
 } from '../types';
-import { Transaction } from 'ethereumjs-tx';
-// import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
-// import Common from '@ethereumjs/common';
+// import { Transaction } from 'ethereumjs-tx';
+import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
+import Common from '@ethereumjs/common';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
 import { PosBasicActionType, TokenType } from '../types/token';
@@ -21,43 +21,30 @@ import { MethodSignature } from './types';
 
 export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
-        // const common = new Common({ chain: tx.chainId, hardfork: 'london' });
+        const common = new Common({ chain: tx.chainId, hardfork: 'london' });
 
-        // const txData = {
-        //     data: tx.data?.raw,
-        //     gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
-        //     maxPriorityFeePerGas: '0x01',
-        //     maxFeePerGas: '0xff',
-        //     nonce: '0x' + tx.nonce.toString(16),
-        //     to: tx.toAddress,
-        //     value: '0x' + new BigNumber(tx.amount).toString(16),
-        //     v: '0x01',
-        //     r: '0xafb6e247b1c490e284053c87ab5f6b59e219d51f743f7a4d83e400782bc7e4b9',
-        //     s: '0x479a268e0e0acd4de3f1e28e4fac2a6b32a4195e8dfa9d19147abe8807aa6f64',
-        //     chainId: '0x' + tx.chainId,
-        //     accessList: [],
-        //     type: '0x02'
-        // };
+        const txData = {
+            data: tx.data?.raw,
+            gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
+            // maxPriorityFeePerGas: '0x' + new BigNumber(8).toString(16),
+            // maxFeePerGas: '0x' + new BigNumber(2000000000).toString(16),
+            maxPriorityFeePerGas: '0x452b556d',
+            maxFeePerGas: '0x1365119b63',
+            nonce: '0x' + tx.nonce.toString(16),
+            to: tx.toAddress,
+            value: '0x' + new BigNumber(tx.amount).toString(16),
+            chainId: '0x' + tx.chainId,
+            accessList: [],
+            type: '0x02'
+        };
 
-        // const transaction = FeeMarketEIP1559Transaction.fromTxData(txData, { common });-
+        const transaction = FeeMarketEIP1559Transaction.fromTxData(txData, { common });
 
-        const transaction = new Transaction(
-            {
-                nonce: '0x' + tx.nonce.toString(16),
-                gasPrice: '0x' + new BigNumber(tx.feeOptions.gasPrice).toString(16),
-                gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
-                to: tx.toAddress,
-                value: '0x' + new BigNumber(tx.amount).toString(16),
-                data: tx.data?.raw
-            },
-            {
-                chain: tx.chainId
-            }
-        );
+        const txSigned = transaction.sign(Buffer.from(privateKey, 'hex'));
 
-        transaction.sign(Buffer.from(privateKey, 'hex'));
+        const txSerialized = '0x' + txSigned.serialize().toString('hex');
 
-        return '0x' + transaction.serialize().toString('hex');
+        return txSerialized;
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {

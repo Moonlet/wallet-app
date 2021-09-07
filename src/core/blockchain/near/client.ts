@@ -4,7 +4,8 @@ import {
     ChainIdType,
     IBlockInfo,
     TransactionType,
-    IBalance
+    IBalance,
+    TypedTransaction
 } from '../types';
 import { networks } from './networks';
 import BigNumber from 'bignumber.js';
@@ -95,6 +96,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getFees(
         transactionType: TransactionType,
+
         data: {
             from?: string;
             to?: string;
@@ -102,6 +104,7 @@ export class Client extends BlockchainGenericClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction: TypedTransaction = TypedTransaction.TYPE_0,
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();

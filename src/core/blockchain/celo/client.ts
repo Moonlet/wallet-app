@@ -1,6 +1,12 @@
 import { Client as EthereumClient } from '../ethereum/client';
 import { Erc20Client } from './tokens/erc20-client';
-import { ChainIdType, TransactionMessageText, TransactionType, Contracts } from '../types';
+import {
+    ChainIdType,
+    TransactionMessageText,
+    TransactionType,
+    Contracts,
+    TypedTransaction
+} from '../types';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { networks } from './networks';
@@ -55,6 +61,7 @@ export class Client extends EthereumClient {
 
     public async getFees(
         transactionType: TransactionType,
+
         data: {
             from?: string;
             to?: string;
@@ -62,6 +69,7 @@ export class Client extends EthereumClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction: TypedTransaction = TypedTransaction.TYPE_0,
         tokenType: TokenType = TokenType.NATIVE
     ) {
         try {
@@ -81,16 +89,18 @@ export class Client extends EthereumClient {
                 case TransactionType.TRANSFER: {
                     results = data.contractAddress
                         ? await this.estimateGas(
+                              true,
                               data.from,
                               data.to,
                               data.contractAddress,
                               new BigNumber(data.amount),
                               transferRawData
                           )
-                        : await this.estimateGas(data.from, data.to);
+                        : await this.estimateGas(true, data.from, data.to);
                 }
                 case TransactionType.CONTRACT_CALL: {
                     results = await this.estimateGas(
+                        true,
                         data.from,
                         data.to,
                         data.contractAddress,
@@ -139,6 +149,7 @@ export class Client extends EthereumClient {
     }
 
     public async estimateGas(
+        fetchPrice: boolean,
         from: string,
         to: string,
         contractAddress?: string,

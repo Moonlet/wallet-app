@@ -1,4 +1,9 @@
-import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
+import {
+    IBlockchainConfig,
+    DerivationType,
+    BlockchainNameService,
+    TypedTransaction
+} from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
@@ -124,6 +129,10 @@ export const config: IBlockchainConfig = {
     tokens: {
         ETH: ETH_NATIVE
     },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_2,
+        HW: TypedTransaction.TYPE_0
+    },
     feeOptions: {
         gasPriceToken: 'ETH',
         defaults: {
@@ -133,17 +142,33 @@ export const config: IBlockchainConfig = {
                 [TokenType.ERC20]: new BigNumber(300000)
             },
             gasPricePresets: {
-                standard: new BigNumber(20000000000),
-                fast: new BigNumber(40000000000),
-                fastest: new BigNumber(120000000000)
+                low: {
+                    gasPrice: new BigNumber(20000000000),
+                    maxFeePerGas: new BigNumber(20000000000),
+                    maxPriorityFeePerGas: new BigNumber(20000000000)
+                },
+                medium: {
+                    gasPrice: new BigNumber(40000000000),
+                    maxFeePerGas: new BigNumber(40000000000),
+                    maxPriorityFeePerGas: new BigNumber(40000000000)
+                },
+                high: {
+                    gasPrice: new BigNumber(120000000000),
+                    maxFeePerGas: new BigNumber(120000000000),
+                    maxPriorityFeePerGas: new BigNumber(120000000000)
+                }
             }
         },
         ui: {
             availableTokenTypes: [TokenType.ERC20],
             feeComponent: 'FeePresets',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: {
+                HD: 'Eip1559FeesAvanced',
+                HW: 'GasFeeAdvanced'
+            },
+
             gasPriceUnit: 'GWEI',
-            defaultPreset: 'standard'
+            defaultPreset: 'medium'
         }
     },
     ui: {

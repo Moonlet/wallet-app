@@ -7,7 +7,8 @@ import {
     TransactionType,
     IBalance,
     ITransactionFees,
-    Contracts
+    Contracts,
+    TypedTransaction
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
@@ -384,6 +385,7 @@ export class Client extends BlockchainGenericClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction: TypedTransaction = TypedTransaction.TYPE_0,
         tokenType: TokenType = TokenType.NATIVE
     ) {
         let gasLimit = config.feeOptions.defaults.gasLimit[tokenType];

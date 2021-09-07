@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, TypedTransaction } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import NearIcon from '../../../assets/icons/blockchains/near.svg';
@@ -94,6 +94,10 @@ export const config: IBlockchainConfig = {
     autoAddedTokensSymbols: {},
     tokens: {
         NEAR: NEAR_NATIVE
+    },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
     },
     feeOptions: {
         gasPriceToken: 'NEAR',

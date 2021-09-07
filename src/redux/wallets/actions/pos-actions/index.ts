@@ -5,7 +5,7 @@ import { Dispatch } from 'react';
 import { IAction } from '../../../types';
 import { IReduxState } from '../../../state';
 import { getChainId } from '../../../preferences/selectors';
-import { getNrPendingTransactions } from '../../selectors';
+import { getNrPendingTransactions, getSelectedWallet } from '../../selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../../tokens/static-selectors';
 import { translate } from '../../../../core/i18n';
@@ -260,11 +260,13 @@ export const posAction = (
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
+    const walletType = getSelectedWallet(state).type;
 
     try {
         const extra: ITransactionExtraFields = {
             ...extraFields,
-            posAction: type
+            posAction: type,
+            typedTransaction: getBlockchain(account.blockchain).config.typedTransaction[walletType]
         };
         const blockchainInstance = getBlockchain(account.blockchain);
 
@@ -318,11 +320,13 @@ export const posActionV2 = (
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
+    const walletType = getSelectedWallet(state).type;
 
     try {
         const extra: ITransactionExtraFields = {
             ...extraFields,
-            posAction: type
+            posAction: type,
+            typedTransaction: getBlockchain(account.blockchain).config.typedTransaction[walletType]
         };
         const blockchainInstance = getBlockchain(account.blockchain);
 

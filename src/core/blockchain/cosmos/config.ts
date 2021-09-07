@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, TypedTransaction } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
@@ -111,6 +111,10 @@ export const config: IBlockchainConfig = {
     tokens: {
         ATOM: ATOM_NATIVE
     },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
+    },
     feeOptions: {
         gasPriceToken: 'ATOM',
         defaults: {
@@ -119,15 +123,15 @@ export const config: IBlockchainConfig = {
                 [TokenType.NATIVE]: new BigNumber(100000)
             },
             gasPricePresets: {
-                standard: new BigNumber(0.0025),
-                fast: new BigNumber(0.025)
+                low: { gasPrice: new BigNumber(0.0025) },
+                medium: { gasPrice: new BigNumber(0.025) }
             }
         },
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeePresets',
             gasPriceUnit: 'UATOM',
-            defaultPreset: 'standard'
+            defaultPreset: 'medium'
         }
     },
     ui: {

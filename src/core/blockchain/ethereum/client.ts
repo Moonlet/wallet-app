@@ -7,7 +7,8 @@ import {
     IBalance,
     IFeeOptions,
     Contracts,
-    ITransactionFees
+    ITransactionFees,
+    TypedTransaction
 } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
@@ -79,11 +80,15 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public async getBaseFeeHistory(): Promise<IBlockInfo> {
-        return this.http.jsonRpc('eth_feeHistory', ['0xA', 'latest', []]).then(res => {
-            return {
-                number: new BigNumber(res.result?.baseFeePerGas[0], 16).toNumber()
-            };
+    public async getBaseFeeHistory(): Promise<BigNumber> {
+        return this.http.jsonRpc('eth_feeHistory', ['0x1', 'latest', []]).then(res => {
+            return new BigNumber(res.result?.baseFeePerGas[0], 16);
+        });
+    }
+
+    public async getMaxPriorityFee(): Promise<BigNumber> {
+        return this.http.jsonRpc('eth_maxPriorityFeePerGas', []).then(res => {
+            return new BigNumber(res.result, 16);
         });
     }
 
@@ -150,6 +155,143 @@ export class Client extends BlockchainGenericClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction: TypedTransaction,
+        tokenType: TokenType = TokenType.NATIVE
+    ): Promise<IFeeOptions> {
+        if (typedTransaction === TypedTransaction.TYPE_0)
+            return this.estimateLegacyTransactions(transactionType, data, tokenType);
+        else return this.estimateEip1559Transactions(transactionType, data, tokenType);
+    }
+
+    private async estimateEip1559Transactions(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
+        tokenType: TokenType = TokenType.NATIVE
+    ): Promise<IFeeOptions> {
+        try {
+            const rpcCalls = [];
+
+            switch (transactionType) {
+                case TransactionType.TRANSFER: {
+                    data.contractAddress
+                        ? rpcCalls.push(
+                              this.estimateGas(
+                                  false,
+                                  data.from,
+                                  data.to,
+                                  data.contractAddress,
+                                  new BigNumber(data.amount),
+                                  '0x' +
+                                      abi
+                                          .simpleEncode(
+                                              MethodSignature.TRANSFER,
+                                              data.to,
+                                              new BigNumber(data.amount).toFixed()
+                                          )
+                                          .toString('hex')
+                              )
+                          )
+                        : rpcCalls.push(this.estimateGas(false, data.from, data.to));
+                    break;
+                }
+                case TransactionType.CONTRACT_CALL: {
+                    rpcCalls.push(
+                        this.estimateGas(
+                            false,
+                            data.from,
+                            data.to,
+                            data.contractAddress,
+                            new BigNumber(data.amount),
+                            data.raw
+                        )
+                    );
+                    break;
+                }
+            }
+            let presets: {
+                low: {
+                    maxFeePerGas: BigNumber;
+                    maxPriorityFeePerGas: BigNumber;
+                };
+                medium: {
+                    maxFeePerGas: BigNumber;
+                    maxPriorityFeePerGas: BigNumber;
+                };
+                high: {
+                    maxFeePerGas: BigNumber;
+                    maxPriorityFeePerGas: BigNumber;
+                };
+            };
+            rpcCalls.push(this.getBaseFeeHistory(), this.getMaxPriorityFee());
+
+            const results = await Promise.all(rpcCalls);
+            if (results[0] && results[1] && results[2]) {
+                presets = {
+                    low: {
+                        maxFeePerGas: new BigNumber(results[1]),
+                        maxPriorityFeePerGas: new BigNumber(results[1])
+                    },
+
+                    medium: {
+                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(1.5),
+                        maxPriorityFeePerGas: new BigNumber(results[1]).multipliedBy(1.5)
+                    },
+                    high: {
+                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(2),
+                        maxPriorityFeePerGas: new BigNumber(results[1]).multipliedBy(2)
+                    }
+                };
+            }
+
+            const gasLimit =
+                results[0] && results[0].result
+                    ? new BigNumber(parseInt(results[0].result, 16))
+                    : config.feeOptions.defaults.gasLimit[tokenType];
+
+            return {
+                maxFeePerGas: results[1].toString(),
+                maxPriorityFeePerGas: results[2].toString(),
+                gasLimit: gasLimit.toString(),
+                presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
+                feeTotal: new BigNumber(results[1])
+                    .multipliedBy(2)
+                    .multipliedBy(gasLimit)
+                    .toString(),
+                responseHasDefaults: presets ? false : true
+            };
+        } catch (error) {
+            const gasPrice = config.feeOptions.defaults.gasPrice;
+            const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+
+            SentryCaptureException(
+                new Error(JSON.stringify({ event: 'getEstimated Fees - defaults Set', error }))
+            );
+
+            return {
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                presets: config.feeOptions.defaults.gasPricePresets,
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString(),
+                responseHasDefaults: true
+            };
+        }
+    }
+
+    private async estimateLegacyTransactions(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType: TokenType = TokenType.NATIVE
     ): Promise<IFeeOptions> {
         try {
@@ -158,6 +300,7 @@ export class Client extends BlockchainGenericClient {
                 case TransactionType.TRANSFER: {
                     results = data.contractAddress
                         ? await this.estimateGas(
+                              true,
                               data.from,
                               data.to,
                               data.contractAddress,
@@ -171,10 +314,11 @@ export class Client extends BlockchainGenericClient {
                                       )
                                       .toString('hex')
                           )
-                        : await this.estimateGas(data.from, data.to);
+                        : await this.estimateGas(true, data.from, data.to);
                 }
                 case TransactionType.CONTRACT_CALL: {
                     results = await this.estimateGas(
+                        true,
                         data.from,
                         data.to,
                         data.contractAddress,
@@ -184,9 +328,15 @@ export class Client extends BlockchainGenericClient {
                 }
             }
             let presets: {
-                standard: BigNumber;
-                fast: BigNumber;
-                fastest: BigNumber;
+                low: {
+                    gasPrice: BigNumber;
+                };
+                medium: {
+                    gasPrice: BigNumber;
+                };
+                high: {
+                    gasPrice: BigNumber;
+                };
             };
 
             if (results[1]) {
@@ -197,21 +347,27 @@ export class Client extends BlockchainGenericClient {
 
                 if (response && response.result) {
                     presets = {
-                        standard: Ethereum.account.convertUnit(
-                            new BigNumber(response.result.data.average),
-                            config.feeOptions.ui.gasPriceUnit,
-                            config.defaultUnit
-                        ),
-                        fast: Ethereum.account.convertUnit(
-                            new BigNumber(response.result.data.fast),
-                            config.feeOptions.ui.gasPriceUnit,
-                            config.defaultUnit
-                        ),
-                        fastest: Ethereum.account.convertUnit(
-                            new BigNumber(response.result.data.fastest),
-                            config.feeOptions.ui.gasPriceUnit,
-                            config.defaultUnit
-                        )
+                        low: {
+                            gasPrice: Ethereum.account.convertUnit(
+                                new BigNumber(response.result.data.average),
+                                config.feeOptions.ui.gasPriceUnit,
+                                config.defaultUnit
+                            )
+                        },
+                        medium: {
+                            gasPrice: Ethereum.account.convertUnit(
+                                new BigNumber(response.result.data.fast),
+                                config.feeOptions.ui.gasPriceUnit,
+                                config.defaultUnit
+                            )
+                        },
+                        high: {
+                            gasPrice: Ethereum.account.convertUnit(
+                                new BigNumber(response.result.data.fastest),
+                                config.feeOptions.ui.gasPriceUnit,
+                                config.defaultUnit
+                            )
+                        }
                     };
                 } else {
                     SentryCaptureException(
@@ -226,7 +382,7 @@ export class Client extends BlockchainGenericClient {
 
             const contractAddressStaking = await getContract(this.chainId, Contracts.STAKING);
 
-            const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
+            const gasPrice = presets?.low.gasPrice || config.feeOptions.defaults.gasPrice;
             let gasLimit =
                 results[0] && results[0].result
                     ? new BigNumber(parseInt(results[0].result, 16))
@@ -266,6 +422,7 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async estimateGas(
+        fetchPrice: boolean,
         from: string,
         to: string,
         contractAddress?: string,
@@ -301,10 +458,13 @@ export class Client extends BlockchainGenericClient {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);
         }
 
-        return Promise.all([
-            gasEstimatePromise,
-            new HttpClient(CONFIG.walletApiBaseUrl).get('/blockchain/ethereum/gas-prices')
-        ]);
+        const calls = [gasEstimatePromise];
+        if (fetchPrice)
+            calls.push(
+                new HttpClient(CONFIG.walletApiBaseUrl).get('/blockchain/ethereum/gas-prices')
+            );
+
+        return Promise.all(calls);
     }
 
     public async getMinimumAmountDelegate(): Promise<BigNumber> {

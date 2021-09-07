@@ -76,6 +76,11 @@ export enum TransactionType {
     CONTRACT_DEPLOY = 'CONTRACT_DEPLOY'
 }
 
+export enum TypedTransaction {
+    TYPE_0 = 'TYPE_O',
+    TYPE_2 = 'TYPE_2'
+}
+
 export interface ITransactionFees {
     gasPrice: string;
     gasLimit: string;
@@ -95,9 +100,21 @@ export interface IFeeOptions {
     maxFeePerGas?: string;
     maxPriorityFeePerGas?: string;
     presets?: {
-        standard?: BigNumber;
-        fast?: BigNumber;
-        fastest?: BigNumber;
+        low?: {
+            gasPrice?: BigNumber;
+            maxFeePerGas?: BigNumber;
+            maxPriorityFeePerGas?: BigNumber;
+        };
+        medium?: {
+            gasPrice?: BigNumber;
+            maxFeePerGas?: BigNumber;
+            maxPriorityFeePerGas?: BigNumber;
+        };
+        high?: {
+            gasPrice?: BigNumber;
+            maxFeePerGas?: BigNumber;
+            maxPriorityFeePerGas?: BigNumber;
+        };
     };
     responseHasDefaults?: boolean;
 }
@@ -136,6 +153,7 @@ export interface ITransactionExtraFields {
     stakeAccountKey?: string;
     stakeAccountIndex?: number;
     splitFrom?: string;
+    typedTransaction?: TypedTransaction;
 
     //
 }

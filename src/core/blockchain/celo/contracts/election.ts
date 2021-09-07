@@ -1,5 +1,11 @@
 import { Client } from '../client';
-import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
+import {
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts,
+    TypedTransaction
+} from '../../types';
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
 import BigNumber from 'bignumber.js';
@@ -43,6 +49,7 @@ export class Election {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -95,6 +102,7 @@ export class Election {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -149,6 +157,7 @@ export class Election {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -182,6 +191,7 @@ export class Election {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;

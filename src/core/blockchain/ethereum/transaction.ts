@@ -26,10 +26,9 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
         const txData = {
             data: tx.data?.raw,
             gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
-            // maxPriorityFeePerGas: '0x' + new BigNumber(8).toString(16),
-            // maxFeePerGas: '0x' + new BigNumber(2000000000).toString(16),
-            maxPriorityFeePerGas: '0x452b556d',
-            maxFeePerGas: '0x1365119b63',
+            maxPriorityFeePerGas:
+                '0x' + new BigNumber(tx.feeOptions.maxPriorityFeePerGas).toString(16),
+            maxFeePerGas: '0x' + new BigNumber(tx.feeOptions.maxFeePerGas).toString(16),
             nonce: '0x' + tx.nonce.toString(16),
             to: tx.toAddress,
             value: '0x' + new BigNumber(tx.amount).toString(16),

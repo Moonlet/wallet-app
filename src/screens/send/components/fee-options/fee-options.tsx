@@ -121,26 +121,44 @@ export class FeeOptionsComponent extends React.Component<
 
     @bind
     public onSelectFeePreset(key: string) {
-        // const typedTransaction = this.state.blockchainConfig.typedTransaction[
-        //     this.props.walletType
-        // ];
+        const typedTransaction = this.state.blockchainConfig.typedTransaction[
+            this.props.walletType
+        ];
 
-        const gasPrice = new BigNumber(this.state.feeOptions.presets[key].gasPrice);
+        let feeOptions = {};
         const gasLimit = new BigNumber(this.state.feeOptions.gasLimit);
 
-        this.setState({
-            selectedPreset: key,
-            feeOptions: {
+        if (typedTransaction === TypedTransaction.TYPE_0) {
+            const gasPrice = new BigNumber(this.state.feeOptions.presets[key].gasPrice);
+            feeOptions = {
                 ...this.state.feeOptions,
                 gasPrice: gasPrice.toString(),
                 gasLimit: gasLimit.toString(),
                 feeTotal: gasPrice.multipliedBy(gasLimit).toString()
-            }
-        });
-        this.props.onFeesChanged({
-            gasPrice: gasPrice.toString(),
-            gasLimit: gasLimit.toString(),
-            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            };
+            this.props.onFeesChanged({
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            });
+        } else {
+            const maxFeePerGas = new BigNumber(this.state.feeOptions.presets[key].maxFeePerGas);
+            feeOptions = {
+                ...this.state.feeOptions,
+                maxFeePerGas: maxFeePerGas.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: maxFeePerGas.multipliedBy(gasLimit).toString()
+            };
+            this.props.onFeesChanged({
+                maxFeePerGas: maxFeePerGas.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: maxFeePerGas.multipliedBy(gasLimit).toString()
+            });
+        }
+
+        this.setState({
+            selectedPreset: key,
+            feeOptions
         });
     }
 

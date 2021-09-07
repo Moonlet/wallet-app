@@ -234,17 +234,17 @@ export class Client extends BlockchainGenericClient {
             if (results[0] && results[1] && results[2]) {
                 presets = {
                     low: {
-                        maxFeePerGas: new BigNumber(results[1]),
-                        maxPriorityFeePerGas: new BigNumber(results[1])
+                        maxFeePerGas: new BigNumber(results[1]).plus(results[2]),
+                        maxPriorityFeePerGas: new BigNumber(results[2])
                     },
 
                     medium: {
-                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(1.5),
-                        maxPriorityFeePerGas: new BigNumber(results[1]).multipliedBy(1.5)
+                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(1.5).plus(results[2]),
+                        maxPriorityFeePerGas: new BigNumber(results[2]).multipliedBy(1.5)
                     },
                     high: {
-                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(2),
-                        maxPriorityFeePerGas: new BigNumber(results[1]).multipliedBy(2)
+                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(2).plus(results[2]),
+                        maxPriorityFeePerGas: new BigNumber(results[2]).multipliedBy(2)
                     }
                 };
             }

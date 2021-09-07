@@ -22,7 +22,10 @@ import { Ethereum } from '.';
 import { fixEthAddress } from '../../utils/format-address';
 import CONFIG from '../../../config';
 import { HttpClient } from '../../utils/http-client';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 import { Staking } from './contracts/staking';
 import { MethodSignature } from './types';
 import { getContract } from './contracts/base-contract';
@@ -37,6 +40,8 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getBalance(address: string): Promise<IBalance> {
+        this.getMaxPriorityFee();
+        this.getBaseFeeHistory();
         return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
             return {
                 total: new BigNumber(res.result, 16),
@@ -239,11 +244,11 @@ export class Client extends BlockchainGenericClient {
                     },
 
                     medium: {
-                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(1.5).plus(results[2]),
+                        maxFeePerGas: new BigNumber(results[1]).plus(results[2]).multipliedBy(1.5),
                         maxPriorityFeePerGas: new BigNumber(results[2]).multipliedBy(1.5)
                     },
                     high: {
-                        maxFeePerGas: new BigNumber(results[1]).multipliedBy(2).plus(results[2]),
+                        maxFeePerGas: new BigNumber(results[1]).plus(results[2]).multipliedBy(2),
                         maxPriorityFeePerGas: new BigNumber(results[2]).multipliedBy(2)
                     }
                 };
@@ -255,8 +260,12 @@ export class Client extends BlockchainGenericClient {
                     : config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
-                maxFeePerGas: results[1].toString(),
-                maxPriorityFeePerGas: results[2].toString(),
+                maxFeePerGas:
+                    presets.medium.maxFeePerGas.toString() ||
+                    config.feeOptions.defaults.gasPricePresets.medium.maxFeePerGas.toString(),
+                maxPriorityFeePerGas:
+                    presets.medium.maxPriorityFeePerGas.toString() ||
+                    config.feeOptions.defaults.gasPricePresets.medium.maxPriorityFeePerGas.toString(),
                 gasLimit: gasLimit.toString(),
                 presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
                 feeTotal: new BigNumber(results[1])
@@ -266,18 +275,24 @@ export class Client extends BlockchainGenericClient {
                 responseHasDefaults: presets ? false : true
             };
         } catch (error) {
-            const gasPrice = config.feeOptions.defaults.gasPrice;
+            const maxFeePerGas = config.feeOptions.defaults.gasPricePresets.medium.maxFeePerGas;
             const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    error
+                })
+            });
             SentryCaptureException(
-                new Error(JSON.stringify({ event: 'getEstimated Fees - defaults Set', error }))
+                new Error(`Failed to get estimated eip 1559 fees - defaults Set, ${error?.message}`)
             );
 
             return {
-                gasPrice: gasPrice.toString(),
+                maxFeePerGas: maxFeePerGas.toString(),
+                maxPriorityFeePerGas: config.feeOptions.defaults.gasPricePresets.medium.maxPriorityFeePerGas.toString(),
                 gasLimit: gasLimit.toString(),
                 presets: config.feeOptions.defaults.gasPricePresets,
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString(),
+                feeTotal: maxFeePerGas.multipliedBy(gasLimit).toString(),
                 responseHasDefaults: true
             };
         }
@@ -371,18 +386,14 @@ export class Client extends BlockchainGenericClient {
                     };
                 } else {
                     SentryCaptureException(
-                        new Error(
-                            JSON.stringify({
-                                event: 'getEstimated Fees - no response - defaults Set'
-                            })
-                        )
+                        new Error(`Failed to get estimated eip 1559 fees - defaults Set`)
                     );
                 }
             }
 
             const contractAddressStaking = await getContract(this.chainId, Contracts.STAKING);
 
-            const gasPrice = presets?.low.gasPrice || config.feeOptions.defaults.gasPrice;
+            const gasPrice = presets?.medium.gasPrice || config.feeOptions.defaults.gasPrice;
             let gasLimit =
                 results[0] && results[0].result
                     ? new BigNumber(parseInt(results[0].result, 16))
@@ -407,8 +418,13 @@ export class Client extends BlockchainGenericClient {
             const gasPrice = config.feeOptions.defaults.gasPrice;
             const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    error
+                })
+            });
             SentryCaptureException(
-                new Error(JSON.stringify({ event: 'getEstimated Fees - defaults Set', error }))
+                new Error(`Failed to get estimated - defaults Set, ${error?.message}`)
             );
 
             return {

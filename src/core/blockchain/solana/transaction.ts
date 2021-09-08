@@ -145,8 +145,10 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 if (fromAccount.isSol || toAccount.isSol) {
                     const lamports = fromAccount.isSol
-                        ? amtIn
-                        : tx.additionalInfo.createAccount.lamports;
+                        ? new BigNumber(amtIn)
+                              .plus(tx.additionalInfo.createAccount.lamportsFromSol)
+                              .toNumber()
+                        : tx.additionalInfo.createAccount.lamportsToSol;
 
                     // Create Account
                     transaction.add(
@@ -159,13 +161,13 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                         })
                     );
                     // Transfer sol to the new account
-                    transaction.add(
-                        SystemProgram.transfer({
-                            fromPubkey: owner,
-                            toPubkey: newAccountPublicKey,
-                            lamports
-                        })
-                    );
+                    // transaction.add(
+                    //     SystemProgram.transfer({
+                    //         fromPubkey: owner,
+                    //         toPubkey: newAccountPublicKey,
+                    //         lamports: amtIn
+                    //     })
+                    // );
                     // Token: Init Account - WSOL
                     transaction.add(
                         Token.createInitAccountInstruction(

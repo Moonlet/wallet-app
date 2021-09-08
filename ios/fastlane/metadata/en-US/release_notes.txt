@@ -1,6 +1,6 @@
-Team's log. Stardate 2108.31:
+Team's log. Stardate 2109.08:
 
-This time we have pushed live some fixes for ERC-20 balance, we removed the Stake now button from Validators tab, we made the validator page load faster and fixed the dynamic links.
+Solana SWAP is here. SPL tokens too. The new ETH fees improvements were implemented as well. So far so good. :)
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

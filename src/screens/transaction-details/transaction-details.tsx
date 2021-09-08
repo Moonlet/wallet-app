@@ -45,6 +45,7 @@ import {
 } from '@sentry/react-native';
 import { removeTransaction, updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { NavigationService } from '../../navigation/navigation-service';
+import { isSwapTx } from '../../core/utils/swap';
 
 interface IReduxProps {
     account: IAccountState;
@@ -322,11 +323,15 @@ class TransactionDetailsComponent extends React.Component<
 
         let recipient =
             tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20
-                ? formatAddress(transaction.data.params[0], blockchain)
-                : formatAddress(transaction.toAddress, blockchain);
+                ? transaction.data.params[0]
+                : transaction.toAddress;
 
         if (transaction?.additionalInfo?.validatorName) {
             recipient = transaction.additionalInfo.validatorName;
+        }
+
+        if (blockchain === Blockchain.SOLANA && transaction.additionalInfo?.stakeAccountKey) {
+            recipient = transaction.additionalInfo.stakeAccountKey;
         }
 
         let transactionType = translate('App.labels.transfer');
@@ -387,6 +392,20 @@ class TransactionDetailsComponent extends React.Component<
                     )}
 
                     {this.renderRow(transactionType, translate('Transaction.transactionType'))}
+
+                    {isSwapTx(transaction) &&
+                        this.renderRow(
+                            transaction.additionalInfo?.swap.fromTokenAmount +
+                                ' ' +
+                                transaction.additionalInfo?.swap.fromTokenSymbol +
+                                ' ' +
+                                translate('App.labels.to').toLowerCase() +
+                                ' ' +
+                                transaction.additionalInfo?.swap.toTokenAmount +
+                                ' ' +
+                                transaction.additionalInfo?.swap.toTokenSymbol,
+                            translate('App.labels.swap')
+                        )}
 
                     {isZilRewardsFlow ? (
                         <View>
@@ -508,12 +527,31 @@ class TransactionDetailsComponent extends React.Component<
                             translate('App.labels.errorMessage')
                         )}
 
-                    {this.renderRow(
-                        formatAddress(transaction.address, account.blockchain),
-                        translate('App.labels.sender')
-                    )}
+                    <TouchableOpacity
+                        onPress={() => {
+                            Clipboard.setString(transaction.address);
+                            Dialog.info(
+                                translate('App.labels.copied'),
+                                String(transaction.address)
+                            );
+                        }}
+                    >
+                        {this.renderRow(
+                            formatAddress(transaction.address, account.blockchain),
+                            translate('App.labels.sender')
+                        )}
+                    </TouchableOpacity>
 
-                    {this.renderRow(recipient, translate('App.labels.recipient'))}
+                    {recipient && recipient !== '' && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                Clipboard.setString(recipient);
+                                Dialog.info(translate('App.labels.copied'), String(recipient));
+                            }}
+                        >
+                            {this.renderRow(recipient, translate('App.labels.recipient'))}
+                        </TouchableOpacity>
+                    )}
 
                     <TouchableOpacity
                         testID={'transaction-id'}

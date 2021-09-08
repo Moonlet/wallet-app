@@ -392,7 +392,11 @@ export const translation: ITranslations = {
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
             processTitleText:
                 'The fees mentioned below are blockchain maximum possible fees and are required to process the transaction on the blockchain network level. ',
+            processTitleTextHighFees:
+                'The fees on the {{blockchain}} network are usually very high. Make sure you delegate the proper amount of {{token}} to make it worth it.',
             processTitleText2: 'Moonlet does not act as an intermediary or profit from these fees.',
+            processTitleText3:
+                'Currently it looks that the maximum fees are higher than the amount you want to stake.',
             processTitleCompletedText:
                 'Some transactions may still pe pending on the blokchain, it is safe to continue. You can check the status of the transactions at any time in Transactions section.',
             processTitleErrorText:
@@ -687,7 +691,11 @@ export const translation: ITranslations = {
             adjustRestake:
                 'You need to adjust the value you want to restake to be higher then  {{higherThen}} per validator',
             warningFeesToHigh:
-                'Please note that the value of the maximum estimated fees are higher than the value of your amount that you want to stake.'
+                'Please note that the value of the maximum estimated fees are higher than the value of your amount that you want to stake.',
+            addressNoExist: `This validator address\ndoesn't exist.`,
+            stakeAmtLow: 'Your stake amount is low',
+            stakeAmtLowDetails:
+                'It looks like the fees are higher than the amount you want to stake. Either you stake more {{token}} or accept that this transaction might not be profitable.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

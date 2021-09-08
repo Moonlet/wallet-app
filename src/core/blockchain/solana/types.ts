@@ -5,7 +5,8 @@ export enum SolanaTransactionInstructionType {
     SPLIT_STAKE = 'SPLIT_STAKE',
     UNSTAKE = 'UNSTAKE',
     WITHDRAW = 'WITHDRAW',
-    CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'CREATE_ASSOCIATED_TOKEN_ACCOUNT'
+    CREATE_ASSOCIATED_TOKEN_ACCOUNT = 'CREATE_ASSOCIATED_TOKEN_ACCOUNT',
+    SWAP = 'SWAP'
 }
 
 export interface ISolanaTransactionInstruction {

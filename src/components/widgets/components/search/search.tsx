@@ -20,6 +20,8 @@ import { renderModules } from '../../render-module';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { LoadingIndicator } from '../../../loading-indicator/loading-indicator';
+import { getSelectedBlockchain } from '../../../../redux/wallets/selectors';
+import { Blockchain } from '../../../../core/blockchain/types';
 
 const MIN_INPUT_LEN_SEARCH = 3;
 
@@ -39,6 +41,7 @@ interface IReduxProps {
         result: IScreenModule[];
     };
     testnet: boolean;
+    blockchain: Blockchain;
     setScreenInputData: typeof setScreenInputData;
 }
 
@@ -48,6 +51,7 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         search: screenKey && state.ui.screens.inputData[screenKey]?.data?.search,
         testnet: state.preferences.testNet,
+        blockchain: getSelectedBlockchain(state),
 
         ...getStateSelectors(state, ownProps.module, {
             screenKey,
@@ -107,7 +111,8 @@ class SearchComponent extends React.Component<
                 input,
                 options: {
                     testnet: this.props.testnet,
-                    flowId: this.props.options?.flowId
+                    flowId: this.props.options?.flowId,
+                    blockchain: this.props.blockchain
                 }
             });
 

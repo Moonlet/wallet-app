@@ -21,7 +21,8 @@ import { ApiClient } from '../../utils/api-client/api-client';
 import { SplClient } from './tokens/spl-client';
 
 export class Client extends BlockchainGenericClient {
-    private connection;
+    private connection: Connection;
+
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 

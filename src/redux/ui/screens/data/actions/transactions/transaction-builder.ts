@@ -29,7 +29,10 @@ const contractCallFunctionsWhitelist = {
         ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
     ],
     [Blockchain.ETHEREUM]: [ContractMethod.INCREASE_ALLOWANCE, ContractMethod.DELEGATE],
-    [Blockchain.SOLANA]: [ContractMethod.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT]
+    [Blockchain.SOLANA]: [
+        ContractMethod.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+        ContractMethod.SWAP
+    ]
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -105,7 +108,7 @@ export const buildContractCallTransaction = async (
 
             case Blockchain.SOLANA: {
                 switch (params.additionalInfo.posAction) {
-                    case PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT:
+                    case PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT: {
                         const blockHash = await client.getCurrentBlockHash();
 
                         params.additionalInfo = {
@@ -116,6 +119,20 @@ export const buildContractCallTransaction = async (
                             tokenSymbol: params.additionalInfo.tokenSymbol
                         };
                         break;
+                    }
+
+                    case PosBasicActionType.SWAP: {
+                        const blockHash = await client.getCurrentBlockHash();
+
+                        params.additionalInfo = {
+                            ...params.additionalInfo,
+                            type: SolanaTransactionInstructionType.SWAP,
+                            instructions: params.additionalInfo.instructions,
+                            currentBlockHash: blockHash,
+                            posAction: PosBasicActionType.SWAP
+                        };
+                        break;
+                    }
                 }
 
                 break;

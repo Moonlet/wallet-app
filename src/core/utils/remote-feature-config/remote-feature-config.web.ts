@@ -1,3 +1,4 @@
+import { Blockchain } from '../../blockchain/types';
 import { RemoteFeature } from './types';
 
 export const getRemoteConfigFeatures = () => {
@@ -14,6 +15,9 @@ export const getFirebaseTCVersion = (): number => {
     return undefined;
 };
 
-export const remoteFeatureSwapContainsToken = (symbol: string): boolean => {
+export const remoteFeatureSwapContainsToken = (
+    blockchain: Blockchain,
+    tokenSymbol: string
+): boolean => {
     return false;
 };

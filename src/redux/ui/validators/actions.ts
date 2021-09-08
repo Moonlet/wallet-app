@@ -9,10 +9,11 @@ import { Blockchain } from '../../../core/blockchain/types';
 export const ADD_VALIDATORS = 'ADD_VALIDATORS';
 export const SET_IS_LOADING = 'SET_IS_LOADING';
 
-export const fetchValidators = (account: IAccountState, posAction: PosBasicActionType) => async (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
+export const fetchValidators = (
+    account: IAccountState,
+    posAction: PosBasicActionType,
+    validatorAddress?: string
+) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const state = getState();
     const blockchain = account.blockchain;
     const chainId = getChainId(state, blockchain).toString();
@@ -35,7 +36,8 @@ export const fetchValidators = (account: IAccountState, posAction: PosBasicActio
         blockchain,
         chainId,
         address,
-        posAction
+        posAction,
+        validatorAddress
     );
 
     if (data) {

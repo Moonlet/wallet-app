@@ -179,7 +179,7 @@ export class SolanaTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
                 }
 
-                if (!fromAccount.isSol && !toAccount.isSol && !toAccount.active) {
+                if (!toAccount.isSol && !toAccount.active) {
                     // Token not created
                     // - only for SPL, not for SOL
                     transaction.add(

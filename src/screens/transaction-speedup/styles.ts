@@ -51,9 +51,14 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.error
         },
         removeTxButton: {
-            borderColor: theme.colors.accent
+            borderColor: theme.colors.error
         },
         removeTxButtonText: {
             color: theme.colors.error
+        },
+        signButton: {
+            marginTop: BASE_DIMENSION,
+            marginHorizontal: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION * 5
         }
     });

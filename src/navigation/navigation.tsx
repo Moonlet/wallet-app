@@ -64,6 +64,7 @@ import { SmartScreen } from '../screens/smart-screen/smart-screen';
 import { ConnectedWebsitesScreen } from '../screens/connected-websites/connected-websites';
 import { HeaderIcon } from '../components/header-icon/header-icon';
 import { TotalBalanceScreen } from '../screens/total-balance/total-balance';
+import { TransactionSpeedup } from '../screens/transaction-speedup/transaction-speedup';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -159,6 +160,9 @@ export const WalletNavigation = createStackNavigator(
         },
         TransactionDetails: {
             screen: TransactionDetails
+        },
+        TransactionSpeedup: {
+            screen: TransactionSpeedup
         },
         ManageAccounts: {
             screen: ManageAccountsScreen
@@ -375,6 +379,9 @@ export const PromotionsNavigation = createStackNavigator(
         },
         TransactionDetails: {
             screen: TransactionDetails
+        },
+        TransactionSpeedup: {
+            screen: TransactionSpeedup
         },
         ManageAccounts: {
             screen: ManageAccountsScreen

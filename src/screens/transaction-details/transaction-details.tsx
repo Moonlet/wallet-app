@@ -279,6 +279,29 @@ class TransactionDetailsComponent extends React.Component<
         );
     }
 
+    private speedUpTransaction() {
+        Dialog.alert(
+            translate('App.labels.speedupTransaction'),
+            translate('App.labels.speedupTransactionDetails'),
+            {
+                text: translate('App.labels.cancel'),
+                onPress: () => {
+                    //
+                }
+            },
+            {
+                text: translate('App.labels.ok'),
+                onPress: () => {
+                    NavigationService.navigate('TransactionSpeedup', {
+                        transaction: this.props.transaction,
+                        accountIndex: this.props.accountIndex,
+                        blockchain: this.props.blockchain
+                    });
+                }
+            }
+        );
+    }
+
     public render() {
         const { account, styles } = this.props;
         const { transaction } = this.state;
@@ -486,6 +509,17 @@ class TransactionDetailsComponent extends React.Component<
                                     </Text>
                                 </View>
                             </TouchableOpacity>
+                        )}
+
+                    {this.props.transaction.status === TransactionStatus.SUCCESS &&
+                        this.props.transaction.blockchain === Blockchain.ETHEREUM && (
+                            <Button
+                                style={styles.speedUpTxButton}
+                                textStyle={styles.removeTxButtonText}
+                                onPress={() => this.speedUpTransaction()}
+                            >
+                                {translate('App.labels.speedup')}
+                            </Button>
                         )}
 
                     <Button

@@ -115,6 +115,9 @@ export const translation: ITranslations = {
                 remove: 'Remove',
                 removeAccount: 'Remove account',
                 removeTransaction: 'Remove transaction',
+                speedup: 'Speedup',
+                speedupTransaction: 'Speedup transaction',
+                speedupTransactionDetails: 'Speedup transaction  description',
                 removeTransactionDetails:
                     'This action will remove the transaction from MoonletWallet. This will still remain on the blockchain network.',
                 rent: 'Rent',
@@ -370,6 +373,7 @@ export const translation: ITranslations = {
         Transaction: {
             transactionID: 'Transaction ID',
             transactionDetails: 'Transaction details',
+            transactionSpeedup: 'Speedup transaction',
             transactionStatus: 'Transaction status',
             nonce: 'Nonce',
             statusValue: {

@@ -246,13 +246,6 @@ class DefaultTokenScreenComponent extends React.Component<
 
     public render() {
         const { styles, navigation, account, transactions, token } = this.props;
-        const { blockchain } = account;
-
-        let swapDisabled = false;
-        const tokenConfig = getTokenConfig(blockchain, token.symbol);
-        if (account.blockchain === Blockchain.SOLANA && tokenConfig.type === TokenType.SPL) {
-            swapDisabled = this.state.splToken?.state !== 'active';
-        }
 
         return (
             <View testID="default-token-screen" style={styles.container}>
@@ -323,7 +316,6 @@ class DefaultTokenScreenComponent extends React.Component<
                                                     resetScreen: true
                                                 })
                                             }
-                                            disabledSecondary={swapDisabled}
                                         >
                                             {translate('App.labels.swap')}
                                         </Button>

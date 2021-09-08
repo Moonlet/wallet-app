@@ -139,23 +139,23 @@ export const config: IBlockchainConfig = {
             gasPrice: new BigNumber(20000000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(21000),
-                [TokenType.ERC20]: new BigNumber(300000)
+                [TokenType.ERC20]: new BigNumber(200000)
             },
             gasPricePresets: {
                 low: {
                     gasPrice: new BigNumber(20000000000),
-                    maxFeePerGas: new BigNumber(20000000000),
-                    maxPriorityFeePerGas: new BigNumber(20000000000)
+                    maxFeePerGas: new BigNumber(50000000000),
+                    maxPriorityFeePerGas: new BigNumber(1000000000)
                 },
                 medium: {
                     gasPrice: new BigNumber(40000000000),
-                    maxFeePerGas: new BigNumber(40000000000),
-                    maxPriorityFeePerGas: new BigNumber(40000000000)
+                    maxFeePerGas: new BigNumber(90000000000),
+                    maxPriorityFeePerGas: new BigNumber(1500000000)
                 },
                 high: {
                     gasPrice: new BigNumber(120000000000),
-                    maxFeePerGas: new BigNumber(120000000000),
-                    maxPriorityFeePerGas: new BigNumber(120000000000)
+                    maxFeePerGas: new BigNumber(150000000000),
+                    maxPriorityFeePerGas: new BigNumber(2000000000)
                 }
             }
         },

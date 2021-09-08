@@ -29,6 +29,7 @@ import {
 import { Staking } from './contracts/staking';
 import { MethodSignature } from './types';
 import { getContract } from './contracts/base-contract';
+import { ApiClient } from '../../utils/api-client/api-client';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -40,8 +41,6 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getBalance(address: string): Promise<IBalance> {
-        this.getMaxPriorityFee();
-        this.getBaseFeeHistory();
         return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
             return {
                 total: new BigNumber(res.result, 16),
@@ -233,7 +232,14 @@ export class Client extends BlockchainGenericClient {
                     maxPriorityFeePerGas: BigNumber;
                 };
             };
-            rpcCalls.push(this.getBaseFeeHistory(), this.getMaxPriorityFee());
+
+            const keyGasLimitErc20 = `ethereum.${this.chainId.toString()}.fees.gasLimit.erc20`;
+
+            rpcCalls.push(
+                this.getBaseFeeHistory(),
+                this.getMaxPriorityFee(),
+                new ApiClient().configs.getConfigs([keyGasLimitErc20])
+            );
 
             const results = await Promise.all(rpcCalls);
             if (results[0] && results[1] && results[2]) {
@@ -254,10 +260,25 @@ export class Client extends BlockchainGenericClient {
                 };
             }
 
-            const gasLimit =
-                results[0] && results[0].result
-                    ? new BigNumber(parseInt(results[0].result, 16))
-                    : config.feeOptions.defaults.gasLimit[tokenType];
+            let gasLimit;
+
+            const contractAddressStaking = await getContract(this.chainId, Contracts.STAKING);
+
+            if (
+                data.contractAddress &&
+                data.contractAddress.toLowerCase() === contractAddressStaking.toLowerCase()
+            ) {
+                const resGasLimit = results[3];
+                gasLimit =
+                    resGasLimit && resGasLimit.result[keyGasLimitErc20]
+                        ? new BigNumber(resGasLimit.result[keyGasLimitErc20])
+                        : config.feeOptions.defaults.gasLimit[tokenType];
+            } else {
+                gasLimit =
+                    results[0] && results[0].result
+                        ? new BigNumber(parseInt(results[0].result, 16))
+                        : config.feeOptions.defaults.gasLimit[tokenType];
+            }
 
             return {
                 maxFeePerGas:
@@ -404,7 +425,14 @@ export class Client extends BlockchainGenericClient {
                 data.contractAddress &&
                 data.contractAddress.toLowerCase() === contractAddressStaking.toLowerCase()
             ) {
-                gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+                const keyGasLimitErc20 = `ethereum.${this.chainId.toString()}.fees.gasLimit.erc20`;
+
+                const resGasLimit = await new ApiClient().configs.getConfigs([keyGasLimitErc20]);
+
+                gasLimit =
+                    resGasLimit?.result && resGasLimit.result[keyGasLimitErc20]
+                        ? new BigNumber(resGasLimit.result[keyGasLimitErc20])
+                        : config.feeOptions.defaults.gasLimit[tokenType];
             }
 
             return {

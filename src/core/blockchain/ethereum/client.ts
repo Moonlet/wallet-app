@@ -242,7 +242,7 @@ export class Client extends BlockchainGenericClient {
             );
 
             const results = await Promise.all(rpcCalls);
-            if (results[0] && results[1] && results[2]) {
+            if (results[1] && results[2]) {
                 presets = {
                     low: {
                         maxFeePerGas: new BigNumber(results[1]).plus(results[2]),
@@ -275,8 +275,8 @@ export class Client extends BlockchainGenericClient {
                         : config.feeOptions.defaults.gasLimit[tokenType];
             } else {
                 gasLimit =
-                    results[0] && results[0].result
-                        ? new BigNumber(parseInt(results[0].result, 16))
+                    results[0][0] && results[0][0].result
+                        ? new BigNumber(parseInt(results[0][0].result, 16))
                         : config.feeOptions.defaults.gasLimit[tokenType];
             }
 

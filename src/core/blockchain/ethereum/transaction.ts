@@ -23,12 +23,14 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
         const common = new Common({ chain: tx.chainId, hardfork: 'london' });
 
+        const maxFeePerGas = new BigNumber(tx.feeOptions.maxFeePerGas).toFixed(0);
+        const maxPriorityFeePerGas = new BigNumber(tx.feeOptions.maxPriorityFeePerGas).toFixed(0);
+
         const txData = {
             data: tx.data?.raw,
             gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
-            maxPriorityFeePerGas:
-                '0x' + new BigNumber(tx.feeOptions.maxPriorityFeePerGas).toString(16),
-            maxFeePerGas: '0x' + new BigNumber(tx.feeOptions.maxFeePerGas).toString(16),
+            maxPriorityFeePerGas: '0x' + new BigNumber(maxPriorityFeePerGas).toString(16),
+            maxFeePerGas: '0x' + new BigNumber(maxFeePerGas).toString(16),
             nonce: '0x' + tx.nonce.toString(16),
             to: tx.toAddress,
             value: '0x' + new BigNumber(tx.amount).toString(16),

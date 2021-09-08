@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { IBlockchainNetwork, ChainIdType } from './network';
-import { IFeeOptions, TransactionType } from './transaction';
+import { IFeeOptions, TransactionType, TypedTransaction } from './transaction';
 import { GenericNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
 import { PosBasicActionType, TokenType } from './token';
@@ -85,6 +85,7 @@ export abstract class BlockchainGenericClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction?: TypedTransaction,
         tokenType?: TokenType
     ): Promise<IFeeOptions>;
 

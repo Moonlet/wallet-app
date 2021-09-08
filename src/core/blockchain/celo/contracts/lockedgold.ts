@@ -1,6 +1,12 @@
 import { Client } from '../client';
 import BigNumber from 'bignumber.js';
-import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
+import {
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts,
+    TypedTransaction
+} from '../../types';
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
 import { PosBasicActionType, TokenType } from '../../types/token';
@@ -23,6 +29,7 @@ export class LockedGold {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -53,6 +60,7 @@ export class LockedGold {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -83,6 +91,7 @@ export class LockedGold {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;

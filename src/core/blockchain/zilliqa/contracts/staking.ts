@@ -1,5 +1,11 @@
 import { Client } from '../client';
-import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
+import {
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts,
+    TypedTransaction
+} from '../../types';
 import { IValidator } from '../../types/stats';
 import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract, ContractFields } from './base-contract';
@@ -234,6 +240,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ZRC2
         );
         transaction.feeOptions = fees;
@@ -283,6 +290,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ZRC2
         );
         transaction.feeOptions = fees;
@@ -337,6 +345,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ZRC2
         );
         transaction.feeOptions = fees;
@@ -398,6 +407,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ZRC2
         );
 
@@ -465,6 +475,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ZRC2
         );
         transaction.feeOptions = fees;

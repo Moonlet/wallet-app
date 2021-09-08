@@ -1,7 +1,12 @@
 import { Platform } from 'react-native';
 import { BigNumber } from 'bignumber.js';
 
-import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
+import {
+    IBlockchainConfig,
+    DerivationType,
+    BlockchainNameService,
+    TypedTransaction
+} from '../types';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
@@ -156,6 +161,10 @@ export const config: IBlockchainConfig = {
             gZIL: GZIL_TESTNET
         }
     },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
+    },
     autoAddedHiddenTokensSymbols: {
         '1': {
             PORT: PORT_MAINNET,
@@ -189,7 +198,10 @@ export const config: IBlockchainConfig = {
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: {
+                HD: 'GasFeeAdvanced',
+                HW: 'GasFeeAdvanced'
+            },
             gasPriceUnit: 'LI'
         }
     },

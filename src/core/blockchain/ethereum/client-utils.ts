@@ -114,6 +114,27 @@ export class ClientUtils implements IClientUtils {
             }
         }
 
+        let feeOptions;
+
+        feeOptions = {
+            gasPrice: txInfo.gasPrice,
+            gasLimit: txInfo.gas,
+            feeTotal: txReceipt.gasUsed
+        };
+
+        if (txInfo.maxFeePerGas) {
+            feeOptions = {
+                ...feeOptions,
+                maxFeePerGas: txInfo.maxFeePerGas
+            };
+        }
+        if (txInfo.maxPriorityFeePerGas) {
+            feeOptions = {
+                ...feeOptions,
+                maxPriorityFeePerGas: txInfo.maxPriorityFeePerGas
+            };
+        }
+
         return {
             id: txInfo.hash,
             date: {
@@ -132,11 +153,7 @@ export class ClientUtils implements IClientUtils {
             toAddress: txInfo.to,
             amount: txInfo.value,
             data,
-            feeOptions: {
-                gasPrice: txInfo.gasPrice,
-                gasLimit: txInfo.gas,
-                feeTotal: txReceipt.gasUsed
-            },
+            feeOptions,
             broadcastedOnBlock: txInfo.blockNumber,
             nonce: txInfo.nonce,
             status: Ethereum.transaction.getTransactionStatusByCode(txReceipt.status),

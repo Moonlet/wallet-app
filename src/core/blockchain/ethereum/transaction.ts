@@ -6,7 +6,9 @@ import {
     IPosTransaction,
     Contracts
 } from '../types';
-import { Transaction } from 'ethereumjs-tx';
+// import { Transaction } from 'ethereumjs-tx';
+import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
+import Common from '@ethereumjs/common';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
 import { PosBasicActionType, TokenType } from '../types/token';
@@ -19,23 +21,29 @@ import { MethodSignature } from './types';
 
 export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
-        const transaction = new Transaction(
-            {
-                nonce: '0x' + tx.nonce.toString(16),
-                gasPrice: '0x' + new BigNumber(tx.feeOptions.gasPrice).toString(16),
-                gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
-                to: tx.toAddress,
-                value: '0x' + new BigNumber(tx.amount).toString(16),
-                data: tx.data?.raw
-            },
-            {
-                chain: tx.chainId
-            }
-        );
+        const common = new Common({ chain: tx.chainId, hardfork: 'london' });
 
-        transaction.sign(Buffer.from(privateKey, 'hex'));
+        const txData = {
+            data: tx.data?.raw,
+            gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
+            maxPriorityFeePerGas:
+                '0x' + new BigNumber(tx.feeOptions.maxPriorityFeePerGas).toString(16),
+            maxFeePerGas: '0x' + new BigNumber(tx.feeOptions.maxFeePerGas).toString(16),
+            nonce: '0x' + tx.nonce.toString(16),
+            to: tx.toAddress,
+            value: '0x' + new BigNumber(tx.amount).toString(16),
+            chainId: '0x' + tx.chainId,
+            accessList: [],
+            type: '0x02'
+        };
 
-        return '0x' + transaction.serialize().toString('hex');
+        const transaction = FeeMarketEIP1559Transaction.fromTxData(txData, { common });
+
+        const txSigned = transaction.sign(Buffer.from(privateKey, 'hex'));
+
+        const txSerialized = '0x' + txSigned.serialize().toString('hex');
+
+        return txSerialized;
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {

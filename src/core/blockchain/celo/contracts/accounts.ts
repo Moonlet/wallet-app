@@ -1,7 +1,13 @@
 import { Client } from '../client';
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
-import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
+import {
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts,
+    TypedTransaction
+} from '../../types';
 import { PosBasicActionType, TokenType } from '../../types/token';
 
 export class Accounts {
@@ -36,6 +42,7 @@ export class Accounts {
                 contractAddress,
                 raw
             },
+            TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;

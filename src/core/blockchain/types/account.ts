@@ -1,5 +1,6 @@
 import { IAccountState } from '../../../redux/wallets/state';
 import { BigNumber } from 'bignumber.js';
+import { IBlockchainConfig } from '.';
 
 export interface IBlockchainAccountUtils {
     getAccountDerivationPath(accountIndex: number): string;
@@ -11,7 +12,11 @@ export interface IBlockchainAccountUtils {
     privateToAddress(privateKey: string): string;
     privateToPublic(privateKey: string): string;
 
-    getAccountFromPrivateKey(privateKey: string, index: number): IAccountState;
+    getAccountFromPrivateKey(
+        privateKey: string,
+        blockchainConfig: IBlockchainConfig,
+        index: number
+    ): IAccountState;
 
     amountToStd(value: BigNumber | number | string, decimals: number): BigNumber;
     amountFromStd(value: BigNumber, decimals: number): BigNumber;

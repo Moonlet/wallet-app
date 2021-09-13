@@ -7,11 +7,11 @@ import {
     BlockchainNameService,
     IResolveNameResponse
 } from '../types';
-import { Zilliqa } from '.';
 import { Client } from './client';
 import { config } from './config';
 import { cryptoNameResolver } from '../common/cryptoNameResolver';
 import { zilNameResolver } from '../common/zilNameResolver';
+import { ZilliqaAccountUtils } from './account';
 
 export class NameService extends GenericNameService {
     constructor(client: Client) {
@@ -19,8 +19,9 @@ export class NameService extends GenericNameService {
     }
 
     public async resolveText(text: string): Promise<IResolveTextResponse> {
-        const validAddress = Zilliqa.account.isValidAddress(text);
-        const validChecksumAddress = Zilliqa.account.isValidChecksumAddress(text);
+        const accountUtils = new ZilliqaAccountUtils();
+        const validAddress = accountUtils.isValidAddress(text);
+        const validChecksumAddress = accountUtils.isValidChecksumAddress(text);
         if (validAddress) {
             return Promise.resolve({
                 code: validChecksumAddress ? ResolveTextCode.OK : ResolveTextCode.WARN_CHECKSUM,

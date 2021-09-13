@@ -9,9 +9,11 @@ import {
 import { PushNotifTokenType } from '../../messaging/types';
 import { Notifications } from '../../messaging/notifications/notifications';
 import { IWalletState } from '../../../redux/wallets/state';
-import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { ApiClient } from './api-client';
 import { Blockchain } from '../../blockchain/types';
+import { IReduxState } from '../../../redux/state';
+import { getTokenConfig } from '../redux-selectors';
+// import { getBlockchain } from '../../blockchain/blockchain-factory';
 
 export class NotificationsApiClient {
     constructor(private apiClient: ApiClient) {}
@@ -107,7 +109,11 @@ export class NotificationsApiClient {
      * @param wallet
      * @param deviceId
      */
-    public async registerNotificationSettings(wallet: IWalletState, deviceId: string) {
+    public async registerNotificationSettings(
+        state: IReduxState,
+        wallet: IWalletState,
+        deviceId: string
+    ) {
         try {
             const walletPublicKey = wallet.walletPublicKey;
             const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
@@ -122,8 +128,15 @@ export class NotificationsApiClient {
                         for (const symbol of Object.keys(account.tokens[chainId])) {
                             const isTokenActive = account.tokens[chainId][symbol]?.active === true;
 
+                            // const tokens = getBlockchain(account.blockchain).config.tokens;
                             if (isTokenActive) {
-                                const tokenConfig = getTokenConfig(account.blockchain, symbol);
+                                const tokenConfig = getTokenConfig(
+                                    state.tokens,
+                                    {},
+                                    chainId,
+                                    account.blockchain,
+                                    symbol
+                                );
 
                                 myTokens.push({
                                     symbol,

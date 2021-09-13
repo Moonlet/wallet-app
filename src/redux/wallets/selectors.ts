@@ -1,12 +1,15 @@
 import { IReduxState } from '../state';
 import { AccountType, IAccountState, IWalletsState, IWalletState } from './state';
-import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainConfig, IBlockchainTransaction } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
 import { getChainId, getBlockchains } from '../preferences/selectors';
 import { ITokenState } from '../wallets/state';
 import { generateTokensConfig } from '../tokens/static-selectors';
 import { TransactionStatus } from '../../core/wallet/types';
+import { pickInsensitiveKey } from '../../core/utils/pick';
+import { ITokenConfigState } from '../tokens/state';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export const getWalletSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
@@ -226,7 +229,10 @@ export const getWalletAndTransactionForHash = (
     return undefined;
 };
 
-export const generateAccountConfig = (blockchain: Blockchain): IAccountState => {
+export const generateAccountConfig = (
+    blockchain: Blockchain,
+    blockchainConfig: IBlockchainConfig
+): IAccountState => {
     return {
         index: 0,
         type: AccountType.DEFAULT,
@@ -234,7 +240,7 @@ export const generateAccountConfig = (blockchain: Blockchain): IAccountState => 
         publicKey: undefined,
         address: undefined,
         blockchain,
-        tokens: generateTokensConfig(blockchain)
+        tokens: generateTokensConfig(blockchain, blockchainConfig)
     };
 };
 
@@ -250,4 +256,25 @@ export const getNrPendingTransactions = (state: IReduxState): number => {
     }
 
     return transactions.filter(tx => tx.status === TransactionStatus.PENDING).length;
+};
+
+export const getTokenConfigSelector = (
+    state: IReduxState,
+    blockchain: Blockchain,
+    symbol: string
+): ITokenConfigState => {
+    const blockchainTokens = getBlockchain(blockchain).config.tokens;
+
+    const chainId = getChainId(state, blockchain);
+
+    const reduxToken = state.tokens;
+    if (reduxToken[blockchain] && reduxToken[blockchain][chainId]) {
+        const token = pickInsensitiveKey(reduxToken[blockchain][chainId], symbol);
+        if (token) return token;
+    }
+
+    const blockchainToken = pickInsensitiveKey(blockchainTokens, symbol);
+    if (blockchainToken) {
+        return blockchainToken;
+    }
 };

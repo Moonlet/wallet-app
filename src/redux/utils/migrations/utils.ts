@@ -1,4 +1,4 @@
-import { accountToken } from '../../tokens/static-selectors';
+import { accountToken } from '../../tokens/utils';
 import { Blockchain } from '../../../core/blockchain/types';
 import { IWalletState } from '../../wallets/state';
 

@@ -76,7 +76,13 @@ export class HDWallet implements IWallet {
 
             if (accountType === AccountType.ROOT) {
                 const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
-                accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, -1));
+                accounts.push(
+                    blockchainInstance.account.getAccountFromPrivateKey(
+                        privateKey,
+                        blockchainInstance.config,
+                        -1
+                    )
+                );
                 fromIndex++;
             }
 
@@ -88,7 +94,13 @@ export class HDWallet implements IWallet {
                 const derivation = key.derive(`m/${accountDerivationPath}`);
 
                 const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(derivation);
-                accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, i));
+                accounts.push(
+                    blockchainInstance.account.getAccountFromPrivateKey(
+                        privateKey,
+                        blockchainInstance.config,
+                        i
+                    )
+                );
             }
             return Promise.resolve(accounts);
         } catch (e) {

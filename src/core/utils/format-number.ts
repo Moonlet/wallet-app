@@ -2,7 +2,6 @@ import { Platform, NativeModules } from 'react-native';
 import 'intl';
 import 'intl/locale-data/jsonp/en-US';
 import BigNumber from 'bignumber.js';
-import { beautify } from '../../components/widgets/utils';
 import { IBeautify } from '../../components/widgets/types';
 
 export interface INumberFormatOptions {
@@ -94,3 +93,37 @@ export const formatNumber = (amount: number | BigNumber, options: INumberFormatO
 
 const integerRegex = new RegExp(/^\d+$/);
 export const isInteger = (value: string) => integerRegex.test(value);
+
+export const beautify = (
+    value: BigNumber | string | number,
+    fromValue?: number
+): {
+    value: BigNumber | string;
+    unit: string;
+} => {
+    fromValue = fromValue || 1000;
+
+    value = new BigNumber(value);
+
+    let out = { value, unit: '' };
+
+    if (value.gte(fromValue)) {
+        const units = [
+            [1000000000, 'B'],
+            [1000000, 'M'],
+            [1000, 'k']
+        ];
+
+        for (const unit of units) {
+            if (value.gte(unit[0])) {
+                out = {
+                    value: value.div(unit[0]),
+                    unit: unit[1].toString()
+                };
+                break;
+            }
+        }
+    }
+
+    return out;
+};

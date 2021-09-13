@@ -8,7 +8,7 @@ import {
     IWalletHWOptions
 } from '../../../redux/wallets/state';
 import { ChainIdType } from '../../blockchain/types';
-import { accountToken } from '../../../redux/tokens/static-selectors';
+import { accountToken } from '../../../redux/tokens/utils';
 
 export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWalletsState => {
     const wallets: IWalletsState = {};

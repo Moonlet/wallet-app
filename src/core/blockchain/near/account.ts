@@ -1,5 +1,5 @@
 import { AccountType, IAccountState } from '../../../redux/wallets/state';
-import { Blockchain, ChainIdType, IBlockchainAccountUtils } from '../types';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils, IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -43,7 +43,11 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
         return this.privateToPublic(privateKey);
     }
 
-    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
+    public getAccountFromPrivateKey(
+        privateKey: string,
+        blockchainConfig: IBlockchainConfig,
+        index: number
+    ): IAccountState {
         const keyPair = nacl.sign.keyPair.fromSecretKey(bs58Decode(privateKey));
         const pk = bs58Encode(Buffer.from(keyPair.publicKey));
         const address = Buffer.from(bs58Decode(pk)).toString('hex');
@@ -55,7 +59,7 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
             publicKey: 'ed25519:' + pk,
             address,
             blockchain: Blockchain.NEAR,
-            tokens: generateTokensConfig(Blockchain.NEAR)
+            tokens: generateTokensConfig(Blockchain.NEAR, blockchainConfig)
         };
     }
 

@@ -7,12 +7,12 @@ import {
     BlockchainNameService,
     IResolveNameResponse
 } from '../types';
-import { Ethereum } from '.';
 import { Client } from './client';
 import { cryptoNameResolver } from '../common/cryptoNameResolver';
 import { ethNameResolver } from '../common/ethNameResolver';
 import { zilNameResolver } from '../common/zilNameResolver';
 import { config } from './config';
+import { EthereumAccountUtils } from './account';
 
 export class NameService extends GenericNameService {
     constructor(client: Client) {
@@ -20,8 +20,9 @@ export class NameService extends GenericNameService {
     }
 
     public async resolveText(text: string): Promise<IResolveTextResponse> {
-        const validAddress = Ethereum.account.isValidAddress(text);
-        const validChecksumAddress = Ethereum.account.isValidChecksumAddress(text);
+        const accountUtils = new EthereumAccountUtils();
+        const validAddress = accountUtils.isValidAddress(text);
+        const validChecksumAddress = accountUtils.isValidChecksumAddress(text);
 
         if (validAddress) {
             return Promise.resolve({

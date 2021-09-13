@@ -1,13 +1,15 @@
-export * from './solana';
 import { IAccountState } from '../../state';
 import { IFeeOptions, ITransactionExtraFields } from '../../../../core/blockchain/types';
 import { Dispatch } from 'react';
 import { IAction } from '../../../types';
 import { IReduxState } from '../../../state';
 import { getChainId } from '../../../preferences/selectors';
-import { getNrPendingTransactions, getSelectedWallet } from '../../selectors';
+import {
+    getNrPendingTransactions,
+    getSelectedWallet,
+    getTokenConfigSelector
+} from '../../selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { getTokenConfig } from '../../../tokens/static-selectors';
 import { translate } from '../../../../core/i18n';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
@@ -270,7 +272,7 @@ export const posAction = (
         };
         const blockchainInstance = getBlockchain(account.blockchain);
 
-        const tokenConfig = getTokenConfig(account.blockchain, token);
+        const tokenConfig = getTokenConfigSelector(state, account.blockchain, token);
 
         dispatch(openProcessTransactions());
 

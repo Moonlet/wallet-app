@@ -1,6 +1,5 @@
 import React from 'react';
 import * as ReactNative from 'react-native';
-
 import { formatNumber, INumberFormatOptions } from '../../core/utils/format-number';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';

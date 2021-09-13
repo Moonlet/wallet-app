@@ -213,8 +213,10 @@ export const createHWWallet = (
         const deviceId = accountsAndDeviceId.deviceId;
         accountsAndDeviceId.accounts[0].selected = true;
 
+        const config = getBlockchain(blockchain).config;
+
         const accounts = accountsAndDeviceId.accounts.map(v => {
-            return { ...v, tokens: generateTokensConfig(blockchain) };
+            return { ...v, tokens: generateTokensConfig(blockchain, config) };
         });
 
         const wallet: IWallet = await HWWalletFactory.get(
@@ -1060,7 +1062,7 @@ export const createNearAccount = (name: string, extension: string, password: str
     const transactionInstance = blockchainInstance.transaction as NearTransactionUtils;
 
     const selectedAccount = getSelectedAccount(state);
-    const account = generateAccountConfig(blockchain);
+    const account = generateAccountConfig(blockchain, blockchainInstance.config);
     account.chainId = chainId;
     account.address = selectedAccount.address; // used to transfer tokens for creating account
     account.publicKey = selectedAccount.publicKey;

@@ -1,4 +1,3 @@
-import { Solana } from '.';
 import {
     IResolveTextResponse,
     IResolveNameResponse,
@@ -7,11 +6,13 @@ import {
     ResolveTextError
 } from '../types';
 import { GenericNameService } from '../types/name-service';
+import { SolanaAccountUtils } from './account';
 
 export class NameService extends GenericNameService {
     public resolveText(text: string): Promise<IResolveTextResponse> {
-        const validAddress = Solana.account.isValidAddress(text);
-        const validChecksumAddress = Solana.account.isValidChecksumAddress(text);
+        const accountUtils = new SolanaAccountUtils();
+        const validAddress = accountUtils.isValidAddress(text);
+        const validChecksumAddress = accountUtils.isValidChecksumAddress(text);
 
         if (validAddress) {
             return Promise.resolve({

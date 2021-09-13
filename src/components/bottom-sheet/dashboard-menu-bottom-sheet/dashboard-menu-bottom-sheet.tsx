@@ -31,6 +31,7 @@ import {
     setSelectedAccount
 } from '../../../redux/wallets/actions/wallet-actions';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -248,9 +249,9 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                                     translate('App.labels.cancel'),
                                     translate('App.labels.add')
                                 );
-
+                                const config = getBlockchain(blockchain).config;
                                 if (inputValue && inputValue !== '') {
-                                    const account = generateAccountConfig(blockchain);
+                                    const account = generateAccountConfig(blockchain, config);
                                     account.address = inputValue;
                                     account.publicKey = selectedAccount.publicKey;
 

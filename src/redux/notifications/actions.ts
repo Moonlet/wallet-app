@@ -109,6 +109,7 @@ export const registerNotificationSettings = () => async (
 
     for (const wallet of Object.values(state.wallets)) {
         await apiClient.notifications.registerNotificationSettings(
+            state,
             wallet,
             state.preferences.deviceId
         );

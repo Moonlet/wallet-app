@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataType, ICurrencyData, IData, IDataStyle, ITextData } from './types';
-import { Text } from '../../library';
+import { Text } from '../../library/text/text';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
@@ -116,40 +116,6 @@ export const formatStyles = (style: IDataStyle): { [key: string]: string | numbe
     }
 
     return finalStyle;
-};
-
-export const beautify = (
-    value: BigNumber | string | number,
-    fromValue?: number
-): {
-    value: BigNumber | string;
-    unit: string;
-} => {
-    fromValue = fromValue || 1000;
-
-    value = new BigNumber(value);
-
-    let out = { value, unit: '' };
-
-    if (value.gte(fromValue)) {
-        const units = [
-            [1000000000, 'B'],
-            [1000000, 'M'],
-            [1000, 'k']
-        ];
-
-        for (const unit of units) {
-            if (value.gte(unit[0])) {
-                out = {
-                    value: value.div(unit[0]),
-                    unit: unit[1].toString()
-                };
-                break;
-            }
-        }
-    }
-
-    return out;
 };
 
 export const formatDataJSXElements = (

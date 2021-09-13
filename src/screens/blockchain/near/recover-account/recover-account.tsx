@@ -92,6 +92,7 @@ export class RecoverNearAccountComponent extends React.Component<
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
+
         this.state = {
             input: {
                 name: '',
@@ -99,7 +100,10 @@ export class RecoverNearAccountComponent extends React.Component<
                 shouldAuthorize: false
             },
 
-            recoveredAccount: generateAccountConfig(Blockchain.NEAR),
+            recoveredAccount: generateAccountConfig(
+                Blockchain.NEAR,
+                getBlockchain(props.selectedAccount.blockchain).config
+            ),
 
             action: {
                 authorizing: false,

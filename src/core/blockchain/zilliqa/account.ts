@@ -6,7 +6,7 @@ import {
 } from '@zilliqa-js/crypto/dist/util'; // import like this to optimize imports
 import { toBech32Address, fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, IBlockchainAccountUtils, IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -42,7 +42,11 @@ export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
         return toBech32Address(getAddressFromPrivateKey(privateKey));
     }
 
-    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
+    public getAccountFromPrivateKey(
+        privateKey: string,
+        blockchainConfig: IBlockchainConfig,
+        index: number
+    ): IAccountState {
         return {
             index,
             type: AccountType.DEFAULT,
@@ -50,7 +54,7 @@ export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),
             blockchain: Blockchain.ZILLIQA,
-            tokens: generateTokensConfig(Blockchain.ZILLIQA)
+            tokens: generateTokensConfig(Blockchain.ZILLIQA, blockchainConfig)
         };
     }
 

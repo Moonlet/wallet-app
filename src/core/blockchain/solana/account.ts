@@ -1,6 +1,6 @@
 import { AccountType, IAccountState } from '../../../redux/wallets/state';
 
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, IBlockchainAccountUtils, IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -43,7 +43,11 @@ export class SolanaAccountUtils implements IBlockchainAccountUtils {
         return this.privateToPublic(privateKey);
     }
 
-    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
+    public getAccountFromPrivateKey(
+        privateKey: string,
+        blockchainConfig: IBlockchainConfig,
+        index: number
+    ): IAccountState {
         return {
             index,
             type: index === -1 ? AccountType.ROOT : AccountType.DEFAULT,
@@ -51,7 +55,7 @@ export class SolanaAccountUtils implements IBlockchainAccountUtils {
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),
             blockchain: Blockchain.SOLANA,
-            tokens: generateTokensConfig(Blockchain.SOLANA),
+            tokens: generateTokensConfig(Blockchain.SOLANA, blockchainConfig),
             name: index === -1 ? translate('App.labels.rootAccount') : undefined
         };
     }

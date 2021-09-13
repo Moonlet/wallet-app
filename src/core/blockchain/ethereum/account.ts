@@ -1,5 +1,5 @@
 import { AccountType, IAccountState } from '../../../redux/wallets/state';
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, IBlockchainAccountUtils, IBlockchainConfig } from '../types';
 import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
 import { convert } from '../common/account';
@@ -40,7 +40,11 @@ export class EthereumAccountUtils implements IBlockchainAccountUtils {
         );
     }
 
-    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
+    public getAccountFromPrivateKey(
+        privateKey: string,
+        blockchainConfig: IBlockchainConfig,
+        index: number
+    ): IAccountState {
         return {
             index,
             type: AccountType.DEFAULT,
@@ -48,7 +52,7 @@ export class EthereumAccountUtils implements IBlockchainAccountUtils {
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),
             blockchain: Blockchain.ETHEREUM,
-            tokens: generateTokensConfig(Blockchain.ETHEREUM)
+            tokens: generateTokensConfig(Blockchain.ETHEREUM, blockchainConfig)
         };
     }
 

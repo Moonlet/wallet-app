@@ -1,4 +1,4 @@
-import { Blockchain, ChainIdType } from '../../core/blockchain/types';
+import { Blockchain, ChainIdType, IBlockchainConfig } from '../../core/blockchain/types';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { store } from '../config';
 import { ITokenConfigState } from './state';
@@ -6,6 +6,7 @@ import { IAccountState, ITokensAccountState, ITokenState } from '../wallets/stat
 import { getChainId } from '../preferences/selectors';
 import { addTokenForBlockchain } from './actions';
 import { pickInsensitiveKey } from '../../core/utils/pick';
+import { accountToken } from './utils';
 
 export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenConfigState => {
     const blockchainTokens = getBlockchain(blockchain).config.tokens;
@@ -24,9 +25,10 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
     }
 };
 
-export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {
-    const blockchainConfig = getBlockchain(blockchain).config;
-
+export const generateTokensConfig = (
+    blockchain: Blockchain,
+    blockchainConfig: IBlockchainConfig
+): ITokensAccountState => {
     // Generate tokens
 
     const tokenList: ITokensAccountState = {};
@@ -84,27 +86,6 @@ export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountStat
     }
 
     return tokenList;
-};
-
-export const accountToken = (
-    symbolKey: string,
-    order: number,
-    options?: { active?: boolean }
-): ITokenState => {
-    return {
-        symbol: symbolKey,
-        order,
-        active: options?.active !== undefined ? options.active : true,
-        balance: {
-            value: '0',
-            inProgress: false,
-            timestamp: undefined,
-            error: undefined,
-            available: '0',
-            total: '0',
-            detailed: {}
-        }
-    };
 };
 
 export const generateAccountTokenState = (

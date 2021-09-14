@@ -30,6 +30,7 @@ import { ZLF_MAINNET } from './tokens/zlf';
 import { ZLP_MAINNET } from './tokens/zlp';
 import { ZYF_MAINNET } from './tokens/zyf';
 import { ZYRO_MAINNET } from './tokens/zyro';
+import { XCAD_MAINNET } from './tokens/xcad';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -155,6 +156,7 @@ export const config: IBlockchainConfig = {
     autoAddedTokensSymbols: {
         '1': {
             gZIL: GZIL_MAINNET,
+            XCAD: XCAD_MAINNET,
             XSGD: XSGD_MAINNET
         },
         '333': {

@@ -239,7 +239,7 @@ export class LedgerConnectComponent extends React.Component<
                     const message = err?.message || '';
                     if (message?.indexOf('denied by the user') >= 0) {
                         this.selectStep(ScreenStep.SIGN_DECLINED);
-                    } else if (message?.includes('Please enable Contract data') >= 0) {
+                    } else if (message?.includes('Please enable Contract data')) {
                         this.selectStep(ScreenStep.WARNING_SMART_CONTRACT_NOT_ALLOWED);
                     } else {
                         this.selectStep(ScreenStep.ERROR_SCREEN);

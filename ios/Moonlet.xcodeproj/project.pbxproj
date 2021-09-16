@@ -21,8 +21,6 @@
 		5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		5E7A08AB2358ADFE0036C459 /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7A08AA2358ADFD0036C459 /* icons.ttf */; };
 		5E7A08AC2358ADFE0036C459 /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7A08AA2358ADFD0036C459 /* icons.ttf */; };
-		5EC86C12268DD5D1005E3A4D /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC86C11268DD5D1005E3A4D /* libswiftWebKit.tbd */; };
-		5EC86C13268DDFB6005E3A4D /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC86C11268DD5D1005E3A4D /* libswiftWebKit.tbd */; };
 		70133443239D936C0074E5DF /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70133442239D936C0074E5DF /* PushKit.framework */; };
 		70133445239DA4C60074E5DF /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70133442239D936C0074E5DF /* PushKit.framework */; };
 		70133447239DA8C20074E5DF /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70133446239DA8C20074E5DF /* CallKit.framework */; };
@@ -67,7 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EC86C12268DD5D1005E3A4D /* libswiftWebKit.tbd in Frameworks */,
 				70133448239DA8CC0074E5DF /* CallKit.framework in Frameworks */,
 				70133445239DA4C60074E5DF /* PushKit.framework in Frameworks */,
 				999B626EFCF64A4C9E947F78 /* libz.tbd in Frameworks */,
@@ -79,7 +76,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EC86C13268DDFB6005E3A4D /* libswiftWebKit.tbd in Frameworks */,
 				70133443239D936C0074E5DF /* PushKit.framework in Frameworks */,
 				70133447239DA8C20074E5DF /* CallKit.framework in Frameworks */,
 				505575AB719030E800E60C19 /* libPods-Moonlet-Moonlet_beta.a in Frameworks */,

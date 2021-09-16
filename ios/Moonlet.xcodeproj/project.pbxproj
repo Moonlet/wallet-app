@@ -205,7 +205,7 @@
 				139B7750897C48308C1B5EA3 /* Upload Debug Symbols to Sentry */,
 				2DCF82DFBCC9D8B74C0C2376 /* [CP-User] [RNFB] Core Configuration */,
 				8E235650F9363C1EF5FEAF75 /* [CP] Copy Pods Resources */,
-				DDE50ABCABDEC5B6A50CC6A9 /* [CP] Embed Pods Frameworks */,
+				6C321C0FEA2242D8FF385B2F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -228,7 +228,7 @@
 				5E7A089A2358A3840036C459 /* Bundle React Native code and images */,
 				9744832723759AA4007961DB /* Upload Debug Symbols to Sentry */,
 				877771BE576010CCD1A8A3F7 /* [CP] Copy Pods Resources */,
-				6B12FFD928A8D106417C7741 /* [CP] Embed Pods Frameworks */,
+				596F4DCBE97E13EC48DC9AD4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -369,6 +369,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		596F4DCBE97E13EC48DC9AD4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		5E7A08912358A3840036C459 /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -402,13 +420,13 @@
 			shellPath = /bin/sh;
 			shellScript = "# enable RAM Bundle \nexport BUNDLE_COMMAND=\"ram-bundle\"\n\n# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n# Trying notion\nif [ -z \"$NODE_BINARY\" ]; then\nif [[ -s \"$HOME/.notion/bin/node\" ]]; then\nexport NODE_BINARY=\"$HOME/.notion/bin/node\"\nfi\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\nif [ \"${CONFIGURATION}\" != \"Debug\" ]; then\n  $NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli --log-level DEBUG react-native xcode \\\n    ../node_modules/react-native/scripts/react-native-xcode.sh\nelse\n  ../node_modules/react-native/scripts/react-native-xcode.sh  \nfi\n\n";
 		};
-		6B12FFD928A8D106417C7741 /* [CP] Embed Pods Frameworks */ = {
+		6C321C0FEA2242D8FF385B2F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Moonlet/Pods-Moonlet-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -417,7 +435,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Moonlet/Pods-Moonlet-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		877771BE576010CCD1A8A3F7 /* [CP] Copy Pods Resources */ = {
@@ -559,24 +577,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n# Trying notion\nif [ -z \"$NODE_BINARY\" ]; then\nif [[ -s \"$HOME/.notion/bin/node\" ]]; then\nexport NODE_BINARY=\"$HOME/.notion/bin/node\"\nfi\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\nif [ \"${CONFIGURATION}\" != \"Debug\" ]; then\n# Run sentry cli script to upload debug symbols\n  $NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli upload-dif \"$DWARF_DSYM_FOLDER_PATH\"\nfi \n";
-		};
-		DDE50ABCABDEC5B6A50CC6A9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Moonlet/Pods-Moonlet-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Moonlet/Pods-Moonlet-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;

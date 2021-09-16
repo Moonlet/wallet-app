@@ -23,6 +23,6 @@ target 'Moonlet' do
        config.build_settings.delete 'ARCHS'
       end
      end
-     system("./pods.sh")
+    system("./pods.sh")
   end
 end

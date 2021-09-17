@@ -91,8 +91,8 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getCurrentBlockHash(): Promise<string> {
-        return this.http.jsonRpc('getRecentBlockhash', []).then(res => {
-            return res.result.value.blockhash;
+        return this.http.jsonRpc('getRecentBlockhash', [{ commitment: 'finalized' }]).then(res => {
+            return res?.result?.value?.blockhash;
         });
     }
 

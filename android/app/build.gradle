@@ -133,6 +133,10 @@ com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    compileOptions {
+         sourceCompatibility JavaVersion.VERSION_1_8
+         targetCompatibility JavaVersion.VERSION_1_8
+     }
 
     dexOptions {
        javaMaxHeapSize "4g"

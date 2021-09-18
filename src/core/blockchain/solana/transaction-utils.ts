@@ -18,10 +18,10 @@ export const solanaSwapInstruction = (
 
     const keys = [
         // spl token
-        { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+        { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
         // amm
         { pubkey: new PublicKey(poolInfo.ammId), isSigner: false, isWritable: true },
-        { pubkey: new PublicKey(poolInfo.ammAuthority), isSigner: false, isWritable: true },
+        { pubkey: new PublicKey(poolInfo.ammAuthority), isSigner: false, isWritable: false },
         { pubkey: new PublicKey(poolInfo.ammOpenOrders), isSigner: false, isWritable: true },
         { pubkey: new PublicKey(poolInfo.ammTargetOrders), isSigner: false, isWritable: true },
         {
@@ -35,7 +35,7 @@ export const solanaSwapInstruction = (
             isWritable: true
         },
         // serum
-        { pubkey: new PublicKey(poolInfo.serumProgramId), isSigner: false, isWritable: true },
+        { pubkey: new PublicKey(poolInfo.serumProgramId), isSigner: false, isWritable: false },
         { pubkey: new PublicKey(poolInfo.serumMarket), isSigner: false, isWritable: true },
         { pubkey: new PublicKey(poolInfo.serumBids), isSigner: false, isWritable: true },
         { pubkey: new PublicKey(poolInfo.serumAsks), isSigner: false, isWritable: true },
@@ -50,10 +50,10 @@ export const solanaSwapInstruction = (
             isSigner: false,
             isWritable: true
         },
-        { pubkey: new PublicKey(poolInfo.serumVaultSigner), isSigner: false, isWritable: true },
+        { pubkey: new PublicKey(poolInfo.serumVaultSigner), isSigner: false, isWritable: false },
         { pubkey: userSourceTokenAccount, isSigner: false, isWritable: true },
         { pubkey: userDestTokenAccount, isSigner: false, isWritable: true },
-        { pubkey: userOwner, isSigner: true, isWritable: true }
+        { pubkey: userOwner, isSigner: true, isWritable: false }
     ];
 
     const data = Buffer.alloc(dataLayout.span);

@@ -1,6 +1,6 @@
-Team's log. Stardate 2109.08:
+Team's log. Stardate 2109.17:
 
-Solana SWAP is here. SPL tokens too. The new ETH fees improvements were implemented as well. So far so good. :)
+This time we have pushed live some fixes for Solana Swap, after the last network upgrade swap transactions were failing because of an unexpected feature activation.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

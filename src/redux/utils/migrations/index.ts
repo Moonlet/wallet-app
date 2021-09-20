@@ -13,6 +13,7 @@ import v13 from './013';
 import v14 from './014';
 import v15 from './015';
 import v16 from './016';
+import v17 from './017';
 
 export const migrations: any = {
     /**
@@ -74,5 +75,9 @@ export const migrations: any = {
     /**
      * Add SOL SPL coins - 27 Jul 2021
      */
-    16: v16
+    16: v16,
+    /**
+     * Add ZIL XCAD coin - 14 Sept 2021
+     */
+    17: v17
 };

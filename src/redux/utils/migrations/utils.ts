@@ -1,15 +1,17 @@
 import { accountToken } from '../../tokens/static-selectors';
 import { Blockchain } from '../../../core/blockchain/types';
 import { IWalletState } from '../../wallets/state';
+import { ITokenConfigState } from '../../tokens/state';
 
 export const addToken = (
     state: any,
-    token: any,
+    token: ITokenConfigState,
     data: {
         blockchain: Blockchain;
         chainId: string;
         tokenActive: boolean;
         order?: number;
+        changeOrder?: number;
     }
 ) => {
     if (
@@ -42,6 +44,16 @@ export const addToken = (
             if (account.blockchain === data.blockchain) {
                 if (account.tokens[data.chainId] && account.tokens[data.chainId][token.symbol]) {
                     // Token has been already added
+                    if (data?.changeOrder) {
+                        // Add Token
+                        account.tokens[data.chainId][token.symbol] = accountToken(
+                            token.symbol,
+                            data.changeOrder,
+                            {
+                                active: data.tokenActive
+                            }
+                        );
+                    }
                 } else {
                     // Add Token
                     account.tokens[data.chainId][token.symbol] = accountToken(

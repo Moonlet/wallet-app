@@ -130,6 +130,7 @@ export class FeeOptionsComponent extends React.Component<
 
         if (typedTransaction === TypedTransaction.TYPE_0) {
             const gasPrice = new BigNumber(this.state.feeOptions.presets[key].gasPrice);
+
             feeOptions = {
                 ...this.state.feeOptions,
                 gasPrice: gasPrice.toString(),
@@ -239,6 +240,8 @@ export class FeeOptionsComponent extends React.Component<
                                                       .multipliedBy(this.state.feeOptions.gasLimit)
                                                       .toString()
                                                 : this.state.feeOptions.presets[item].gasPrice
+                                                      .multipliedBy(this.state.feeOptions.gasLimit)
+                                                      .toString()
                                         }
                                         blockchain={this.props.account.blockchain}
                                         title={translate('App.labels.' + item)}

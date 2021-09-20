@@ -12,7 +12,8 @@ import {
     IBlockchainConfig,
     IFeeOptions,
     ChainIdType,
-    TransactionType
+    TransactionType,
+    TypedTransaction
 } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
@@ -23,6 +24,9 @@ import { connect } from 'react-redux';
 import bind from 'bind-decorator';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { getSelectedWallet } from '../../../../redux/wallets/selectors';
+import { WalletType } from '../../../../core/wallet/types';
+import { Eip1559FeesAvanced } from '../eip1559-fees-advanced/eip1559-fees-advanced';
 
 export interface IExternalProps {
     transactionType: TransactionType;
@@ -50,6 +54,7 @@ interface IState {
 
 interface IReduxProps {
     chainId: ChainIdType;
+    walletType: WalletType;
 }
 
 export class FeeOptionsComponent extends React.Component<
@@ -96,6 +101,7 @@ export class FeeOptionsComponent extends React.Component<
                     amount: '1',
                     contractAddress: tokenSendingToken.contractAddress
                 },
+                blockchainInstance.config.typedTransaction[this.props.walletType],
                 tokenSendingToken.type
             );
 
@@ -115,22 +121,44 @@ export class FeeOptionsComponent extends React.Component<
 
     @bind
     public onSelectFeePreset(key: string) {
-        const gasPrice = new BigNumber(this.state.feeOptions.presets[key]);
+        const typedTransaction = this.state.blockchainConfig.typedTransaction[
+            this.props.walletType
+        ];
+
+        let feeOptions = {};
         const gasLimit = new BigNumber(this.state.feeOptions.gasLimit);
 
-        this.setState({
-            selectedPreset: key,
-            feeOptions: {
+        if (typedTransaction === TypedTransaction.TYPE_0) {
+            const gasPrice = new BigNumber(this.state.feeOptions.presets[key].gasPrice);
+            feeOptions = {
                 ...this.state.feeOptions,
                 gasPrice: gasPrice.toString(),
                 gasLimit: gasLimit.toString(),
                 feeTotal: gasPrice.multipliedBy(gasLimit).toString()
-            }
-        });
-        this.props.onFeesChanged({
-            gasPrice: gasPrice.toString(),
-            gasLimit: gasLimit.toString(),
-            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            };
+            this.props.onFeesChanged({
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            });
+        } else {
+            const maxFeePerGas = new BigNumber(this.state.feeOptions.presets[key].maxFeePerGas);
+            feeOptions = {
+                ...this.state.feeOptions,
+                maxFeePerGas: maxFeePerGas.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: maxFeePerGas.multipliedBy(gasLimit).toString()
+            };
+            this.props.onFeesChanged({
+                maxFeePerGas: maxFeePerGas.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: maxFeePerGas.multipliedBy(gasLimit).toString()
+            });
+        }
+
+        this.setState({
+            selectedPreset: key,
+            feeOptions
         });
     }
 
@@ -138,6 +166,23 @@ export class FeeOptionsComponent extends React.Component<
     public onInputAdvancedFees(gasPrice: string, gasLimit: string, feeTotal: string) {
         const feeOptions: IFeeOptions = {
             gasPrice,
+            gasLimit,
+            feeTotal,
+            presets: this.state.feeOptions?.presets
+        };
+        this.setState({ feeOptions });
+        this.props.onFeesChanged(feeOptions);
+    }
+    @bind
+    public onInputEip1559AdvancedFees(
+        maxFeePerGas: string,
+        maxPriorityFeePerGas: string,
+        gasLimit: string,
+        feeTotal: string
+    ) {
+        const feeOptions: IFeeOptions = {
+            maxFeePerGas,
+            maxPriorityFeePerGas,
             gasLimit,
             feeTotal,
             presets: this.state.feeOptions?.presets
@@ -186,9 +231,15 @@ export class FeeOptionsComponent extends React.Component<
                                     <FeePreset
                                         key={item}
                                         token={this.props.token}
-                                        amount={this.state.feeOptions.presets[item]
-                                            .multipliedBy(this.state.feeOptions.gasLimit)
-                                            .toString()}
+                                        amount={
+                                            this.state.blockchainConfig.typedTransaction[
+                                                this.props.walletType
+                                            ] === TypedTransaction.TYPE_2
+                                                ? this.state.feeOptions.presets[item].maxFeePerGas
+                                                      .multipliedBy(this.state.feeOptions.gasLimit)
+                                                      .toString()
+                                                : this.state.feeOptions.presets[item].gasPrice
+                                        }
                                         blockchain={this.props.account.blockchain}
                                         title={translate('App.labels.' + item)}
                                         presetKey={item}
@@ -209,7 +260,11 @@ export class FeeOptionsComponent extends React.Component<
         }
     }
     public renderAdvancedFees() {
-        if (this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced === 'GasFeeAdvanced') {
+        if (
+            this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced[
+                this.props.walletType
+            ] === 'GasFeeAdvanced'
+        ) {
             return (
                 this.state.feeOptions && (
                     <GasFeeAvanced
@@ -218,6 +273,27 @@ export class FeeOptionsComponent extends React.Component<
                         blockchain={this.props.account.blockchain}
                         onInputFees={this.onInputAdvancedFees}
                         token={this.props.token}
+                        options={{
+                            feeTotalBackgroundColor: this.props.options?.feeTotalBackgroundColor,
+                            feeLabelLeftPadding: this.props.options?.feeLabelLeftPadding
+                        }}
+                    />
+                )
+            );
+        } else if (
+            this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced[
+                this.props.walletType
+            ] === 'Eip1559FeesAvanced'
+        ) {
+            return (
+                this.state.feeOptions && (
+                    <Eip1559FeesAvanced
+                        token={this.props.token}
+                        maxPriorityFeePerGas={this.state.feeOptions.maxPriorityFeePerGas}
+                        maxFeePerGas={this.state.feeOptions.maxFeePerGas}
+                        gasLimit={this.state.feeOptions.gasLimit}
+                        blockchain={this.props.account.blockchain}
+                        onInputFees={this.onInputEip1559AdvancedFees}
                         options={{
                             feeTotalBackgroundColor: this.props.options?.feeTotalBackgroundColor,
                             feeLabelLeftPadding: this.props.options?.feeLabelLeftPadding
@@ -290,8 +366,11 @@ export class FeeOptionsComponent extends React.Component<
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    const selectedWallet = getSelectedWallet(state);
+
     return {
-        chainId: getChainId(state, ownProps.account.blockchain)
+        chainId: getChainId(state, ownProps.account.blockchain),
+        walletType: selectedWallet.type
     };
 };
 

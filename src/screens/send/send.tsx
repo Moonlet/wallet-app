@@ -408,8 +408,9 @@ export class SendScreenComponent extends React.Component<
                     this.state.amount === '' ||
                     this.state.insufficientFunds ||
                     this.state.insufficientFundsFees ||
-                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-                    isNaN(Number(this.state.feeOptions?.gasPrice))
+                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true // ||
+                    // (isNaN(Number(this.state.feeOptions?.gasPrice)) === true &&
+                    //     isNaN(Number(this.state.feeOptions?.maxFeePerGas)))
                 )
                     disableButton = true;
                 break;

@@ -501,7 +501,7 @@ export const updateTransactionFromBlockchain = (
 
     const wallets = getWalletWithAddress(
         state,
-        [transaction.address.toLowerCase(), receivingAddress.toLowerCase()],
+        [transaction.address.toLowerCase(), receivingAddress?.toLowerCase()],
         blockchain
     );
 
@@ -523,7 +523,7 @@ export const updateTransactionFromBlockchain = (
                 ? wallets.find(loopWallet =>
                       loopWallet.accounts.some(
                           account =>
-                              account.address.toLowerCase() === receivingAddress.toLowerCase()
+                              account.address.toLowerCase() === receivingAddress?.toLowerCase()
                       )
                   )
                 : wallets[0];
@@ -532,7 +532,7 @@ export const updateTransactionFromBlockchain = (
         if (wallet) {
             transactionAccount =
                 wallet.accounts.find(
-                    account => account.address.toLowerCase() === receivingAddress.toLowerCase()
+                    account => account.address.toLowerCase() === receivingAddress?.toLowerCase()
                 ) ||
                 wallet.accounts.find(
                     account => account.address.toLowerCase() === transaction.address.toLowerCase()
@@ -696,7 +696,9 @@ export const sendTransferTransaction = (
             amount: blockchainInstance.account.amountToStd(amount, tokenConfig.decimals).toFixed(),
             token,
             feeOptions: {
-                gasPrice: feeOptions.gasPrice.toString(),
+                gasPrice: feeOptions.gasPrice?.toString(),
+                maxFeePerGas: feeOptions.maxFeePerGas?.toString(),
+                maxPriorityFeePerGas: feeOptions.maxPriorityFeePerGas?.toString(),
                 gasLimit: feeOptions.gasLimit.toString()
             },
             extraFields

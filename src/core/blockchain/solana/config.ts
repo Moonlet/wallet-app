@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, TypedTransaction } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import SolIcon from '../../../assets/icons/blockchains/sol.svg';
@@ -6,13 +6,12 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 import { AccountType } from '../../../redux/wallets/state';
 import { IconValues } from '../../../components/icon/values';
-// import { USDC_MAINNET, USDC_TESTNET } from './tokens/usdc';
-// import { USDT_MAINNET } from './tokens/usdt';
-// import { BTC_MAINNET } from './tokens/btc';
-// import { ETH_MAINNET } from './tokens/eth';
-// import { SRM_MAINNET } from './tokens/srm';
-// import { LINK_MAINNET } from './tokens/link';
-// import { UNI_MAINNET } from './tokens/uni';
+import { USDC_MAINNET, USDC_TESTNET } from './tokens/usdc';
+import { USDT_MAINNET } from './tokens/usdt';
+import { BTC_MAINNET } from './tokens/btc';
+import { ETH_MAINNET } from './tokens/eth';
+import { SRM_MAINNET } from './tokens/srm';
+import { RAY_MAINNET } from './tokens/ray';
 
 export const SOL_NATIVE: ITokenConfigState = {
     name: 'Solana',
@@ -112,21 +111,24 @@ export const config: IBlockchainConfig = {
     droppedTxBlocksThreshold: 360,
     iconComponent: SolIcon,
     autoAddedTokensSymbols: {
-        // '1': {
-        //     USDT: USDT_MAINNET,
-        //     USDC: USDC_MAINNET,
-        //     BTC: BTC_MAINNET,
-        //     ETH: ETH_MAINNET,
-        //     SRM: SRM_MAINNET,
-        //     LINK: LINK_MAINNET,
-        //     UNI: UNI_MAINNET
-        // },
-        // '3': {
-        //     USDC: USDC_TESTNET
-        // }
+        '1': {
+            USDT: USDT_MAINNET,
+            USDC: USDC_MAINNET,
+            BTC: BTC_MAINNET,
+            ETH: ETH_MAINNET,
+            SRM: SRM_MAINNET,
+            RAY: RAY_MAINNET
+        },
+        '3': {
+            USDC: USDC_TESTNET
+        }
     },
     tokens: {
         SOL: SOL_NATIVE
+    },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
     },
     feeOptions: {
         gasPriceToken: 'SOL',
@@ -140,7 +142,10 @@ export const config: IBlockchainConfig = {
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: {
+                HD: 'GasFeeAdvanced',
+                HW: 'GasFeeAdvanced'
+            },
             gasPriceUnit: 'LA'
         }
     },

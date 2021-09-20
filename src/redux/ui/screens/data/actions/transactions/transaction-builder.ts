@@ -10,7 +10,7 @@ import {
 import { TransactionStatus } from '../../../../../../core/wallet/types';
 import { getChainId } from '../../../../../preferences/selectors';
 import { IReduxState } from '../../../../../state';
-import { getSelectedAccount } from '../../../../../wallets/selectors';
+import { getSelectedAccount, getSelectedWallet } from '../../../../../wallets/selectors';
 import { getTokenConfig } from '../../../../../tokens/static-selectors';
 import { IContractCallParams } from '.';
 import {
@@ -29,7 +29,10 @@ const contractCallFunctionsWhitelist = {
         ContractMethod.SWAP_EXACT_TOKENS_FOR_TOKENS
     ],
     [Blockchain.ETHEREUM]: [ContractMethod.INCREASE_ALLOWANCE, ContractMethod.DELEGATE],
-    [Blockchain.SOLANA]: [ContractMethod.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT]
+    [Blockchain.SOLANA]: [
+        ContractMethod.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT,
+        ContractMethod.SWAP
+    ]
 };
 
 const isWhitelistedMethod = (blockchain: Blockchain, method: string): boolean => {
@@ -44,6 +47,7 @@ export const buildContractCallTransaction = async (
     const state = getState();
     const account = getSelectedAccount(state);
     const chainId = getChainId(state, account.blockchain);
+    const walletType = getSelectedWallet(state).type;
 
     const blockchainInstance = getBlockchain(account.blockchain);
 
@@ -104,7 +108,7 @@ export const buildContractCallTransaction = async (
 
             case Blockchain.SOLANA: {
                 switch (params.additionalInfo.posAction) {
-                    case PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT:
+                    case PosBasicActionType.SOLANA_CREATE_ASSOCIATED_TOKEN_ACCOUNT: {
                         const blockHash = await client.getCurrentBlockHash();
 
                         params.additionalInfo = {
@@ -115,6 +119,20 @@ export const buildContractCallTransaction = async (
                             tokenSymbol: params.additionalInfo.tokenSymbol
                         };
                         break;
+                    }
+
+                    case PosBasicActionType.SWAP: {
+                        const blockHash = await client.getCurrentBlockHash();
+
+                        params.additionalInfo = {
+                            ...params.additionalInfo,
+                            type: SolanaTransactionInstructionType.SWAP,
+                            instructions: params.additionalInfo.instructions,
+                            currentBlockHash: blockHash,
+                            posAction: PosBasicActionType.SWAP
+                        };
+                        break;
+                    }
                 }
 
                 break;
@@ -179,6 +197,7 @@ export const buildContractCallTransaction = async (
                         contractAddress,
                         raw
                     },
+                    getBlockchain(account.blockchain).config.typedTransaction[walletType],
                     tokenType
                 );
             } catch (error) {

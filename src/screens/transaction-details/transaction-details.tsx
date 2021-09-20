@@ -34,6 +34,7 @@ import { Capitalize } from '../../core/utils/format-string';
 import { TransactionStatus } from '../../core/wallet/types';
 import { Client as ZilliqaClient } from '../../core/blockchain/zilliqa/client';
 import { Client as SolanaClient } from '../../core/blockchain/solana/client';
+import { Client as EthClient } from '../../core/blockchain/ethereum/client';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
@@ -44,6 +45,7 @@ import {
 } from '@sentry/react-native';
 import { removeTransaction, updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { NavigationService } from '../../navigation/navigation-service';
+import { isSwapTx } from '../../core/utils/swap';
 
 interface IReduxProps {
     account: IAccountState;
@@ -229,6 +231,30 @@ class TransactionDetailsComponent extends React.Component<
                 );
             }
         }
+
+        if (blockchain === Blockchain.ETHEREUM) {
+            const blockchainConfig = getBlockchain(blockchain);
+            const ethClient = blockchainConfig.getClient(chainId) as EthClient;
+
+            try {
+                const txFees = await ethClient.getTransactionFees(transaction.id);
+
+                txFees && this.setState({ txFees });
+            } catch (error) {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({
+                        data: {
+                            txId: transaction.id
+                        },
+                        error
+                    })
+                });
+
+                SentryCaptureException(
+                    new Error(`Fetch Eth getTransactionFees, ${error?.message}`)
+                );
+            }
+        }
     }
 
     public componentDidUpdate(prevProps: INavigationParams & IReduxProps) {
@@ -297,11 +323,15 @@ class TransactionDetailsComponent extends React.Component<
 
         let recipient =
             tokenType === TokenType.ZRC2 || tokenType === TokenType.ERC20
-                ? formatAddress(transaction.data.params[0], blockchain)
-                : formatAddress(transaction.toAddress, blockchain);
+                ? transaction.data.params[0]
+                : transaction.toAddress;
 
         if (transaction?.additionalInfo?.validatorName) {
             recipient = transaction.additionalInfo.validatorName;
+        }
+
+        if (blockchain === Blockchain.SOLANA && transaction.additionalInfo?.stakeAccountKey) {
+            recipient = transaction.additionalInfo.stakeAccountKey;
         }
 
         let transactionType = translate('App.labels.transfer');
@@ -363,6 +393,20 @@ class TransactionDetailsComponent extends React.Component<
 
                     {this.renderRow(transactionType, translate('Transaction.transactionType'))}
 
+                    {isSwapTx(transaction) &&
+                        this.renderRow(
+                            transaction.additionalInfo?.swap.fromTokenAmount +
+                                ' ' +
+                                transaction.additionalInfo?.swap.fromTokenSymbol +
+                                ' ' +
+                                translate('App.labels.to').toLowerCase() +
+                                ' ' +
+                                transaction.additionalInfo?.swap.toTokenAmount +
+                                ' ' +
+                                transaction.additionalInfo?.swap.toTokenSymbol,
+                            translate('App.labels.swap')
+                        )}
+
                     {isZilRewardsFlow ? (
                         <View>
                             {/* ZILLIQA ZIL and gZIL rewards */}
@@ -411,9 +455,62 @@ class TransactionDetailsComponent extends React.Component<
                                 blockchain={blockchain}
                                 token={coin}
                                 tokenDecimals={nativeCoinTokenConfig.decimals}
-                                uiDecimals={6}
+                                uiDecimals={20}
                             />
                             <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
+                        </View>
+                    )}
+                    {this.state.txFees?.gasPrice && (
+                        <View style={styles.rowContainer}>
+                            <Amount
+                                style={styles.textPrimary}
+                                amount={this.state.txFees.gasPrice}
+                                blockchain={blockchain}
+                                token={coin}
+                                tokenDecimals={nativeCoinTokenConfig.decimals}
+                                uiDecimals={20}
+                            />
+                            <Text style={styles.textSecondary}>{translate('Fee.gasPrice')}</Text>
+                        </View>
+                    )}
+
+                    {this.state.txFees?.gasLimit && (
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.textPrimary}>
+                                {parseInt(this.state.txFees.gasLimit, 16)}
+                            </Text>
+                            <Text style={styles.textSecondary}>{translate('Fee.gasLimit')}</Text>
+                        </View>
+                    )}
+
+                    {this.state.txFees?.maxPriorityFeePerGas && (
+                        <View style={styles.rowContainer}>
+                            <Amount
+                                style={styles.textPrimary}
+                                amount={this.state.txFees.maxFeePerGas}
+                                blockchain={blockchain}
+                                token={coin}
+                                tokenDecimals={nativeCoinTokenConfig.decimals}
+                                uiDecimals={20}
+                            />
+                            <Text style={styles.textSecondary}>
+                                {translate('Fee.maxPriorityFeePerGas')}
+                            </Text>
+                        </View>
+                    )}
+                    {this.state.txFees?.maxFeePerGas && (
+                        <View style={styles.rowContainer}>
+                            <Amount
+                                style={styles.textPrimary}
+                                amount={this.state.txFees.maxFeePerGas}
+                                blockchain={blockchain}
+                                token={coin}
+                                tokenDecimals={nativeCoinTokenConfig.decimals}
+                                uiDecimals={15}
+                            />
+                            <Text style={styles.textSecondary}>
+                                {translate('Fee.maxFeePerGas')}
+                            </Text>
                         </View>
                     )}
 
@@ -430,12 +527,31 @@ class TransactionDetailsComponent extends React.Component<
                             translate('App.labels.errorMessage')
                         )}
 
-                    {this.renderRow(
-                        formatAddress(transaction.address, account.blockchain),
-                        translate('App.labels.sender')
-                    )}
+                    <TouchableOpacity
+                        onPress={() => {
+                            Clipboard.setString(transaction.address);
+                            Dialog.info(
+                                translate('App.labels.copied'),
+                                String(transaction.address)
+                            );
+                        }}
+                    >
+                        {this.renderRow(
+                            formatAddress(transaction.address, account.blockchain),
+                            translate('App.labels.sender')
+                        )}
+                    </TouchableOpacity>
 
-                    {this.renderRow(recipient, translate('App.labels.recipient'))}
+                    {recipient && recipient !== '' && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                Clipboard.setString(recipient);
+                                Dialog.info(translate('App.labels.copied'), String(recipient));
+                            }}
+                        >
+                            {this.renderRow(recipient, translate('App.labels.recipient'))}
+                        </TouchableOpacity>
+                    )}
 
                     <TouchableOpacity
                         testID={'transaction-id'}

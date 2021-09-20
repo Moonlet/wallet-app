@@ -1,5 +1,11 @@
 import { Client } from '../client';
-import { IPosTransaction, IBlockchainTransaction, TransactionType, Contracts } from '../../types';
+import {
+    IPosTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    Contracts,
+    TypedTransaction
+} from '../../types';
 import { IValidator } from '../../types/stats';
 import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract } from './base-contract';
@@ -31,6 +37,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            tx.extraFields.typedTransaction || TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -71,6 +78,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            tx.extraFields.typedTransaction || TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -110,6 +118,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            tx.extraFields.typedTransaction || TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;
@@ -156,6 +165,7 @@ export class Staking {
                 contractAddress,
                 raw
             },
+            tx.extraFields.typedTransaction || TypedTransaction.TYPE_0,
             TokenType.ERC20
         );
         transaction.feeOptions = fees;

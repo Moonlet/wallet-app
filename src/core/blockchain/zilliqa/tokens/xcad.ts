@@ -9,7 +9,7 @@ export const XCAD_MAINNET: ITokenConfigState = {
     },
     contractAddress: 'zil1h63h5rlg7avatnlzhfnfzwn8vfspwkapzdy2aw',
     removable: true,
-    defaultOrder: 999,
+    defaultOrder: 910, // 3rd position
     decimals: 6,
     ui: {
         decimals: 3,

@@ -3,7 +3,8 @@ import {
     ChainIdType,
     IBlockInfo,
     TransactionType,
-    IBalance
+    IBalance,
+    TypedTransaction
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
@@ -94,6 +95,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getFees(
         transactionType: TransactionType,
+
         data: {
             from?: string;
             to?: string;
@@ -101,10 +103,12 @@ export class Client extends BlockchainGenericClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction: TypedTransaction = TypedTransaction.TYPE_0,
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasPrice =
-            config.feeOptions.defaults.gasPricePresets.low || config.feeOptions.defaults.gasPrice;
+            config.feeOptions.defaults.gasPricePresets.low.gasPrice ||
+            config.feeOptions.defaults.gasPrice;
         const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();
         const feeTotal = gasPrice.multipliedBy(new BigNumber(gasLimit)).toFixed();
 

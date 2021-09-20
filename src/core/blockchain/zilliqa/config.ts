@@ -1,7 +1,12 @@
 import { Platform } from 'react-native';
 import { BigNumber } from 'bignumber.js';
 
-import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
+import {
+    IBlockchainConfig,
+    DerivationType,
+    BlockchainNameService,
+    TypedTransaction
+} from '../types';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
@@ -25,6 +30,7 @@ import { ZLF_MAINNET } from './tokens/zlf';
 import { ZLP_MAINNET } from './tokens/zlp';
 import { ZYF_MAINNET } from './tokens/zyf';
 import { ZYRO_MAINNET } from './tokens/zyro';
+import { XCAD_MAINNET } from './tokens/xcad';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -150,11 +156,16 @@ export const config: IBlockchainConfig = {
     autoAddedTokensSymbols: {
         '1': {
             gZIL: GZIL_MAINNET,
+            XCAD: XCAD_MAINNET,
             XSGD: XSGD_MAINNET
         },
         '333': {
             gZIL: GZIL_TESTNET
         }
+    },
+    typedTransaction: {
+        HD: TypedTransaction.TYPE_0,
+        HW: TypedTransaction.TYPE_0
     },
     autoAddedHiddenTokensSymbols: {
         '1': {
@@ -189,7 +200,10 @@ export const config: IBlockchainConfig = {
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: {
+                HD: 'GasFeeAdvanced',
+                HW: 'GasFeeAdvanced'
+            },
             gasPriceUnit: 'LI'
         }
     },

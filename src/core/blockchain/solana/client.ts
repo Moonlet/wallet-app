@@ -6,7 +6,8 @@ import {
     IBalance,
     IBlockInfo,
     ITransactionFees,
-    TransactionType
+    TransactionType,
+    TypedTransaction
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
@@ -20,7 +21,8 @@ import { ApiClient } from '../../utils/api-client/api-client';
 import { SplClient } from './tokens/spl-client';
 
 export class Client extends BlockchainGenericClient {
-    private connection;
+    private connection: Connection;
+
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
@@ -89,8 +91,8 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getCurrentBlockHash(): Promise<string> {
-        return this.http.jsonRpc('getRecentBlockhash', []).then(res => {
-            return res.result.value.blockhash;
+        return this.http.jsonRpc('getRecentBlockhash', [{ commitment: 'finalized' }]).then(res => {
+            return res?.result?.value?.blockhash;
         });
     }
 
@@ -172,6 +174,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getFees(
         transactionType: TransactionType,
+
         data: {
             from?: string;
             to?: string;
@@ -179,6 +182,7 @@ export class Client extends BlockchainGenericClient {
             contractAddress?: string;
             raw?: string;
         },
+        typedTransaction: TypedTransaction = TypedTransaction.TYPE_0,
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();

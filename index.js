@@ -39,11 +39,8 @@ import PushNotification from 'react-native-push-notification';
 import { notificationHandler } from './src/core/messaging/handlers/notification';
 
 // TODO remove this when fixed
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['RCTRootView cancelTouches', 'Require cycle']);
-YellowBox.ignoreWarnings([
-    'VirtualizedLists should never be nested' // TODO: Remove when fixed
-]);
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['RCTRootView cancelTouches', 'Require cycle']);
 
 // console.disableYellowBox = true;
 

@@ -54,7 +54,7 @@ jobs:
 
   deploy-ios:
     name: iOS app
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - uses: actions/setup-node@v1
         with:
@@ -89,7 +89,7 @@ jobs:
       - name: Generate fonts and icons
         run: yarn run generate-icons
       - name: Run fastlane deploy
-        run: xcversion select 12.0.1 && cd ios/fastlane && bundle exec fastlane deploy
+        run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane deploy
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           # FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}

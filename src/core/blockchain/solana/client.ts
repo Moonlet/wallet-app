@@ -60,7 +60,7 @@ export class Client extends BlockchainGenericClient {
                 deactivating: data?.balance?.deactivating || balance.deactivating,
                 activating: data?.balance?.activating || balance.activating,
                 reward: data?.balance?.reward || balance.reward,
-                detailed: data?.balance?.detailed || {}
+                detailed: data?.balance?.detailed || balance.detailed
             };
         } catch {
             // no need to handle this

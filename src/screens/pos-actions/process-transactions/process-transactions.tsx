@@ -204,14 +204,9 @@ class ProcessTransactionsComponent extends React.Component<
                         nativeTokenState,
                         this.props.chainId,
                         {
-                            balanceAvailable:
-                                blockchain === Blockchain.SOLANA &&
-                                nativeTokenState?.balance?.available &&
-                                nativeTokenState?.balance?.unstaked
-                                    ? new BigNumber(nativeTokenState.balance.available)
-                                          .plus(new BigNumber(nativeTokenState.balance.unstaked))
-                                          .toFixed()
-                                    : undefined
+                            balanceAvailable: new BigNumber(nativeTokenState.balance.available)
+                                .plus(new BigNumber(nativeTokenState.balance.unstaked))
+                                .toFixed()
                         }
                     );
                 }

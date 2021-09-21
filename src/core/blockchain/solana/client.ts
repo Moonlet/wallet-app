@@ -3,7 +3,7 @@ import {
     BlockchainGenericClient,
     ChainIdType,
     Contracts,
-    IBalance,
+    ISolanaBalance,
     IBlockInfo,
     ITransactionFees,
     TransactionType,
@@ -33,25 +33,40 @@ export class Client extends BlockchainGenericClient {
         this.tokens[TokenType.SPL] = new SplClient(this);
     }
 
-    public async getBalance(address: string): Promise<IBalance> {
+    public async getBalance(address: string): Promise<ISolanaBalance> {
+        let balance: ISolanaBalance = {
+            total: new BigNumber(0),
+            available: new BigNumber(0),
+            staked: new BigNumber(0),
+            unstaked: new BigNumber(0),
+            deactivating: new BigNumber(0),
+            activating: new BigNumber(0),
+            reward: new BigNumber(0),
+            detailed: {}
+        };
+
         try {
             const data = await new ApiClient().validators.getBalance(
                 address,
                 Blockchain.SOLANA,
                 this.chainId.toString()
             );
-            return {
-                total: data?.balance.total || new BigNumber(0),
-                available: data?.balance.available || new BigNumber(0),
-                detailed: data?.balance.detailed || {}
+
+            balance = {
+                total: data?.balance?.total || balance.total,
+                available: data?.balance?.available || balance.available,
+                staked: data?.balance?.staked || balance.staked,
+                unstaked: data?.balance?.unstaked || balance.unstaked,
+                deactivating: data?.balance?.deactivating || balance.deactivating,
+                activating: data?.balance?.activating || balance.activating,
+                reward: data?.balance?.reward || balance.reward,
+                detailed: data?.balance?.detailed || {}
             };
         } catch {
-            return {
-                total: new BigNumber(0),
-                available: new BigNumber(0),
-                detailed: {}
-            };
+            // no need to handle this
         }
+
+        return balance;
     }
 
     public async getTransactionFees(txHash: string): Promise<ITransactionFees> {

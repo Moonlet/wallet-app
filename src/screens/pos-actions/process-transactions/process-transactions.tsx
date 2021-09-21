@@ -151,21 +151,11 @@ class ProcessTransactionsComponent extends React.Component<
                     nativeTokenConfig.symbol
                 ];
 
-                const accountAvailableAmountForFees = await availableAmount(
+                let accountAvailableAmountForFees = await availableAmount(
                     this.props.selectedAccount,
                     nativeTokenState,
                     this.props.chainId,
-                    {
-                        // This is applied only on Solana, because you cand stake from unstaked balance
-                        balanceAvailable:
-                            blockchain === Blockchain.SOLANA &&
-                            nativeTokenState?.balance?.available &&
-                            nativeTokenState?.balance?.unstaked
-                                ? new BigNumber(nativeTokenState.balance.available)
-                                      .plus(new BigNumber(nativeTokenState.balance.unstaked))
-                                      .toFixed()
-                                : undefined
-                    }
+                    {}
                 );
 
                 let txValueToUseFromAmountStd = new BigNumber(0);
@@ -200,6 +190,30 @@ class ProcessTransactionsComponent extends React.Component<
                         isStakeAction = true;
                     }
                     feesAmountStd = feesAmountStd.plus(transaction.feeOptions?.feeTotal || '0');
+                }
+
+                // This is applied only on Solana, because you cand stake from unstaked balance
+                if (
+                    isStakeAction &&
+                    blockchain === Blockchain.SOLANA &&
+                    nativeTokenState?.balance?.available &&
+                    nativeTokenState?.balance?.unstaked
+                ) {
+                    accountAvailableAmountForFees = await availableAmount(
+                        this.props.selectedAccount,
+                        nativeTokenState,
+                        this.props.chainId,
+                        {
+                            balanceAvailable:
+                                blockchain === Blockchain.SOLANA &&
+                                nativeTokenState?.balance?.available &&
+                                nativeTokenState?.balance?.unstaked
+                                    ? new BigNumber(nativeTokenState.balance.available)
+                                          .plus(new BigNumber(nativeTokenState.balance.unstaked))
+                                          .toFixed()
+                                    : undefined
+                        }
+                    );
                 }
 
                 const feesAmount = blockchainInstance.account.amountFromStd(

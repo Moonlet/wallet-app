@@ -55,15 +55,18 @@ export interface ITokenState {
     symbol: string;
     order: number;
     active: boolean;
-    balance?: {
-        value: string;
-        inProgress: boolean;
-        timestamp: number;
-        error: any;
-        available: string;
-        total: string;
-        detailed: any;
-    };
+    balance?: ITokenStakeBalance;
+}
+
+export interface ITokenStakeBalance {
+    value: string;
+    inProgress: boolean;
+    timestamp: number;
+    error: any;
+    available: string;
+    total: string;
+    detailed: any;
+    unstaked?: string;
 }
 
 export enum AccountType {

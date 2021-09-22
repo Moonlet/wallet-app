@@ -151,7 +151,7 @@ class ProcessTransactionsComponent extends React.Component<
                     nativeTokenConfig.symbol
                 ];
 
-                const accountAvailableAmountForFees = await availableAmount(
+                let accountAvailableAmountForFees = await availableAmount(
                     this.props.selectedAccount,
                     nativeTokenState,
                     this.props.chainId,
@@ -190,6 +190,25 @@ class ProcessTransactionsComponent extends React.Component<
                         isStakeAction = true;
                     }
                     feesAmountStd = feesAmountStd.plus(transaction.feeOptions?.feeTotal || '0');
+                }
+
+                // This is applied only on Solana, because you cand stake from unstaked balance
+                if (
+                    isStakeAction &&
+                    blockchain === Blockchain.SOLANA &&
+                    nativeTokenState?.balance?.available &&
+                    nativeTokenState?.balance?.unstaked
+                ) {
+                    accountAvailableAmountForFees = await availableAmount(
+                        this.props.selectedAccount,
+                        nativeTokenState,
+                        this.props.chainId,
+                        {
+                            balanceAvailable: new BigNumber(nativeTokenState.balance.available)
+                                .plus(new BigNumber(nativeTokenState.balance.unstaked))
+                                .toFixed()
+                        }
+                    );
                 }
 
                 const feesAmount = blockchainInstance.account.amountFromStd(
@@ -683,7 +702,43 @@ class ProcessTransactionsComponent extends React.Component<
 
     @bind
     private onPressSignTransaction() {
-        this.props.signAndSendTransactions(this.props.currentTxIndex + 1);
+        if (this.state.insufficientFundsFees) {
+            const account = this.props.selectedAccount;
+            const blockchain = account.blockchain;
+
+            const blockchainInstance = getBlockchain(blockchain);
+            const nativeCoin = blockchainInstance.config.coin;
+
+            Dialog.alert(
+                translate('Validator.notEnoughTokensFees4'),
+                translate('Validator.notEnoughTokensFees5'),
+                {
+                    text: translate('App.labels.topUp'),
+                    onPress: () => {
+                        const token: ITokenState = this.props.selectedAccount.tokens[
+                            this.props.chainId
+                        ][nativeCoin];
+
+                        this.props.closeProcessTransactions();
+                        NavigationService.popToTop();
+
+                        NavigationService.navigate('Receive', {
+                            accountIndex: account.index,
+                            blockchain,
+                            token
+                        });
+                    }
+                },
+                {
+                    text: translate('App.labels.sign'),
+                    onPress: () => {
+                        this.props.signAndSendTransactions(this.props.currentTxIndex + 1);
+                    }
+                }
+            );
+        } else {
+            this.props.signAndSendTransactions(this.props.currentTxIndex + 1);
+        }
     }
 
     @bind
@@ -782,14 +837,8 @@ class ProcessTransactionsComponent extends React.Component<
                 return (
                     <Button
                         primary
-                        onPress={() =>
-                            this
-                                .onPressSignTransaction
-                                // this.props.transactions[this.props.currentTxIndex]
-                                ()
-                        }
+                        onPress={() => this.onPressSignTransaction()} // this.props.transactions[this.props.currentTxIndex]
                         wrapperStyle={styles.continueButton}
-                        disabled={this.state.insufficientFundsFees}
                     >
                         {translate(
                             'ProcessTransactions.ledgerSignButton',

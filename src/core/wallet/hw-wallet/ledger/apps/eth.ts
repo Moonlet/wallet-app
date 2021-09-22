@@ -1,5 +1,5 @@
 import EthApp from '@ledgerhq/hw-app-eth';
-import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
+import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { IHardwareWalletApp } from '../types';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
 import { Transaction } from 'ethereumjs-tx';
@@ -54,7 +54,10 @@ export class Eth implements IHardwareWalletApp {
             };
 
             if (tx.token.type === TokenType.ERC20) {
-                const tokenInfo = byContractAddress(tx.toAddress.toLowerCase());
+                const tokenInfo = byContractAddressAndChainId(
+                    tx.toAddress.toLowerCase(),
+                    tx.chainId
+                );
 
                 if (tokenInfo) await this.app.provideERC20TokenInformation(tokenInfo);
             }

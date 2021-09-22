@@ -20,6 +20,29 @@ export interface IBalance {
     detailed?: {};
 }
 
+export interface ISolanaBalance {
+    available: BigNumber;
+    total: BigNumber;
+    staked: BigNumber;
+    unstaked: BigNumber;
+    deactivating: BigNumber;
+    activating: BigNumber;
+    reward: BigNumber;
+    detailed: {
+        [key: string]: IStakeAccountFormat;
+    };
+}
+
+export interface IStakeAccountFormat {
+    index: number;
+    lockupTime: number;
+    validatorId?: string;
+    staked?: string;
+    unstaked?: string;
+    activating?: string;
+    deactivating?: string;
+}
+
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     public nameService: GenericNameService;

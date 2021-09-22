@@ -1,5 +1,5 @@
 import { IAction } from '../types';
-import { IAccountState, IWalletsState, ITokenState } from './state';
+import { IAccountState, IWalletsState, ITokenState, ITokenStakeBalance } from './state';
 import {
     WALLET_ADD,
     WALLET_DELETE,
@@ -26,7 +26,7 @@ import { RESET_ALL_DATA, EXTENSION_UPDATE_STATE } from '../app/actions';
 
 const intialState: IWalletsState = {};
 
-const newBalance = (oldBalance: any, action: any) => ({
+const newBalance = (oldBalance: any, action: any): ITokenStakeBalance => ({
     // TODO migration and change value to actual avaialble and total values
     value: action.data.balance
         ? new BigNumber(action.data.balance.available).toFixed()
@@ -40,7 +40,10 @@ const newBalance = (oldBalance: any, action: any) => ({
     total: action.data.balance
         ? new BigNumber(action.data.balance.total).toFixed()
         : new BigNumber(oldBalance?.total).toFixed(),
-    detailed: action.data.balance ? action.data.balance.detailed || {} : oldBalance?.detailed || {}
+    detailed: action.data.balance ? action.data.balance.detailed || {} : oldBalance?.detailed || {},
+    unstaked: action.data?.balance?.unstaked
+        ? new BigNumber(action.data.balance.unstaked).toFixed()
+        : undefined
 });
 
 export default (state: IWalletsState = intialState, action: IAction) => {

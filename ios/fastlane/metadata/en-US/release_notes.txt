@@ -1,6 +1,6 @@
-Team's log. Stardate 2109.17:
+Team's log. Stardate 2109.22:
 
-This time we have pushed live some fixes for Solana Swap, after the last network upgrade swap transactions were failing because of an unexpected feature activation.
+We pushed live some fixes for Solana and Ethereum. Hopefully we smashed all the bugs.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

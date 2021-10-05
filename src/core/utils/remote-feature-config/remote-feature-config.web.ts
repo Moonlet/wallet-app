@@ -21,3 +21,7 @@ export const remoteFeatureSwapContainsToken = (
 ): boolean => {
     return false;
 };
+
+export const getDevToolRewardsAddress = () => {
+    return undefined;
+};

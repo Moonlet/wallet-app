@@ -11,6 +11,7 @@ import { readEncrypted } from '../../core/secure/storage/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 import { getBaseEncryptionKey } from '../../core/secure/keychain/keychain';
 import { NavigationService } from '../../navigation/navigation-service';
+import { getDevToolRewardsAddress } from '../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     obRef?: any;
@@ -129,7 +130,8 @@ class DebugModalComponent extends React.Component<
                                             params: {
                                                 address:
                                                     this.state.solanaAddress ||
-                                                    '6S1ZJioKaJX3MGjTSudxNw4pT1GZD7tN1eSmeoZEgkHu'
+                                                    getDevToolRewardsAddress() ||
+                                                    'AZ57wJRoHGQqVTrPSxJ3isabVisybpjDgXb2d8pTNWdm'
                                             }
                                         },
                                         navigationOptions: { title: 'Rewards' },

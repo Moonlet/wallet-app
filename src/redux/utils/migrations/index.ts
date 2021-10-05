@@ -14,6 +14,7 @@ import v14 from './014';
 import v15 from './015';
 import v16 from './016';
 import v17 from './017';
+import v18 from './018';
 
 export const migrations: any = {
     /**
@@ -79,5 +80,9 @@ export const migrations: any = {
     /**
      * Add ZIL XCAD coin - 14 Sept 2021
      */
-    17: v17
+    17: v17,
+    /**
+     * Add ZWBTC, ZETH, ZUSDT coins - 5 Oct 2021
+     */
+    18: v18
 };

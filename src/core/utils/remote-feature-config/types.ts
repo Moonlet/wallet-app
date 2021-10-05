@@ -8,5 +8,6 @@ export enum RemoteFeature {
     NEAR_LEDGER_BLE = 'near_ledger_ble',
     SWAP_TOKENS = 'swap_tokens',
     TC_VERSION = 'tcVersion',
-    GRT = 'feature_grt'
+    GRT = 'feature_grt',
+    DEV_SOL_REWARDS = 'dev_sol_rewards'
 }

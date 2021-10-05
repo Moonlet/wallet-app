@@ -31,6 +31,9 @@ import { ZLP_MAINNET } from './tokens/zlp';
 import { ZYF_MAINNET } from './tokens/zyf';
 import { ZYRO_MAINNET } from './tokens/zyro';
 import { XCAD_MAINNET } from './tokens/xcad';
+import { ZWBTC_MAINNET } from './tokens/zwbtc';
+import { ZETH_MAINNET } from './tokens/zeth';
+import { ZUSDT_MAINNET } from './tokens/zusdt';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -157,7 +160,10 @@ export const config: IBlockchainConfig = {
         '1': {
             gZIL: GZIL_MAINNET,
             XCAD: XCAD_MAINNET,
-            XSGD: XSGD_MAINNET
+            XSGD: XSGD_MAINNET,
+            ZWBTC: ZWBTC_MAINNET,
+            ZETH: ZETH_MAINNET,
+            ZUSDT: ZUSDT_MAINNET
         },
         '333': {
             gZIL: GZIL_TESTNET

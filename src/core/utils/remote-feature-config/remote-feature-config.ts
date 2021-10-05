@@ -124,3 +124,7 @@ export const getFirebaseTCVersion = async (): Promise<number> => {
 
     return;
 };
+
+export const getDevToolRewardsAddress = () => {
+    return featuresConfig && featuresConfig[RemoteFeature.DEV_SOL_REWARDS];
+};

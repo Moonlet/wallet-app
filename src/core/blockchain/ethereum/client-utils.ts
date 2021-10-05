@@ -7,7 +7,10 @@ import { config } from './config';
 import abi from 'ethereumjs-abi';
 import { Ethereum } from '.';
 import { TransactionStatus } from '../../wallet/types';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 import { MethodSignature } from './types';
 
 export class ClientUtils implements IClientUtils {
@@ -83,7 +86,13 @@ export class ClientUtils implements IClientUtils {
                     }
                 }
             } catch (error) {
-                SentryCaptureException(new Error(JSON.stringify(error)));
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({ error })
+                });
+
+                SentryCaptureException(
+                    new Error(`Failed to getTransaction status NEAR ${error?.code}`)
+                );
             }
         }
 

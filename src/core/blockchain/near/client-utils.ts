@@ -5,7 +5,10 @@ import { Near } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { TransactionStatus } from '../../wallet/types';
 import { ITokenConfigState } from '../../../redux/tokens/state';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -49,7 +52,13 @@ export class ClientUtils implements IClientUtils {
                         .getCurrentBlock()
                         .then(res => res.number);
                 } catch (error) {
-                    SentryCaptureException(new Error(JSON.stringify(error)));
+                    SentryAddBreadcrumb({
+                        message: JSON.stringify({ error })
+                    });
+
+                    SentryCaptureException(
+                        new Error(`Failed to fetch block number NEAR ${error?.code}`)
+                    );
                 }
             }
 

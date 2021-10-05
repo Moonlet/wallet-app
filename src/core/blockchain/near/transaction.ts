@@ -32,7 +32,10 @@ import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { NEAR_TLD } from '../../constants/app';
 import { NEAR_DEFAULT_FUNC_CALL_GAS, NEAR_CREATE_ACCOUNT_MIN_BALANCE } from './consts';
 import { splitStake } from '../../utils/balance';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -156,7 +159,21 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                                 new BigNumber(unstaked)
                             );
                         } catch (error) {
-                            SentryCaptureException(new Error(JSON.stringify(error)));
+                            SentryAddBreadcrumb({
+                                message: JSON.stringify({
+                                    error,
+                                    data: {
+                                        contractName: validator.id,
+                                        methodName:
+                                            NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                                        args: { account_id: tx.account.address }
+                                    }
+                                })
+                            });
+
+                            SentryCaptureException(
+                                new Error(`Failed to call contract NEAR ${error?.code}`)
+                            );
                         }
 
                         // Stake
@@ -221,7 +238,17 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             transactions.push(selectSPTx);
                         }
                     } catch (error) {
-                        SentryCaptureException(new Error(JSON.stringify(error)));
+                        SentryAddBreadcrumb({
+                            message: JSON.stringify({
+                                error,
+                                data: {
+                                    contractName: validator.id
+                                }
+                            })
+                        });
+                        SentryCaptureException(
+                            new Error(`Failed to call contract NEAR ${error?.code}`)
+                        );
                     }
 
                     let unstakedAmount = new BigNumber(0);
@@ -233,7 +260,20 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                         });
                         unstakedAmount = new BigNumber(unstaked);
                     } catch (error) {
-                        SentryCaptureException(new Error(JSON.stringify(error)));
+                        SentryAddBreadcrumb({
+                            message: JSON.stringify({
+                                error,
+                                data: {
+                                    contractName: validator.id,
+                                    methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                                    args: { account_id: tx.account.address }
+                                }
+                            })
+                        });
+
+                        SentryCaptureException(
+                            new Error(`Failed to call contract NEAR ${error?.code}`)
+                        );
                     }
 
                     const stakeTx = await client.lockup.stake(

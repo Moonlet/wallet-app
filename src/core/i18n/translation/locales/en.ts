@@ -92,7 +92,8 @@ export const translation: ITranslations = {
                 maybeLater: 'Maybe later',
                 message: 'Message',
                 medium: 'Medium',
-                mnemonicNotValid: 'Your mnemonic is not valid!',
+                mnemonicNotValid:
+                    'Your secret phrase is not valid! Please make sure you don`t have typos or special characters like -()[]<>,.@$, etc. As well, do not use numbers.',
                 myVotes: 'My Votes',
                 myStakes: 'My Stakes',
                 network: 'Network',

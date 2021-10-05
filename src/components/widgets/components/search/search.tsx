@@ -18,7 +18,10 @@ import { handleCta } from '../../../../redux/ui/screens/data/handle-cta';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { renderModules } from '../../render-module';
 import { ApiClient } from '../../../../core/utils/api-client/api-client';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 import { LoadingIndicator } from '../../../loading-indicator/loading-indicator';
 import { getSelectedBlockchain } from '../../../../redux/wallets/selectors';
 import { Blockchain } from '../../../../core/blockchain/types';
@@ -125,7 +128,27 @@ class SearchComponent extends React.Component<
                 }
             });
         } catch (error) {
-            SentryCaptureException(new Error(JSON.stringify(error)));
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        type: (this.props.module.data as ISearchData).type,
+                        input,
+                        options: {
+                            testnet: this.props.testnet,
+                            flowId: this.props.options?.flowId,
+                            blockchain: this.props.blockchain
+                        }
+                    }
+                })
+            });
+
+            SentryAddBreadcrumb({
+                message: JSON.stringify({ error })
+            });
+
+            SentryCaptureException(
+                new Error(`Failed to fetch api /walletUi/search ${error?.code}`)
+            );
         }
 
         this.setState({ isLoading: false });

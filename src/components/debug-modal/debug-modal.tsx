@@ -129,7 +129,7 @@ class DebugModalComponent extends React.Component<
                                             params: {
                                                 address:
                                                     this.state.solanaAddress ||
-                                                    '6S1ZJioKaJX3MGjTSudxNw4pT1GZD7tN1eSmeoZEgkHu'
+                                                    'AZ57wJRoHGQqVTrPSxJ3isabVisybpjDgXb2d8pTNWdm'
                                             }
                                         },
                                         navigationOptions: { title: 'Rewards' },

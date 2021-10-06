@@ -655,9 +655,9 @@ export const translation: ITranslations = {
             operationNotAvailableMessage:
                 'This operation can not be performed. You tried to {{operation}} too quickly. Please try again next network cycle or immediately after rewards distribution.',
             restakeScreenMessageZil:
-                'The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
+                'The accumulated ZIL rewards will be automatically claimed and deposited into your available balance.',
             unstakeScreenMessageZil:
-                'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
+                'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance.',
             alreadyStaked:
                 'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
             multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,

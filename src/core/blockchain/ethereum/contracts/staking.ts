@@ -11,6 +11,7 @@ import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract } from './base-contract';
 import abi from 'ethereumjs-abi';
 import { MethodSignature } from '../types';
+import BigNumber from 'bignumber.js';
 
 export class Staking {
     constructor(private client: Client) {}
@@ -101,13 +102,29 @@ export class Staking {
     ): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
+        const contractAddressGRT = await getContract(this.client.chainId, Contracts.GRT_TOKEN);
+
+        const balance = await this.client.tokens[TokenType.ERC20].getBalance(
+            contractAddressGRT,
+            tx.account.address
+        );
 
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
 
+        const staked = new BigNumber(balance.detailed[validator.id].staked).toFixed(0);
+
+        const amountInShares = new BigNumber(tx.amount).minus(staked).isEqualTo(0)
+            ? balance.detailed[validator.id].shareAmount
+            : new BigNumber(tx.amount)
+                  .dividedBy(balance.detailed[validator.id].personalExchangeRate)
+                  .toFixed(0);
+
         const raw =
             '0x' +
-            abi.simpleEncode(MethodSignature.UNDELEGATE, validator.id, tx.amount).toString('hex');
+            abi
+                .simpleEncode(MethodSignature.UNDELEGATE, validator.id, amountInShares)
+                .toString('hex');
 
         const fees = await this.client.getFees(
             TransactionType.CONTRACT_CALL,

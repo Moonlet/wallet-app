@@ -1,5 +1,8 @@
 const contracts = {};
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 import { Ethereum } from '..';
 import { Client as EthereumClient } from '../client';
 import { ApiClient } from '../../../utils/api-client/api-client';
@@ -30,7 +33,11 @@ export const fetchContracts = async (chainId: ChainIdType) => {
 
         return values;
     } catch (error) {
-        SentryCaptureException(new Error(JSON.stringify(error)));
+        SentryAddBreadcrumb({
+            message: JSON.stringify({ error })
+        });
+
+        SentryCaptureException(new Error(`Failed to fetch contracts ETH ${error?.code}`));
     }
 
     return contracts;

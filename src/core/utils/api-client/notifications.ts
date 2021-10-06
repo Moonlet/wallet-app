@@ -1,4 +1,7 @@
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 import { getWalletCredentialsKey } from '../../secure/keychain/keychain';
 import {
     getCurrentTimestampNTP,
@@ -59,6 +62,15 @@ export class NotificationsApiClient {
                 return response.result.notifications;
             }
         } catch (err) {
+            SentryAddBreadcrumb({
+                message: JSON.stringify({
+                    data: {
+                        blockchainNetworks
+                    },
+                    err
+                })
+            });
+
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }

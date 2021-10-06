@@ -77,7 +77,6 @@ const mapDispatchToProps = {
 interface IState {
     transaction: IBlockchainTransaction;
     zilRewards: {
-        gZil: string;
         zil: string;
     };
     txFees: IFeeOptions;
@@ -189,22 +188,12 @@ class TransactionDetailsComponent extends React.Component<
                             maximumFractionDigits: 4
                         });
 
-                        // gZIL
-                        const amountGzil = blockchainConfig.account.amountFromStd(
-                            new BigNumber(zilRewards.zil),
-                            15
-                        );
-                        const formatAmountGzil = formatNumber(amountGzil, {
-                            currency: 'gZIL',
-                            maximumFractionDigits: 8
-                        });
-
                         this.setState({
-                            zilRewards: { zil: formatAmountZil, gZil: formatAmountGzil }
+                            zilRewards: { zil: formatAmountZil }
                         });
                     }
                 } catch {
-                    this.setState({ zilRewards: { zil: 'N/A', gZil: 'N/A' } });
+                    this.setState({ zilRewards: { zil: 'N/A' } });
                 }
             }
         }
@@ -409,7 +398,7 @@ class TransactionDetailsComponent extends React.Component<
 
                     {isZilRewardsFlow ? (
                         <View>
-                            {/* ZILLIQA ZIL and gZIL rewards */}
+                            {/* ZILLIQA ZIL rewards */}
                             <View style={styles.rowContainer}>
                                 <Text style={styles.textPrimary}>
                                     {txStatus === TransactionStatus.PENDING
@@ -419,17 +408,6 @@ class TransactionDetailsComponent extends React.Component<
                                         : 'N/A'}
                                 </Text>
                                 <Text style={styles.textSecondary}>{'ZIL Rewards'}</Text>
-                            </View>
-
-                            <View style={styles.rowContainer}>
-                                <Text style={styles.textPrimary}>
-                                    {txStatus === TransactionStatus.PENDING
-                                        ? 'Waiting confirmation'
-                                        : txStatus === TransactionStatus.SUCCESS
-                                        ? this.state.zilRewards.gZil
-                                        : 'N/A'}
-                                </Text>
-                                <Text style={styles.textSecondary}>{'gZIL Rewards'}</Text>
                             </View>
                         </View>
                     ) : (

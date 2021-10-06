@@ -1,6 +1,6 @@
-Team's log. Stardate 2109.22:
+Team's log. Stardate 2110.06:
 
-We pushed live some fixes for Solana and Ethereum. Hopefully we smashed all the bugs.
+You can swap now the Zilliqa bridge tokens (ZWBTC, ZETH, ZUSDT) and gZIL has been removed from tx details. The GRT unstake issue has been fixed as well. 
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

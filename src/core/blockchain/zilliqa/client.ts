@@ -112,13 +112,9 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async fetchRewardsForTransaction(
-        txHash: string
-    ): Promise<{ gZil: string; zil: string }> {
+    public async fetchRewardsForTransaction(txHash: string): Promise<{ zil: string }> {
         try {
             let zil = 0;
-            let gZil = 0;
-
             return this.call('GetTransaction', [txHash]).then(response => {
                 if (response?.result?.receipt?.event_logs) {
                     const logs = response?.result?.receipt?.event_logs;
@@ -130,16 +126,9 @@ export class Client extends BlockchainGenericClient {
                             zil = params[0].value;
                         }
                     }
-                    const gZilObject = logs.filter(v => (v._eventname = 'Minted'));
-                    if (gZilObject.length) {
-                        const params = gZilObject[0].params.filter(v => (v.vname = 'amount'));
-                        if (params.length) {
-                            gZil = params[0].value;
-                        }
-                    }
                 }
 
-                return { gZil: new BigNumber(gZil).toFixed(), zil: new BigNumber(zil).toFixed() };
+                return { zil: new BigNumber(zil).toFixed() };
             });
         } catch (err) {
             throw new Error(err);

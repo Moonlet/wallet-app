@@ -37,6 +37,7 @@ import { InfoModal } from './components/info-modal/info-modal';
 import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
 import { UniversalLinks } from './core/universal-links';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -172,6 +173,12 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (
+            (Platform.OS === 'ios' && nextAppState === AppStateStatus.ACTIVE) ||
+            nextAppState === AppStateStatus.BACKGROUND
+        ) {
+            PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        }
         if (
             nextAppState === AppStateStatus.INACTIVE ||
             nextAppState === AppStateStatus.BACKGROUND

@@ -1,6 +1,6 @@
-Team's log. Stardate 2110.06:
+Team's log. Stardate 2111.09:
 
-You can swap now the Zilliqa bridge tokens (ZWBTC, ZETH, ZUSDT) and gZIL has been removed from tx details. The GRT unstake issue has been fixed as well. 
+We updated the XCAD smart contract address.
 
 As always, we're here to help! If you come across a problem, want to provide feedback, or require support, you can get in touch through our app or on Twitter.
 

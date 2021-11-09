@@ -10,7 +10,7 @@ export const XCAD_MAINNET: ITokenConfigState = {
     contractAddress: 'zil1z5l74hwy3pc3pr3gdh3nqju4jlyp0dzkhq2f5y',
     removable: true,
     defaultOrder: 910, // 3rd position
-    decimals: 6,
+    decimals: 18,
     ui: {
         decimals: 3,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT

@@ -16,6 +16,10 @@ export default (state: any) => {
         // Update XCAD contract address
         state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XCAD_MAINNET.symbol].contractAddress =
             XCAD_MAINNET.contractAddress;
+
+        // Update XCAD decimals
+        state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XCAD_MAINNET.symbol].decimals =
+            XCAD_MAINNET.decimals;
     }
 
     return {

@@ -7,7 +7,7 @@ export const XCAD_MAINNET: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/xcad.png'
     },
-    contractAddress: 'zil1h63h5rlg7avatnlzhfnfzwn8vfspwkapzdy2aw',
+    contractAddress: 'zil1z5l74hwy3pc3pr3gdh3nqju4jlyp0dzkhq2f5y',
     removable: true,
     defaultOrder: 910, // 3rd position
     decimals: 6,

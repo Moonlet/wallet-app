@@ -15,6 +15,7 @@ import v15 from './015';
 import v16 from './016';
 import v17 from './017';
 import v18 from './018';
+import v19 from './019';
 
 export const migrations: any = {
     /**
@@ -84,5 +85,9 @@ export const migrations: any = {
     /**
      * Add ZWBTC, ZETH, ZUSDT coins - 5 Oct 2021
      */
-    18: v18
+    18: v18,
+    /**
+     * Update XCAD contract address - 9 Nov 2021
+     */
+    19: v19
 };

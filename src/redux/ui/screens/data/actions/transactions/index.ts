@@ -28,6 +28,7 @@ export interface IContractCallParams {
     amount: string;
     contractMethod: string;
     contractType: Contracts;
+    contractAddress?: string;
     tokenSymbol: string;
     additionalInfo: any;
     fees?: {

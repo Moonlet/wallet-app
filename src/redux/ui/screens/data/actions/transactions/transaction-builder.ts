@@ -31,7 +31,9 @@ export const buildContractCallTransaction = async (
 
     let contractAddress: string = '';
 
-    if (params.contractType === Contracts.TOKEN_CONTRACT) {
+    if (params.contractAddress) {
+        contractAddress = params.contractAddress;
+    } else if (params.contractType === Contracts.TOKEN_CONTRACT) {
         const configToken = getTokenConfig(account.blockchain, params.tokenSymbol);
         contractAddress = configToken.contractAddress;
     } else {

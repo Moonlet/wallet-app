@@ -63,6 +63,7 @@ import { delay } from '../../../../core/utils/time';
 import { buildDummyValidator } from '../../../wallets/actions/util-actions';
 import { supportedActions } from './actions/index';
 import { isFeatureActive, RemoteFeature } from '../../../../core/utils/remote-feature-config';
+import { closeProcessTransactions } from '../../process-transactions/actions';
 
 export interface IHandleCtaOptions {
     screenKey?: string;
@@ -1446,6 +1447,11 @@ const handleCtaAction = async (
                             setScreenInputData(flowId, screenData)(dispatch, getState);
                         }
                     }
+                    break;
+                }
+
+                case 'closeProcessTransactions': {
+                    dispatch(closeProcessTransactions());
                     break;
                 }
 

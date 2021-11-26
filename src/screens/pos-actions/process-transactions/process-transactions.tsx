@@ -40,6 +40,22 @@ import { PercentageCircle } from '../../../components/widgets/components/progres
 import { IExchangeRates } from '../../../redux/market/state';
 import { convertAmount } from '../../../core/utils/balance';
 import { isSwapTx } from '../../../core/utils/swap';
+import { Widgets } from '../../../components/widgets/widgets';
+import {
+    IScreenContext,
+    IScreenValidation,
+    IScreenWidget
+} from '../../../components/widgets/types';
+import { fetchScreenData, resetScreenData } from '../../../redux/ui/screens/data/actions';
+import { handleCta } from '../../../redux/ui/screens/data/handle-cta';
+import {
+    clearScreenInputData,
+    runScreenValidation,
+    runScreenStateActions,
+    setScreenInputData
+} from '../../../redux/ui/screens/input-data/actions';
+import { IScreenData, IScreensData } from '../../../redux/ui/screens/data/state';
+import { getScreenDataKey } from '../../../redux/ui/screens/data/reducer';
 
 interface IReduxProps {
     isVisible: boolean;
@@ -58,6 +74,16 @@ interface IReduxProps {
     addAccount: typeof addAccount;
     setSelectedAccount: typeof setSelectedAccount;
     exchangeRates: IExchangeRates;
+
+    screenData: IScreensData;
+
+    fetchScreenData: typeof fetchScreenData;
+    handleCta: typeof handleCta;
+    clearScreenInputData: typeof clearScreenInputData;
+    runScreenValidation: typeof runScreenValidation;
+    runScreenStateActions: typeof runScreenStateActions;
+    setScreenInputData: typeof setScreenInputData;
+    resetScreenData: typeof resetScreenData;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -74,7 +100,8 @@ const mapStateToProps = (state: IReduxState) => {
         selectedAccount,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
         accountTransactions: getSelectedAccountTransactions(state) || [],
-        exchangeRates: state.market.exchangeRates
+        exchangeRates: state.market.exchangeRates,
+        screenData: state.ui.screens.data?.ProcessTransactionsScreen
     };
 };
 
@@ -82,7 +109,15 @@ const mapDispatchToProps = {
     closeProcessTransactions,
     addAccount,
     setSelectedAccount,
-    signAndSendTransactions
+    signAndSendTransactions,
+
+    fetchScreenData,
+    handleCta,
+    clearScreenInputData,
+    runScreenValidation,
+    runScreenStateActions,
+    setScreenInputData,
+    resetScreenData
 };
 
 interface IState {
@@ -91,6 +126,7 @@ interface IState {
     insufficientFundsFees: boolean;
     warningFeesToHigh: boolean;
     amountNeededToPassTxs: string;
+    context: IScreenContext;
 }
 
 class ProcessTransactionsComponent extends React.Component<
@@ -109,7 +145,10 @@ class ProcessTransactionsComponent extends React.Component<
             txContainerHeight: undefined,
             insufficientFundsFees: false,
             warningFeesToHigh: false,
-            amountNeededToPassTxs: ''
+            amountNeededToPassTxs: '',
+            context: {
+                screen: 'ProcessTransactionsScreen'
+            }
         };
         this.scrollViewRef = React.createRef();
     }
@@ -134,6 +173,9 @@ class ProcessTransactionsComponent extends React.Component<
         // Check fees for insufficient funds
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
+                const screenKey = this.getScreenKey(this.props);
+                this.props.resetScreenData(this.state.context, screenKey);
+
                 let insufficientFundsFees = false;
                 let warningFeesToHigh = false;
 
@@ -270,7 +312,20 @@ class ProcessTransactionsComponent extends React.Component<
                     }
                 }
 
-                this.setState({ insufficientFundsFees, warningFeesToHigh });
+                this.setState(
+                    {
+                        insufficientFundsFees,
+                        warningFeesToHigh,
+                        context: {
+                            ...this.state.context,
+                            params: {
+                                transactions: this.props.transactions,
+                                blockchain
+                            }
+                        }
+                    },
+                    () => this.props.fetchScreenData(this.state.context)
+                );
             }
         }
     }
@@ -872,6 +927,42 @@ class ProcessTransactionsComponent extends React.Component<
         } else this.props.closeProcessTransactions();
     }
 
+    private getScreenKey(props: IReduxProps) {
+        return getScreenDataKey({
+            pubKey: props?.selectedWallet?.walletPublicKey,
+            blockchain: props?.selectedAccount?.blockchain,
+            chainId: String(props.chainId),
+            address: props.selectedAccount?.address,
+            step: null,
+            tab: null
+        });
+    }
+
+    private getScreenData(props: IReduxProps): IScreenData {
+        const screenKey = this.getScreenKey(props);
+        return props.screenData && screenKey && props.screenData[screenKey];
+    }
+
+    private renderWidgets(widgets: IScreenWidget[], validation?: IScreenValidation) {
+        return (
+            <Widgets
+                data={widgets}
+                context={this.state.context}
+                screenKey={this.getScreenKey(this.props)}
+                actions={{
+                    handleCta: this.props.handleCta,
+                    clearScreenInputData: this.props.clearScreenInputData,
+                    runScreenValidation: this.props.runScreenValidation,
+                    runScreenStateActions: this.props.runScreenStateActions,
+                    setScreenInputData: this.props.setScreenInputData
+                }}
+                blockchain={this.props?.selectedAccount?.blockchain}
+                validation={validation}
+                pubSub={null}
+            />
+        );
+    }
+
     public render() {
         const { styles, theme } = this.props;
         const blockchain = this.props.selectedAccount?.blockchain;
@@ -935,6 +1026,8 @@ class ProcessTransactionsComponent extends React.Component<
         }
 
         if (this.props.isVisible) {
+            const screenData = this.getScreenData(this.props);
+
             return (
                 <SafeAreaProvider style={styles.container}>
                     <SafeAreaView style={styles.container}>
@@ -978,6 +1071,12 @@ class ProcessTransactionsComponent extends React.Component<
                                     })
                                 }
                             >
+                                {screenData?.response?.widgets &&
+                                    this.renderWidgets(
+                                        screenData.response.widgets,
+                                        screenData.response?.validation
+                                    )}
+
                                 {this.props.transactions.map((tx, index) =>
                                     this.renderCard(tx, index)
                                 )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { Text } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
@@ -96,8 +97,21 @@ interface IState {
     context: IScreenContext;
 }
 
-const navigationOptions = ({ navigation, theme }: any) =>
-    navigation?.state?.params?.navigationOptions || {};
+const navigationOptions = ({ navigation, theme }: any) => {
+    const navOptions = navigation?.state?.params?.navigationOptions || {};
+
+    if (navOptions?.titles) {
+        navOptions.title = (
+            <View style={{ flexDirection: 'row' }}>
+                {navOptions.titles.map(title => (
+                    <Text style={title.style}>{title.value}</Text>
+                ))}
+            </View>
+        );
+    }
+
+    return navOptions;
+};
 
 class SmartScreenComponent extends React.Component<
     INavigationProps<INavigationParams> &

@@ -473,8 +473,8 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNKeychain (5.0.1):
-    - React
+  - RNKeychain (8.0.0):
+    - React-Core
   - RNReanimated (2.2.0):
     - DoubleConversion
     - FBLazyVector
@@ -850,7 +850,7 @@ SPEC CHECKSUMS:
   RNFBStorage: 052a32c5af38b106e4d6b0a296df304d97be995e
   RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNKeychain: a5623de13ec5378bfb8035422e3dee4fa538660d
+  RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
   RNScreens: 0591543e343c7444ea1756b6265d81a4295922c9
   RNSentry: 68644ef607b780551cc555f084869764f2566652
@@ -865,4 +865,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a5cfed43e5a953ce2b3cd905f7ef17100abbd3bd
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

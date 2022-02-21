@@ -42,7 +42,6 @@ import {
 } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
-import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
 import { QuickDelegateSelectValidator } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-select-validator/quick-delegate-select-validator';
 import { PosBasicAction } from '../screens/pos-actions/pos-basic-action/pos-basic-action';
@@ -61,7 +60,6 @@ import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
 import { QuickStakeSelectValidatorScreen } from '../screens/quick-stake-select-validator/quick-stake-select-validator';
 import { PromoDetailsScreen } from '../screens/promo-details/promo-details';
 import { SmartScreen } from '../screens/smart-screen/smart-screen';
-import { ConnectedWebsitesScreen } from '../screens/connected-websites/connected-websites';
 import { HeaderIcon } from '../components/header-icon/header-icon';
 import { TotalBalanceScreen } from '../screens/total-balance/total-balance';
 
@@ -169,9 +167,6 @@ export const WalletNavigation = createStackNavigator(
         ManageToken: {
             screen: ManageTokenScreen
         },
-        ConnectExtension: {
-            screen: ConnectExtensionScreen
-        },
         Validator: {
             screen: ValidatorScreen
         },
@@ -183,9 +178,6 @@ export const WalletNavigation = createStackNavigator(
         },
         Notifications: {
             screen: NotificationsScreen
-        },
-        ConnectedWebsites: {
-            screen: ConnectedWebsitesScreen
         },
         CreateNearAccount: {
             screen: CreateNearAccountScreen
@@ -289,9 +281,6 @@ export const SettingsNavigation = createStackNavigator(
         BackupWallet: {
             screen: BackupWalletScreen
         },
-        ConnectExtension: {
-            screen: ConnectExtensionScreen
-        },
         SmartScreen: {
             screen: SmartScreen
         },
@@ -384,9 +373,6 @@ export const PromotionsNavigation = createStackNavigator(
         },
         ManageToken: {
             screen: ManageTokenScreen
-        },
-        ConnectExtension: {
-            screen: ConnectExtensionScreen
         },
         Validator: {
             screen: ValidatorScreen

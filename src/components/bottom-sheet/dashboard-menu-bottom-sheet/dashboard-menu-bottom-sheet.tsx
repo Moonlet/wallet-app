@@ -82,11 +82,6 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         NavigationService.navigate('AddToken', {});
     }
 
-    private connectedWebsites() {
-        this.props.onClose();
-        NavigationService.navigate('ConnectedWebsites', {});
-    }
-
     private zilGovernance() {
         this.props.onClose();
         NavigationService.navigate('SmartScreen', {
@@ -218,12 +213,6 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             onPress: () => this.qrCodeScanner.open()
                         })}
 
-                    {Platform.OS === 'web' &&
-                        this.renderRow({
-                            title: translate('DashboardMenu.connectedWebsites'),
-                            iconName: IconValues.FLASH_OFF,
-                            onPress: () => this.connectedWebsites()
-                        })}
                     {this.renderRow({
                         title: translate('DashboardMenu.copyToClipboard'),
                         subtitle: this.props.selectedAccount.address,

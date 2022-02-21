@@ -31,16 +31,3 @@ jobs:
         echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
     - name: Run Type checker
       run: npx tsc --noEmit
-    # - name: Run Unit Tests
-    #   run: npm test
-    # - name: Build extension
-    #   run: npm run ext:build:beta:chrome
-    # - name: Run extension test
-    #   run: cd extension && xvfb-run npx jest
-    # - name: Upload coverage to Codecov
-    #   env:
-    #     CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-    #   run: |-
-    #     curl -s https://codecov.io/bash | bash -s -- \
-    #     -F "unittests" \
-    #     -Z || echo 'Codecov upload failed'

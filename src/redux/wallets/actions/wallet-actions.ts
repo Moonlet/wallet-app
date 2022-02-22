@@ -32,7 +32,6 @@ import {
     getWalletAndTransactionForHash,
     generateAccountConfig,
     getWalletByPubKey,
-    getSelectedBlockchain,
     getSelectedAccountTransactions,
     getNrPendingTransactions
 } from '../selectors';
@@ -54,8 +53,7 @@ import {
 } from '../../../core/secure/keychain/keychain';
 import { delay } from '../../../core/utils/time';
 import { toggleBiometricAuth } from '../../preferences/actions';
-import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-request/actions';
-import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
+import { closeTransactionRequest } from '../../ui/transaction-request/actions';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import {
     addBreadcrumb as SentryAddBreadcrumb,
@@ -75,10 +73,6 @@ import {
 } from '../../ui/process-transactions/actions';
 import cloneDeep from 'lodash/cloneDeep';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
-import { ExtensionEventEmitter } from '../../../core/communication/extension-event-emitter';
-import { ExtensionEvents } from '../../../core/communication/extension';
-import { bgPortRequest } from '../../../core/communication/bg-port';
-import { Platform } from 'react-native';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 // actions consts
@@ -109,7 +103,6 @@ export const addWallet = (walletData: IWalletState) => {
 };
 
 export const setSelectedWallet = (walletId: string) => {
-    ExtensionEventEmitter.emit(ExtensionEvents.DEFAULT_ACCOUNT_CHANGED);
     return {
         type: SELECT_WALLET,
         data: walletId
@@ -125,7 +118,6 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     if (wallet === undefined) {
         return;
     }
-    ExtensionEventEmitter.emit(ExtensionEvents.DEFAULT_ACCOUNT_CHANGED);
     dispatch({
         type: WALLET_SELECT_BLOCKCHAIN,
         data: {
@@ -161,14 +153,6 @@ export const setSelectedAccount = (account: IAccountState) => async (
     if (wallet === undefined) {
         return;
     }
-    // send message to extension background script
-    await bgPortRequest({
-        origin: Platform.OS === 'web' && document.location.hash,
-        controller: 'AccountAccessController',
-        method: 'switchAccount',
-        params: [wallet.walletPublicKey || wallet.id, getSelectedBlockchain(state), account.address]
-    });
-    ExtensionEventEmitter.emit(ExtensionEvents.DEFAULT_ACCOUNT_CHANGED);
 
     dispatch({
         type: WALLET_SELECT_ACCOUNT,
@@ -564,8 +548,7 @@ export const signMessage = (
     walletPublicKey: string,
     blockchain: Blockchain,
     address: string,
-    message: string,
-    sendResponse?: { requestId: string }
+    message: string
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     try {
         const state = getState();
@@ -624,20 +607,6 @@ export const signMessage = (
         );
 
         if (signedMessage) {
-            if (sendResponse) {
-                let result;
-                try {
-                    result = JSON.parse(signedMessage);
-                } catch {
-                    result = signedMessage;
-                }
-                await ConnectExtension.sendResponse(sendResponse.requestId, {
-                    result
-                });
-
-                dispatch({ type: CLOSE_TX_REQUEST });
-            }
-
             await LoadingModal.close();
             dispatch(closeTransactionRequest());
             return;
@@ -840,29 +809,11 @@ export const sendTransaction = (
                     walletId: appWallet.id
                 }
             });
-
-            if (options.sendResponse) {
-                await ConnectExtension.sendResponse(options.sendResponse.requestId, {
-                    result: {
-                        ...txRes,
-                        tx
-                    }
-                });
-
-                dispatch({ type: CLOSE_TX_REQUEST });
-            }
-
-            // if (appWallet.type === WalletType.HD) {
             await LoadingModal.close();
-            // } else {
-            //     await LedgerConnect.close();
-            // }
             dispatch(closeTransactionRequest());
-            if (!options.sendResponse) {
-                NavigationService.navigate('Token', {
-                    activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
-                });
-            }
+            NavigationService.navigate('Token', {
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
+            });
             return;
         } else {
             SentryAddBreadcrumb({
@@ -893,17 +844,6 @@ export const sendTransaction = (
             await LoadingModal.close();
         } else {
             await LedgerConnect.close();
-        }
-
-        if (options.sendResponse) {
-            await ConnectExtension.sendResponse(options.sendResponse.requestId, {
-                result: {
-                    ...res,
-                    tx
-                }
-            });
-
-            dispatch({ type: CLOSE_TX_REQUEST });
         }
 
         const message =

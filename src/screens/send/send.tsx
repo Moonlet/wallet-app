@@ -1,32 +1,22 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text, Button } from '../../library';
+import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { sendTransferTransaction, addPublishedTxToAccount } from '../../redux/wallets/actions';
 import { getAccount, getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import {
-    Blockchain,
-    IFeeOptions,
-    ChainIdType,
-    TransactionMessageText,
-    TransactionMessageType,
-    IBlockchainTransaction,
-    TransactionType
-} from '../../core/blockchain/types';
+import { Blockchain, IFeeOptions, ChainIdType, TransactionType } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
-import BigNumber from 'bignumber.js';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { IAccountState, ITokenState, IWalletState } from '../../redux/wallets/state';
-import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
@@ -38,11 +28,6 @@ import findIndex from 'lodash/findIndex';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import { NotificationType } from '../../core/messaging/types';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
-import { NavigationService } from '../../navigation/navigation-service';
-import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
@@ -167,130 +152,15 @@ export class SendScreenComponent extends React.Component<
     }
 
     public async confirmPayment() {
-        if (Platform.OS === 'web') {
-            await LoadingModal.open({
-                text: TransactionMessageText.WAITING_TX_CONFIRM,
-                type: TransactionMessageType.INFO
-            });
-
-            const account = this.props.account;
-            const token = this.props.token;
-            const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
-
-            const blockchainInstance = getBlockchain(account.blockchain);
-
-            const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
-                currency: token.symbol
-            });
-
-            const formattedAddress = formatAddress(
-                this.props.account.address,
-                this.props.account.blockchain
-            );
-
-            const tx = await blockchainInstance.transaction.buildTransferTransaction({
-                account,
-                chainId: this.props.chainId,
-                toAddress: this.state.toAddress,
-                amount: blockchainInstance.account
-                    .amountToStd(this.state.amount, tokenConfig.decimals)
-                    .toFixed(0, BigNumber.ROUND_DOWN),
-                token: token.symbol,
-                feeOptions: this.state.feeOptions,
-                extraFields: { memo: this.state.memo }
-            });
-
-            tx.walletPubKey = this.props.selectedWallet.walletPublicKey;
-
-            // add type to this
-            const sendRequestPayload = {
-                method: NotificationType.MOONLET_TRANSACTION,
-                params: [tx],
-                notification: {
-                    title: translate('Notifications.extensionTx.title'),
-                    body: translate('Notifications.extensionTx.body', {
-                        formattedAmount,
-                        formattedAddress
-                    })
-                }
-            };
-
-            try {
-                const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
-
-                if (sendRequestRes?.success) {
-                    await LoadingModal.open({
-                        type: TransactionMessageType.COMPONENT,
-                        component: (
-                            <View style={this.props.styles.loadingModalContainer}>
-                                <Text style={this.props.styles.loadingModalMessage}>
-                                    {translate(
-                                        'LoadingModal.' +
-                                            TransactionMessageText.WAITING_TX_CONFIRM_CANCEL,
-                                        { app: this.props.blockchain }
-                                    )}
-                                </Text>
-                                <Button
-                                    onPress={async () => {
-                                        await LoadingModal.close();
-
-                                        try {
-                                            await ConnectExtension.deleteRequest(
-                                                sendRequestRes.data.requestId
-                                            );
-                                        } catch {
-                                            //
-                                        }
-                                    }}
-                                >
-                                    {translate('App.labels.cancel')}
-                                </Button>
-                            </View>
-                        )
-                    });
-
-                    ConnectExtensionWeb.listenerReqResponse(
-                        sendRequestRes.data.requestId,
-                        async (res: {
-                            result: { txHash: string; tx: IBlockchainTransaction };
-                            errorCode: string;
-                        }) => {
-                            if (res.errorCode) {
-                                await LoadingModal.close();
-                            } else if (res.result?.txHash && res.result?.tx) {
-                                this.props.addPublishedTxToAccount(
-                                    res.result.txHash,
-                                    res.result.tx,
-                                    this.props.selectedWallet.id
-                                );
-
-                                await LoadingModal.close();
-                                NavigationService.goBack();
-                            } else {
-                                // error
-                            }
-                        }
-                    );
-                }
-            } catch {
-                // show error message to the user
-                await LoadingModal.close();
-            }
-
-            return;
-        } else {
-            // Mobile App
-
-            this.props.sendTransferTransaction(
-                this.props.account,
-                this.state.toAddress,
-                this.state.amount,
-                this.props.token.symbol,
-                this.state.feeOptions,
-                this.props.navigation,
-                { memo: this.state.memo }
-            );
-        }
+        this.props.sendTransferTransaction(
+            this.props.account,
+            this.state.toAddress,
+            this.state.amount,
+            this.props.token.symbol,
+            this.state.feeOptions,
+            this.props.navigation,
+            { memo: this.state.memo }
+        );
     }
 
     public onFeesChanged(feeOptions: IFeeOptions) {

@@ -1,7 +1,18 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { LETTER_SPACING, normalizeFontAndLineHeight } from '../../styles/dimensions';
-import { CONTAINER_TOP_PADDING } from '../transaction-request/styles';
+import {
+    BASE_DIMENSION,
+    isIphoneXorAbove,
+    LETTER_SPACING,
+    normalizeFontAndLineHeight
+} from '../../styles/dimensions';
+
+export const CONTAINER_TOP_PADDING =
+    Platform.OS === 'ios'
+        ? isIphoneXorAbove()
+            ? BASE_DIMENSION * 8
+            : BASE_DIMENSION * 6
+        : BASE_DIMENSION * 2;
 
 export default (theme: ITheme) =>
     StyleSheet.create({

@@ -21,7 +21,6 @@ import { LegalModal } from './components/legal/legal-modal/legal-modal';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { AppStateStatus } from './core/constants/app';
-import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
 import { addBreadcrumb, captureException as SentryCaptureException } from '@sentry/react-native';
 import { isEqual } from 'lodash';
@@ -34,7 +33,6 @@ import { ZilliqaTransactionUpdate } from './components/zilliqa-transaction-updat
 import { ContextScreen } from './components/widgets/types';
 import { fetchScreenData } from './redux/ui/screens/data/actions';
 import { InfoModal } from './components/info-modal/info-modal';
-import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
 import { UniversalLinks } from './core/universal-links';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -198,51 +196,46 @@ export default class App extends React.Component<{}, IState> {
     };
 
     public renderApp() {
-        const bgRequest = Platform.OS === 'web' && !!document.location.hash;
-        if (bgRequest) {
-            return <ExtensionBackgroundRequest />;
-        } else {
-            // SafeAreaProvider used to prevent header form jumping off
-            return (
-                <SafeAreaProvider>
-                    <AppContainer
-                        ref={(nav: any) => {
-                            NavigationService.setTopLevelNavigator(nav);
-                            this.handleNavigationLoaded();
-                        }}
-                        theme="dark"
-                        onNavigationStateChange={(_, newState) => {
-                            if (!isEqual(this.state.navigationState, newState)) {
-                                this.setState({ navigationState: newState });
+        // SafeAreaProvider used to prevent header form jumping off
+        return (
+            <SafeAreaProvider>
+                <AppContainer
+                    ref={(nav: any) => {
+                        NavigationService.setTopLevelNavigator(nav);
+                        this.handleNavigationLoaded();
+                    }}
+                    theme="dark"
+                    onNavigationStateChange={(_, newState) => {
+                        if (!isEqual(this.state.navigationState, newState)) {
+                            this.setState({ navigationState: newState });
 
-                                const currentRoute = NavigationService.getCurrentRouteWithParams();
+                            const currentRoute = NavigationService.getCurrentRouteWithParams();
 
-                                // Sentry Breadcrumbs
-                                currentRoute &&
-                                    currentRoute?.routeName &&
-                                    addBreadcrumb({
-                                        message: JSON.stringify({
-                                            route: currentRoute.routeName,
-                                            params:
-                                                currentRoute?.params &&
-                                                filterObjectProps(currentRoute.params, [
-                                                    'blockchain',
-                                                    'accountIndex',
-                                                    'step',
-                                                    'appNetworks',
-                                                    'transaction',
-                                                    'wallet.selectedBlockchain',
-                                                    'wallet.type',
-                                                    'wallet.hwOptions'
-                                                ])
-                                        })
-                                    });
-                            }
-                        }}
-                    />
-                </SafeAreaProvider>
-            );
-        }
+                            // Sentry Breadcrumbs
+                            currentRoute &&
+                                currentRoute?.routeName &&
+                                addBreadcrumb({
+                                    message: JSON.stringify({
+                                        route: currentRoute.routeName,
+                                        params:
+                                            currentRoute?.params &&
+                                            filterObjectProps(currentRoute.params, [
+                                                'blockchain',
+                                                'accountIndex',
+                                                'step',
+                                                'appNetworks',
+                                                'transaction',
+                                                'wallet.selectedBlockchain',
+                                                'wallet.type',
+                                                'wallet.hwOptions'
+                                            ])
+                                    })
+                                });
+                        }
+                    }}
+                />
+            </SafeAreaProvider>
+        );
     }
 
     public render() {
@@ -257,7 +250,6 @@ export default class App extends React.Component<{}, IState> {
                                 <ImageCanvas />
                             )}
                             <ProcessTransactions />
-                            <TransactionRequestScreen />
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}
                             <LoadingModal.Component />

@@ -20,7 +20,6 @@ import {
     getWalletAndAccountNameByAddress
 } from '../../redux/wallets/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
-import { openTransactionRequest } from '../../redux/ui/transaction-request/actions';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
@@ -34,7 +33,6 @@ export interface IReduxProps {
     notifications: INotificationState;
     markSeenNotification: typeof markSeenNotification;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
-    openTransactionRequest: typeof openTransactionRequest;
     fetchNotifications: (options?: { page?: number; showLoading?: boolean }) => Promise<any>;
     updateDisplayedHint: typeof updateDisplayedHint;
 
@@ -56,7 +54,6 @@ export const navigationOptions = () => ({
 const mapDispatchToProps = {
     markSeenNotification,
     updateTransactionFromBlockchain,
-    openTransactionRequest,
     fetchNotifications,
     updateDisplayedHint,
     getWalletAndAccountNameByAddress
@@ -106,13 +103,6 @@ export class NotificationsComponent extends React.Component<
                     Number(notification.data.broadcastedOnBlock),
                     true
                 );
-                break;
-
-            case NotificationType.EXTENSION_SIGN_TX:
-                this.props.openTransactionRequest({
-                    requestId: notification.data.requestId
-                });
-                await LoadingModal.close();
                 break;
 
             default:

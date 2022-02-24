@@ -30,7 +30,6 @@ import {
     normalizeFontAndLineHeight,
     LETTER_SPACING
 } from '../../styles/dimensions';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
@@ -202,21 +201,10 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        if (Platform.OS === 'web') {
-            this.setState({ isLoading: true });
-            if ((await ConnectExtensionWeb.isConnected()) === false) {
-                this.setState({ isLoading: false });
-                this.props.navigation.navigate('OnboardingNavigation');
-            } else {
-                this.setState({ isLoading: false });
-                ConnectExtensionWeb.listenLastSync();
-            }
-        } else {
-            if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {
-                // maybe check this in another screen?
-                this.props.navigation.dispatch(StackActions.popToTop());
-                this.props.navigation.navigate('OnboardingNavigation');
-            }
+        if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {
+            // maybe check this in another screen?
+            this.props.navigation.dispatch(StackActions.popToTop());
+            this.props.navigation.navigate('OnboardingNavigation');
         }
 
         this.props.navigation.setParams({

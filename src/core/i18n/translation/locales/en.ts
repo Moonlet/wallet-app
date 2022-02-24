@@ -66,7 +66,6 @@ export const translation: ITranslations = {
                 error: 'Error',
                 errorMessage: 'Error message',
                 errorOccured: 'An error has occurred. Please try again!',
-                extensionNotConnected: 'Connecting to phone',
                 failed: 'Failed',
                 fast: 'Fast',
                 fastest: 'Fastest',
@@ -370,9 +369,7 @@ export const translation: ITranslations = {
             connectLedger: 'Connect your Ledger!',
             quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests',
             connectWallet: 'Manage your wallets',
-            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets',
-            connectedWebsites: 'Connected websites',
-            manageWebsites: 'Manage your connected websites'
+            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -388,8 +385,6 @@ export const translation: ITranslations = {
             signTransaction: 'Sign transaction',
             signTransactions: 'Sign transaction(s)',
             signAll: 'Sign all transactions',
-            signExtensionTransaction:
-                'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
             processTitleText:
                 'The fees mentioned below are blockchain maximum possible fees and are required to process the transaction on the blockchain network level. ',
@@ -446,7 +441,6 @@ export const translation: ITranslations = {
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
             welcomeText: 'A portal to the decentralised world',
-            welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
             webStep1: 'Open Moonlet app on your mobile',
             webStep2: 'Tap on menu icon from the header',
             webStep3: 'Scan the QR code to connect'
@@ -462,10 +456,8 @@ export const translation: ITranslations = {
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
-            connectExtension: 'Connect to extension',
             scanPay: 'Scan to pay',
             switchWallets: 'Switch between the wallets anytime',
-            connectedWebsites: 'Connected websites',
             tokenSwap: 'Token swap (coming soon)',
             copyToClipboard: 'Copy address to clipboard'
         },
@@ -477,10 +469,6 @@ export const translation: ITranslations = {
             FaceID: 'FaceID',
             TouchID: 'TouchID',
             FingerprintLogin: 'Fingerprint login'
-        },
-        Extension: {
-            appRequestInfo:
-                'Please use the Moonlet mobile app on your phone to sign this transaction'
         },
         Token: {
             deleteToken: 'Delete token',
@@ -582,52 +570,12 @@ export const translation: ITranslations = {
                     "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data."
             }
         },
-        ConnectExtension: {
-            title: 'Connect extension',
-            buttonScan: 'Scan QR code',
-            body: 'Quickly connect extension and use Moonlet on your laptop or desktop computers',
-            disconnect: 'Disconnect',
-            disconnectInfo: 'Do you want to disconnect from this device?',
-            currentlyActive: 'Currently active',
-            qrCodeError: 'Invalid QR Code!',
-            error: 'The connection has failed! Please try again!'
-        },
         Notifications: {
-            extensionTx: {
-                title: 'Confirm transaction',
-                body:
-                    'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
-            },
-            extensionSignMessage: {
-                title: 'Sign message',
-                body: 'Open Moonlet to sign the message'
-            },
-            extensionContractCall: {
-                title: 'Contract call',
-                body: 'Open Moonlet to sign the contract call transaction'
-            },
-            extensionContractDeploy: {
-                title: 'New contract deploy',
-                body: 'Open Moonlet to sign the contract deploy transaction'
-            },
             notificationsCenter: {
                 emptyNotifTitle: 'No notifications available',
                 emptyNotifSubtitle:
                     'Notifications will appear here once you start to make transactions'
             }
-        },
-        TransactionRequest: {
-            title: 'Transaction request',
-            walletName: 'Wallet name',
-            accountName: 'Account name',
-            errorMessage: 'Transaction request is not valid anymore.',
-            errorMsgExtension: 'Transaction request is not valid anymore.',
-            errorMsgToken:
-                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
-            errorMsgGeneral:
-                'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
-            insufficientFunds:
-                'You don’t have enough funds for this transaction request. Either select a different wallet/account or add more funds to this account.'
         },
         Validator: {
             selectValidator: 'Select\nvalidator(s)',
@@ -791,13 +739,6 @@ export const translation: ITranslations = {
                 'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.',
             viewAddress: 'to view the addresses of your follwing accounts:',
             makeSure: 'Make sure you connect with websites you trust'
-        },
-        ConnectedWebsites: {
-            title: 'Connected websites',
-            connectedFollowing: 'is connected to the following websites:',
-            notConnected: 'You are not connected\nto any website',
-            disconnectTitle: 'Disconnect website',
-            disconnectBody: 'You’re about to disconnect from {{url}}'
         },
         TotalBalance: {
             byCumulativeMessage:

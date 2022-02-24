@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { Text, Button } from '../../library';
+import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
 import { toggleBiometricAuth } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
@@ -23,8 +23,6 @@ import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { setPinCode, clearPinCode } from '../../core/secure/keychain/keychain';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
-import { resetAllData } from '../../redux/app/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { openURL } from '../../core/utils/linking-handler';
 import { IconValues } from '../../components/icon/values';
@@ -40,7 +38,6 @@ export interface IReduxProps {
     biometricActive: boolean;
     toggleBiometricAuth: typeof toggleBiometricAuth;
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
-    resetAllData: typeof resetAllData;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -51,8 +48,7 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     toggleBiometricAuth,
-    setDisplayPasswordModal,
-    resetAllData
+    setDisplayPasswordModal
 };
 
 const navigationOptions = () => ({
@@ -248,11 +244,6 @@ export class SettingsScreenComponent extends React.Component<
                 {this.renderRow(translate('Settings.mainnetTestnet'), () =>
                     navigation.navigate('NetworkOptions')
                 )}
-
-                {Platform.OS !== 'web' &&
-                    this.renderRow(translate('ConnectExtension.title'), () =>
-                        navigation.navigate('ConnectExtension')
-                    )}
             </View>
         );
     }
@@ -336,18 +327,6 @@ export class SettingsScreenComponent extends React.Component<
                                 />
                             </View>
                         </TouchableOpacity>
-                    )}
-                    {Platform.OS === 'web' && (
-                        <Button
-                            style={styles.button}
-                            onPress={async () => {
-                                await ConnectExtensionWeb.disconnect();
-                                this.props.resetAllData();
-                                location.reload();
-                            }}
-                        >
-                            {translate('App.labels.disconnect')}
-                        </Button>
                     )}
                 </ScrollView>
 

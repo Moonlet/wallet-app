@@ -127,6 +127,7 @@ interface IState {
     warningFeesToHigh: boolean;
     amountNeededToPassTxs: string;
     context: IScreenContext;
+    widgetsLoaded: boolean;
 }
 
 class ProcessTransactionsComponent extends React.Component<
@@ -148,7 +149,8 @@ class ProcessTransactionsComponent extends React.Component<
             amountNeededToPassTxs: '',
             context: {
                 screen: 'ProcessTransactionsScreen'
-            }
+            },
+            widgetsLoaded: false
         };
         this.scrollViewRef = React.createRef();
     }
@@ -173,9 +175,6 @@ class ProcessTransactionsComponent extends React.Component<
         // Check fees for insufficient funds
         if (this.props.transactions !== prevProps.transactions) {
             if (this.props.transactions.length) {
-                const screenKey = this.getScreenKey(this.props);
-                this.props.resetScreenData(this.state.context, screenKey);
-
                 let insufficientFundsFees = false;
                 let warningFeesToHigh = false;
 
@@ -324,8 +323,21 @@ class ProcessTransactionsComponent extends React.Component<
                             }
                         }
                     },
-                    () => this.props.fetchScreenData(this.state.context)
+                    () => {
+                        if (!this.state.widgetsLoaded) {
+                            const screenKey = this.getScreenKey(this.props);
+                            this.props.resetScreenData(this.state.context, screenKey);
+
+                            this.props.fetchScreenData(this.state.context);
+                            this.setState({ widgetsLoaded: true });
+                        }
+                    }
                 );
+            } else {
+                const screenKey = this.getScreenKey(this.props);
+                this.props.resetScreenData(this.state.context, screenKey);
+
+                this.setState({ widgetsLoaded: false });
             }
         }
     }
@@ -740,19 +752,11 @@ class ProcessTransactionsComponent extends React.Component<
                 // ];
                 NavigationService.popToTop();
                 NavigationService.navigate('TransactonsHistory', {});
-                // NavigationService.navigate('Token', {
-                //     blockchain: this.props.selectedAccount.blockchain,
-                //     accountIndex: this.props.selectedAccount.index,
-                //     token,
-                //     activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions,
-                //     accountName:
-                //         this.props.selectedAccount?.name ||
-                //         `${translate('App.labels.account')} ${this.props.selectedAccount.index + 1}`
-                // });
             }
         }
 
         this.props.closeProcessTransactions();
+        this.setState({ widgetsLoaded: false });
     }
 
     @bind

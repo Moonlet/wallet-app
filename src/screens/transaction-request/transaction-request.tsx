@@ -14,13 +14,9 @@ import {
     setSelectedWallet,
     signMessage
 } from '../../redux/wallets/actions';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import { ResponsePayloadType } from '../../core/connect-extension/types';
-import { ExtensionTransferRequest } from './extension-tx-request/extension-tx-request';
 import {
     QRCodeTransferRequest,
     IQRCodeTxPayload,
@@ -30,17 +26,16 @@ import {
 import { openURL } from '../../core/utils/linking-handler';
 import CONFIG from '../../config';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
-import { getUrlParams } from '../../core/connect-extension/utils';
 import bind from 'bind-decorator';
 import { IWalletState, IWalletsState } from '../../redux/wallets/state';
 import { IconValues } from '../../components/icon/values';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { NotificationType } from '../../core/messaging/types';
 import { IBlockchainTransaction, TransactionType } from '../../core/blockchain/types';
+import { getUrlParams } from '../../core/utils/url-params';
 
 export interface IReduxProps {
     isVisible: boolean;
-    requestId: string;
     qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
@@ -54,7 +49,6 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.transactionRequest.isVisible,
-        requestId: state.ui.transactionRequest.data.requestId,
         qrCode: state.ui.transactionRequest.data.qrCode,
         selectedWallet: getSelectedWallet(state),
         wallets: state.wallets
@@ -99,83 +93,14 @@ export class TransactionRequestScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.props.requestId) {
-            this.getExtensionTxPayload();
-        }
-
         if (this.props.qrCode) {
             this.getQrCodeTxPayload();
         }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.requestId !== prevProps.requestId && this.props.requestId !== undefined) {
-            this.getExtensionTxPayload();
-        }
-
         if (this.props.qrCode !== prevProps.qrCode && this.props.qrCode !== undefined) {
             this.getQrCodeTxPayload();
-        }
-    }
-
-    private async getExtensionTxPayload() {
-        try {
-            const payload = await ConnectExtensionWeb.getRequestIdData(this.props.requestId);
-            if (payload) {
-                const payloadParams = payload?.params[0] || {};
-                const walletId = payloadParams.walletId || payloadParams.walletPubKey;
-
-                if (
-                    walletId !== this.props.selectedWallet.id &&
-                    walletId !== this.props.selectedWallet.walletPublicKey
-                ) {
-                    const wallet = Object.values(this.props.wallets).find(
-                        w => w.id === walletId || w.walletPublicKey === walletId
-                    );
-
-                    if (wallet) {
-                        // Switch the wallet
-                        this.props.setSelectedWallet(wallet.id);
-
-                        this.setState({ extensionTxPayload: payload });
-                    } else {
-                        // The wallet has been removed from the app
-                        // Maybe show a more relevant error message
-                        this.setExtensionTxError();
-                    }
-                } else {
-                    this.setState({ extensionTxPayload: payload });
-                }
-            } else {
-                this.setExtensionTxError();
-            }
-        } catch {
-            this.setExtensionTxError();
-        }
-    }
-
-    private setExtensionTxError() {
-        this.setState({
-            extensionTxPayload: undefined,
-            error: {
-                extensionError: true,
-                generalError: false,
-                tokenError: false,
-                tokenErrorSymbol: undefined
-            }
-        });
-    }
-
-    private async cancelTransactionRequest() {
-        try {
-            if (this.props.requestId) {
-                await ConnectExtension.sendResponse(this.props.requestId, {
-                    result: undefined,
-                    errorCode: ResponsePayloadType.CANCEL
-                });
-            }
-        } catch {
-            //
         }
     }
 
@@ -188,16 +113,12 @@ export class TransactionRequestScreenComponent extends React.Component<
                     extensionTxPayload?.params[0]?.walletPubKey,
                     extensionTxPayload?.params[0]?.blockchain,
                     extensionTxPayload?.params[0]?.address,
-                    extensionTxPayload?.params[0]?.message,
-                    { requestId: this.props.requestId }
+                    extensionTxPayload?.params[0]?.message
                 );
                 break;
             default:
                 this.props.sendTransaction(extensionTxPayload?.params[0], {
-                    goBack: false,
-                    sendResponse: {
-                        requestId: this.props.requestId
-                    }
+                    goBack: false
                 });
         }
     }
@@ -345,7 +266,7 @@ export class TransactionRequestScreenComponent extends React.Component<
     }
 
     private renderExtensionTx() {
-        const { extensionTxPayload, qrCodeTxPayload } = this.state;
+        const { qrCodeTxPayload } = this.state;
         const { styles } = this.props;
         const { extensionError, generalError, tokenError, tokenErrorSymbol } = this.state.error;
 
@@ -384,13 +305,6 @@ export class TransactionRequestScreenComponent extends React.Component<
                         </Button>
                     )}
                 </View>
-            );
-        } else if (extensionTxPayload) {
-            return (
-                <ExtensionTransferRequest
-                    extensionTxPayload={extensionTxPayload}
-                    callback={this.confirm}
-                />
             );
         } else if (qrCodeTxPayload) {
             return (
@@ -456,10 +370,6 @@ export class TransactionRequestScreenComponent extends React.Component<
     @bind
     private closeTxRequest() {
         this.props.closeTransactionRequest();
-
-        if (this.state.extensionTxPayload) {
-            this.cancelTransactionRequest();
-        }
 
         this.setState({
             error: {

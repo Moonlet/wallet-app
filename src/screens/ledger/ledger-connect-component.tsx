@@ -31,6 +31,7 @@ import { SignDeclined } from './components/sign-declined/sign-declined';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ReviewMessage } from './components/review-message/review-message';
 import { SmartContractWarning } from './components/smartcontract-warning/smartcontract-warning';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 const ANIMATION_TIME = 300;
 
@@ -235,6 +236,7 @@ export class LedgerConnectComponent extends React.Component<
                 this.resultDeferred.resolve(signature);
             })
             .catch(err => {
+                SentryCaptureException(new Error(`Sign with ledger failed ${JSON.stringify(err)}`));
                 if (err !== 'TERMINATED') {
                     const message = err?.message || '';
                     if (message?.indexOf('denied by the user') >= 0) {
@@ -284,6 +286,9 @@ export class LedgerConnectComponent extends React.Component<
                 this.resultDeferred.resolve(messageSignature);
             })
             .catch(err => {
+                SentryCaptureException(
+                    new Error(`SignMessage with ledger failed ${JSON.stringify(err)}`)
+                );
                 if (err !== 'TERMINATED') {
                     const message = err?.message || '';
                     if (message?.indexOf('denied by the user') >= 0) {

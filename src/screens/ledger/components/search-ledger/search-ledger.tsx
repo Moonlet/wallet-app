@@ -16,6 +16,7 @@ import ImgNanoX from '../../../../assets/icons/ledger/search-bluetooth.svg';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
 import { SmartImage } from '../../../../library/image/smart-image';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -60,6 +61,7 @@ export class SearchLedgerComponent extends React.Component<
         // - location permission is active at app level (android)
         // - location is active system level (android)
         if (!permissionsEnabled) {
+            SentryCaptureException(new Error(`Permissions Ledger Android not enabled`));
             this.props.onError(new Error('Location disabled'));
         } else if (this.props.scanForDevices) {
             this.scannerUnsubscribe = await TransportFactory.scan(
@@ -99,6 +101,9 @@ export class SearchLedgerComponent extends React.Component<
             this.scannerUnsubscribe.unsubscribe();
             this.props.onConnect(item);
         } catch (error) {
+            SentryCaptureException(
+                new Error(`Seearch ledger connect failed ${JSON.stringify(error)}`)
+            );
             this.props.onError(error);
         }
     }

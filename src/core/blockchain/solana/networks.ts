@@ -5,7 +5,7 @@ export const networks: IBlockchainNetwork[] = [
         name: 'Mainnet beta',
         chainId: '1',
         mainNet: true,
-        url: 'https://node-mainnet-solana.moonlet.network',
+        url: 'https://fire.moonlet.app/functions/nodes/rpc/solana/mainnet',
         wsUrl: 'wss://api.mainnet-beta.solana.com/',
         explorer: {
             name: 'Explorer',

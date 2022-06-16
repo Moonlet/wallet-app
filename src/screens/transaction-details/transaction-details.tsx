@@ -145,7 +145,12 @@ class TransactionDetailsComponent extends React.Component<
                 });
 
                 SentryCaptureException(
-                    new Error(`Fetch ZIL getTransactionFees, ${error?.message}`)
+                    new Error(
+                        `Fetch ZIL getTransactionFees, ${JSON.stringify({
+                            error: error?.message,
+                            txHash: transaction.id || 'no tx hash'
+                        })}`
+                    )
                 );
             }
 
@@ -165,7 +170,12 @@ class TransactionDetailsComponent extends React.Component<
                 });
 
                 SentryCaptureException(
-                    new Error(`Fetch ZIL getTransactionErrorMessage, ${error?.message}`)
+                    new Error(
+                        `Fetch ZIL getTransactionFees, ${JSON.stringify({
+                            error: error?.message,
+                            txHash: transaction.id || 'no tx hash'
+                        })}`
+                    )
                 );
             }
 

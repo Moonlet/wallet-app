@@ -120,9 +120,21 @@ export class NotificationsApiClient {
      * @param deviceId
      */
     public async registerNotificationSettings(wallet: IWalletState, deviceId: string) {
+        let errorHandling;
         try {
             const walletPublicKey = wallet.walletPublicKey;
             const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+
+            errorHandling = {
+                ...errorHandling,
+                deviceId
+            };
+
+            if (!walletPublicKey)
+                errorHandling = {
+                    ...errorHandling,
+                    walletPublicKey: 'not available'
+                };
 
             if (walletPrivateKey) {
                 const myAccounts = [];
@@ -152,6 +164,12 @@ export class NotificationsApiClient {
                     });
                 }
 
+                if (myAccounts.length === 0)
+                    errorHandling = {
+                        ...errorHandling,
+                        myAccounts: 'no accounts'
+                    };
+
                 const data: any = {
                     walletPublicKey,
                     timestamp: await getCurrentTimestampNTP(),
@@ -164,10 +182,20 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
+                if (!signature)
+                    errorHandling = {
+                        ...errorHandling,
+                        signature: 'not available'
+                    };
+
                 await this.apiClient.http.post('/notifications/registerSettings', data);
-            }
+            } else
+                errorHandling = {
+                    ...errorHandling,
+                    walletPrivateKey: 'not available'
+                };
         } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(JSON.stringify({ error: err, extra: errorHandling })));
         }
     }
 
@@ -203,6 +231,7 @@ export class NotificationsApiClient {
      * @param walletPublicKeys
      */
     public async getUnseenNotifications(walletPublicKeys: string[]): Promise<number> {
+        let errorHandling;
         try {
             const data = {
                 walletPublicKeys: []
@@ -226,13 +255,20 @@ export class NotificationsApiClient {
                 data.walletPublicKeys.push(walletData);
             }
 
+            if (data.walletPublicKeys.length === 0) {
+                errorHandling = {
+                    ...errorHandling,
+                    walletPublicKeys: 'empty walletPublicKeys'
+                };
+            }
+
             const response = await this.apiClient.http.post('/notifications/unseen', data);
 
             if (response?.result?.unseenNotifications) {
                 return response.result.unseenNotifications;
             }
         } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(JSON.stringify({ error: err, errorHandling })));
         }
 
         return 0;

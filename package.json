@@ -89,7 +89,7 @@
         "lottie-react-native": "^4.0.2",
         "metro-config": "^0.66.1",
         "modal-enhanced-react-native-web": "^0.2.0",
-        "moment": "^2.29.1",
+        "moment": "^2.29.4",
         "near-api-js": "^0.30.0",
         "node-libs-react-native": "^1.2.1",
         "puppeteer": "^10.1.0",

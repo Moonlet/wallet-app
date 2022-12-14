@@ -76,7 +76,7 @@
         "ethereumjs-abi": "^0.6.8",
         "ethereumjs-tx": "^2.1.2",
         "ethereumjs-util": "^6.1.0",
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "firebase": "^7.14.2",
         "hdkey": "^2.0.1",
         "hoist-non-react-statics": "^3.3.2",

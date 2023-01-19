@@ -16,10 +16,10 @@ jobs:
     steps:
       - run: |
           echo "TEST"
-          echo $KEYSTORE_PASSWORD > asd.txt
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" > asd.env
       
       - name: Save as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: asd.txt
-          path: asd.txt
+          name: asd.env
+          path: asd.env

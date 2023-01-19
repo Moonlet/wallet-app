@@ -1,0 +1,19 @@
+name: Admin Deployment
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+
+env:
+  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
+
+jobs:
+  build:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          echo "TEST"
+          echo $KEYSTORE_PASSWORD

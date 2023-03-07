@@ -12398,9 +12398,9 @@ minimatch@^3.0.4:
     brace-expansion "^1.1.7"
 
 minimist@^1.1.1, minimist@^1.2.0, minimist@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
-  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
+  integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
 minipass-collect@^1.0.2:
   version "1.0.2"
@@ -15526,11 +15526,6 @@ redux-logger@^3.0.6:
   integrity sha1-91VZZvMJjzyIYExEnPC69XeCdL8=
   dependencies:
     deep-diff "^0.3.5"
-
-redux-persist-webextension-storage@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/redux-persist-webextension-storage/-/redux-persist-webextension-storage-1.0.2.tgz#3021f49e5e5e0c359a64e6192edfe884f693a215"
-  integrity sha512-WGiK6sNIMLtvZaWqDOZF7Yzz53LOx5YzE9I2bwjZeACtp6+VvfyP57J5czXtTSe9KVSTTPlLmX96jS4agYfwsQ==
 
 redux-persist@^6.0.0:
   version "6.0.0"

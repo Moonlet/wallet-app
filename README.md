@@ -2,6 +2,14 @@
 
 [![Coverage Status](https://codecov.io/gh/moonlet/wallet-app/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/Moonlet/wallet-app/)
 
+## iOS
+
+If iOS certificates have expired, go to https://gitlab.com/moonlet/moonlet-ios-certificates and delete all all `certs` and `profiles`. Also go to Apple Developer Portal, then `Profiles` and delete both `match AppStore` files.
+
+Then go to `ios` and run `fastlane match appstore`.
+
+If you are on a new device, you need to find the secret for `MATCH_PASSWORD`.
+
 # Project Setup
 
 ## Windows

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
 
 jobs:
@@ -16,8 +16,8 @@ jobs:
     steps:
       - run: |
           echo "TEST"
-          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" > asd.env
-      
+          echo "MATCH_PASSWORD=$MATCH_PASSWORD" > asd.env
+
       - name: Save as artifact
         uses: actions/upload-artifact@v3
         with:

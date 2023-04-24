@@ -1,8 +1,6 @@
 # Moonlet Wallet
 
-[![Coverage Status](https://codecov.io/gh/moonlet/wallet-app/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/Moonlet/wallet-app/)
-
-## iOS
+## iOS Certificates
 
 If iOS certificates have expired, go to https://gitlab.com/moonlet/moonlet-ios-certificates and delete all all `certs` and `profiles`. Also go to Apple Developer Portal, then `Profiles` and delete both `match AppStore` files.
 

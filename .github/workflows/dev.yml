@@ -177,9 +177,6 @@ jobs:
       - name: Cocoapods version
         run: gem install cocoapods --version 1.12.0
 
-      - name: Cocoapods version
-        run: pod --version
-
       - name: Cocoapods install
         run: cd ios && pod install
 

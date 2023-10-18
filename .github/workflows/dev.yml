@@ -162,6 +162,9 @@ jobs:
       - name: Cocoapods version
         run: gem install cocoapods -v '1.10.0.rc.1'
 
+      - name: Sudo fix
+        run: sudo gem install activesupport -v 7.0.8
+
       - name: Cocoapods install
         run: cd ios && pod install
 

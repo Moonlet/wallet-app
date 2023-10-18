@@ -6,17 +6,18 @@ buildscript {
         minSdkVersion = 21
         compileSdkVersion = 31
         targetSdkVersion = 31
-        ndkVersion = "21.4.7075529"
+        ndkVersion = "20.1.5948944"
     }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath('com.android.tools.build:gradle:7.0.0')
         classpath 'com.google.gms:google-services:4.3.10'
+        //classpath 'com.google.gms:google-services:4.3.2'
 
-        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"1
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

@@ -173,9 +173,9 @@ jobs:
 
       - name: Install xcversion
         run: |
-          gem install xcpretty
+          # gem install xcpretty
           gem install xcode-install
-          xcversion list
+          # xcversion list
         shell: bash
 
       - name: Switch to the desired Xcode version

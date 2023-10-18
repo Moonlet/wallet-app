@@ -179,6 +179,6 @@ jobs:
         run: yarn run generate-icons
 
       - name: Run fastlane beta
-        run: xcversion select 14.2 && cd ios/fastlane && bundle exec fastlane beta
+        run: cd ios/fastlane && bundle exec fastlane beta # xcversion select 14.2 &&
         env:
           NODE_ENV: production

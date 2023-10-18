@@ -145,9 +145,6 @@ jobs:
         with:
           ruby-version: 2.7.8
 
-      - name: Install an older Cocoapods version
-        run: gem install cocoapods -v 1.10.2
-
       - name: Dependencies install
         run: cd ios && bundle install
 
@@ -163,7 +160,7 @@ jobs:
         run: yarn
 
       - name: Cocoapods version
-        run: gem install cocoapods --version 1.12.0
+        run: gem install cocoapods -v '1.10.0.rc.1'
 
       - name: Cocoapods install
         run: cd ios && pod install

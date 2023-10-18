@@ -119,9 +119,14 @@ jobs:
 
   beta-ios:
     name: iOS app
-    runs-on: macos-11
+    runs-on: macos-latest
     # needs: unit-tests
     steps:
+      - name: Setup xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Checkout
         uses: actions/checkout@v4
 

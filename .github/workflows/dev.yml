@@ -130,11 +130,6 @@ jobs:
         with:
           node-version: "14.x"
 
-      - name: Install Fastlane
-        uses: strides/match-action@v4
-        with:
-          fastlane_version: 2.216.0
-
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:
@@ -142,6 +137,12 @@ jobs:
 
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+
+      - name: Install xcversion
+        run: |
+          brew install xcversion
+          xcversion list
+        shell: bash
 
       - name: Generate firebase config file
         run: |

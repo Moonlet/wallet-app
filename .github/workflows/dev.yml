@@ -119,7 +119,7 @@ jobs:
 
   beta-ios:
     name: iOS app
-    runs-on: macos-12
+    runs-on: macos-11
     # needs: unit-tests
     steps:
       - name: Checkout
@@ -167,11 +167,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn
 
-      - name: Cocoapods version
-        run: gem install cocoapods -v '1.10.0.rc.1'
+      # - name: Cocoapods version
+      #   run: gem install cocoapods -v '1.10.0.rc.1'
 
-      - name: Sudo fix
-        run: sudo gem install activesupport -v 7.0.8
+      # - name: Sudo fix
+      #   run: sudo gem install activesupport -v 7.0.8
 
       # - name: Install xcversion
       #   run: |
@@ -200,6 +200,6 @@ jobs:
         run: yarn run generate-icons
 
       - name: Run fastlane beta
-        run: xcversion select 13.4 && cd ios/fastlane && bundle exec fastlane beta
+        run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane beta
         env:
           NODE_ENV: production

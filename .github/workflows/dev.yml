@@ -173,21 +173,21 @@ jobs:
       - name: Sudo fix
         run: sudo gem install activesupport -v 7.0.8
 
-      - name: Install xcversion
-        run: |
-          # gem install xcpretty
-          gem install xcode-install
-          # xcversion list
-        shell: bash
-
-      - name: Switch to the desired Xcode version
-        run: |
-          xcversion install 13.0  # Specify the desired Xcode version
-          xcode-select -s /Applications/Xcode_13.0.app
-        shell: bash
-
       # - name: Install xcversion
-      #   run: brew tap xcpretty/cask && brew install --cask xcversion
+      #   run: |
+      #     # gem install xcpretty
+      #     gem install xcode-install
+      #     # xcversion list
+      #   shell: bash
+
+      # - name: Switch to the desired Xcode version
+      #   run: |
+      #     xcversion install 13.0  # Specify the desired Xcode version
+      #     xcode-select -s /Applications/Xcode_13.0.app
+      #   shell: bash
+
+      - name: Install xcversion
+        run: brew tap xcpretty/cask && brew install --cask xcversion
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'

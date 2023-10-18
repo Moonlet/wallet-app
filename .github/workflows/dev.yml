@@ -122,11 +122,6 @@ jobs:
         with:
           node-version: "14.x"
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7
-
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:
@@ -145,20 +140,13 @@ jobs:
         run: |
           echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
 
-      - name: Clear Gem Cache
-        run: gem clean
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.8
 
-      - name: Reset Environment
-        run: |
-          gem env home
-          gem env path
-          gem env version
-          gem env
-
-      - name: Install CocoaPods
-        run: |
-          gem update --system
-          gem install cocoapods
+      - name: Install an older Cocoapods version
+        run: gem install cocoapods -v 1.10.2
 
       - name: Dependencies install
         run: cd ios && bundle install

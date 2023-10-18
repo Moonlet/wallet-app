@@ -184,11 +184,11 @@ jobs:
           # xcversion list
         shell: bash
 
-      - name: Switch to the desired Xcode version
-        run: |
-          xcversion install 13.0  # Specify the desired Xcode version
-          xcode-select -s /Applications/Xcode_13.0.app
-        shell: bash
+      # - name: Switch to the desired Xcode version
+      #   run: |
+      #     xcversion install 13.0  # Specify the desired Xcode version
+      #     xcode-select -s /Applications/Xcode_13.0.app
+      #   shell: bash
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'

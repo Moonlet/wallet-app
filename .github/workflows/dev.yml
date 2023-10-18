@@ -122,6 +122,11 @@ jobs:
         with:
           node-version: "14.x"
 
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:

@@ -130,6 +130,11 @@ jobs:
         with:
           node-version: "14.x"
 
+      - name: Install Fastlane
+        uses: strides/match-action@v4
+        with:
+          fastlane_version: 2.216.0
+
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:
@@ -162,32 +167,6 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
-
-      # - name: Cocoapods version
-      #   run: gem install cocoapods -v '1.10.0.rc.1'
-
-      # - name: Sudo fix
-      #   run: sudo gem install activesupport -v 7.0.8
-
-      # - name: Install xcversion
-      #   run: |
-      #     # gem install xcpretty
-      #     gem install xcode-install
-      #     # xcversion list
-      #   shell: bash
-
-      # - name: Switch to the desired Xcode version
-      #   run: |
-      #     xcversion install 13.0  # Specify the desired Xcode version
-      #     xcode-select -s /Applications/Xcode_13.0.app
-      #   shell: bash
-
-      # - name: Install xcversion
-      #   run: brew tap xcpretty/cask && brew install --cask xcversion
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'

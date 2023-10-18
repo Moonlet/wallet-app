@@ -177,12 +177,6 @@ jobs:
       - name: Sudo fix
         run: sudo gem install activesupport -v 7.0.8
 
-      - name: Cocoapods install
-        run: cd ios && pod install
-
-      - name: Generate fonts and icons
-        run: yarn run generate-icons
-
       - name: Install xcversion
         run: |
           gem install xcpretty
@@ -195,6 +189,16 @@ jobs:
           xcversion install 13.0  # Specify the desired Xcode version
           xcode-select -s /Applications/Xcode_13.0.app
         shell: bash
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn
+
+      - name: Cocoapods install
+        run: cd ios && pod install
+
+      - name: Generate fonts and icons
+        run: yarn run generate-icons
 
       - name: Run fastlane beta
         run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane beta

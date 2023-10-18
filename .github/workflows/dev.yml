@@ -140,6 +140,21 @@ jobs:
         run: |
           echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
 
+      - name: Clear Gem Cache
+        run: gem clean
+
+      - name: Reset Environment
+        run: |
+          gem env home
+          gem env path
+          gem env version
+          gem env
+
+      - name: Install CocoaPods
+        run: |
+          gem update --system
+          gem install cocoapods
+
       - name: Dependencies install
         run: cd ios && bundle install
 

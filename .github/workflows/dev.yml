@@ -5,10 +5,7 @@ on:
 
 env:
   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-  # FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
   FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-  # DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: " "
-  # FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
   NODE_ENV: production
@@ -177,12 +174,12 @@ jobs:
       - name: Sudo fix
         run: sudo gem install activesupport -v 7.0.8
 
-      - name: Install xcversion
-        run: |
-          gem install xcpretty
-          gem install xcode-install
-          # xcversion list
-        shell: bash
+      # - name: Install xcversion
+      #   run: |
+      #     gem install xcpretty
+      #     gem install xcode-install
+      #     # xcversion list
+      #   shell: bash
 
       # - name: Switch to the desired Xcode version
       #   run: |
@@ -197,8 +194,8 @@ jobs:
       - name: Cocoapods install
         run: cd ios && pod install
 
-      # - name: Generate fonts and icons
-      #   run: yarn run generate-icons
+      - name: Generate fonts and icons
+        run: yarn run generate-icons
 
       - name: Run fastlane beta
         run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane beta

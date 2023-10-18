@@ -163,11 +163,12 @@ class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, ISta
         );
     }
 
-    private renderErrorWidget() {
+    private renderErrorWidget(error: string) {
         return (
             <ErrorWidget
                 header={translate('Widgets.wentWrong')}
-                body={translate('Widgets.didNotLoad')}
+                body={error}
+                // body={translate('Widgets.didNotLoad')}
                 cta={{
                     label: translate('App.labels.retry'),
                     onPress: () => this.props.fetchScreenData(this.props.context)
@@ -203,7 +204,7 @@ class SmartScreenComp extends React.Component<IReduxProps & IExternalProps, ISta
             }
 
             if (screenData.error) {
-                return this.renderErrorWidget();
+                return this.renderErrorWidget(screenData.error);
             }
         }
 

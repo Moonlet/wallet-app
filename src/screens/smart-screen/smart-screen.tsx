@@ -306,11 +306,12 @@ class SmartScreenComponent extends React.Component<
         );
     }
 
-    private renderErrorWidget() {
+    private renderErrorWidget(error: string) {
         return (
             <ErrorWidget
                 header={translate('Widgets.wentWrong')}
-                body={translate('Widgets.didNotLoad')}
+                body={error}
+                // body={translate('Widgets.didNotLoad')}
                 cta={{
                     label: translate('App.labels.retry'),
                     onPress: () => {
@@ -386,7 +387,9 @@ class SmartScreenComponent extends React.Component<
 
                         {/* Display Error (Try again)*/}
                         {!loadingScreenData && screenData.error && (
-                            <View style={styles.errorContainer}>{this.renderErrorWidget()}</View>
+                            <View style={styles.errorContainer}>
+                                {this.renderErrorWidget(screenData.error)}
+                            </View>
                         )}
                     </KeyboardAwareScrollView>
                 )}

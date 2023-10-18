@@ -3,6 +3,18 @@ on:
     branches:
       - master
 
+env:
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  # FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+  FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  # DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: " "
+  # FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+  NODE_ENV: production
+  APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+  APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+
 name: Beta build & deploy
 jobs:
   unit-tests:
@@ -173,27 +185,16 @@ jobs:
 
       - name: Install xcversion
         run: |
-          # gem install xcpretty
+          gem install xcpretty
           gem install xcode-install
           # xcversion list
         shell: bash
 
-      # - name: Switch to the desired Xcode version
-      #   run: |
-      #     xcversion install 13.0  # Specify the desired Xcode version
-      #     xcode-select -s /Applications/Xcode_13.0.app
-      #   shell: bash
+      - name: Switch to the desired Xcode version
+        run: |
+          xcversion install 13.0  # Specify the desired Xcode version
+          xcode-select -s /Applications/Xcode_13.0.app
+        shell: bash
 
       - name: Run fastlane beta
         run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane beta
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          # FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          # DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: " "
-          # FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
-          NODE_ENV: production
-          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}

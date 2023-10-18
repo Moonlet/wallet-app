@@ -178,11 +178,11 @@ jobs:
           # xcversion list
         shell: bash
 
-      - name: Switch to the desired Xcode version
-        run: |
-          xcversion install 13.0  # Specify the desired Xcode version
-          xcode-select -s /Applications/Xcode_13.0.app
-        shell: bash
+      # - name: Switch to the desired Xcode version
+      #   run: |
+      #     xcversion install 13.0  # Specify the desired Xcode version
+      #     xcode-select -s /Applications/Xcode_13.0.app
+      #   shell: bash
 
       - name: Run fastlane beta
         run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane beta

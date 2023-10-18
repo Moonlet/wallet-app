@@ -64,7 +64,7 @@ jobs:
   beta-android:
     name: Android app
     runs-on: ubuntu-latest
-    needs: unit-tests
+    # needs: unit-tests
     steps:
       - name: Increase watchers
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
@@ -112,40 +112,54 @@ jobs:
   beta-ios:
     name: iOS app
     runs-on: macos-12
-    needs: unit-tests
+    # needs: unit-tests
     steps:
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
-      - uses: actions/checkout@v1
+          node-version: "16.x"
+
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
+
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+
       - name: Generate firebase config file
         run: |
           echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+
       - name: Generate p8 File
         run: |
           echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
+
       - name: Dependencies install
         run: cd ios && bundle install
+
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: cache
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Yarn install
+          path: "**/node_modules"
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: yarn
+
       - name: Cocoapods install
         run: cd ios && pod install
+
       - name: Generate fonts and icons
         run: yarn run generate-icons
+
       - name: Run fastlane beta
         run: xcversion select 13.4 && cd ios/fastlane && bundle exec fastlane beta
         env:

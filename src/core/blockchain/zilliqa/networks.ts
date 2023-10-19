@@ -26,6 +26,18 @@ export const networks: IBlockchainNetwork[] = [
         }
     },
     {
+        name: 'Dev 2',
+        chainId: 333,
+        mainNet: false,
+        url: 'https://api.testnet.zilliqa.com/',
+        wsUrl: 'wss://dev-ws.zilliqa.com/',
+        explorer: {
+            name: 'Viewblock',
+            getAccountUrl: addr => `https://viewblock.io/zilliqa/address/${addr}?network=testnet`,
+            getTransactionUrl: txn => `https://viewblock.io/zilliqa/tx/${txn}?network=testnet`
+        }
+    },
+    {
         name: 'Kaya Local',
         chainId: 2,
         mainNet: false,

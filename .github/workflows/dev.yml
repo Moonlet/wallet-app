@@ -153,11 +153,6 @@ jobs:
         run: |
           echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
 
-      # - name: Set up Ruby
-      #   uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: 2.7.8
-
       - name: Dependencies install
         run: cd ios && bundle install
 

@@ -413,7 +413,11 @@ export class Staking {
 
         // TODO: check this with ZILLIQA team
         let gasLimitBasedOnCycles = 3450; // default value
-        if (nrCyclesPassed >= 365) {
+        if (nrCyclesPassed >= 1095) {
+            gasLimitBasedOnCycles = 300000;
+        } else if (nrCyclesPassed >= 730) {
+            gasLimitBasedOnCycles = 200000;
+        } else if (nrCyclesPassed >= 365) {
             gasLimitBasedOnCycles = 100000;
         } else if (nrCyclesPassed >= 180) {
             gasLimitBasedOnCycles = 30000;

@@ -14,10 +14,22 @@ export const networks: IBlockchainNetwork[] = [
         }
     },
     {
-        name: 'Dev',
+        name: 'Testnet',
         chainId: 333,
         mainNet: false,
         url: 'https://dev-api.zilliqa.com/',
+        wsUrl: 'wss://dev-ws.zilliqa.com/',
+        explorer: {
+            name: 'Viewblock',
+            getAccountUrl: addr => `https://viewblock.io/zilliqa/address/${addr}?network=testnet`,
+            getTransactionUrl: txn => `https://viewblock.io/zilliqa/tx/${txn}?network=testnet`
+        }
+    },
+    {
+        name: 'Devnet',
+        chainId: 617,
+        mainNet: false,
+        url: 'https://api.devnet.zilliqa.com/',
         wsUrl: 'wss://dev-ws.zilliqa.com/',
         explorer: {
             name: 'Viewblock',

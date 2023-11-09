@@ -13,9 +13,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:7.0.0')
-        classpath 'com.google.gms:google-services:4.3.10'
-        //classpath 'com.google.gms:google-services:4.3.2'
+        classpath('com.android.tools.build:gradle:4.1.0')
+        classpath 'com.google.gms:google-services:4.2.0'
 
         // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"1
 

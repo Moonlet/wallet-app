@@ -108,6 +108,8 @@ jobs:
         run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
       - name: Generate fonts and icons
         run: yarn run generate-icons
+      - name: Gradle clean
+        run: cd android && ./gradlew clean
       - name: Run fastlane beta
         run: cd android/fastlane && bundle exec fastlane beta
         env:

@@ -1,4 +1,4 @@
-Team's log. Stardate 2206.16:
+Team's log.
 
 Bug fixing
 

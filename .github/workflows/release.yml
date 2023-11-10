@@ -3,6 +3,14 @@ on:
     types:
       - published
 
+env:
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+  APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+  APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+
 name: Release build & deploy
 jobs:
   deploy-android:
@@ -54,49 +62,58 @@ jobs:
 
   deploy-ios:
     name: iOS app
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
-      - uses: actions/setup-node@v1
+      - name: Setup xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
         with:
           node-version: "14.x"
-      - uses: actions/checkout@v1
+
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
+
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+
       - name: Generate firebase config files
         run: |
           echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+
       - name: Generate p8 File
         run: |
           echo '${{ secrets.APPSTORE_CONNECT_FILE_KEY }}' > ios/AuthKey.p8
+
       - name: Dependencies install
         run: cd ios && bundle install
+
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+
       - name: Yarn install
+        if: steps.cache.outputs.cache-hit != 'true'
         run: yarn
+
       - name: Cocoapods install
         run: cd ios && pod install
+
       - name: Generate fonts and icons
         run: yarn run generate-icons
+
       - name: Run fastlane deploy
-        run: xcversion select 13.0 && cd ios/fastlane && bundle exec fastlane deploy
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          # FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:  ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          # DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: " "
-          # FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
-          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+        run: cd ios/fastlane && bundle exec fastlane deploy

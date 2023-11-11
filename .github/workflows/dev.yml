@@ -133,15 +133,6 @@ jobs:
       - name: Generate fonts and icons
         run: yarn run generate-icons
 
-      - name: Gradle clean
-        run: cd android && ./gradlew clean
-
-      - name: Gradle stop
-        run: cd android && ./gradlew -stop
-
-      - name: Gradle wrapper
-        run: cd android && ./gradlew wrapper --gradle-version=7.6.1
-
       - name: Run fastlane beta
         run: cd android/fastlane && bundle exec fastlane beta
         env:

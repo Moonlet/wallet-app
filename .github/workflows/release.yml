@@ -19,38 +19,53 @@ jobs:
     steps:
       - name: Increase watchers
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
         with:
           node-version: "14.x"
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "2.7"
+
       - name: Generate firebase config files
         run: |
           echo '${{ secrets.FB_CONFIG_ANDROID_DEPLOY }}' > android/app/google-services.json
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
+
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
+
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+
       - name: Dependencies install
         run: cd android && bundle install
+
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+
       - name: Yarn install
+        if: steps.cache.outputs.cache-hit != 'true'
         run: yarn
+
       - name: Get sign ssh-keys
         run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+
       - name: Generate fonts and icons
         run: yarn run generate-icons
+
       - name: Run fastlane deploy
         run: cd android/fastlane && bundle exec fastlane deploy
         env:

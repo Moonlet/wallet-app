@@ -20,17 +20,16 @@ buildscript {
 
 allprojects {
     repositories {
-        // Commenting out exclusiveContent block as it seems to cause issues
-        // exclusiveContent {
-        //     filter {
-        //         includeGroup "com.facebook.react"
-        //     }
-        //     forRepository {
-        //         maven {
-        //             url "$rootDir/../node_modules/react-native/android"
-        //         }
-        //     }
-        // }
+        exclusiveContent {
+            filter {
+                includeGroup "com.facebook.react"
+            }
+            forRepository {
+                maven {
+                    url "$rootDir/../node_modules/react-native/android"
+                }
+            }
+        }
         mavenLocal()
         maven {
             url "$rootDir/../node_modules/react-native/android"

@@ -128,7 +128,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false)
 
 // WORKAROUND for com.google.gms:google-services:4.2.0: https://github.com/invertase/react-native-firebase/issues/1676#issuecomment-441243419
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+// com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 // googleServices.disableVersionCheck = true
 
 android {

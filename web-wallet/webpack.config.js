@@ -143,7 +143,7 @@ module.exports = (env, argv) => ({
             'react-native$': 'react-native-web',
             'react-native-linear-gradient$': 'react-native-web-linear-gradient',
             '@sentry/react-native$': '@sentry/browser',
-            'lottie-react-native$': 'react-native-web-lottie',
+            // 'lottie-react-native$': 'react-native-web-lottie',
             'react-native-device-info$': path.resolve(
                 __dirname,
                 '../src/react-native-web/react-native-device-info'

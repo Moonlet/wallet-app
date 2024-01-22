@@ -42,7 +42,11 @@ platform :android do
       api_token: ENV['APPCENTER_TOKEN'],
       owner_name: "moonlet",
       app_name: "Moonlet-Beta",
-      apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      # apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      ipa: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      # mapping_file: "mapping.txt",
+      # mapping_build_type: "Release",
+      # mapping_version: package["version"],
       release_notes: changelog,
       notify_testers: true
     )

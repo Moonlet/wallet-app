@@ -91,10 +91,6 @@ jobs:
           distribution: adopt
           architecture: x64
 
-      - name: Print Java and Gradle Versions
-        run: |
-          java -version
-
       - name: Increase watchers
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 

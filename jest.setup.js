@@ -75,3 +75,7 @@ NativeModules.Aes = {
 };
 
 global.WebSocket = jest.fn(() => {});
+
+jest.mock('react-native-webview', () => ({
+    WebView: 'WebView'
+}));

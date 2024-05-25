@@ -24,7 +24,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "16.x"
 
       - name: Create version tag
         env:
@@ -101,7 +101,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v1
         with:
-          node-version: "14.x"
+          node-version: "16.x"
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -167,7 +167,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "16.x"
 
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1

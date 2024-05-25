@@ -1,11 +1,10 @@
 name: Admin Deployment
 
-# Controls when the workflow will run
 on:
   workflow_dispatch:
 
 env:
-  MATCH_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
 
 jobs:

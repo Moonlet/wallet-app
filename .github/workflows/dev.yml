@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 env:
   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}

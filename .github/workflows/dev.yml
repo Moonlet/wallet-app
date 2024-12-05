@@ -170,15 +170,18 @@ jobs:
       #   with:
       #     node-version: "14.x"
 
+      - name: Install Python 3.9 (compatible version)
+        run: brew install python@3.9
+
       - name: Install Node.js 14.x using nvm
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          export PATH="/usr/local/opt/python@3.9/bin:$PATH"
           nvm install 14
           nvm use 14
           node -v
-          npm -v
 
       - name: Install Yarn
         run: npm install -g yarn

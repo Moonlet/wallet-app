@@ -153,8 +153,8 @@ jobs:
 
   beta-ios:
     name: iOS app
-    # runs-on: macos-latest
-    runs-on: macos-11
+    runs-on: macos-latest
+    # runs-on: macos-11
     # needs: unit-tests
     steps:
       - name: Setup xcode
@@ -165,10 +165,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup nodejs
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
+      # - name: Setup nodejs
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: "14.x"
+
+      - name: Setup nodejs 15.x
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install 15
+          nvm use 15
+          node -v
 
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1

@@ -180,6 +180,9 @@ jobs:
           node -v
           npm -v
 
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1
         with:

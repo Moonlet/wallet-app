@@ -153,8 +153,8 @@ jobs:
 
   beta-ios:
     name: iOS app
-    # runs-on: macos-latest
-    runs-on: macos-11
+    runs-on: macos-latest
+    # runs-on: macos-11
     # needs: unit-tests
     steps:
       - name: Setup xcode

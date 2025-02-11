@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD_NOVI }} # MATCH_PASSWORD
   FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}

@@ -165,9 +165,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup nodejs
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: "14.x"
+          architecture: "x64"
 
       - name: Setup key
         uses: webfactory/ssh-agent@v0.4.1

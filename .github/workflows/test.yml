@@ -18,7 +18,7 @@ jobs:
           echo "MATCH_PASSWORD=$MATCH_PASSWORD" > asd.env
 
       - name: Save as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: asd.env
           path: asd.env

@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  # MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  MATCH_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
 
 jobs:

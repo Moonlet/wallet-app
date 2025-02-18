@@ -68,7 +68,7 @@
         "detox": "^18.18.1",
         "detox-getprops": "^0.1.2",
         "dotenv": "^10.0.0",
-        "elliptic": "^6.5.4",
+        "elliptic": "^6.5.7",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
         "eth-ens-namehash": "^2.0.8",

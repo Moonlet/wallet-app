@@ -64,7 +64,7 @@
         "bowser": "^2.11.0",
         "bs58": "^4.0.1",
         "buffer-layout": "^1.2.2",
-        "crypto-js": "^4.0.0",
+        "crypto-js": "^4.2.0",
         "detox": "^18.18.1",
         "detox-getprops": "^0.1.2",
         "dotenv": "^10.0.0",

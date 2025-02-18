@@ -28,7 +28,7 @@
         "@ethereumjs/common": "^2.4.0",
         "@ethereumjs/tx": "^3.3.0",
         "@ethersproject/abi": "^5.0.5",
-        "@ledgerhq/hw-app-eth": "^6.8.0",
+        "@ledgerhq/hw-app-eth": "^6.33.0",
         "@ledgerhq/react-native-hid": "^4.78.0",
         "@ledgerhq/react-native-hw-transport-ble": "^4.78.0",
         "@react-native-community/async-storage": "^1.12.1",

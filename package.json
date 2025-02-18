@@ -92,7 +92,7 @@
         "moment": "^2.29.1",
         "near-api-js": "^0.30.0",
         "node-libs-react-native": "^1.2.1",
-        "puppeteer": "^10.1.0",
+        "puppeteer": "^13.1.2",
         "qrcode": "^1.4.4",
         "react": "17.0.2",
         "react-native": "0.64.2",
